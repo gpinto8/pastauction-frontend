@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-primary;
+  color: #212529;
+}
+
+.v-application {
+  @apply bg-[#F8F9FA];
+}

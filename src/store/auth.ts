@@ -1,0 +1,249 @@
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+
+import router from '../router';
+
+import { post, get, put, elimina } from '@/api/api';
+
+export const useAuthStore = defineStore('auth', () => {
+  // state
+  const isUserLogged = ref(window.localStorage.getItem('past_token'));
+  const loading = ref(false);
+  const detail = ref();
+  const listCountries = ref();
+  const listCities = ref();
+  const imageUrl = ref();
+
+  // getters
+  const isUserLoggedIn = computed(() => !!isUserLogged.value);
+  const getLoading = computed(() => loading.value);
+  const getDetail = computed(() => detail.value);
+  const isUserAuthenticated = computed(() =>
+    isUserLogged.value ? true : false
+  );
+
+  const getListCountries = computed(() => listCountries.value);
+  const getListCities = computed(() => listCities.value);
+  const getProfileImage = computed(() => imageUrl.value);
+
+  // actions
+  async function login(user: any) {
+    loading.value = true;
+    return await new Promise((resolve, reject) => {
+      post('login', user)
+        .then(({ data }) => {
+          console.log(data);
+
+          saveToken(data.access_token);
+          loading.value = false;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          loading.value = false;
+          reject(err);
+        });
+    });
+  }
+
+  async function register(user: any) {
+    loading.value = true;
+    return await new Promise((resolve, reject) => {
+      post('sign_up', user)
+        .then(({ data }) => {
+          console.log(data);
+          loading.value = false;
+          router.push({ name: 'LoginView' }).catch(() => {});
+          resolve(data);
+        })
+        .catch((err: any) => {
+          loading.value = false;
+          reject(err);
+        });
+    });
+  }
+
+  async function getLoggedUserInfo() {
+    return await new Promise((resolve, reject) => {
+      get('user_info')
+        .then(({ data }) => {
+          detail.value = data;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function changePassword(info: any) {
+    loading.value = true;
+    return await new Promise((resolve, reject) => {
+      post('changePassword', info)
+        .then(({ data }) => {
+          loading.value = false;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          loading.value = false;
+          reject(err);
+        });
+    });
+  }
+
+  async function updateUser(postPayload: any) {
+    const format = (date: Date) => {
+      const newDate = new Date(date);
+      const day = newDate.getDate();
+      let month: any = newDate.getMonth() + 1;
+      const year = newDate.getFullYear();
+
+      if (month < 10) month = `0${month}`;
+
+      return `${day}-${month}-${year}`;
+    };
+
+    let formData = new FormData();
+    formData.append('name', postPayload.name);
+    formData.append('surname', postPayload.surname);
+    formData.append('birth', format(postPayload.birth));
+    formData.append('country_id', postPayload.country_id);
+    formData.append('city_id', postPayload.city_id);
+
+    loading.value = true;
+    return await new Promise((resolve, reject) => {
+      put('user_info', formData)
+        .then(({ data }) => {
+          loading.value = false;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          loading.value = false;
+          reject(err);
+        });
+    });
+  }
+
+  async function getCountries() {
+    return await new Promise((resolve, reject) => {
+      get('list_countries')
+        .then(({ data }) => {
+          console.log('countires', data);
+          listCountries.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function getCities(county: string) {
+    return await new Promise((resolve, reject) => {
+      get(`list_cities/${county}`)
+        .then(({ data }) => {
+          console.log('cities', data);
+
+          listCities.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function uploadPicture(file: any) {
+    let formData = new FormData();
+    formData.append('file', file);
+
+    loading.value = true;
+    return await new Promise((resolve, reject) => {
+      post('profile_image', formData)
+        .then(({ data }) => {
+          loading.value = false;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          loading.value = false;
+          reject(err);
+        });
+    });
+  }
+
+  async function deletePicture() {
+    return await new Promise((resolve, reject) => {
+      elimina('profile_image')
+        .then(({ data }) => {
+          loading.value = false;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          loading.value = false;
+          reject(err);
+        });
+    });
+  }
+
+  async function loadImage(imgUrl: string) {
+    return await new Promise((resolve, reject) => {
+      get(`${imgUrl}`)
+        .then(({ data }) => {
+          console.log('img', data);
+          imageUrl.value = URL.createObjectURL(data);
+          let image = document.createElement('img') as any;
+          let reader = new FileReader();
+          reader.addEventListener('loadend', () => {
+            let contents = reader.result;
+            image.src = contents;
+            document.body.appendChild(image);
+          });
+          if (Blob instanceof Blob) reader.readAsDataURL(data);
+
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  function saveToken(token: string) {
+    window.localStorage.setItem('past_token', token);
+    isUserLogged.value = token;
+    router.push({ name: 'Home' }).catch(() => {});
+  }
+
+  function logout() {
+    window.localStorage.removeItem('past_token');
+    window.localStorage.removeItem('user');
+    router.push({ path: '/login' }).catch(() => {});
+  }
+
+  return {
+    // state
+    detail,
+
+    // getters
+    isUserLoggedIn,
+    getLoading,
+    getDetail,
+    isUserAuthenticated,
+    getListCountries,
+    getListCities,
+    getProfileImage,
+
+    // actions
+    login,
+    getLoggedUserInfo,
+    changePassword,
+    saveToken,
+    logout,
+    updateUser,
+    getCountries,
+    getCities,
+    uploadPicture,
+    deletePicture,
+    loadImage,
+    register,
+  };
+});
