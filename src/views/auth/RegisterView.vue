@@ -1,0 +1,113 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useAuthStore } from '@/store/auth';
+import { useVuelidate } from '@vuelidate/core';
+import { email, required } from '@vuelidate/validators';
+
+const store = useAuthStore();
+
+const user = ref({
+  email: 'ing.irenavoci@gmail.com',
+  password: 'string',
+  user_category: 0,
+  gender: '',
+  first_name: 'Irena',
+  surname: '',
+  address: '',
+  city: '',
+  country: '',
+  birthdate: null,
+  phone: '',
+  vat: '',
+  nickname: '',
+});
+
+const rules = {
+  first_name: { required },
+  password: { required },
+  email: { required, email },
+};
+
+const v$ = useVuelidate(rules, user);
+
+const submit = () => {
+  store.register(user.value);
+};
+</script>
+
+<template>
+  <div
+    class="bg-white p-14 rounded-r-3xl absolute left-0 top-0 bottom-0 w-[588px] max-h-[680px] my-auto space-y-6 !text-primary"
+  >
+    <div class="space-y-2 text-center">
+      <h2 class="text-4xl">Create an account</h2>
+      <div class="text-grey">Start your journey with PastAuction</div>
+    </div>
+
+    <v-form @submit.prevent="submit">
+      <label>Name*</label>
+      <v-text-field
+        v-model="user.first_name"
+        :error-messages="v$.first_name.$errors.map(e => e.$message)"
+        :counter="10"
+        density="comfortable"
+        placeholder="Enter your name"
+        required
+        variant="outlined"
+        @input="v$.first_name.$touch"
+        @blur="v$.first_name.$touch"
+      ></v-text-field>
+
+      <label>E-mail*</label>
+      <v-text-field
+        v-model="user.email"
+        :error-messages="v$.email.$errors.map(e => e.$message)"
+        placeholder="Enter your email"
+        required
+        variant="outlined"
+        density="comfortable"
+        @input="v$.email.$touch"
+        @blur="v$.email.$touch"
+      ></v-text-field>
+
+      <label>Password*</label>
+      <v-text-field
+        v-model="user.password"
+        :error-messages="v$.password.$errors.map(e => e.$message)"
+        :counter="10"
+        density="comfortable"
+        placeholder="Password"
+        required
+        variant="outlined"
+        @input="v$.password.$touch"
+        @blur="v$.password.$touch"
+      ></v-text-field>
+
+      <v-checkbox>
+        <template #label>
+          <div>
+            By creating an account you agree to the
+            <br />
+            <b>Terms of use and Privacy Policy</b>
+          </div>
+        </template>
+      </v-checkbox>
+
+      <v-btn
+        class="!bg-primary text-white w-full !rounded-lg"
+        :disabled="v$.$invalid"
+        :loading="store.getLoading"
+        size="large"
+        type="submit"
+      >
+        Get Started
+      </v-btn>
+      <div class="text-center my-3">
+        Already have an account?
+        <router-link to="/login" class="text-blue-600 underline">
+          Sign in
+        </router-link>
+      </div>
+    </v-form>
+  </div>
+</template>
