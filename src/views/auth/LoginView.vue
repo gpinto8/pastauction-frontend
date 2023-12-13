@@ -8,8 +8,8 @@ import { email, required } from '@vuelidate/validators';
 const store = useAuthStore();
 
 const user = ref({
-  email: 'torio@example.com',
-  password: 'string',
+  email: '',
+  password: '',
 });
 
 const rules = {

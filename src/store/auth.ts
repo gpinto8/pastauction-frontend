@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
-import router from '../router';
+import router from '@/router';
 
 import { post, get, put, elimina } from '@/api/api';
 

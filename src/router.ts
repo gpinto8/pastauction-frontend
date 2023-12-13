@@ -3,15 +3,13 @@ import {
   createRouter,
   createWebHistory,
   type Router,
-  type NavigationGuardNext,
-  type RouteLocationNormalized,
   type RouteRecordRaw,
 } from 'vue-router';
 
 import { useAuthStore } from '@/store/auth';
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
-import RegisterView from '@/views/auth/RegisterView.vue';
+import SignupView from '@/views/auth/SignupView.vue';
 
 /** Router Rules */
 const routes: RouteRecordRaw[] = [
@@ -157,8 +155,8 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/sign-up',
-        name: 'SignUp',
-        component: RegisterView,
+        name: 'SignupView',
+        component: SignupView,
       },
       {
         path: '/profile',
@@ -198,7 +196,7 @@ const router: Router = createRouter({
 router.beforeEach((to, from, next) => {
   const store = useAuthStore();
 
-  if (to.name !== 'LoginView' && !store.isUserAuthenticated)
+  if (to.name !== 'LoginView' && to.name !== 'SignupView' && !store.isUserAuthenticated)
     next({ name: 'LoginView' });
   else next();
 });
