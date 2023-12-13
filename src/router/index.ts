@@ -8,9 +8,10 @@ import {
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
 import SignupView from '@/views/auth/SignupView.vue';
-import { authGuard } from './utils/guard';
 
-/** Router Rules */
+import { authGuard } from './utils/guard';
+import { scrollBehaviour } from './utils/scrollBehaviours';
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -180,19 +181,8 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router: Router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL), // createWebHashHistory(import.meta.env.BASE_URL)
-  /*
-  scrollBehavior: (to, _from, savedPosition) => {
-    let scrollTo: number | string = 0;
-
-    if (to.hash) {
-      scrollTo = to.hash;
-    } else if (savedPosition) {
-      scrollTo = savedPosition.top;
-    }
-    return goTo(scrollTo);
-  },
-  */
+  history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior: scrollBehaviour,
   routes,
 });
 
