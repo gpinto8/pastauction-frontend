@@ -1,4 +1,3 @@
-import { useGlobal } from '@/store';
 import {
   createRouter,
   createWebHistory,
@@ -6,10 +5,10 @@ import {
   type RouteRecordRaw,
 } from 'vue-router';
 
-import { useAuthStore } from '@/store/auth';
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
 import SignupView from '@/views/auth/SignupView.vue';
+import { authGuard } from './utils/guard';
 
 /** Router Rules */
 const routes: RouteRecordRaw[] = [
@@ -33,6 +32,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "Garage" */ '@/views/garage/GarageView.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail',
@@ -41,6 +41,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/create_garage',
@@ -49,6 +50,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "NewGarage" */ '@/views/garage/NewGarageView.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/:id',
@@ -57,6 +59,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/:garageId/vehicle/:id',
@@ -65,6 +68,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "VehicleDetail" */ '@/views/vehicle/createVehicleStep1.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/view',
@@ -73,6 +77,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "GarageViewPage" */ '@/views/garage/tables/GarageViewPage.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/social-media-rumors',
@@ -81,6 +86,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "SocialMediaRumors" */ '@/views/garage/tables/SocialMediaRumors.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/social-media-rumors-detail',
@@ -89,6 +95,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "SocialMediaRumorsDetail" */ '@/views/garage/tables/SocialMediaRumorsDetail.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/auction-alert',
@@ -97,6 +104,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "AuctionAlert" */ '@/views/garage/tables/AuctionAlert.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/garage/detail/auction-alert-detail/:id',
@@ -105,6 +113,7 @@ const routes: RouteRecordRaw[] = [
           await import(
             /* webpackChunkName: "AuctionAlertDetail" */ '@/views/garage/tables/AuctionAlertDetail.vue'
           ),
+          meta: { authentication: true }
       },
       {
         path: '/datas',
@@ -170,13 +179,7 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
-/** Vue Router */
 const router: Router = createRouter({
-  /**
-   * History Mode
-   *
-   * @see {@link https://router.vuejs.org/guide/essentials/history-mode.html }
-   */
   history: createWebHistory(import.meta.env.BASE_URL), // createWebHashHistory(import.meta.env.BASE_URL)
   /*
   scrollBehavior: (to, _from, savedPosition) => {
@@ -193,12 +196,6 @@ const router: Router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const store = useAuthStore();
-
-  if (to.name !== 'LoginView' && to.name !== 'SignupView' && !store.isUserAuthenticated)
-    next({ name: 'LoginView' });
-  else next();
-});
+router.beforeEach(authGuard);
 
 export default router;

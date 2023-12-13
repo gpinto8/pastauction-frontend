@@ -1,18 +1,12 @@
-/**
- * Vue3 Main script
- */
-
-// Load vue core
 import store from '@/store';
 import { createApp } from 'vue';
 
 import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
-import router from '@/router';
+import router from '@/router/index';
 import './assets/main.css';
 import axios from 'axios';
 
-/** Register Vue */
 const vue = createApp(App);
 vue.use(router);
 vue.use(store);
