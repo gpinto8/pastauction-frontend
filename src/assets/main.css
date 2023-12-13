@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+html { overflow-y: auto }
+
 body {
   @apply text-primary;
   color: #212529;
