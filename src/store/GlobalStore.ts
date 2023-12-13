@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, type Ref } from 'vue';
-import { post, get } from '@/api/api';
+import { httpPost, httpGet } from '@/api/api';
 
 /** Global Store */
 export const useGlobalStore = defineStore('global', () => {
@@ -57,7 +57,7 @@ export const useGlobalStore = defineStore('global', () => {
    */
   async function globalFilter(tableName: any, column: any) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tableName}/${column}/?page=1&size=50`)
+      httpGet(`filter/${tableName}/${column}/?page=1&size=50`)
         .then(({ data }) => {
           resolve(data.items);
         })

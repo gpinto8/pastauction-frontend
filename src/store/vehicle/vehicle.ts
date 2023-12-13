@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { buildQS } from '@/utils/functions/buildQS';
 
-import { post, get, put } from '@/api/api';
+import { httpPost, httpGet, httpPut } from '@/api/api';
 
 export const useVehicleStore = defineStore('vehicle', () => {
   // state
@@ -35,7 +35,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
     });
 
     return await new Promise((resolve, reject) => {
-      get(`garage_vehicle/query?${qs}`)
+      httpGet(`garage_vehicle/query?${qs}`)
         .then(({ data }) => {
           console.log('Garage', data);
 
@@ -55,7 +55,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('garage_vehicle/create', item)
+      httpPost('garage_vehicle/create', item)
         .then(({ data }) => {
           console.log(data);
           loading.value = false;
@@ -73,7 +73,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      put('garage_vehicle/update', item)
+      httpPut('garage_vehicle/update', item)
         .then(({ data }) => {
           console.log(data);
           loading.value = false;
@@ -88,7 +88,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
 
   async function filter(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}?page=1&size=50`)
+      httpGet(`filter/${tablename}/${columnName}?page=1&size=50`)
         .then(({ data }) => {
           console.log(data);
           resolve(data);

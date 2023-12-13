@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { get } from '@/api/api';
+import { httpGet } from '@/api/api';
 import { buildQS } from '@/utils/functions/buildQS';
 
 export const useModelStore = defineStore('model', () => {
@@ -31,7 +31,7 @@ export const useModelStore = defineStore('model', () => {
     });
 
     return await new Promise((resolve, reject) => {
-      get(`bidwatcher_vehicle/query_5?${qs}`)
+      httpGet(`bidwatcher_vehicle/query_5?${qs}`)
         .then(({ data }) => {
           console.log(data);
           listItems.value = data;

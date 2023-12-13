@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
-import { post, getHtml } from '@/api/api';
+import { httpPost, getHtml } from '@/api/api';
 
 export const useChartsStore = defineStore('charts', () => {
   // state

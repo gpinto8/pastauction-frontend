@@ -4,7 +4,7 @@ import { buildQS } from '@/utils/functions/buildQS';
 
 import router from '../router';
 
-import { post, get } from '@/api/api';
+import { httpPost, httpGet } from '@/api/api';
 
 export const useGarageStore = defineStore('garage', () => {
   // state
@@ -39,7 +39,7 @@ export const useGarageStore = defineStore('garage', () => {
     });
 
     return await new Promise((resolve, reject) => {
-      get(`garage_set/query?${qs}`)
+      httpGet(`garage_set/query?${qs}`)
         .then(({ data }) => {
           console.log('Garage', data);
 
@@ -59,7 +59,7 @@ export const useGarageStore = defineStore('garage', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('garage_set/create', item)
+      httpPost('garage_set/create', item)
         .then(({ data }) => {
           console.log(data);
           loading.value = false;
@@ -77,7 +77,7 @@ export const useGarageStore = defineStore('garage', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('garage_set/create', item)
+      httpPost('garage_set/create', item)
         .then(({ data }) => {
           console.log(data);
           loading.value = false;
@@ -100,7 +100,7 @@ export const useGarageStore = defineStore('garage', () => {
     });
 
     return new Promise((resolve, reject) => {
-      get(`bidwatcher_auction/query_10?${qs}`)
+      httpGet(`bidwatcher_auction/query_10?${qs}`)
         .then(({ data }) => {
           console.log('Garage view', data);
           listItems.value = data;
@@ -129,7 +129,7 @@ export const useGarageStore = defineStore('garage', () => {
     });
 
     return new Promise((resolve, reject) => {
-      get(`bidwatcher_auction/query_12?${qs}`)
+      httpGet(`bidwatcher_auction/query_12?${qs}`)
         .then(({ data }) => {
           console.log('Garage view', data);
           listItems.value = data;
@@ -158,7 +158,7 @@ export const useGarageStore = defineStore('garage', () => {
     });
 
     return new Promise((resolve, reject) => {
-      get(`bidwatcher_auction/query_13?${qs}`)
+      httpGet(`bidwatcher_auction/query_13?${qs}`)
         .then(({ data }) => {
           console.log('Garage view', data);
           socialRumorsDetail.value = data;
@@ -181,7 +181,7 @@ export const useGarageStore = defineStore('garage', () => {
     });
 
     return new Promise((resolve, reject) => {
-      get(`bidwatcher_auction/query_14?${qs}`)
+      httpGet(`bidwatcher_auction/query_14?${qs}`)
         .then(({ data }) => {
           console.log('Garage view', data);
           listItems.value = data;
@@ -210,7 +210,7 @@ export const useGarageStore = defineStore('garage', () => {
     });
 
     return new Promise((resolve, reject) => {
-      get(`bidwatcher_auction/query_15?${qs}`)
+      httpGet(`bidwatcher_auction/query_15?${qs}`)
         .then(({ data }) => {
           console.log('Garage view', data);
           listItems.value = data;

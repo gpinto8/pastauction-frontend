@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 
 import router from '@/router';
 
-import { post, get, put, elimina } from '@/api/api';
+import { httpPost, httpGet, httpPut, httpElimina } from '@/api/api';
 
 export const useAuthStore = defineStore('auth', () => {
   // state
@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(user: any) {
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('login', user)
+      httpPost('login', user)
         .then(({ data }) => {
           console.log(data);
 
@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function register(user: any) {
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('sign_up', user)
+      httpPost('sign_up', user)
         .then(({ data }) => {
           console.log(data);
           loading.value = false;
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function getLoggedUserInfo() {
     return await new Promise((resolve, reject) => {
-      get('user_info')
+      httpGet('user_info')
         .then(({ data }) => {
           detail.value = data;
           resolve(data);
@@ -78,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function changePassword(info: any) {
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('changePassword', info)
+      httpPost('changePassword', info)
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -111,7 +111,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      put('user_info', formData)
+      httpPut('user_info', formData)
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -125,7 +125,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function getCountries() {
     return await new Promise((resolve, reject) => {
-      get('list_countries')
+      httpGet('list_countries')
         .then(({ data }) => {
           console.log('countires', data);
           listCountries.value = data.items;
@@ -139,7 +139,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function getCities(county: string) {
     return await new Promise((resolve, reject) => {
-      get(`list_cities/${county}`)
+      httpGet(`list_cities/${county}`)
         .then(({ data }) => {
           console.log('cities', data);
 
@@ -158,7 +158,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      post('profile_image', formData)
+      httpPost('profile_image', formData)
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -172,7 +172,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function deletePicture() {
     return await new Promise((resolve, reject) => {
-      elimina('profile_image')
+      httpElimina('profile_image')
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -186,7 +186,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function loadImage(imgUrl: string) {
     return await new Promise((resolve, reject) => {
-      get(`${imgUrl}`)
+      httpGet(`${imgUrl}`)
         .then(({ data }) => {
           console.log('img', data);
           imageUrl.value = URL.createObjectURL(data);

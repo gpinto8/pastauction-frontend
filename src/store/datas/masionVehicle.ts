@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { get } from '@/api/api';
+import { httpGet } from '@/api/api';
 import { buildQS } from '@/utils/functions/buildQS';
 
 export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
@@ -43,7 +43,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
     });
 
     return await new Promise((resolve, reject) => {
-      get(`bidwatcher_auction/query_2v?${qs}`)
+      httpGet(`bidwatcher_auction/query_2v?${qs}`)
         .then(({ data }) => {
           console.log(data);
           listItems.value = data;
@@ -59,7 +59,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
 
   async function auctionAreas(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listAreas.value = data.items;
@@ -73,7 +73,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
 
   async function auctionCountries(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listCountries.value = data.items;
@@ -87,7 +87,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
 
   async function auctionCities(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listCities.value = data.items;
@@ -101,7 +101,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
 
   async function auctionMaison(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listMaison.value = data.items;
@@ -115,7 +115,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
 
   async function auctionEvents(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listEvents.value = data.items;
@@ -129,7 +129,7 @@ export const useMaisonVehicleStore = defineStore('maisonVehicle', () => {
 
   async function auctionYear(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listYears.value = data.items;

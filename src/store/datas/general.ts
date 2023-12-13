@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
-import { get, upload, getHtml, load } from '@/api/api';
+import { httpGet, upload, getHtml, load } from '@/api/api';
 
 export const useGeneralStore = defineStore('general', () => {
   // state

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { get } from '@/api/api';
+import { httpGet } from '@/api/api';
 import { buildQS } from '@/utils/functions/buildQS';
 
 export const useBrandStore = defineStore('brand', () => {
@@ -38,7 +38,7 @@ export const useBrandStore = defineStore('brand', () => {
     });
 
     return await new Promise((resolve, reject) => {
-      get(`bidwatcher_model/query_m?${qs}`)
+      httpGet(`bidwatcher_model/query_m?${qs}`)
         .then(({ data }) => {
           console.log(data);
           listItems.value = data;
@@ -54,7 +54,7 @@ export const useBrandStore = defineStore('brand', () => {
 
   async function auctionLetters(tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}`)
         .then(({ data }) => {
           console.log(data);
           listFirstLetters.value = data.items;
@@ -71,7 +71,7 @@ export const useBrandStore = defineStore('brand', () => {
     qs?: string
   ) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}/?${qs}`)
+      httpGet(`filter/${tablename}/${columnName}/?${qs}`)
         .then(({ data }) => {
           console.log(data);
           listFirstTwoLetters.value = data.items;
@@ -89,7 +89,7 @@ export const useBrandStore = defineStore('brand', () => {
     qs?: string
   ) {
     return await new Promise((resolve, reject) => {
-      get(`filter/${tablename}/${columnName}/?${qs}`)
+      httpGet(`filter/${tablename}/${columnName}/?${qs}`)
         .then(({ data }) => {
           console.log(data);
           listBrand.value = data.items;

@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-export const post = (url: string, item: any) => axios.post(url, item);
+export const httpPost = (url: string, item: any) => axios.post(url, item);
 
-export const put = (url: string, item: any) => axios.put(url, item);
+export const httpPut = (url: string, item: any) => axios.put(url, item);
 
-export const get = (url: string) => axios.get(url);
-export const elimina = (url: string) => axios.delete(url);
+export const httpGet = (url: string) => axios.get(url);
+export const httpElimina = (url: string) => axios.delete(url);
 
 export const getHtml = (url: string) => {
   const config: any = {
