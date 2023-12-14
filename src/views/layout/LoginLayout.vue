@@ -9,11 +9,14 @@ import backgroundUrl from '@/assets/images/login.png';
 
     <v-main class="d-flex flex-col justify-center position-background"
       :style="{ backgroundImage: `url(${backgroundUrl})` }">
-      <router-view v-slot="{ Component, route }">
-        <transition>
-          <component :is="Component" :key="route.name" />
-        </transition>
-      </router-view>
+      <div
+        class="bg-white p-14 pl-10 rounded-r-3xl w-[450px] my-auto space-y-6 !text-primary flex flex-col justify-stretch">
+        <router-view v-slot="{ Component, route }">
+          <transition>
+            <component :is="Component" :key="route.name" />
+          </transition>
+        </router-view>
+      </div>
     </v-main>
   </v-app>
 </template>
