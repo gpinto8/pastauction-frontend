@@ -26,49 +26,23 @@ const submit = () => {
 
 <template>
   <div
-    class="bg-white p-14 rounded-r-3xl absolute left-0 top-0 bottom-0 w-[588px] max-h-[680px] my-auto space-y-6 !text-primary flex flex-col justify-center"
-  >
+    class="bg-white p-14 pl-10 rounded-r-3xl w-[450px] max-h-[75%] my-auto space-y-6 !text-primary flex flex-col justify-stretch">
     <div class="space-y-2 text-center">
-      <h2 class="text-4xl">Sign In</h2>
+      <h2 class="text-3xl">Sign In</h2>
       <div class="text-grey">Welcome back! Login to your account</div>
     </div>
 
     <v-form @submit.prevent="submit" class="space-y-4">
-      <div>
-        <label>E-mail</label>
-        <v-text-field
-          v-model="user.email"
-          :error-messages="v$.email.$errors.map(e => e.$message)"
-          placeholder="Enter your email"
-          required
-          variant="outlined"
-          density="comfortable"
-          @input="v$.email.$touch"
-          @blur="v$.email.$touch"
-        ></v-text-field>
-      </div>
-      <div>
-        <label>Password</label>
-        <v-text-field
-          v-model="user.password"
-          :error-messages="v$.password.$errors.map(e => e.$message)"
-          :counter="10"
-          density="comfortable"
-          placeholder="Password"
-          required
-          variant="outlined"
-          @input="v$.password.$touch"
-          @blur="v$.password.$touch"
-        ></v-text-field>
-      </div>
+        <v-text-field v-model="user.email" :error-messages="v$.email.$errors.map(e => e.$message)"
+          placeholder="Enter your email" label="Email" required variant="outlined" density="comfortable" @input="v$.email.$touch"
+          @blur="v$.email.$touch"></v-text-field>
 
-      <v-btn
-        class="!bg-primary text-white w-full !rounded-lg"
-        :disabled="v$.$invalid"
-        :loading="store.getLoading"
-        size="large"
-        type="submit"
-      >
+        <v-text-field v-model="user.password" :error-messages="v$.password.$errors.map(e => e.$message)" :counter="10"
+          density="comfortable" placeholder="Password" label="Password" required variant="outlined" @input="v$.password.$touch"
+          @blur="v$.password.$touch"></v-text-field>
+
+      <v-btn class="!bg-primary text-white w-full !rounded-lg" :disabled="v$.$invalid" :loading="store.getLoading"
+        size="large" type="submit">
         Sign in
       </v-btn>
 
