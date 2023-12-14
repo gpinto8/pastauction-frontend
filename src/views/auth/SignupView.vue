@@ -37,32 +37,32 @@ const submit = () => {
 
 <template>
   <div
-    class="bg-white p-14 rounded-r-3xl absolute left-0 top-0 bottom-0 w-[588px] max-h-[680px] my-auto space-y-6 !text-primary"
+    class="bg-white p-12 rounded-r-3xl w-[450px] my-auto space-y-6 !text-primary flex flex-col justify-stretch"
   >
     <div class="space-y-2 text-center">
-      <h2 class="text-4xl">Create an account</h2>
+      <h2 class="text-3xl">Create an account</h2>
       <div class="text-grey">Start your journey with PastAuction</div>
     </div>
 
     <v-form @submit.prevent="submit">
-      <label>Name*</label>
       <v-text-field
         v-model="user.first_name"
         :error-messages="v$.first_name.$errors.map(e => e.$message)"
         :counter="10"
         density="comfortable"
         placeholder="Enter your name"
+        label="Name"
         required
         variant="outlined"
         @input="v$.first_name.$touch"
         @blur="v$.first_name.$touch"
       ></v-text-field>
 
-      <label>E-mail*</label>
       <v-text-field
         v-model="user.email"
         :error-messages="v$.email.$errors.map(e => e.$message)"
         placeholder="Enter your email"
+        label="Email"
         required
         variant="outlined"
         density="comfortable"
@@ -70,13 +70,13 @@ const submit = () => {
         @blur="v$.email.$touch"
       ></v-text-field>
 
-      <label>Password*</label>
       <v-text-field
         v-model="user.password"
         :error-messages="v$.password.$errors.map(e => e.$message)"
         :counter="10"
         density="comfortable"
         placeholder="Password"
+        label="Password"
         required
         variant="outlined"
         @input="v$.password.$touch"

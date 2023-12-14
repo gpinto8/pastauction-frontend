@@ -26,7 +26,7 @@ const submit = () => {
 
 <template>
   <div
-    class="bg-white p-14 pl-10 rounded-r-3xl w-[450px] max-h-[75%] my-auto space-y-6 !text-primary flex flex-col justify-stretch">
+    class="bg-white p-14 pl-10 rounded-r-3xl w-[450px] my-auto space-y-6 !text-primary flex flex-col justify-stretch">
     <div class="space-y-2 text-center">
       <h2 class="text-3xl">Sign In</h2>
       <div class="text-grey">Welcome back! Login to your account</div>
