@@ -26,7 +26,7 @@ const submit = () => {
 
 <template>
   <div class="space-y-2 text-center">
-    <h2 class="text-3xl">Sign In</h2>
+    <h2 class="text-4xl p-0">Sign In</h2>
     <div class="text-grey">Welcome back! Login to your account</div>
   </div>
 
@@ -36,15 +36,21 @@ const submit = () => {
       @input="v$.email.$touch" @blur="v$.email.$touch"></v-text-field>
 
     <v-text-field v-model="user.password" :error-messages="v$.password.$errors.map(e => e.$message)" :counter="10"
-      density="comfortable" placeholder="Password" label="Password" required variant="outlined"
+      density="comfortable" placeholder="Password" label="Password" type="password" required variant="outlined"
       @input="v$.password.$touch" @blur="v$.password.$touch"></v-text-field>
 
-    <v-btn class="!bg-primary text-white w-full !rounded-lg" :disabled="v$.$invalid" :loading="store.getLoading"
+
+      <v-btn class="!bg-primary text-white w-full !rounded-lg mt-8" :disabled="v$.$invalid" :loading="store.getLoading"
       size="large" type="submit">
       Sign in
     </v-btn>
+    <div class="text-center mb-1 mt-5">
+      <router-link to="/forgot-password" class="text-blue-600 underline">
+        Forgot password
+      </router-link>
+    </div>
 
-    <div class="text-center my-3">
+    <div class="text-center mb-3 mt-1">
       Don't you have an account?
       <router-link to="/sign-up" class="text-blue-600 underline">
         Sign up
