@@ -48,6 +48,7 @@
     "axios": "^1.4.0",
     "chart.js": "^4.4.0",
     "core-js": "^3.32.0",
+    "deep-clone": "^4.0.0",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
     "vee-validate": "^4.11.2",

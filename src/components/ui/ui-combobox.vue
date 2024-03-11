@@ -46,6 +46,7 @@ const search = computed({
 
 const filteredList = computed<typeof props.items>(() => {
   if (props.items?.length > 0)
+  // @ts-ignore
     return props.items.filter(({ name }) =>
       name.toLowerCase().includes(props.search?.toLowerCase())
     );

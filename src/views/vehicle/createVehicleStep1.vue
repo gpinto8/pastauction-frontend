@@ -60,21 +60,21 @@
         density="compact"
       />
       <v-select
-        v-model="vehicle.variant"
+        v-model="(vehicle as any).variant"
         :items="[2020, 2021, 2022, 2023]"
         label="Variant"
         variant="outlined"
         density="compact"
       />
       <v-select
-        v-model="vehicle.variant"
+        v-model="(vehicle as any).variant"
         :items="[2020, 2021, 2022, 2023]"
         label="Series"
         variant="outlined"
         density="compact"
       />
       <v-select
-        v-model="vehicle.type_vehicle"
+        v-model="(vehicle as any).type_vehicle"
         :items="[2020, 2021, 2022, 2023]"
         label="Vehicle Type"
         variant="outlined"
@@ -88,7 +88,7 @@
         density="compact"
       />
       <v-select
-        v-model="vehicle.doors"
+        v-model="(vehicle as any).doors"
         :items="[2020, 2021, 2022, 2023]"
         label="Doors"
         variant="outlined"
@@ -105,7 +105,7 @@
         </v-radio-group>
       </div>
       <v-select
-        v-model="vehicle.power"
+        v-model="(vehicle as any).power"
         :items="[2020, 2021, 2022, 2023]"
         label="Power"
         variant="outlined"
@@ -143,9 +143,9 @@
             ]"
             class="h-8 w-8 border rounded bg-grey-100 p-1 cursor-pointer"
             :class="{
-              'border-2 !border-blue-500': vehicle.exterior_color_id === color,
+              'border-2 !border-blue-500': (vehicle as any).exterior_color_id === color,
             }"
-            @click="vehicle.exterior_color_id = color"
+            @click="(vehicle as any).exterior_color_id = color"
           >
             <div class="h-full" :style="{ backgroundColor: color }"></div>
           </div>
@@ -165,9 +165,9 @@
             ]"
             class="h-8 w-8 border rounded bg-grey-100 p-1 cursor-pointer"
             :class="{
-              'border-2 !border-blue-500': vehicle.interior_color_id === color,
+              'border-2 !border-blue-500': (vehicle as any).interior_color_id === color,
             }"
-            @click="vehicle.interior_color_id = color"
+            @click="(vehicle as any).interior_color_id = color"
           >
             <div class="h-full" :style="{ backgroundColor: color }"></div>
           </div>
@@ -219,7 +219,7 @@
       />
 
       <v-select
-        v-model="vehicle.original_miles"
+        v-model="(vehicle.original_miles as any)"
         label="Miles"
         variant="outlined"
         density="compact"
@@ -236,7 +236,7 @@
         </v-radio-group>
       </div>
       <v-select
-        v-model="vehicle.location_id"
+        v-model="(vehicle.location_id as any)"
         label="County"
         variant="outlined"
         density="compact"
@@ -265,8 +265,8 @@
           color="black"
           @click="
             () => {
-              if (setp === 2) save();
-              else step++;
+              // if ((setp as any) === 2) save();
+              // else step++;
             }
           "
         >

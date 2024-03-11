@@ -56,7 +56,7 @@
           </div>
           <div class="flex gap-2 items-center">
             <img src="@/assets/images/flags/US.png" alt="" />
-            <img src="@/assets/images/flags/Logo_Sotheby 1.png" alt="" />
+            <!-- <img src="@/assets/images/flags/Logo_Sotheby 1.png" alt="" /> -->
             <span class="font-medium">
               {{ store.getListItems?.maison_name }}
             </span>

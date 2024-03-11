@@ -173,7 +173,7 @@ const updateFilter = (filterName: string) => {
               <div class="text-black text-base font-normal">Facebook</div>
               <div class="text-black text-base font-semibold">
                 {{
-                  store.getListItems?.items?.filter(el => el.id === -1)[0][
+                  store.getListItems?.items?.filter((el: any) => el.id === -1)[0][
                     'Facebook'
                   ]
                 }}
@@ -204,7 +204,7 @@ const updateFilter = (filterName: string) => {
               <div class="text-black text-base font-normal">Twitter</div>
               <div class="text-black text-base font-semibold">
                 {{
-                  store.getListItems?.items?.filter(el => el.id === -1)[0][
+                  store.getListItems?.items?.filter((el: any) => el.id === -1)[0][
                     'X_twitter'
                   ]
                 }}
@@ -235,7 +235,7 @@ const updateFilter = (filterName: string) => {
               <div class="text-black text-base font-normal">Youtube</div>
               <div class="text-black text-base font-semibold">
                 {{
-                  store.getListItems?.items?.filter(el => el.id === -1)[0][
+                  store.getListItems?.items?.filter((el: any) => el.id === -1)[0][
                     'Youtube'
                   ]
                 }}
@@ -286,7 +286,7 @@ const updateFilter = (filterName: string) => {
               <div class="text-black text-base font-normal">Tiktok</div>
               <div class="text-black text-base font-semibold">
                 {{
-                  store.getListItems?.items?.filter(el => el.id === -1)[0][
+                  store.getListItems?.items?.filter((el: any) => el.id === -1)[0][
                     'TikTok'
                   ]
                 }}
@@ -342,7 +342,7 @@ const updateFilter = (filterName: string) => {
               <div class="text-black text-base font-normal">Instagram</div>
               <div class="text-black text-base font-semibold">
                 {{
-                  store.getListItems?.items?.filter(el => el.id === -1)[0][
+                  store.getListItems?.items?.filter((el: any) => el.id === -1)[0][
                     'Instagram'
                   ]
                 }}
@@ -579,7 +579,7 @@ const updateFilter = (filterName: string) => {
             <p class="text-[#343A40]">Number of comments per month</p>
           </div>
           <hr />
-          <Bar :width="300" :height="100" :data="data" :options="options" />
+          <Bar :width="300" :height="100" :data="data" :options="(options as any)" />
         </v-card>
         <v-card class="px-4 pb-4">
           <div class="py-4 space-y-1">

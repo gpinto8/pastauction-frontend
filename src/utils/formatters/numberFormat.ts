@@ -4,7 +4,7 @@ import { isNotNil } from "../functions/isNotNil";
 type FormatOptions = {
   locales?: string[],
   value?: number | null,
-} & NumberFormatOptions
+} & any
 
 export const numberFormat: ((options: FormatOptions ) => string) = (
    {

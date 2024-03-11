@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 
 import router from '@/router';
 
-import { httpPost, httpGet, httpPut, httpElimina } from '@/api/api';
+import { httpPost, httpGet, httpPut, httpDelete } from '@/api/api';
 
 export const useAuthStore = defineStore('auth', () => {
   // state
@@ -172,7 +172,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function deletePicture() {
     return await new Promise((resolve, reject) => {
-      httpElimina('profile_image')
+      httpDelete('profile_image')
         .then(({ data }) => {
           loading.value = false;
           resolve(data);

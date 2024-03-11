@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { defineProps, computed, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 
 interface Props {
@@ -19,7 +20,7 @@ const value = computed<typeof props.modelValue>({
   get() {
     return props.modelValue;
   },
-  set(value) {
+  set(value: any) {
     emit("update:modelValue", value);
   },
 });
