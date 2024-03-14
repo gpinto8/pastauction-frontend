@@ -14,10 +14,16 @@
     </v-container>
     <v-container fluid>
       <v-row justify="start">
-        <v-col>
-          <span class="mdi mdi-cog-outline"></span>
-          Bolts available
-          <span class="number-span">26</span> <!--TO DO-->
+        <v-col class="d-flex">
+          <img class="me-2" src="@/assets/images/bolt.svg" alt="Immagine blu">
+          <span class="me-2 mt-1">Bolts available</span>  
+          <v-chip
+            class="custom-chip"
+            color=""
+            label
+          >
+            26
+          </v-chip>
         </v-col>
       </v-row>
       <v-row justify="start">
@@ -30,16 +36,19 @@
     <!-- Prima riga di card -->
     <v-container fluid>
       <v-row justify="center">
-        <v-col cols="4" v-for="(card, index) in firstRowCards" :key="index">
+        <v-col xs="12" v-for="(card, index) in firstRowCards" :key="index">
           <v-card
             :variant="variant"
             class="mx-auto"
-            max-width="300"
           >
             <v-card-item>
               <div>
                 <div>
                   <v-alert :color="card.isActive ? '#0D6EFD' : 'grey'"  class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
+                </div>
+                <div class="d-flex justify-space-around mt-2">
+                  <img v-if="card.isActive" class="" src="@/assets/images/charts_bluicon.svg" alt="Immagine blu">
+                  <img v-else class="" src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
                 </div>
                 <div class="text-caption text-center mt-2 mb-2">
                   <span class="mdi mdi-cog-outline"></span>
@@ -53,7 +62,7 @@
             <v-card-actions class="d-flex justify-center">
               <v-btn
                 size="small"
-                class="float-right"
+                class="float-right px-15"
                 :variant="card.isSelected ? 'elevated' : 'outlined'"
                 :color="card.isSelected ? 'black' : ''"
                 @click="selectCard(card)"
@@ -70,16 +79,19 @@
     <!-- Seconda riga di card -->
     <v-container fluid>
       <v-row justify="center">
-        <v-col cols="4" v-for="(card, index) in secondRowCards" :key="index">
+        <v-col v-for="(card, index) in secondRowCards" :key="index">
           <v-card
             :variant="variant"
             class="mx-auto"
-            max-width="300"
           >
             <v-card-item>
               <div>
                 <div>
                   <v-alert :color="card.isActive ? '#0D6EFD' : 'grey'" class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
+                </div>
+                <div class="d-flex justify-space-around mt-2">
+                  <img v-if="card.isActive" class="" src="@/assets/images/charts_bluicon.svg" alt="Immagine blu">
+                  <img v-else class="" src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
                 </div>
                 <div class="text-caption text-center mt-2 mb-2">
                   <span class="mdi mdi-cog-outline"></span>
@@ -93,7 +105,7 @@
             <v-card-actions class="d-flex justify-center">
               <v-btn
                 size="small"
-                class="float-right"
+                class="float-right px-15"
                 :variant="card.isSelected ? 'elevated' : 'outlined'"
                 :color="card.isSelected ? 'black' : ''"
                 @click="selectCard(card)"
@@ -117,13 +129,18 @@
 
 
     <!-- Modale -->
-    <ModalChartsType :modalOpen="modalOpen" @update:modalOpen="updateModalOpen" />
+    <ModalChartsType 
+      :modalOpen="modalOpen" 
+      @update:modalOpen="updateModalOpen" 
+      @continueClicked="continueProcess"
+    />
 
   </div>
 </template>
 
 <script>
 import ModalChartsType from './components/ModalChartsType.vue';
+import router from '@/router/index';
 
 export default {
   components: {
@@ -203,10 +220,11 @@ export default {
     openModal() {
       if (this.cardSelected) {
         this.modalOpen = true;
-        console.log('modalOpen settato a true');
-      } else {
-        console.log('modalOpen non può essere aperto perché cardSelected non è true');
       }
+    },
+
+    continueProcess() {
+      router.push({ path: '/charts/filters' });
     },
 
     selectCard(card) {
@@ -230,13 +248,11 @@ export default {
 </script>
 
 <style scoped>
-.number-span {
-  display: inline-block;
-  width: 60px; 
-  height: 30px; 
-  text-align: center; 
-  line-height: 30px; 
-  border: 1px solid black; 
-  border-radius: 10%;
+.custom-chip {
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  padding-left: 20px;
+  padding-right: 20px; 
 }
+
 </style>
