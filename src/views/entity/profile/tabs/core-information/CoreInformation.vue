@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useEntityStore } from '@/store/entity';
@@ -7,10 +7,13 @@ import { useEntityStore } from '@/store/entity';
 import ManagingSheet from '@/components/entity/ManagingSheet.vue';
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
 import BtnFileInput from './helpers/BtnFileInput.vue';
+import config from '@/config';
 
 const entityStore = useEntityStore();
 const { coreInfo } = storeToRefs(entityStore);
 const { fetchCoreInfo, saveCoreInfo, uploadPhoto } = entityStore;
+
+const apiUrl = ref(config.apiUrl);
 
 onMounted(async () => {
   await fetchCoreInfo();
@@ -44,7 +47,7 @@ onMounted(async () => {
             <span class="font-weight-bold">Main photo</span>
           </v-col>
           <v-col>
-            <v-img :src="`/photo_url/${props.data.value.mainPhoto}`" width="430" height="200"
+            <v-img :src="`${apiUrl}/photo/${props.data.value.mainPhoto}`" width="230"
               v-if="props.editInputDisabled.value" />
             <BtnFileInput @selected="uploadPhoto" v-else>
               <template #activator="{ activate }">
