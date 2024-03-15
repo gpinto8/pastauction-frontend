@@ -13,7 +13,7 @@ const props = defineProps<{
 
 const entityStore = useEntityStore();
 const { brands, brandsLoading } = storeToRefs(entityStore);
-const { fetchFamilies, fetchModels } = entityStore;
+const { fetchFamilies, fetchModels,fetchTypes, fetchPeriods } = entityStore;
 
 const inputVariant = computed(() => props.isAddMode ? 'outlined' : 'underlined');
 const buttonIcon = computed(() => props.isAddMode ? 'mdi-plus' : 'mdi-close');
@@ -21,12 +21,16 @@ const buttonColor = computed(() => props.isAddMode ? 'primary' : 'error');
 
 const families = ref<string[]>([]);
 const models = ref<string[]>([]);
+const types = ref<string[]>([]);
+const periods = ref<string[]>([]);
 
 const brand = computed(() => props.vehicle.brand);
 const family = computed(() => props.vehicle.family);
 
 const familyLoading = ref(false);
 const modelLoading = ref(false);
+const typeLoading = ref(false);
+const periodLoading = ref(false);
 
 async function assignFamilies() {
     if (brand.value) {
@@ -49,6 +53,26 @@ async function assignModels() {
         }
     }
 }
+async function assignTypes() {
+    if (brand.value && family.value) {
+        try {
+            typeLoading.value = true;
+            types.value = await fetchTypes(brand.value, family.value);
+        } finally {
+            typeLoading.value = false;
+        }
+    }
+}
+async function assignPeriods() {
+    if (brand.value && family.value) {
+        try {
+            periodLoading.value = true;
+            periods.value = await fetchPeriods(brand.value, family.value);
+        } finally {
+            periodLoading.value = false;
+        }
+    }
+}
 
 watch(brand, async () => {
     props.vehicle.family = '';
@@ -58,9 +82,22 @@ watch(family, async () => {
     props.vehicle.model = '';
   await assignModels();
 });
+watch([brand, family], async () => {
+    props.vehicle.type = '';
+    await assignTypes();
+});
+watch([brand, family], async () => {
+    props.vehicle.period = '';
+    await assignPeriods();
+});
 
 async function initialization() {
-    await Promise.all([assignFamilies(), assignModels()]);
+    await Promise.all([
+        assignFamilies(), 
+        assignModels(),
+        assignTypes(),
+        assignPeriods()
+    ]);
 }
 initialization();
 </script>
@@ -80,12 +117,12 @@ initialization();
                 :items="models" :readonly="editInputDisabled" :loading="modelLoading" placeholder="Model" />
         </v-col>
         <v-col>
-            <v-text-field hide-details :variant="inputVariant" density="compact" v-model="vehicle.type"
-                :readonly="editInputDisabled" placeholder="Type" />
+            <v-autocomplete hide-details :variant="inputVariant" density="compact" v-model="vehicle.type"
+                :items="types" :readonly="editInputDisabled" :loading="typeLoading" placeholder="Type" />
         </v-col>
         <v-col>
-            <v-text-field hide-details :variant="inputVariant" density="compact" v-model="vehicle.period"
-                :readonly="editInputDisabled" placeholder="Period" />
+            <v-autocomplete hide-details :variant="inputVariant" density="compact" v-model="vehicle.period"
+                :items="periods" :readonly="editInputDisabled" :loading="periodLoading" placeholder="Period" />
         </v-col>
         <v-col :cols="1">
             <v-checkbox class="d-flex justify-center" hide-details width="auto" density="compact"
