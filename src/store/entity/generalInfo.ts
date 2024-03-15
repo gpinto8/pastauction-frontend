@@ -19,7 +19,6 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
     latitude: '',
     longitude: '',
     website: '',
-    entityType: '',
     phone: '',
     email: '',
   };
@@ -44,7 +43,6 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
       latitude: entity.city_latit || '0.0',
       longitude: entity.city_longit || '0.0',
       website: entity.website ?? '',
-      entityType: 'TODO' ?? '',
       phone: entity.phone ?? '',
       email: entity.email ?? '',
     }

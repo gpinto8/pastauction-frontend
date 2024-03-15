@@ -47,15 +47,17 @@ onMounted(async () => {
             <span class="font-weight-bold">Main photo</span>
           </v-col>
           <v-col>
-            <v-img :src="`${apiUrl}/photo/${props.data.value.mainPhoto}`" width="230"
-              v-if="props.editInputDisabled.value" />
-            <BtnFileInput @selected="uploadPhoto" v-else>
-              <template #activator="{ activate }">
-                <v-btn class="ml-0 mx-2" color="primary" @click="activate">{{
-                  props.data.value.mainPhoto ? 'Change photo' : 'Add photo'
-                  }}</v-btn>
-              </template>
-            </BtnFileInput>
+            <div class="d-flex align-center flex-column" style="width: 230px">
+              <img class="mb-4" :src="`${apiUrl}/photo/${props.data.value.mainPhoto}`" width="230"
+                v-if="props.data.value.mainPhoto" />
+              <BtnFileInput @selected="uploadPhoto" v-if="!props.editInputDisabled.value">
+                <template #activator="{ activate }">
+                  <v-btn class="ml-0 mx-2" color="primary" @click="activate">{{
+                    props.data.value.mainPhoto ? 'Change photo' : 'Add photo'
+                    }}</v-btn>
+                </template>
+              </BtnFileInput>
+            </div>
           </v-col>
         </v-row>
 

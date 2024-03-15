@@ -81,11 +81,11 @@ onMounted(async () => {
         </v-col>
       </v-row>
       <v-row>
-        <v-col :cols="4">
+        <v-col :cols="6">
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="Latitude"
             v-model="props.data.value.latitude" :readonly="props.editInputDisabled.value" />
         </v-col>
-        <v-col :cols="4">
+        <v-col :cols="6">
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="Longitude"
             v-model="props.data.value.longitude" :readonly="props.editInputDisabled.value" />
         </v-col>
@@ -95,12 +95,6 @@ onMounted(async () => {
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="Website"
             v-model="props.data.value.website" :readonly="props.editInputDisabled.value" />
         </v-col>
-        <v-col :cols="4">
-          <v-text-field :variant="props.editInputVariant.value" density="compact" label="Entity type"
-            v-model="props.data.value.entityType" :readonly="props.editInputDisabled.value" />
-        </v-col>
-      </v-row>
-      <v-row>
         <v-col :cols="4">
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="Phone"
             v-model="props.data.value.phone" :readonly="props.editInputDisabled.value" />
