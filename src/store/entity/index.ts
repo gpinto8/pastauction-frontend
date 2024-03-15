@@ -18,8 +18,8 @@ export const useEntityStore = defineStore('entity', () => {
     identityTypeCircuitData,
     identityTypeCollectorsData,} = storeToRefs(identityTypeStore);
   const {fetchIdentityTypes, saveIdentityTypes, updateClubDataToEmpty, updateCircuitDataToEmpty, updateCollectorsDataToEmpty,} = identityTypeStore;
-  const {brands, families, models, types, periods, vehiclesOfInterest, brandsLoading} = storeToRefs(vehiclesOfInterestStore);
-  const {fetchVehiclesOfInterest, saveVehiclesOfInterest, fetchBrands, fetchFamilies, fetchModels} = vehiclesOfInterestStore;
+  const {brands, vehiclesOfInterest, brandsLoading} = storeToRefs(vehiclesOfInterestStore);
+  const {fetchVehiclesOfInterest, saveVehiclesOfInterest, fetchBrands, fetchFamilies, fetchModels, fetchTypes, fetchPeriods} = vehiclesOfInterestStore;
   const {coreInfo} = storeToRefs(coreInfoStore);
   const {fetchCoreInfo, saveCoreInfo, uploadPhoto} = coreInfoStore;
 
@@ -39,15 +39,12 @@ updateCollectorsDataToEmpty,
     fetchIdentityTypes,
     saveIdentityTypes,
     brands,
-    families,
-    models,
-    types,
-    periods,
     vehiclesOfInterest,
     brandsLoading,
     fetchBrands,
     fetchFamilies,
     fetchModels,
+    fetchTypes, fetchPeriods,
     fetchVehiclesOfInterest,
     saveVehiclesOfInterest,
     coreInfo,
