@@ -53,7 +53,7 @@ const clubTypeInfo = computed({
       </v-col>
       <v-col>
         <v-text-field variant="underlined" density="compact" label="Club speciality"
-          v-model="clubTypeInfo.specific_models" :readonly="readonly" />
+          v-model="clubTypeInfo.speciality" :readonly="readonly" />
       </v-col>
     </v-row>
     <v-row>
