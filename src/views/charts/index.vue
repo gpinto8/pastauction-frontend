@@ -46,12 +46,12 @@
                 <div>
                   <v-alert :color="card.isActive ? '#0D6EFD' : 'grey'"  class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
                 </div>
-                <div class="d-flex justify-space-around mt-2">
+                <div class="d-flex justify-space-around mt-5 mb-5">
                   <img v-if="card.isActive" class="" src="@/assets/images/charts_bluicon.svg" alt="Immagine blu">
                   <img v-else class="" src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
                 </div>
-                <div class="text-caption text-center mt-2 mb-2">
-                  <span class="mdi mdi-cog-outline"></span>
+                <div class="text-caption text-center mt-2 mb-2 d-flex justify-center">
+                  <img class="me-2" src="@/assets/images/bolt.svg" alt="Immagine blu" width="15">
                   <span class="font-bold mr-1">{{ card.number }}</span>
                   <small>{{ card.extraCharge }}</small> 
                 </div>
@@ -87,16 +87,18 @@
             <v-card-item>
               <div>
                 <div>
-                  <v-alert :color="card.isActive ? '#0D6EFD' : 'grey'" class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
+                  <v-alert :color="card.isActive ? '#F3A53F' : 'grey'" class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
                 </div>
-                <div class="d-flex justify-space-around mt-2">
-                  <img v-if="card.isActive" class="" src="@/assets/images/charts_bluicon.svg" alt="Immagine blu">
+                <div class="d-flex justify-space-around mt-5 mb-5">
+                  <img v-if="card.isActive" class="" src="@/assets/images/chart_iconyellow.svg" alt="Immagine blu">
                   <img v-else class="" src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
                 </div>
-                <div class="text-caption text-center mt-2 mb-2">
-                  <span class="mdi mdi-cog-outline"></span>
+                <div class="text-caption text-center mt-2 mb-2 d-flex justify-center">
+                  <img v-if="card.extraCharge === 'Included in plan'" class="me-2" src="@/assets/images/v-icon.svg" alt="plan included" width="15">
+                  <img v-else-if="card.extraCharge === 'Not available in this plan'" class="me-2" src="@/assets/images/x-circle-fill.svg" alt="plan included" width="15">
+                  <img v-else class="me-2" src="@/assets/images/bolt.svg" alt="plan included" width="15">
                   <span class="font-bold mr-1">{{ card.number }}</span>
-                  <small>{{ card.extraCharge }}</small> 
+                  <small >{{ card.extraCharge }}</small> 
                 </div>
                 <div class="text-caption text-center">{{ card.description }}</div>
               </div>
@@ -184,7 +186,7 @@ export default {
           title: 'Maison',
           variant: 'primary',
           number: 26,
-          extraCharge: 'Extra charge required',
+          extraCharge: 'Included in plan',
           description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
           isActive: false,
           isSelected: false 
@@ -193,9 +195,9 @@ export default {
           title: 'Auction',
           variant: 'primary',
           number: 26,
-          extraCharge: 'Extra charge required',
+          extraCharge: 'Not available in this plan',
           description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: false,
+          isActive: true,
           isSelected: false
         },
         {

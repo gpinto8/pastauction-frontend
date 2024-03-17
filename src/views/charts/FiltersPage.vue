@@ -33,18 +33,72 @@
                         >
                         <small>Brands</small>
                     </v-chip>
-                    <v-btn
-                        v-for="letter in alphabet"
-                        :key="letter"
-                        class="letter-button"
-                        :variant="selectedBrand === letter ? 'elevated' : 'outlined'"
-                        @click="selectBrand(letter)"
-                        color="black"
-                        text
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        <v-btn
+                            v-for="letter in alphabet"
+                            :key="letter"
+                            class="letter-button"
+                            :variant="selectedBrand === letter ? 'elevated' : 'outlined'"
+                            @click="selectBrand(letter)"
+                            color="black"
+                            text
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                            >
+                            {{ letter }}
+                        </v-btn>
+                </v-col>
+            </v-row>
+            <v-row justify="start" class="align-center mt-0">
+                <v-col class="d-flex flex-wrap align-center pt-0">
+                    <div :class="{ 'd-block': selectedBrand, 'd-none': !selectedBrand }" class="mt-3" justify="start" >
+                        <v-btn
+                            v-for="coupleLetters in brandsCoupleLetter" 
+                            :key="coupleLetters"
+                            class="letter-button"
+                            :variant="selectedCoupleBrand === coupleLetters ? 'elevated' : 'outlined'"
+                            @click="selectCoupleBrand(coupleLetters)"
+                            color="black"
+                            text
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
-                        {{ letter }}
-                    </v-btn>
+                            {{ coupleLetters }}
+                        </v-btn>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row justify="start" class="align-center mt-0">
+                <v-col class="d-flex flex-wrap align-center pt-0">
+                    <div :class="{ 'd-block': selectedCoupleBrand, 'd-none': !selectedCoupleBrand }" class="mt-3">
+                        <v-row justify="start" class="align-center">
+                            <v-col
+                            >
+                            <v-chip
+                                v-for="(brand, index) in selectedBrandFull"
+                                :key="index"
+                                class="m-2"
+                                closable
+                                color="black"
+                                style="border-radius: 5px;"
+                                variant="flat"
+                                @click:close="removeSelectedBrand(index)"
+                            >
+                                {{ brand }}
+                            </v-chip>
+                            </v-col>
+                        </v-row>
+                        <v-row class="letter-button" color="black" text style="min-width: 20px; margin: 2px; border: 1px solid black; font-size: 10px;">
+                            <a
+                                v-for="brand in brandList" 
+                                :key="brand" 
+                                href="#"
+                                :class="{ 'selected': selectedBrandFull.includes(brand) }"
+                                class="m-3"
+                                style="font-size: 16px;" 
+                                @click="selectBrandName(brand)"
+                                >
+                                {{ brand }}
+                            </a>
+                        </v-row>
+                    </div>
                 </v-col>
             </v-row>
             <v-row justify="start" class="align-center">
@@ -58,19 +112,19 @@
                     >
                        <small>Family</small> 
                     </v-chip>
-                    <p v-if="!brandSelected">Please, select the Brand of your interest first.</p>
-                    <v-btn v-else
-                        v-for="letter in alphabet"
-                        :key="'family_' + letter"
-                        class="letter-button"
-                        :variant="selectedFamily ===letter ? 'elevated' : 'outlined'"
-                        @click="selectFamily(letter)"
-                        color="black"
-                        text
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                        {{ letter }}
-                    </v-btn>
+                        <p v-if="!brandSelected">Please, select the Brand of your interest first.</p>
+                        <v-btn v-else
+                            v-for="letter in alphabet"
+                            :key="'family_' + letter"
+                            class="letter-button"
+                            :variant="selectedFamily ===letter ? 'elevated' : 'outlined'"
+                            @click="selectFamily(letter)"
+                            color="black"
+                            text
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                            >
+                            {{ letter }}
+                        </v-btn>
                 </v-col>
             </v-row>
             <v-row justify="start" class="align-center">
@@ -314,14 +368,19 @@
 
 <script>
 import router from '@/router/index';
+import axios from 'axios';
 
 export default {
     data() {
         return {
             brandSelected: false,
+            brandCoupleSelected: false,
             familySelected: false,
             modelSelected: false,
-            selectedBrand: null,
+            selectedBrand: [],
+            selectedBrandFull: [],
+            selectedCoupleBrand: null,
+            selectedNameBrand: null,
             selectedFamily: null,
             selectedModel: null,
             selectedCountry: null,
@@ -358,17 +417,55 @@ export default {
             miscOptionsSecondBlock: ['AUD', 'CAD', 'CHF', 'DKK', 'EAD', 'GBP', 'JPY', 'MXN', 'PLN', 'RNB', 'RUB', 'SEK', 'USD'],
             selectedMiscellaneous: null,
             miscellaneousSelected: false,
-            selectedFilters: []
+            selectedFilters: [],
+            brandsCoupleLetter: [],
+            brandList: [],
         };
     },
     methods: {
         selectBrand(letter) {
             this.selectedBrand = letter;
             this.brandSelected = true;
-            this.familySelected = false; 
-            this.modelSelected = false; 
-            this.countrySelected = false; 
+            this.familySelected = false;
+            this.modelSelected = false;
+            this.countrySelected = false;
+
+            axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${letter}`)
+            .then(response => {
+                const brandsCoupleLetter = response.data.items.map(item => item.left_1);
+                this.brandsCoupleLetter = brandsCoupleLetter; 
+            })
+            .catch(error => {
+                console.error('Error fetching brands:', error);
+            });
         },
+
+        selectCoupleBrand(brandsCoupleLetter) {
+            this.selectedCoupleBrand = brandsCoupleLetter;
+            this.brandCoupleSelected = true;
+
+            axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${brandsCoupleLetter}`)
+            .then(response => {
+                const brands = response.data.items.map(item => item.name);
+                this.brandList = brands; 
+            })
+            .catch(error => {
+                console.error('Error fetching brands:', error);
+            });
+        },
+
+        selectBrandName(brand) {
+            if (!this.selectedBrandFull.includes(brand)) {
+                this.selectedBrandFull.push(brand);
+            } else {
+                this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
+            }
+        },
+
+        removeSelectedBrand(index) {
+            this.selectedBrandFull.splice(index, 1);
+        },
+
         selectFamily(letter) {
             this.selectedFamily = letter;
             this.familySelected = true;
@@ -415,6 +512,11 @@ export default {
             this.selectedPeriod = null;
             this.selectedColour = null;
             this.selectedMiscellaneous = null;
+            this.selectedCoupleBrand = null;
+            this.selectedNameBrand = null;
+            this.selectedBrand = [];
+            this.selectedBrandFull = [];
+
         },
 
         goToDashboard() {
@@ -431,12 +533,10 @@ export default {
             ) {
                 this.$router.push({ path: '/charts/filters/brand' });
             } else {
-                // Gestisci il caso in cui non tutti i filtri sono stati selezionati
-                // Ad esempio, puoi mostrare un messaggio di errore all'utente
                 console.log('Per favore, seleziona tutti i filtri prima di procedere.');
             }
         }
-    }
+    },
 };
 </script>
 
@@ -447,5 +547,10 @@ export default {
   display: flex;
   justify-content: center; 
   align-items: center; 
+}
+
+.selected{
+    text-decoration: underline;
+    color: #407BFF;
 }
 </style>
