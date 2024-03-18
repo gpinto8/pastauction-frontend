@@ -35,66 +35,6 @@ export const useEntityVehiclesOfInterestStore = defineStore('entity-vehicles-of-
   const brands = ref<string[]>([]);
   const brandsLoading = ref(false);
 
-  const families = ref([
-    {
-      family: 'Mercedes',
-      active: true
-    },
-    {
-      family: 'Renault',
-      active: true
-    },
-    {
-      family: 'Fiat',
-      active: true
-    }
-  ]);
-
-  const models = ref([
-    {
-      model: 'Mercedes',
-      active: true
-    },
-    {
-      model: 'Renault',
-      active: true
-    },
-    {
-      model: 'Fiat',
-      active: true
-    }
-  ]);
-
-  const types = ref([
-    {
-      type: 'Coupe',
-      active: true
-    },
-    {
-      type: 'Sedan',
-      active: true
-    },
-    {
-      type: 'SUV',
-      active: true
-    }
-  ]);
-
-  const periods = ref([
-    {
-      period: 'Classic',
-      active: true
-    },
-    {
-      period: 'Modern',
-      active: true
-    },
-    {
-      period: 'Future',
-      active: true
-    }
-  ]);
-
   const vehiclesOfInterest = ref<VehicleOfInterest[]>([]);
 
   function convertApiUglyFormatToVehiclesOfInterest(apiUglyVehicleOfInterest: any): VehicleOfInterest {
@@ -137,6 +77,14 @@ export const useEntityVehiclesOfInterestStore = defineStore('entity-vehicles-of-
     return (await fetchAllItems<{model_name:string}>(`filter/filter_charts_vehicles/model_name/?model_name:asc&search=family_name:${family}`)).map(item => item.model_name);
   }
 
+  async function fetchTypes(brand: string, family: string): Promise<string[]> {
+    return (await fetchAllItems<{body_shape:string}>(`/filter/filter_charts_vehicles/body_shape/?search=brand_name:${brand},family_name:${family}&sort_by=body_shape:asc`)).map(item => item.body_shape);
+  }
+
+  async function fetchPeriods(brand: string, family: string): Promise<string[]> {
+    return (await fetchAllItems<{age_name:string}>(`/filter/filter_charts_vehicles/age_name/?search=brand_name:${brand},family_name:${family}&sort_by=age_name:asc`)).map(item => item.age_name);
+  }
+
   async function fetchVehiclesOfInterest() {
     const entity = (await httpGet('/entity')).data;
     vehiclesOfInterest.value = entity.vehicleOfInterest.map(convertApiUglyFormatToVehiclesOfInterest);
@@ -146,5 +94,5 @@ export const useEntityVehiclesOfInterestStore = defineStore('entity-vehicles-of-
     await httpPatch('/entity_entity/update', { vehiclesOfInterest: vehiclesOfInterest.value.map(convertVehiclesOfInterestToApiUglyFormat) });
   }
 
-  return { vehiclesOfInterest, brands, families, models, types, periods, brandsLoading, fetchVehiclesOfInterest, fetchBrands, fetchFamilies, fetchModels, saveVehiclesOfInterest };
+  return { vehiclesOfInterest, brands, brandsLoading, fetchVehiclesOfInterest, fetchBrands, fetchFamilies, fetchModels, fetchTypes, fetchPeriods, saveVehiclesOfInterest };
 });
