@@ -30,7 +30,7 @@ const clubTypeInfo = computed({
       <v-col>
         <v-text-field variant="underlined" density="compact" label="Club annual fee"
           v-model="clubTypeInfo.annual_fee" :readonly="readonly" />
-      </v-col>
+      </v-col> 
       <v-col>
         <v-text-field variant="underlined" density="compact" label="Club annual fee currency"
           v-model="clubTypeInfo.annual_fee_currency" :readonly="readonly" />
