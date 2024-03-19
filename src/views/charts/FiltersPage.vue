@@ -112,8 +112,8 @@
                     >
                        <small>Family</small> 
                     </v-chip>
-                        <p v-if="!brandSelected">Please, select the Brand of your interest first.</p>
-                        <v-btn v-else
+                        <p v-if="selectedBrandFull.length === 0">Please, select the Brand of your interest first.</p>
+                        <v-btn v-if="selectedBrandFull.length > 0"
                             v-for="letter in alphabet"
                             :key="'family_' + letter"
                             class="letter-button"
@@ -423,44 +423,63 @@ export default {
         };
     },
     methods: {
-        selectBrand(letter) {
-            this.selectedBrand = letter;
-            this.brandSelected = true;
-            this.familySelected = false;
-            this.modelSelected = false;
-            this.countrySelected = false;
+        async selectBrand(letter) {
+            try {
+                this.selectedBrand = letter;
+                this.brandSelected = true;
+                this.familySelected = false;
+                this.modelSelected = false;
+                this.countrySelected = false;
 
-            axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${letter}`)
-            .then(response => {
+                const response = await axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${letter}`);
                 const brandsCoupleLetter = response.data.items.map(item => item.left_1);
-                this.brandsCoupleLetter = brandsCoupleLetter; 
-            })
-            .catch(error => {
+                this.brandsCoupleLetter = brandsCoupleLetter;
+            } catch (error) {
                 console.error('Error fetching brands:', error);
-            });
-        },
-
-        selectCoupleBrand(brandsCoupleLetter) {
-            this.selectedCoupleBrand = brandsCoupleLetter;
-            this.brandCoupleSelected = true;
-
-            axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${brandsCoupleLetter}`)
-            .then(response => {
-                const brands = response.data.items.map(item => item.name);
-                this.brandList = brands; 
-            })
-            .catch(error => {
-                console.error('Error fetching brands:', error);
-            });
-        },
-
-        selectBrandName(brand) {
-            if (!this.selectedBrandFull.includes(brand)) {
-                this.selectedBrandFull.push(brand);
-            } else {
-                this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
             }
         },
+
+
+        async selectCoupleBrand(brandsCoupleLetter) {
+            try {
+                this.selectedCoupleBrand = brandsCoupleLetter;
+                this.brandCoupleSelected = true;
+
+                const response = await axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${brandsCoupleLetter}`);
+                const brands = response.data.items.map(item => item.name);
+                this.brandList = brands;
+            } catch (error) {
+                console.error('Error fetching brands:', error);
+            }
+        },
+
+
+        async selectBrandName(brand) {
+            try {
+                if (!this.selectedBrandFull.includes(brand)) {
+                    this.selectedBrandFull.push(brand);
+                } else {
+                    this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
+                }
+                
+                const response = await axios.get('https://pastauction.com/api/v1/filter/filter_charts_vehicles/family_name/', {
+                    params: {
+                        search: `brand_name:${this.selectedBrandFull.join(',')}`,
+                        page: 1,
+                        size: 50
+                    },
+                    headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYjBhYzY1Yi0yNDYwLTRjOTUtODg2Zi0zMmE4NjQ0MTRkNDIiLCJleHAiOjE3MTA4MDIyMzJ9.VlbagkDT5EVMVf1R0Xp9u7V_flAC3juGsDCmIqzAgKc'
+                    }
+                });
+                
+                console.log(response.data);
+            } catch (error) {
+                console.error('Errore nella richiesta GET:', error);
+            }
+        },
+
+
 
         removeSelectedBrand(index) {
             this.selectedBrandFull.splice(index, 1);
@@ -472,27 +491,33 @@ export default {
             this.modelSelected = false;
             this.countrySelected = false; 
         },
+
         selectModel(letter) {
             this.selectedModel = letter;
             this.modelSelected = true;
             this.countrySelected = false; 
         },
+
         selectCountry(country) {
             this.selectedCountry = country;
             this.countrySelected = true;
         },
+
         selectType(type) {
             this.selectedType = type;
             this.typeSelected = true;
         },
+
         selectAttribute(attribute) {
             this.selectedAttribute = attribute;
             this.attributeSelected = true;
         },
+
         selectPeriod(period) {
             this.selectedPeriod = period;
             this.periodSelected = true;
         },
+        
         selectColour(colour) {
             this.selectedColour = colour;
             this.colourSelected = true;
