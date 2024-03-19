@@ -462,14 +462,10 @@ export default {
                     this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
                 }
                 
-                const response = await axios.get('https://pastauction.com/api/v1/filter/filter_charts_vehicles/family_name/', {
+                const response = await axios.get('/filter/filter_charts_vehicles/family_name/', {
                     params: {
                         search: `brand_name:${this.selectedBrandFull.join(',')}`,
-                        page: 1,
-                        size: 50
-                    },
-                    headers: {
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYjBhYzY1Yi0yNDYwLTRjOTUtODg2Zi0zMmE4NjQ0MTRkNDIiLCJleHAiOjE3MTA4MDIyMzJ9.VlbagkDT5EVMVf1R0Xp9u7V_flAC3juGsDCmIqzAgKc'
+
                     }
                 });
                 
