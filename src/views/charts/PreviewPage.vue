@@ -2,14 +2,12 @@
     <div class="m-5">
       <v-container fluid>
         <v-alert
-            color="info"
-            variant="tonal"
+            :color="alertColor"
         >
           <v-row justify="center">
             <v-col cols="12">
               <div class="text-center text-black">
-                <h3><strong></strong></h3>
-                <p><small></small></p>
+                <h3 class="text-white"><strong>{{ alertTitle }}</strong></h3>
               </div>
             </v-col>
           </v-row>
@@ -37,13 +35,18 @@
   </template>
   
   <script>
-  import router from '@/router/index';
-  
   export default {
-
-
-
-  }
+      data() {
+          return {
+              alertColor: '',
+              alertTitle: '',
+          };
+      },
+      created() {
+          this.alertColor = this.$route.query.color || 'info';
+          this.alertTitle = this.$route.query.title || '';
+      },
+  };
   </script>
   
   <style scoped>

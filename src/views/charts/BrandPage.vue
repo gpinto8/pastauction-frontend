@@ -190,9 +190,16 @@
     },
     methods: {
 
-        continueProcess() {
-            router.push({ path: '/charts/filters/brand/preview' });
-        },
+      continueProcess() {
+          const selectedCard = this.brandRow.find(card => card.isSelected);
+          router.push({ 
+              path: '/charts/filters/brand/preview',
+              query: { 
+                  color: selectedCard.title === 'Dashboard' ? 'info' : selectedCard.title === 'Single chart' ? '#FFDA44' : 'success',
+                  title: selectedCard.title
+              }
+          });
+      },
 
         selectCard(card) {
         this.brandRow.forEach((c) => {
