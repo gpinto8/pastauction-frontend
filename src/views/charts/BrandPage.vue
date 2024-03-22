@@ -24,7 +24,7 @@
               class="me-2 custom-chip"
               color=""
               label
-            >
+            > 
               26
             </v-chip>
           </v-col>
