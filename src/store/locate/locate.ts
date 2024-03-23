@@ -24,10 +24,10 @@ export const useLocateStore = defineStore('locate', () => {
         return items;
       }
   
-    async function fetchBrands() {
+    async function fetchBrands(table, column) {
         try {
           brandsLoading.value = true;
-          brands.value = (await fetchAllItems<{name:string}>('filter/bidwatcher_brand/name/?sort_by=name:asc')).map(item => item.name);
+          brands.value = (await fetchAllItems<{name:string}>(`filter/${table}/${column}/?sort_by=name:asc`)).map(item => item.name);
         }
         finally {
           brandsLoading.value = false;
