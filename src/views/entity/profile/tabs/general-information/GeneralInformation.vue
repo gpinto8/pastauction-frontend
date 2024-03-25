@@ -34,7 +34,7 @@ onMounted(async () => {
       <v-row>
         <v-col :cols="4">
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="ID" v-model="props.data.value.id"
-            :readonly="props.editInputDisabled.value" />
+            :readonly="props.editInputDisabled.value" v-if="props.editInputDisabled.value" />
         </v-col>
         <v-col :cols="4">
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="Year beginning"
