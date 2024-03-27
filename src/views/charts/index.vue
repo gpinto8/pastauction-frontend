@@ -39,7 +39,7 @@
         <v-col xs="12" v-for="(card, index) in firstRowCards" :key="index">
           <v-card
             :variant="variant"
-            class="mx-auto"
+            class="mx-auto h-100"
           >
             <v-card-item>
               <div>
@@ -47,15 +47,18 @@
                   <v-alert :color="card.isActive ? '#0D6EFD' : 'grey'"  class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
                 </div>
                 <div class="d-flex justify-space-around mt-5 mb-5">
-                  <img v-if="card.isActive" class="" src="@/assets/images/charts_bluicon.svg" alt="Immagine blu">
-                  <img v-else class="" src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
+                  <img v-if="card.isActive" src="@/assets/images/charts_bluicon.svg" alt="Immagine blu">
+                  <img v-else src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
                 </div>
                 <div class="text-caption text-center mt-2 mb-2 d-flex justify-center">
-                  <img class="me-2" src="@/assets/images/bolt.svg" alt="Immagine blu" width="15">
+                  <img v-if="card.isActive" src="@/assets/images/v-icon.svg" alt="plan included" width="15">
+                  <img v-else-if="!card.isActive" src="@/assets/images/x-circle-fill.svg" alt="plan included" width="15">
+                  <img v-else src="@/assets/images/bolt.svg" alt="plan included" width="15">
                   <span class="font-bold mr-1">{{ card.number }}</span>
-                  <small>{{ card.extraCharge }}</small> 
+                  <small v-if="card.isActive">Included in plan</small>
+                  <small v-else="!card.isActive">Not available in this plan</small> 
                 </div>
-                <div class="text-caption text-center">{{ card.description }}</div>
+                <div class="text-caption text-center h-100">{{ card.subtitle }}</div>
               </div>
             </v-card-item>
 
@@ -82,7 +85,7 @@
         <v-col v-for="(card, index) in secondRowCards" :key="index">
           <v-card
             :variant="variant"
-            class="mx-auto"
+            class="mx-auto h-100"
           >
             <v-card-item>
               <div>
@@ -90,17 +93,18 @@
                   <v-alert :color="card.isActive ? '#F3A53F' : 'grey'" class="text-center text-white text-bold p-2 rounded-0" style="font-size:large;">{{ card.title }}</v-alert>
                 </div>
                 <div class="d-flex justify-space-around mt-5 mb-5">
-                  <img v-if="card.isActive" class="" src="@/assets/images/chart_iconyellow.svg" alt="Immagine blu">
-                  <img v-else class="" src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
+                  <img v-if="card.isActive" src="@/assets/images/chart_iconyellow.svg" alt="Immagine blu">
+                  <img v-else src="@/assets/images/charts_icongrey.svg" alt="Immagine grigio" >
                 </div>
                 <div class="text-caption text-center mt-2 mb-2 d-flex justify-center">
-                  <img v-if="card.extraCharge === 'Included in plan'" class="me-2" src="@/assets/images/v-icon.svg" alt="plan included" width="15">
-                  <img v-else-if="card.extraCharge === 'Not available in this plan'" class="me-2" src="@/assets/images/x-circle-fill.svg" alt="plan included" width="15">
-                  <img v-else class="me-2" src="@/assets/images/bolt.svg" alt="plan included" width="15">
+                  <img v-if="card.isActive" src="@/assets/images/v-icon.svg" alt="plan included" width="15">
+                  <img v-else-if="!card.isActive" src="@/assets/images/x-circle-fill.svg" alt="plan included" width="15">
+                  <img v-else src="@/assets/images/bolt.svg" alt="plan included" width="15">
                   <span class="font-bold mr-1">{{ card.number }}</span>
-                  <small >{{ card.extraCharge }}</small> 
+                  <small v-if="card.isActive">Included in plan</small>
+                  <small v-else="!card.isActive">Not available in this plan</small> 
                 </div>
-                <div class="text-caption text-center">{{ card.description }}</div>
+                <div class="text-caption text-center">{{ card.subtitle }}</div>
               </div>
             </v-card-item>
 
@@ -141,6 +145,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import ModalChartsType from './components/ModalChartsType.vue';
 import router from '@/router/index';
 
@@ -152,64 +157,16 @@ export default {
     return {
       modalOpen: false,
       cardSelected: false,
-      firstRowCards: [
-        {
-          title: 'Brand',
-          variant: 'primary',
-          number: 26,
-          extraCharge: 'Extra charge required',
-          description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: true,
-          isSelected: false
-        },
-        {
-          title: 'Family',
-          variant: 'primary',
-          number: 26,
-          extraCharge: 'Extra charge required',
-          description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: false,
-          isSelected: false,
-        },
-        {
-          title: 'Model',
-          variant: 'primary',
-          number: 26,
-          extraCharge: 'Extra charge required',
-          description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: false,
-          isSelected: false
-        },
-      ],
-      secondRowCards: [
-        {
-          title: 'Maison',
-          variant: 'primary',
-          number: 26,
-          extraCharge: 'Included in plan',
-          description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: false,
-          isSelected: false 
-        },
-        {
-          title: 'Auction',
-          variant: 'primary',
-          number: 26,
-          extraCharge: 'Not available in this plan',
-          description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: true,
-          isSelected: false
-        },
-        {
-          title: 'Index',
-          variant: 'primary',
-          number: 26,
-          extraCharge: 'Extra charge required',
-          description: 'This type of chart is not included in your plan. You can activate it for a fee in bolts',
-          isActive: false,
-          isSelected: false
-        },
-      ]
+      firstRowCards: [],
+      secondRowCards: [],
+    }
+  },
+
+  async mounted() {
+    try {
+      await this.fetchChartSelection();
+    } catch (error) {
+      console.error('Errore durante il recupero dei dati:', error);
     }
   },
 
@@ -222,6 +179,28 @@ export default {
     openModal() {
       if (this.cardSelected) {
         this.modalOpen = true;
+      }
+    },
+
+    async fetchChartSelection() {
+      try {
+        const response = await axios.get('/chart/selection', {
+          params: {
+            page: 1,
+            size: 50
+          }
+        });
+        // Modifica la proprietà isActive in base al valore di available
+        this.firstRowCards = response.data.items.slice(0, 3).map(item => ({
+          ...item,
+          isActive: item.available === 1 // Se available è 1, isActive sarà true
+        }));
+        this.secondRowCards = response.data.items.slice(3).map(item => ({
+          ...item,
+          isActive: item.available === 1 // Se available è 1, isActive sarà true
+        }));
+      } catch (error) {
+        throw new Error(error);
       }
     },
 
@@ -256,5 +235,4 @@ export default {
   padding-left: 20px;
   padding-right: 20px; 
 }
-
 </style>
