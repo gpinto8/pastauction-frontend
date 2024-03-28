@@ -85,18 +85,19 @@
                             </v-chip>
                             </v-col>
                         </v-row>
-                        <v-row class="letter-button" color="black" text style="min-width: 20px; margin: 2px; border: 1px solid black; font-size: 10px;">
-                            <a
+                        <v-row class="letter-button border-brand" color="black" text>
+                            <v-col 
                                 v-for="brand in brandList" 
                                 :key="brand" 
-                                href="#"
-                                :class="{ 'selected': selectedBrandFull.includes(brand) }"
-                                class="m-3"
+                                cols="12" sm="6" md="4" lg="3">
+                                <a href="#" 
+                                :class="{ 'selected': selectedBrandFull.includes(brand) }" 
+                                class="m-3" 
                                 style="font-size: 16px;" 
-                                @click="selectBrandName(brand)"
-                                >
-                                {{ brand }}
-                            </a>
+                                @click="selectBrandName(brand)">
+                                    {{ brand }}
+                                </a>
+                            </v-col>
                         </v-row>
                     </div>
                 </v-col>
@@ -573,5 +574,12 @@ export default {
 .selected{
     text-decoration: underline;
     color: #407BFF;
+}
+
+.border-brand{
+    min-width: 20px; 
+    margin: 2px; 
+    border: 1px solid black; 
+    font-size: 10px;
 }
 </style>
