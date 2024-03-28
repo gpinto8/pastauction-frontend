@@ -133,10 +133,9 @@
       </v-row>
     </v-container>
 
-
-    <!-- Modale -->
     <ModalChartsType 
       :modalOpen="modalOpen" 
+      :description="selectedDescription" 
       @update:modalOpen="updateModalOpen" 
       @continueClicked="continueProcess"
     />
@@ -157,9 +156,10 @@ export default {
     return {
       modalOpen: false,
       cardSelected: false,
+      selectedDescription: '',
       firstRowCards: [],
       secondRowCards: [],
-    }
+      }
   },
 
   async mounted() {
@@ -190,14 +190,13 @@ export default {
             size: 50
           }
         });
-        // Modifica la proprietà isActive in base al valore di available
         this.firstRowCards = response.data.items.slice(0, 3).map(item => ({
           ...item,
-          isActive: item.available === 1 // Se available è 1, isActive sarà true
+          isActive: item.available === 1 
         }));
         this.secondRowCards = response.data.items.slice(3).map(item => ({
           ...item,
-          isActive: item.available === 1 // Se available è 1, isActive sarà true
+          isActive: item.available === 1 
         }));
       } catch (error) {
         throw new Error(error);
@@ -217,6 +216,11 @@ export default {
       });
       card.isSelected = true;
       this.cardSelected = true;
+
+      const selectedObject = this.firstRowCards.find(c => c === card) || this.secondRowCards.find(c => c === card);
+      this.selectedDescription = selectedObject.description;
+
+      this.$emit('cardSelected', selectedObject.description);
     },
 
     toggleSelect(card) {
