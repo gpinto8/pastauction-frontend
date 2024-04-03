@@ -128,6 +128,56 @@
                     </v-btn>
                 </v-col>
             </v-row>
+            <v-row justify="start" class="align-center mt-0">
+                <v-col class="d-flex flex-wrap align-center pt-0">
+                    <div :class="{ 'd-block': selectedFamily, 'd-none': !selectedFamily }" class="mt-3">
+                        <v-row justify="start" class="align-center">
+                            <v-col>
+                                <v-chip
+                                    v-for="(family, index) in selectedFamilyFull"
+                                    :key="index"
+                                    class="m-2"
+                                    closable
+                                    color="black"
+                                    style="border-radius: 5px;"
+                                    variant="flat"
+                                    @click:close="removeSelectedFamily(index)"
+                                >
+                                    {{ family }}
+                                </v-chip>
+                            </v-col>
+                        </v-row>
+                        <v-row class="letter-button border-brand" color="black" text>
+                            <v-col 
+                                v-for="family in familyList" 
+                                :key="family" 
+                                cols="12" sm="6" md="4" lg="3">
+                                <a href="#" 
+                                :class="{ 'selected': selectedFamilyFull.includes(family) }" 
+                                class="m-3" 
+                                style="font-size: 16px;" 
+                                @click="selectFamilyName(family)">
+                                    {{ family }}
+                                </a>
+                            </v-col>
+                        </v-row>
+                    </div>
+                </v-col>
+            </v-row>
+            <div class="mt-3">
+                <v-chip
+                    v-for="(model, index) in selectedModelFull"
+                    :key="index"
+                    class="m-2"
+                    closable
+                    color="black"
+                    style="border-radius: 5px;"
+                    variant="flat"
+                    @click:close="removeSelectedModel(index)"
+                >
+                    {{ model }}
+                </v-chip>
+            </div>
             <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -137,21 +187,24 @@
                         label
                         size="large"
                     >
-                       <small>Model</small>
+                        <small>Model</small>
                     </v-chip>
+
                     <p v-if="!familySelected">Please, select the Family of your interest first.</p>
-                    <v-btn v-else
-                        v-for="letter in alphabet"
-                        :key="'model_' + letter"
-                        class="letter-button"
-                        :variant="selectedModel === letter ? 'elevated' : 'outlined'"
-                        @click="selectModel(letter)"
-                        color="black"
-                        text
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                        {{ letter }}
-                    </v-btn>
+                    <v-row v-else class="letter-button border-brand" color="black" text>
+                        <v-col 
+                            v-for="model in modelList" 
+                            :key="model" 
+                            cols="12" sm="6" md="4" lg="3">
+                            <a href="#" 
+                                class="m-3"
+                                :class="{ 'selected': selectedModelFull.includes(model) }" 
+                                style="font-size: 16px;" 
+                                @click="selectModelName(model)">
+                                {{ model }}
+                            </a>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
             <v-row justify="start">
@@ -421,7 +474,13 @@ export default {
             selectedFilters: [],
             brandsCoupleLetter: [],
             brandList: [],
-            familyOptionsLetter: []
+            familyOptionsLetter: [],
+            selectedFamilyFull: [],
+            familyList: [],
+            selectedFamilyName: [],
+            selectedModelFull: [],
+            modelList: [], 
+
         };
     },
     methods: {
@@ -463,60 +522,105 @@ export default {
                     this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
                 }
 
-                // Concatena i brand selezionati con il separatore '|'
                 const brandNames = this.selectedBrandFull.join('|');
 
-                // Effettua una singola chiamata API per tutti i marchi selezionati
                 const response = await axios.get('/filter/filter_charts_vehicles/family_name_left_1/', {
                     params: {
                         search: `brand_name:${brandNames}`,
                     }
                 });
 
-                // Memorizza i valori della famiglia restituiti dalla chiamata API
                 const familyOptions = response.data.items;
 
-                // Inizializza due array per memorizzare i valori di lettere e numeri
                 let letters = [];
                 let numbers = [];
 
-                // Divide i valori in base al tipo (lettera o numero)
                 familyOptions.forEach(item => {
                     const value = item.left_1;
                     if (isNaN(value)) {
-                        letters.push(value); // Se è una lettera, aggiungi a letters
+                        letters.push(value); 
                     } else {
-                        numbers.push(value); // Se è un numero, aggiungi a numbers
+                        numbers.push(value); 
                     }
                 });
 
-                // Ordina i valori di lettere e numeri separatamente
                 letters.sort();
                 numbers.sort((a, b) => parseInt(a) - parseInt(b));
 
-                // Concatena i due array ordinati mantenendo l'allineamento sinistra-destra
                 this.familyOptionsLetter = letters.concat(numbers);
             } catch (error) {
                 console.error('Errore nella richiesta GET:', error);
             }
         },
 
-
         removeSelectedBrand(index) {
             this.selectedBrandFull.splice(index, 1);
         },
 
-        selectFamily(letter) {
-            this.selectedFamily = letter;
-            this.familySelected = true;
-            this.modelSelected = false;
-            this.countrySelected = false; 
+        async selectFamily(letter) {
+            try {
+                this.selectedFamily = letter;
+                this.modelSelected = false;
+                this.countrySelected = false; 
+
+                const response = await axios.get('/filter/filter_charts_vehicles/family_name/', {
+                    params: {
+                        search: `brand_name:${this.selectedBrandFull.join('|')}`,
+                        family_name: letter
+                    }
+                });
+
+                const filteredFamilies = response.data.items.filter(item => item.family_name.startsWith(letter));
+
+                const familyNames = filteredFamilies.map(item => item.family_name);
+
+                this.familyList = familyNames;
+            } catch (error) {
+                console.error('Errore nella richiesta GET:', error);
+            }
         },
 
-        selectModel(letter) {
-            this.selectedModel = letter;
+        async selectFamilyName(family) {
+            if (!this.selectedFamilyFull.includes(family)) {
+                this.selectedFamilyFull.push(family);
+            }
+
+            try {
+                this.familySelected = true;
+
+                const response = await axios.get('/filter/filter_charts_vehicles/model_name/', {
+                    params: {
+                        search: `family_name:${family}`
+                    }
+                });
+
+                this.modelList = response.data.items.map(item => item.model_name);
+                
+                this.selectedModel = null;
+                
+                this.familySelected = true;
+            } catch (error) {
+                console.error('Errore nella richiesta GET:', error);
+            }
+        },
+
+        removeSelectedFamily(index) {
+            this.selectedFamilyFull.splice(index, 1);
+        },
+
+        async selectModelName(model) {
+                console.log('Model selected:', model); 
+            if (!this.selectedModelFull.includes(model)) {
+                this.selectedModelFull.push(model);
+            }
+
             this.modelSelected = true;
-            this.countrySelected = false; 
+
+            this.familySelected = true;
+        },
+
+        removeSelectedModel(index) {
+            this.selectedModelFull.splice(index, 1);
         },
 
         selectCountry(country) {
