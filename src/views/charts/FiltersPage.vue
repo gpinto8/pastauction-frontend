@@ -111,21 +111,21 @@
                         label
                         size="large"
                     >
-                       <small>Family</small> 
+                        <small>Family</small> 
                     </v-chip>
-                        <p v-if="selectedBrandFull.length === 0">Please, select the Brand of your interest first.</p>
-                        <v-btn v-if="selectedBrandFull.length > 0"
-                            v-for="letter in alphabet"
-                            :key="'family_' + letter"
-                            class="letter-button"
-                            :variant="selectedFamily ===letter ? 'elevated' : 'outlined'"
-                            @click="selectFamily(letter)"
-                            color="black"
-                            text
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                            >
-                            {{ letter }}
-                        </v-btn>
+                    <p v-if="selectedBrandFull.length === 0">Please, select the Brand of your interest first.</p>
+                    <v-btn v-if="familyOptionsLetter.length > 0"
+                        v-for="family in familyOptionsLetter"
+                        :key="'family_' + family"
+                        class="letter-button"
+                        :variant="selectedFamily === family ? 'elevated' : 'outlined'"
+                        @click="selectFamily(family)"
+                        color="black"
+                        text
+                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        >
+                        {{ family }}
+                    </v-btn>
                 </v-col>
             </v-row>
             <v-row justify="start" class="align-center">
@@ -421,6 +421,7 @@ export default {
             selectedFilters: [],
             brandsCoupleLetter: [],
             brandList: [],
+            familyOptionsLetter: []
         };
     },
     methods: {
@@ -440,7 +441,6 @@ export default {
             }
         },
 
-
         async selectCoupleBrand(brandsCoupleLetter) {
             try {
                 this.selectedCoupleBrand = brandsCoupleLetter;
@@ -454,28 +454,52 @@ export default {
             }
         },
 
-
         async selectBrandName(brand) {
             try {
+                // Aggiungi o rimuovi il marchio selezionato dalla lista
                 if (!this.selectedBrandFull.includes(brand)) {
                     this.selectedBrandFull.push(brand);
                 } else {
                     this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
                 }
-                
-                const response = await axios.get('/filter/filter_charts_vehicles/family_name/', {
-                    params: {
-                        search: `brand_name:${this.selectedBrandFull.join(',')}`,
 
+                // Concatena i brand selezionati con il separatore '|'
+                const brandNames = this.selectedBrandFull.join('|');
+
+                // Effettua una singola chiamata API per tutti i marchi selezionati
+                const response = await axios.get('/filter/filter_charts_vehicles/family_name_left_1/', {
+                    params: {
+                        search: `brand_name:${brandNames}`,
                     }
                 });
-                
-                console.log(response.data);
+
+                // Memorizza i valori della famiglia restituiti dalla chiamata API
+                const familyOptions = response.data.items;
+
+                // Inizializza due array per memorizzare i valori di lettere e numeri
+                let letters = [];
+                let numbers = [];
+
+                // Divide i valori in base al tipo (lettera o numero)
+                familyOptions.forEach(item => {
+                    const value = item.left_1;
+                    if (isNaN(value)) {
+                        letters.push(value); // Se è una lettera, aggiungi a letters
+                    } else {
+                        numbers.push(value); // Se è un numero, aggiungi a numbers
+                    }
+                });
+
+                // Ordina i valori di lettere e numeri separatamente
+                letters.sort();
+                numbers.sort((a, b) => parseInt(a) - parseInt(b));
+
+                // Concatena i due array ordinati mantenendo l'allineamento sinistra-destra
+                this.familyOptionsLetter = letters.concat(numbers);
             } catch (error) {
                 console.error('Errore nella richiesta GET:', error);
             }
         },
-
 
 
         removeSelectedBrand(index) {
