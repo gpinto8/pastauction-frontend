@@ -222,7 +222,7 @@
                         v-for="country in countries"
                         :key="country.country_brand_area"
                         class="letter-button"
-                        :variant="selectedCountry === country ? 'elevated' : 'outlined'"
+                        :variant="selectedCountry === country.country_brand_area ? 'elevated' : 'outlined'"
                         @click="selectCountry(country.country_brand_area)"
                         color="black"
                         text
@@ -245,18 +245,53 @@
                 </v-chip>
                 <v-btn
                     v-for="type in types"
-                    :key="type"
+                    :key="type.body_type"
                     class="letter-button"
-                    :variant="selectedType === type ? 'elevated' : 'outlined'"
-                    @click="selectType(type)"
-                    :color="selectedType === type ? 'black' : ''"
+                    :variant="selectedType === type.body_type ? 'elevated' : 'outlined'"
+                    @click="selectType(type.body_type)"
+                    :color="selectedType === type.body_type ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
-                    {{ type }}
+                    {{ type.body_type }}
                 </v-btn>
             </v-col>
         </v-row>
+        <v-row justify="start" class="align-center mt-0">
+            <v-col class="d-flex flex-wrap align-center pt-0">
+                <!-- <div :class="{ 'd-block': selectedCoupleBrand, 'd-none': !selectedCoupleBrand }" class="mt-3"> -->
+                    <!-- <v-row justify="start" class="align-center">
+                        <v-col
+                        >
+                        <v-chip
+                            v-for="(brand, index) in selectedBrandFull"
+                            :key="index"
+                            class="m-2"
+                            closable
+                            color="black"
+                            style="border-radius: 5px;"
+                            variant="flat"
+                            @click:close="removeSelectedBrand(index)"
+                        >
+                            {{ brand }}
+                        </v-chip>
+                        </v-col>
+                    </v-row> -->
+                    <v-row class="letter-button border-brand" color="black" text>
+                        <v-col 
+                            v-for="catType in categoryType" 
+                            :key="catType.body_category" 
+                            cols="12" sm="6" md="4" lg="3">
+                            <p 
+                            class="m-3 font-bold" 
+                            style="font-size: 16px;" >
+                                {{ catType.body_category }}
+                            </p>
+                        </v-col>
+                    </v-row>
+                <!-- </div> -->
+            </v-col>
+            </v-row>
         <v-row justify="start">
             <v-col class="d-flex flex-wrap align-center">
                 <v-chip
@@ -272,9 +307,9 @@
                     v-for="attribute in attributes"
                     :key="attribute.body_shape"
                     class="letter-button"
-                    :variant="selectedAttribute === attribute ? 'elevated' : 'outlined'"
+                    :variant="selectedAttribute === attribute.body_shape ? 'elevated' : 'outlined'"
                     @click="selectAttribute(attribute.body_shape)"
-                    :color="selectedAttribute === attribute ? 'black' : ''"
+                    :color="selectedAttribute === attribute.body_shape ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
@@ -297,9 +332,9 @@
                     v-for="period in periods"
                     :key="period.age_name"
                     class="letter-button"
-                    :variant="selectedPeriod === period ? 'elevated' : 'outlined'"
+                    :variant="selectedPeriod === period.age_name ? 'elevated' : 'outlined'"
                     @click="selectPeriod(period.age_name)"
-                    :color="selectedPeriod === period ? 'black' : ''"
+                    :color="selectedPeriod === period.age_name ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
@@ -322,9 +357,9 @@
                     v-for="colour in colours"
                     :key="colour.colorfamily_name"
                     class="letter-button"
-                    :variant="selectedColour === colour ? 'elevated' : 'outlined'"
+                    :variant="selectedColour === colour.colorfamily_name ? 'elevated' : 'outlined'"
                     @click="selectColour(colour.colorfamily_name)"
-                    :color="selectedColour === colour ? 'black' : ''"
+                    :color="selectedColour === colour.colorfamily_name ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
@@ -332,6 +367,24 @@
                 </v-btn>
             </v-col>
         </v-row>
+        <v-row justify="start" class="align-center mt-0">
+                <v-col class="d-flex flex-wrap align-center pt-0">
+                    <div :class="{ 'd-block': selectedBrand, 'd-none': !selectedBrand }" class="mt-3" justify="start" >
+                        <v-btn
+                            v-for="color in sfumature" 
+                            :key="color.color_name"
+                            class="letter-button"
+                            :variant="selectedColor === color.color_name ? 'elevated' : 'outlined'"
+                            @click="selectColorSfumatura(color.color_name)"
+                            color="black"
+                            text
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        >
+                            {{ color.color_name }}
+                        </v-btn>
+                    </div>
+                </v-col>
+            </v-row>
         <v-row justify="start">
             <v-col>
                 <div class="d-flex flex-wrap align-center">
@@ -420,7 +473,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from '@/router/index';
 import axios from 'axios';
 
@@ -444,15 +497,19 @@ export default {
             attributes: [],
             selectedAttribute: null,
             attributeSelected: false,
-            types: ['Boat', 'Car', 'Motorbike', 'Tractor', 'Utility', 'Other'],
+            types: [],
+            categoryType: [],
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             countries: [],
             periods: [],
             selectedPeriod: null,
             periodSelected: false,
             colours: [],
+            sfumature: [],
             selectedColour: null,
+            selectedColor: null,
             colourSelected: false,
+            colorSelected: false,
             miscOptionsSold: ['Sold', 'Not sold'],
             miscOptionsQuote: ['Quoted', 'Not quoted'],
             miscOptionChas: ['With chassis', 'Without chassis'],
@@ -478,6 +535,7 @@ export default {
         this.fetchAttributes();
         this.fetchPeriods();
         this.fetchColoursPrimary();
+        this.fetchType();
     },
 
     methods: {
@@ -616,10 +674,39 @@ export default {
             this.familySelected = true;
         },
 
+        removeSelectedModel(index) {
+            this.selectedModelFull.splice(index, 1);
+        },
+
         async fetchCountries() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/country_brand_area/');
                 this.countries = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+        },
+
+        async fetchType() {
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/body_type/');
+                this.types = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+        },
+
+        async selectType(type) {
+            this.selectedType = type;
+            this.typeSelected = true;
+
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/body_category/', {
+                    params: {
+                        search: `body_type:${type}`
+                    }
+                });
+                this.categoryType = response.data.items; 
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
@@ -636,6 +723,11 @@ export default {
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
+        },
+
+        selectAttribute(attribute) {
+            this.selectedAttribute = attribute;
+            this.attributeSelected = true;
         },
 
         async fetchPeriods() {
@@ -656,8 +748,27 @@ export default {
             }
         },
 
-        removeSelectedModel(index) {
-            this.selectedModelFull.splice(index, 1);
+        async selectColour(colour) {
+            this.selectedColour = colour;
+            this.colourSelected = true;
+    
+
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/color_name/', {
+                    params: {
+                        search: `colorfamily_name:${colour}`
+                    }
+                });
+                this.sfumature = response.data.items;
+                console.log(colour)
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+        },
+
+        selectColorSfumatura(color){
+            this.selectedColor = color;
+            this.colorSelected = true;
         },
 
         selectCountry(country) {
@@ -665,25 +776,11 @@ export default {
             this.countrySelected = true;
         },
 
-        selectType(type) {
-            this.selectedType = type;
-            this.typeSelected = true;
-        },
-
-        selectAttribute(attribute) {
-            this.selectedAttribute = attribute;
-            this.attributeSelected = true;
-        },
-
         selectPeriod(period) {
             this.selectedPeriod = period;
             this.periodSelected = true;
         },
         
-        selectColour(colour) {
-            this.selectedColour = colour;
-            this.colourSelected = true;
-        },
         selectMiscellaneous(misc) {
             this.selectedMiscellaneous = misc;
             this.miscellaneousSelected = true;
@@ -728,7 +825,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .custom-chip {
   width: 100px;
   display: flex;
