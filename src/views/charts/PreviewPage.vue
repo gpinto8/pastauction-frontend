@@ -25,16 +25,10 @@
           </v-col>
         </v-row>
       </v-container>
-
- 
-       
-  
- 
-  
     </div>
   </template>
   
-  <script>
+  <script lang="ts">
   export default {
       data() {
           return {

@@ -143,7 +143,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import axios from 'axios';
 import ModalChartsType from './components/ModalChartsType.vue';
 import router from '@/router/index';

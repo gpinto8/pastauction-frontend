@@ -145,15 +145,10 @@
             </v-col>
         </v-row>
     </v-container>
- 
-       
-  
- 
-  
     </div>
   </template>
   
-  <script>
+  <script lang="ts">
   import router from '@/router/index';
   
   export default {

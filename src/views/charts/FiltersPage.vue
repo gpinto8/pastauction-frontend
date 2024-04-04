@@ -259,7 +259,7 @@
         </v-row>
         <v-row justify="start" class="align-center mt-0">
             <v-col class="d-flex flex-wrap align-center pt-0">
-                <!-- <div :class="{ 'd-block': selectedCoupleBrand, 'd-none': !selectedCoupleBrand }" class="mt-3"> -->
+                <div :class="{ 'd-block': selectedType, 'd-none': !selectedType }" class="mt-3">
                     <!-- <v-row justify="start" class="align-center">
                         <v-col
                         >
@@ -279,17 +279,18 @@
                     </v-row> -->
                     <v-row class="letter-button border-brand" color="black" text>
                         <v-col 
+                            class="d-flex justify-between"
+                            cols="12">
+                            <p 
                             v-for="catType in categoryType" 
                             :key="catType.body_category" 
-                            cols="12" sm="6" md="4" lg="3">
-                            <p 
                             class="m-3 font-bold" 
-                            style="font-size: 16px;" >
+                            style="font-size: 16px;">
                                 {{ catType.body_category }}
                             </p>
                         </v-col>
                     </v-row>
-                <!-- </div> -->
+                </div>
             </v-col>
             </v-row>
         <v-row justify="start">
@@ -442,20 +443,6 @@
                                 </v-btn>
                             </div>
                         </div>
-                        <div>
-                            <v-btn
-                                v-for="item in miscOptionsSecondBlock"
-                                :key="item"
-                                class="letter-button"
-                                :variant="selectedMiscellaneous === item ? 'elevated' : 'outlined'"
-                                @click="selectMiscellaneous(item)"
-                                :color="selectedMiscellaneous === item ? 'black' : ''"
-                                text
-                                style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                            >
-                                {{ item }}
-                            </v-btn>
-                        </div>
                     </div>
                 </div>
             </v-col>
@@ -513,8 +500,6 @@ export default {
             miscOptionsSold: ['Sold', 'Not sold'],
             miscOptionsQuote: ['Quoted', 'Not quoted'],
             miscOptionChas: ['With chassis', 'Without chassis'],
-            miscOptionsFirstBlock: ['Sold', 'Not sold', 'Quoted', 'Not quoted', 'With chassis', 'Without chassis'],
-            miscOptionsSecondBlock: ['AUD', 'CAD', 'CHF', 'DKK', 'EAD', 'GBP', 'JPY', 'MXN', 'PLN', 'RNB', 'RUB', 'SEK', 'USD'],
             selectedMiscellaneous: null,
             miscellaneousSelected: false,
             selectedFilters: [],
