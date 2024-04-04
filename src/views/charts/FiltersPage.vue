@@ -460,7 +460,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import router from '@/router/index';
 import axios from 'axios';
 
