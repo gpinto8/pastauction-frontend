@@ -220,15 +220,15 @@
                     </v-chip>
                     <v-btn
                         v-for="country in countries"
-                        :key="country"
+                        :key="country.country_brand_area"
                         class="letter-button"
                         :variant="selectedCountry === country ? 'elevated' : 'outlined'"
-                        @click="selectCountry(country)"
+                        @click="selectCountry(country.country_brand_area)"
                         color="black"
                         text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
-                        {{ country }}
+                        {{ country.country_brand_area }}
                     </v-btn>
                 </v-col>
             </v-row>
@@ -270,15 +270,15 @@
                 </v-chip>
                 <v-btn
                     v-for="attribute in attributes"
-                    :key="attribute"
+                    :key="attribute.body_shape"
                     class="letter-button"
                     :variant="selectedAttribute === attribute ? 'elevated' : 'outlined'"
-                    @click="selectAttribute(attribute)"
+                    @click="selectAttribute(attribute.body_shape)"
                     :color="selectedAttribute === attribute ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
-                    {{ attribute }}
+                    {{ attribute.body_shape }}
                 </v-btn>
             </v-col>
         </v-row>
@@ -295,15 +295,15 @@
                 </v-chip>
                 <v-btn
                     v-for="period in periods"
-                    :key="period.label"
+                    :key="period.age_name"
                     class="letter-button"
                     :variant="selectedPeriod === period ? 'elevated' : 'outlined'"
-                    @click="selectPeriod(period)"
+                    @click="selectPeriod(period.age_name)"
                     :color="selectedPeriod === period ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
-                    {{ period.label }}
+                    {{ period.age_name }}
                 </v-btn>
             </v-col>
         </v-row>
@@ -320,15 +320,15 @@
                 </v-chip>
                 <v-btn
                     v-for="colour in colours"
-                    :key="colour"
+                    :key="colour.colorfamily_name"
                     class="letter-button"
                     :variant="selectedColour === colour ? 'elevated' : 'outlined'"
-                    @click="selectColour(colour)"
+                    @click="selectColour(colour.colorfamily_name)"
                     :color="selectedColour === colour ? 'black' : ''"
                     text
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
-                    {{ colour }}
+                    {{ colour.colorfamily_name }}
                 </v-btn>
             </v-col>
         </v-row>
@@ -441,27 +441,16 @@ export default {
             countrySelected: false,
             selectedType: null,
             typeSelected: false,
-            attributes: ['Anniversary', 'Custom', 'Hardtop', 'LWB', 'Military', 'Pedal', 'Project', 'Race', 'Rally', 'Replica', 'SWB', 'VIP'],
+            attributes: [],
             selectedAttribute: null,
             attributeSelected: false,
             types: ['Boat', 'Car', 'Motorbike', 'Tractor', 'Utility', 'Other'],
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-            countries: ['Africa', 'America', 'Asia', 'Europe', 'Japan', 'Middle East', 'Oceania', 'UK'],
-            periods: [
-                { label: 'Antique 1880-1904' },
-                { label: 'Veteran 1905-1918' },
-                { label: 'Vintage 1919-1930' },
-                { label: 'Post Vintage 1931-1945' },
-                { label: 'Classic 1946-1964' },
-                { label: 'Post classic 1965-1974' },
-                { label: 'Modern 1975-1999' },
-                { label: 'Contemporary 2000-2020' },
-                { label: 'N/A' },
-                { label: 'None' }
-            ],
+            countries: [],
+            periods: [],
             selectedPeriod: null,
             periodSelected: false,
-            colours: ['Black', 'Blue', 'Brown', 'Green', 'Grey', 'Red', 'White', 'Yellow'],
+            colours: [],
             selectedColour: null,
             colourSelected: false,
             miscOptionsSold: ['Sold', 'Not sold'],
@@ -483,6 +472,14 @@ export default {
 
         };
     },
+
+    mounted() {
+        this.fetchCountries();
+        this.fetchAttributes();
+        this.fetchPeriods();
+        this.fetchColoursPrimary();
+    },
+
     methods: {
         async selectBrand(letter) {
             try {
@@ -617,6 +614,46 @@ export default {
             this.modelSelected = true;
 
             this.familySelected = true;
+        },
+
+        async fetchCountries() {
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/country_brand_area/');
+                this.countries = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+        },
+
+        async fetchAttributes() {
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/body_shape/', {
+                    params: {
+                        search: `body_category:Attribute`
+                    }
+                });
+                this.attributes = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+        },
+
+        async fetchPeriods() {
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/age_name/');
+                this.periods = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+        },
+
+        async fetchColoursPrimary() {
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/colorfamily_name/');
+                this.colours = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
         },
 
         removeSelectedModel(index) {
