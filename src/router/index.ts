@@ -185,7 +185,7 @@ const router = createRouter({
                 name: 'Events',
                 component: async () =>
                   await import(
-                    /* webpackChunkName: "Events" */ '@/views/entity/Events'
+                    /* webpackChunkName: "Events" */ '@/views/entity/events/Events'
                   ),
               },
               {
