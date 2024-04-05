@@ -3,11 +3,58 @@ import { ref } from 'vue';
 
 import ToggleButton from './helpers/ToggleButton.vue';
 import YearPaginator from './helpers/YearPaginator.vue';
+import Linguetta from './helpers/Linguetta.vue';
 
 const selectPast = ref(true);
 const selectOngoing = ref(true);
 const selectNext = ref(true);
 const year = ref(new Date().getFullYear());
+
+function addEvent() {
+
+}
+
+function statusToColor(status: string) {
+  switch (status) {
+    case 'past':
+      return 'red';
+    case 'ongoing':
+      return 'green';
+    case 'next':
+      return 'blue';
+    default:
+      return 'red';
+  }
+}
+
+const events = ref([{
+  id: 1,
+  name: 'Nome',
+  location: 'Valdagno',
+  beginDate: '2021-10-10',
+  avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+  status: 'past'
+},
+
+{
+  id: 2,
+  name: 'Nome',
+  location: 'Valdagno',
+  beginDate: '2021-10-10',
+  avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+  status: 'ongoing'
+},
+
+{
+  id: 3,
+  name: 'Nome',
+  location: 'Valdagno',
+  beginDate: '2021-10-10',
+  avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+  status: 'next'
+}
+
+]);
 </script>
 
 <template>
@@ -16,15 +63,47 @@ const year = ref(new Date().getFullYear());
       <ToggleButton v-model="selectPast" label="Past" color="red" />
       <ToggleButton v-model="selectOngoing" label="Ongoing" color="green" />
       <ToggleButton v-model="selectNext" label="Next" color="blue" />
-      <span class="flex-1-1"></span>
-      <YearPaginator v-model="year" disabled/>
+      <v-spacer />
+      <YearPaginator v-model="year" />
     </div>
     <v-sheet :elevation="1">
-      <v-container>
+      <v-container v-if="events.length === 0">
         <v-row align="center">
           <v-col class="d-flex flex-column align-center">
             <span class="mb-8">You don't have any event yet.</span>
-            <v-btn color="#212529" class="px-12 text-white text-none font-normal">Add event</v-btn>
+            <v-btn color="#212529" class="px-12 text-white text-none font-normal" @click="addEvent">Add event</v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container v-else>
+        <v-row class="ml-1 mt-1 mb-4">
+          <v-col class="d-flex">
+            <span style="font-size: 18px">Events</span>
+            <v-spacer />
+            <v-btn icon="mdi-plus" color="#227AD2" density="compact" @click="addEvent" />
+          </v-col>
+        </v-row>
+        <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of events" :key="event.id">
+          <v-col class="mr-4" :cols="1">
+            <v-avatar :image="event.avatar" :size="64" />
+          </v-col>
+          <v-col>
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.name" readonly
+              label="Name" />
+          </v-col>
+          <v-col>
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.location" readonly
+              label="Location" />
+          </v-col>
+          <v-col class="d-flex align-center">
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.beginDate" readonly
+              label="Begin date">
+              <template v-slot:append-inner>
+                <div class="d-flex align-top">
+                  <Linguetta class="ml-2" :color="statusToColor(event.status)" />
+                </div>
+              </template>
+            </v-text-field>
           </v-col>
         </v-row>
       </v-container>
@@ -36,9 +115,11 @@ const year = ref(new Date().getFullYear());
 .red {
   background-color: #D80027;
 }
+
 .green {
   background-color: #6DA544;
 }
+
 .blue {
   background-color: #227AD2;
 }
