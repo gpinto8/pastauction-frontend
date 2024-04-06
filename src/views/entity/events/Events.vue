@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useEntityEventsStore } from '@/store/entity/events';
 
-import ToggleButton from './helpers/ToggleButton.vue';
-import YearPaginator from './helpers/YearPaginator.vue';
-import Linguetta from './helpers/Linguetta.vue';
+const entityEventsStore = useEntityEventsStore();
+const { entityEvents, loadingEntityEvents } = storeToRefs(entityEventsStore);
 
 const selectPast = ref(true);
 const selectOngoing = ref(true);
@@ -27,34 +28,11 @@ function statusToColor(status: string) {
   }
 }
 
-const events = ref([{
-  id: 1,
-  name: 'Nome',
-  location: 'Valdagno',
-  beginDate: '2021-10-10',
-  avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-  status: 'past'
-},
+entityEventsStore.fetchEntityEvents();
 
-{
-  id: 2,
-  name: 'Nome',
-  location: 'Valdagno',
-  beginDate: '2021-10-10',
-  avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-  status: 'ongoing'
-},
-
-{
-  id: 3,
-  name: 'Nome',
-  location: 'Valdagno',
-  beginDate: '2021-10-10',
-  avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-  status: 'next'
-}
-
-]);
+import ToggleButton from './helpers/ToggleButton.vue';
+import YearPaginator from './helpers/YearPaginator.vue';
+import Linguetta from './helpers/Linguetta.vue';
 </script>
 
 <template>
@@ -67,7 +45,14 @@ const events = ref([{
       <YearPaginator v-model="year" />
     </div>
     <v-sheet :elevation="1">
-      <v-container v-if="events.length === 0">
+      <v-container v-if="loadingEntityEvents">
+        <v-row align="center">
+          <v-col class="d-flex flex-column align-center">
+            <span class="mb-8">Loading...</span>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container v-else-if="entityEvents.length === 0">
         <v-row align="center">
           <v-col class="d-flex flex-column align-center">
             <span class="mb-8">You don't have any event yet.</span>
@@ -83,7 +68,7 @@ const events = ref([{
             <v-btn icon="mdi-plus" color="#227AD2" density="compact" @click="addEvent" />
           </v-col>
         </v-row>
-        <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of events" :key="event.id">
+        <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of entityEvents" :key="event.id">
           <v-col class="mr-4" :cols="1">
             <v-avatar :image="event.avatar" :size="64" />
           </v-col>
