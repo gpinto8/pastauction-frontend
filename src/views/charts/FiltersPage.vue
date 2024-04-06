@@ -258,36 +258,55 @@
             </v-col>
         </v-row>
         <v-row justify="start" class="align-center mt-0">
+                <v-col class="d-flex flex-wrap align-center pt-0">
+                    <div :class="{ 'd-block': selectedType, 'd-none': !selectedType }" class="mt-3" justify="start" >
+                        <v-btn
+                            v-for="catType in categoryType" 
+                            :key="catType.body_category"
+                            class="letter-button"
+                            :variant="selectedCategoryType === catType.body_category ? 'elevated' : 'outlined'"
+                            @click="selectCategoryType(selectedType, catType.body_category)"
+                            color="black"
+                            text
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        >
+                            {{ catType.body_category }}
+                        </v-btn>
+                    </div>
+                </v-col>
+            </v-row>
+        <v-row justify="start" class="align-center mt-0">
             <v-col class="d-flex flex-wrap align-center pt-0">
-                <div :class="{ 'd-block': selectedType, 'd-none': !selectedType }" class="mt-3">
-                    <!-- <v-row justify="start" class="align-center">
+                <div :class="{ 'd-block': selectedCategoryType, 'd-none': !selectedCategoryType }" class="mt-3">
+                    <v-row justify="start" class="align-center">
                         <v-col
                         >
                         <v-chip
-                            v-for="(brand, index) in selectedBrandFull"
+                            v-for="(categoryName, index) in selectedCategoryName"
                             :key="index"
                             class="m-2"
                             closable
                             color="black"
                             style="border-radius: 5px;"
                             variant="flat"
-                            @click:close="removeSelectedBrand(index)"
+                            @click:close="removeSelectedCategoryName(index)"
                         >
-                            {{ brand }}
+                            {{ categoryName }}
                         </v-chip>
                         </v-col>
-                    </v-row> -->
+                    </v-row>
                     <v-row class="letter-button border-brand" color="black" text>
                         <v-col 
-                            class="d-flex justify-between"
-                            cols="12">
-                            <p 
-                            v-for="catType in categoryType" 
-                            :key="catType.body_category" 
-                            class="m-3 font-bold" 
-                            style="font-size: 16px;">
-                                {{ catType.body_category }}
-                            </p>
+                            v-for="categoryName in listaType" 
+                            :key="categoryName.body_shape" 
+                            cols="12" sm="6" md="4" lg="3">
+                            <a href="#" 
+                                class="m-3"
+                                :class="{ 'selected': selectedCategoryName.includes(categoryName.body_shape) }" 
+                                style="font-size: 16px;" 
+                                @click="selectCategoryName(categoryName.body_shape)">
+                                {{ categoryName.body_shape }}
+                            </a>
                         </v-col>
                     </v-row>
                 </div>
@@ -400,7 +419,7 @@
                     </v-chip>
                     <div>
                         <div class="d-flex justify-space-between">
-                            <div>
+                            <div class="me-4">
                                 <v-btn
                                     v-for="item in miscOptionsSold"
                                     :key="item"
@@ -414,7 +433,7 @@
                                     {{ item }}
                                 </v-btn>
                             </div>
-                            <div>
+                            <div class="me-4">
                                 <v-btn
                                     v-for="item in miscOptionsQuote"
                                     :key="item"
@@ -428,7 +447,7 @@
                                     {{ item }}
                                 </v-btn>
                             </div>
-                            <div>
+                            <div class="me-4">
                                 <v-btn
                                     v-for="item in miscOptionChas"
                                     :key="item"
@@ -480,7 +499,9 @@ export default {
             selectedCountry: null,
             countrySelected: false,
             selectedType: null,
+            selectedCategoryType: null,
             typeSelected: false,
+            categoryTypeSelected: false, 
             attributes: [],
             selectedAttribute: null,
             attributeSelected: false,
@@ -508,10 +529,10 @@ export default {
             familyOptionsLetter: [],
             selectedFamilyFull: [],
             familyList: [],
-            selectedFamilyName: [],
             selectedModelFull: [],
-            modelList: [], 
-
+            selectedCategoryName: [],
+            modelList: [],
+            listaType: [],
         };
     },
 
@@ -692,9 +713,41 @@ export default {
                     }
                 });
                 this.categoryType = response.data.items; 
+                
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
+        },
+
+        async selectCategoryType(type, categoryType) {
+             this.selectedType = type;
+             this.typeSelected = true;
+
+             this.selectedCategoryType = categoryType;
+             this.categoryTypeSelected = true;
+
+            try {
+               const response = await axios.get('/filter/filter_charts_vehicles/body_shape/', {
+                     params: {
+                         search: `body_type:${type},body_category:${categoryType}`
+                    }
+                });
+                this.listaType = response.data.items; 
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+             }
+        },
+
+        async selectCategoryName(categoryName) {
+            console.log(categoryName)
+            if (!this.selectedCategoryName.includes(categoryName)) {
+                this.selectedCategoryName.push(categoryName);
+            }
+
+        },
+
+        removeSelectedCategoryName(index) {
+            this.selectedCategoryName.splice(index, 1);
         },
 
         async fetchAttributes() {
@@ -828,5 +881,10 @@ export default {
     margin: 2px; 
     border: 1px solid black; 
     font-size: 10px;
+}
+.category-link {
+    display: block;
+    position: relative;
+    padding-left: 10px; /* Spazio a sinistra della linea */
 }
 </style>
