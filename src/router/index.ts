@@ -182,11 +182,39 @@ const router = createRouter({
               },
               {
                 path: '/entity/events',
-                name: 'Events',
+                name: 'EntityEvents',
+                redirect: { name: 'EntityEventsAll' },
                 component: async () =>
                   await import(
-                    /* webpackChunkName: "Events" */ '@/views/entity/events/Events'
+                    /* webpackChunkName: "EntityEvents" */ '@/views/layout/EntityEventsLayout.vue'
                   ),
+                  children: [
+                    {
+                      path: 'all',
+                      name: 'EntityEventsAll',
+                      component: async () =>
+                        await import(
+                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/all/EventsAll.vue'
+                        ),
+                    },
+                    {
+                      path: 'new',
+                      name: 'EntityEventsNew',
+                      component: async () =>
+                        await import(
+                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/new/EventsNew.vue'
+                        ),
+                    },
+                    {
+                      path: 'event/:id',
+                      name: 'EntityEventsEvent',
+                      props: true,
+                      component: async () =>
+                        await import(
+                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/event/EventsEvent.vue'
+                        ),
+                    },
+                  ]
               },
               {
                 path: '/entity/requests',

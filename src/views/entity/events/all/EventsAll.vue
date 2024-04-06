@@ -11,10 +11,6 @@ const selectOngoing = ref(true);
 const selectNext = ref(true);
 const year = ref(new Date().getFullYear());
 
-function addEvent() {
-
-}
-
 function statusToColor(status: string) {
   switch (status) {
     case 'past':
@@ -33,6 +29,7 @@ entityEventsStore.fetchEntityEvents();
 import ToggleButton from './helpers/ToggleButton.vue';
 import YearPaginator from './helpers/YearPaginator.vue';
 import Linguetta from './helpers/Linguetta.vue';
+import router from '@/router';
 </script>
 
 <template>
@@ -55,8 +52,9 @@ import Linguetta from './helpers/Linguetta.vue';
       <v-container v-else-if="entityEvents.length === 0">
         <v-row align="center">
           <v-col class="d-flex flex-column align-center">
-            <span class="mb-8">You don't have any event yet.</span>
-            <v-btn color="#212529" class="px-12 text-white text-none font-normal" @click="addEvent">Add event</v-btn>
+            <span class="mb-8">No event found</span>
+            <v-btn :to="{ name: 'EntityEventsNew' }" color="#212529" class="px-12 text-white text-none font-normal">Add
+              event</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -65,12 +63,14 @@ import Linguetta from './helpers/Linguetta.vue';
           <v-col class="d-flex">
             <span style="font-size: 18px">Events</span>
             <v-spacer />
-            <v-btn icon="mdi-plus" color="#227AD2" density="compact" @click="addEvent" />
+            <v-btn :to="{ name: 'EntityEventsNew' }" icon="mdi-plus" color="#227AD2" density="compact" />
           </v-col>
         </v-row>
         <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of entityEvents" :key="event.id">
           <v-col class="mr-4" :cols="1">
-            <v-avatar :image="event.avatar" :size="64" />
+            <router-link :to="{ name: 'EntityEventsEvent', params: { id: event.id } }">
+              <v-avatar :image="event.avatar" :size="64" />
+            </router-link>
           </v-col>
           <v-col>
             <v-text-field hide-details variant="underlined" density="compact" :model-value="event.name" readonly

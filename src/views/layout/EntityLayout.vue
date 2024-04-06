@@ -21,7 +21,7 @@ const tabs = ref([
   {
     name: 'events',
     label: 'Events',
-    to: './events'
+    to: { name: 'EntityEvents' }
   },
   {
     name: 'requests',
