@@ -1,30 +1,17 @@
 <script setup lang="ts">
-import {defineProps, computed, ref} from 'vue';
+import { defineProps, computed, ref} from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEntityEventsStore } from '@/store/entity/events';
 
 const entityEventsStore = useEntityEventsStore();
 const { entityEventCategoires } = storeToRefs(entityEventsStore);
 
-// import { useManagingForm } from '@/composables/entity/managingForm';
+const props = defineProps<{
+  isAdd: boolean;
+}>();
 
-// const props = defineProps<{
-  // title: string,
-  // modelValue: any,
-  // editCallback?: () => Promise<void>,
-  // onStartClicked?: () => void,
-  // onCancelClicked?: () => void,
-  // onSaveClicked?: () => void
-// }>()
-// const emit = defineEmits(['update:modelValue'])
-
-// const wrappedData = computed({
-//   get: () => props.modelValue,
-//   set: (value) => emit('update:modelValue', value)
-// })
-
-// const managingForm = useManagingForm(wrappedData, props.editCallback ?? (async () => {}), props.onStartClicked ?? (() => {}), props.onCancelClicked ?? (() => {}), props.onSaveClicked ?? (() => {}));
-
+import activeIcon from '@/assets/icons/active_on.svg?url';
+import inactiveIcon from '@/assets/icons/active_off.svg?url';
 import Linguetta from '../helpers/Linguetta.vue';
 
 const event = ref({
@@ -49,8 +36,11 @@ const event = ref({
   description: 'Description',
   website: 'https://www.google.com',
   logo: 'https://www.google.com',
-  photo: 'https://www.google.com'
+  photo: 'https://www.google.com',
+  active: false
 })
+
+const iconActive = computed(() => event.value.active ? activeIcon : inactiveIcon);
 
 function duplicateEvent() {
   console.log('duplicateEvent');
@@ -61,6 +51,15 @@ function deleteEvent() {
 function addEvent() {
   console.log('addEvent');
 }
+function saveEvent() {
+  console.log('saveEvent');
+}
+function resetEvent() {
+  console.log('resetEvent');
+}
+function toggleActive() {
+  console.log('toggleActive');
+}
 </script>
 
 <template>
@@ -70,7 +69,8 @@ function addEvent() {
         <v-col :cols="2" class="d-flex align-center">
           <Linguetta :color="entityEventsStore.statusToColor(event.status)" :width="100" />
         </v-col>
-        <v-col class="text-center">
+        <v-col class="text-center d-flex align-center justify-center">
+          <img :src="iconActive" class="icon-active mr-2" @click="toggleActive" />
           <span class="font-weight-bold" style="font-size: 18px">Event</span>
         </v-col>
         <v-col :cols="2" class="text-end">
@@ -140,8 +140,8 @@ function addEvent() {
           <span class="font-weight-bold">Category</span>
         </v-col>
         <v-col cols="12">
-          <v-checkbox class="d-inline-flex mr-4" v-for="category of entityEventCategoires"
-            v-model="event.categories" :value="category.value" :label="category.label" />
+          <v-checkbox class="d-inline-flex mr-4" v-for="category of entityEventCategoires" v-model="event.categories"
+            :value="category.value" :label="category.label" />
         </v-col>
       </v-row>
 
@@ -163,9 +163,15 @@ function addEvent() {
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row v-if="isAdd">
         <v-col class="d-flex justify-end" :cols="12">
           <v-btn class="px-16" color="primary" @click="addEvent">Add</v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-else>
+        <v-col class="d-flex justify-end" :cols="12">
+          <v-btn class="px-16 mr-4" color="grey" @click="resetEvent">Reset</v-btn>
+          <v-btn class="px-16" color="primary" @click="saveEvent">Save</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -175,5 +181,12 @@ function addEvent() {
 <style scoped>
 .subheader {
   background: rgba(64, 123, 255, 0.12);
+}
+
+.icon-active {
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  cursor: pointer;
 }
 </style>
