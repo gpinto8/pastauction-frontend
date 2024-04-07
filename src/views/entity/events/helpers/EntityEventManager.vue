@@ -43,7 +43,13 @@ const event = ref({
   endAddress: 'Via Roma 1',
   endLongitude: 12.4963655,
   endLatitude: 41.9027835,
-  categories: []
+  categories: [],
+  openDay: '2022-01-01',
+  openTime: '00:00',
+  description: 'Description',
+  website: 'https://www.google.com',
+  logo: 'https://www.google.com',
+  photo: 'https://www.google.com'
 })
 
 function duplicateEvent() {
@@ -139,11 +145,24 @@ function addEvent() {
         </v-col>
       </v-row>
 
-      <!-- <v-row v-if="managingForm.isEditing.value">
-        <v-col class="d-flex justify-end" :cols="12">
-          <v-btn class="px-16" color="primary" @click="managingForm.editSave">Save</v-btn>
-        </v-col
-      </v-row> -->
+      <v-row>
+        <v-col :cols="12">
+          <span class="font-weight-bold">Event information</span>
+        </v-col>
+        <v-col>
+          <v-text-field variant="outlined" density="compact" label="Open day" type="date" v-model="event.openDay" />
+        </v-col>
+        <v-col>
+          <v-text-field variant="outlined" density="compact" label="Open time" v-model="event.openTime" />
+        </v-col>
+        <v-col :cols="12">
+          <v-textarea variant="outlined" density="compact" label="Description" v-model="event.description" />
+        </v-col>
+        <v-col :cols="12">
+          <v-text-field variant="outlined" density="compact" label="Website" v-model="event.website" />
+        </v-col>
+      </v-row>
+
       <v-row>
         <v-col class="d-flex justify-end" :cols="12">
           <v-btn class="px-16" color="primary" @click="addEvent">Add</v-btn>
