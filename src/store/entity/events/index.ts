@@ -141,11 +141,23 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
       website: 'https://www.google.com',
       logo: 'https://www.google.com',
       photo: 'https://www.google.com',
-      active: true
+      active: false
     };
   }
 
   async function addEntityEvent(event: any) {
+    console.log('ciao')
+  }
+
+  async function deleteEntityEvent(id: number) {
+    console.log('ciao')
+  }
+
+  async function updateEntityEvent(id: number, event: any) {
+    console.log('ciao')
+  }
+
+  async function toggleEntityEventActive(id: number, active: boolean) {
     console.log('ciao')
   }
 
@@ -156,6 +168,9 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     statusToColor,
     fetchEntityEvents,
     fetchEntityEventByid,
-    addEntityEvent
+    addEntityEvent,
+    deleteEntityEvent,
+    updateEntityEvent,
+    toggleEntityEventActive
   }
 });

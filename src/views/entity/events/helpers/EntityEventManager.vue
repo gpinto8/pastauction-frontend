@@ -12,17 +12,20 @@ const props = defineProps({
   event: { type: Object }
 });
 
-const emit = defineEmits(['add', 'save']);
+const emit = defineEmits(['add', 'save', 'delete', 'enable', 'disable', 'duplicate']);
 
-let internalEvent = ref<any>(deepClone(props.event));
+const internalEvent = ref<any>(deepClone(props.event));
+const showDeleteDialog = ref(false);
+const showEnableDialog = ref(false);
+const showDisableDialog = ref(false);
 
 const iconActive = computed(() => internalEvent.value.active ? activeIcon : inactiveIcon);
 
 function duplicateEvent() {
-  console.log('duplicateEvent');
+  emit('duplicate', internalEvent.value);
 }
 function deleteEvent() {
-  console.log('deleteEvent');
+  showDeleteDialog.value = true;
 }
 function addEvent() {
   emit('add', internalEvent.value);
@@ -34,12 +37,19 @@ function resetEvent() {
   internalEvent.value = deepClone(props.event);
 }
 function toggleActive() {
-  console.log('toggleActive');
+  if (internalEvent.value.active) {
+    showDisableDialog.value = true;
+  } else {
+    showEnableDialog.value = true;
+  }
 }
 
 import activeIcon from '@/assets/icons/active_on.svg?url';
 import inactiveIcon from '@/assets/icons/active_off.svg?url';
-import Linguetta from '../helpers/Linguetta.vue';
+import Linguetta from './Linguetta.vue';
+import DeleteEventDialog from './DeleteEventDialog.vue';
+import EnableEventDialog from './EnableEventDialog.vue';
+import DisableEventDialog from './DisableEventDialog.vue';
 </script>
 
 <template>
@@ -157,6 +167,10 @@ import Linguetta from '../helpers/Linguetta.vue';
       </v-row>
     </v-container>
   </v-sheet>
+
+  <DeleteEventDialog v-model="showDeleteDialog" @delete="$emit('delete')" />
+  <EnableEventDialog v-model="showEnableDialog" @delete="$emit('enable')" />
+  <DisableEventDialog v-model="showDisableDialog" @delete="$emit('disable')" />
 </template>
 
 <style scoped>
