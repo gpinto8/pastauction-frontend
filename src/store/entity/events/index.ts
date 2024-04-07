@@ -117,11 +117,45 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
 }, 2000)});
   }
 
+  async function fetchEntityEventByid(id: number) {
+    return {
+      id: 1,
+      status: 'past',
+      name: 'Nome',
+      beginDate: '2022-01-01',
+      beginCountry: 'Italy',
+      beginCity: 'Rome',
+      beginAddress: 'Via Roma 1',
+      beginLongitude: 12.4963655,
+      beginLatitude: 41.9027835,
+      endDate: '2022-01-01',
+      endCountry: 'Italy',
+      endCity: 'Rome',
+      endAddress: 'Via Roma 1',
+      endLongitude: 12.4963655,
+      endLatitude: 41.9027835,
+      categories: [],
+      openDay: '2022-01-01',
+      openTime: '00:00',
+      description: 'Description',
+      website: 'https://www.google.com',
+      logo: 'https://www.google.com',
+      photo: 'https://www.google.com',
+      active: true
+    };
+  }
+
+  async function addEntityEvent(event: any) {
+    console.log('ciao')
+  }
+
   return {
     entityEvents,
     loadingEntityEvents,
     entityEventCategoires,
     statusToColor,
-    fetchEntityEvents
+    fetchEntityEvents,
+    fetchEntityEventByid,
+    addEntityEvent
   }
 });

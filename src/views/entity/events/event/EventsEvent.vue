@@ -3,13 +3,26 @@ import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEntityEventsStore } from '@/store/entity/events';
 
+const entityEventsStore = useEntityEventsStore();
+
 const props = defineProps<{
-  id: string;
+  id: number;
 }>();
+
+async function saveEvent() {
+
+}
+
+const event = ref<any>(null);
+
+async function fetchEvent() {
+  event.value = await entityEventsStore.fetchEntityEventByid(props.id);
+}
+fetchEvent();
+
+import EntityEventManager from '../helpers/EntityEventManager.vue';
 </script>
 
 <template>
-  <div class="px-14 mt-12">
-    Event  {{ id }}
-  </div>
+  <EntityEventManager :is-add="false" :event="event" @save="saveEvent" v-if="event" />
 </template>
