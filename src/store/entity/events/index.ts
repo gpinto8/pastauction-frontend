@@ -5,6 +5,82 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   const entityEvents = ref<any[]>([]);
   const loadingEntityEvents = ref(false);
 
+  const entityEventCategoires = ref<{ label: string, value: string}[]>([
+    {
+      label: 'Race',
+      value: 'race'
+    },
+    {
+      label: 'Exhibition',
+      value: 'exhibition'
+    },
+    {
+      label: 'Museum',
+      value: 'museum'
+    },
+    {
+      label: 'Circuit',
+      value: 'circuit'
+    },
+    {
+      label: 'Races',
+      value: 'races'
+    },
+    {
+      label: 'Market',
+      value: 'market'
+    },
+    {
+      label: 'Rally',
+      value: 'rally'
+    },
+    {
+      label: 'Tours',
+      value: 'tours'
+    },
+    {
+      label: 'Library',
+      value: 'library'
+    },
+    {
+      label: 'Factory',
+      value: 'factory'
+    },
+    {
+      label: 'Magazine',
+      value: 'magazine'
+    },
+    {
+      label: 'Owner club',
+      value: 'owner_club'
+    },
+    {
+      label: 'Concours',
+      value: 'concours'
+    },
+    {
+      label: 'Collection',
+      value: 'collection'
+    },
+    {
+      label: 'Services',
+      value: 'services'
+    }
+  ]);
+
+  function statusToColor(status: string) {
+    switch (status) {
+      case 'past':
+        return 'red';
+      case 'ongoing':
+        return 'green';
+      case 'next':
+        return 'blue';
+      default:
+        return 'red';
+    }
+  }
+
   async function fetchEntityEvents() {
     // TODO
     return new Promise((resolve) => {
@@ -44,6 +120,8 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   return {
     entityEvents,
     loadingEntityEvents,
+    entityEventCategoires,
+    statusToColor,
     fetchEntityEvents
   }
 });

@@ -2,10 +2,10 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEntityEventsStore } from '@/store/entity/events';
+
+import EntityEventManager from '../helpers/EntityEventManager.vue';
 </script>
 
 <template>
-  <div class="px-14 mt-12">
-    New
-  </div>
+  <EntityEventManager />
 </template>

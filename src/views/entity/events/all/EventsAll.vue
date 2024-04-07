@@ -11,25 +11,11 @@ const selectOngoing = ref(true);
 const selectNext = ref(true);
 const year = ref(new Date().getFullYear());
 
-function statusToColor(status: string) {
-  switch (status) {
-    case 'past':
-      return 'red';
-    case 'ongoing':
-      return 'green';
-    case 'next':
-      return 'blue';
-    default:
-      return 'red';
-  }
-}
-
 entityEventsStore.fetchEntityEvents();
 
-import ToggleButton from './helpers/ToggleButton.vue';
-import YearPaginator from './helpers/YearPaginator.vue';
-import Linguetta from './helpers/Linguetta.vue';
-import router from '@/router';
+import ToggleButton from '../helpers/ToggleButton.vue';
+import YearPaginator from '../helpers/YearPaginator.vue';
+import Linguetta from '../helpers/Linguetta.vue';
 </script>
 
 <template>
@@ -85,7 +71,7 @@ import router from '@/router';
               label="Begin date">
               <template v-slot:append-inner>
                 <div class="d-flex align-top">
-                  <Linguetta class="ml-2" :color="statusToColor(event.status)" />
+                  <Linguetta class="ml-2" :color="entityEventsStore.statusToColor(event.status)" />
                 </div>
               </template>
             </v-text-field>
