@@ -19,7 +19,7 @@ const showDeleteDialog = ref(false);
 const showEnableDialog = ref(false);
 const showDisableDialog = ref(false);
 
-const iconActive = computed(() => internalEvent.value.event_disabled ? inactiveIcon :  activeIcon);
+const iconActive = computed(() => internalEvent.value.disabled ? inactiveIcon :  activeIcon);
 
 function duplicateEvent() {
   emit('duplicate', internalEvent.value);
@@ -37,7 +37,7 @@ function resetEvent() {
   internalEvent.value = deepClone(props.event);
 }
 function toggleActive() {
-  if (!internalEvent.value.event_disabled) {
+  if (!internalEvent.value.disabled) {
     showDisableDialog.value = true;
   } else {
     showEnableDialog.value = true;
@@ -71,8 +71,8 @@ import DisableEventDialog from './DisableEventDialog.vue';
 
       <v-row>
         <v-col :cols="4" class="d-flex">
-          <v-text-field class="mr-2" variant="outlined" density="compact" label="ID" :model-value="internalEvent.event_id_key" disabled v-if="!isAdd"/>
-          <v-text-field variant="outlined" density="compact" label="Name" v-model="internalEvent.event_name" />
+          <v-text-field class="mr-2" variant="outlined" density="compact" label="ID" :model-value="internalEvent.id_key" disabled v-if="!isAdd"/>
+          <v-text-field variant="outlined" density="compact" label="Name" v-model="internalEvent.name" />
         </v-col>
       </v-row>
 
@@ -81,22 +81,22 @@ import DisableEventDialog from './DisableEventDialog.vue';
           <span class="font-weight-bold">Begin</span>
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.event_begin_date" />
+          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.begin_date" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.event_begin_country" />
+          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.begin_country" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.event_begin_city" />
+          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.begin_city" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.event_begin_address" />
+          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.begin_address" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.event_begin_lon" />
+          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.begin_lon" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.event_begin_lat" />
+          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.begin_lat" />
         </v-col>
       </v-row>
 
@@ -106,22 +106,22 @@ import DisableEventDialog from './DisableEventDialog.vue';
         </v-col>
 
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.event_date_end" />
+          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.date_end" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.event_end_country" />
+          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.end_country" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.event_end_address" />
+          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.end_address" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.event_end_city" />
+          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.end_city" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.event_end_lat" />
+          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.end_lat" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.event_end_lon" />
+          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.end_lon" />
         </v-col>
       </v-row>
 
@@ -130,7 +130,7 @@ import DisableEventDialog from './DisableEventDialog.vue';
           <span class="font-weight-bold">Category</span>
         </v-col>
         <v-col cols="12">
-          <v-checkbox class="d-inline-flex mr-4" v-for="category of entityEventCategoires" v-model="internalEvent.categories"
+          <v-checkbox class="d-inline-flex mr-4" v-for="category of entityEventCategoires" v-model="internalEvent.event_type"
             :value="category.value" :label="category.label" />
         </v-col>
       </v-row>
@@ -146,10 +146,10 @@ import DisableEventDialog from './DisableEventDialog.vue';
           <v-text-field variant="outlined" density="compact" label="Open time" v-model="internalEvent.entity_opening_descr" />
         </v-col>
         <v-col :cols="12">
-          <v-textarea variant="outlined" density="compact" label="Description" v-model="internalEvent.event_description" />
+          <v-textarea variant="outlined" density="compact" label="Description" v-model="internalEvent.description" />
         </v-col>
         <v-col :cols="12">
-          <v-text-field variant="outlined" density="compact" label="Website" v-model="internalEvent.event_website" />
+          <v-text-field variant="outlined" density="compact" label="Website" v-model="internalEvent.website" />
         </v-col>
       </v-row>
 
