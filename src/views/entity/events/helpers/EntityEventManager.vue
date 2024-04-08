@@ -19,7 +19,7 @@ const showDeleteDialog = ref(false);
 const showEnableDialog = ref(false);
 const showDisableDialog = ref(false);
 
-const iconActive = computed(() => internalEvent.value.active ? activeIcon : inactiveIcon);
+const iconActive = computed(() => internalEvent.value.event_disabled ? inactiveIcon :  activeIcon);
 
 function duplicateEvent() {
   emit('duplicate', internalEvent.value);
@@ -37,7 +37,7 @@ function resetEvent() {
   internalEvent.value = deepClone(props.event);
 }
 function toggleActive() {
-  if (internalEvent.value.active) {
+  if (!internalEvent.value.event_disabled) {
     showDisableDialog.value = true;
   } else {
     showEnableDialog.value = true;
@@ -57,7 +57,7 @@ import DisableEventDialog from './DisableEventDialog.vue';
     <v-container>
       <v-row class="subheader rounded-lg mb-4">
         <v-col :cols="2" class="d-flex align-center" v-if="!isAdd">
-          <Linguetta :color="entityEventsStore.statusToColor(internalEvent.status)" :width="100" />
+          <Linguetta :color="entityEventsStore.statusToColor(entityEventsStore.getStatusFromEvent(internalEvent))" :width="100" />
         </v-col>
         <v-col class="text-center d-flex align-center justify-center">
           <img :src="iconActive" class="icon-active mr-2" @click="toggleActive" v-if="!isAdd" />
@@ -71,8 +71,8 @@ import DisableEventDialog from './DisableEventDialog.vue';
 
       <v-row>
         <v-col :cols="4" class="d-flex">
-          <v-text-field class="mr-2" variant="outlined" density="compact" label="ID" :model-value="internalEvent.id" disabled v-if="!isAdd"/>
-          <v-text-field variant="outlined" density="compact" label="Name" v-model="internalEvent.name" />
+          <v-text-field class="mr-2" variant="outlined" density="compact" label="ID" :model-value="internalEvent.event_id_key" disabled v-if="!isAdd"/>
+          <v-text-field variant="outlined" density="compact" label="Name" v-model="internalEvent.event_name" />
         </v-col>
       </v-row>
 
@@ -81,22 +81,22 @@ import DisableEventDialog from './DisableEventDialog.vue';
           <span class="font-weight-bold">Begin</span>
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.beginDate" />
+          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.event_begin_date" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.beginCountry" />
+          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.event_begin_country" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.beginCity" />
+          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.event_begin_city" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.beginAddress" />
+          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.event_begin_address" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.beginLongitude" />
+          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.event_begin_lon" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.beginLatitude" />
+          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.event_begin_lat" />
         </v-col>
       </v-row>
 
@@ -106,22 +106,22 @@ import DisableEventDialog from './DisableEventDialog.vue';
         </v-col>
 
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.endDate" />
+          <v-text-field variant="outlined" density="compact" label="Date" type="date" v-model="internalEvent.event_date_end" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.endCountry" />
+          <v-text-field variant="outlined" density="compact" label="Country" v-model="internalEvent.event_end_country" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.endCity" />
+          <v-text-field variant="outlined" density="compact" label="City" v-model="internalEvent.event_end_address" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.endAddress" />
+          <v-text-field variant="outlined" density="compact" label="Address" v-model="internalEvent.event_end_city" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.endLongitude" />
+          <v-text-field variant="outlined" density="compact" label="Longitude" v-model="internalEvent.event_end_lat" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.endLatitude" />
+          <v-text-field variant="outlined" density="compact" label="Latitude" v-model="internalEvent.event_end_lon" />
         </v-col>
       </v-row>
 
@@ -143,13 +143,13 @@ import DisableEventDialog from './DisableEventDialog.vue';
           <v-text-field variant="outlined" density="compact" label="Open day" type="date" v-model="internalEvent.openDay" />
         </v-col>
         <v-col>
-          <v-text-field variant="outlined" density="compact" label="Open time" v-model="internalEvent.openTime" />
+          <v-text-field variant="outlined" density="compact" label="Open time" v-model="internalEvent.entity_opening_descr" />
         </v-col>
         <v-col :cols="12">
-          <v-textarea variant="outlined" density="compact" label="Description" v-model="internalEvent.description" />
+          <v-textarea variant="outlined" density="compact" label="Description" v-model="internalEvent.event_description" />
         </v-col>
         <v-col :cols="12">
-          <v-text-field variant="outlined" density="compact" label="Website" v-model="internalEvent.website" />
+          <v-text-field variant="outlined" density="compact" label="Website" v-model="internalEvent.event_website" />
         </v-col>
       </v-row>
 
@@ -169,8 +169,8 @@ import DisableEventDialog from './DisableEventDialog.vue';
   </v-sheet>
 
   <DeleteEventDialog v-model="showDeleteDialog" @delete="$emit('delete')" />
-  <EnableEventDialog v-model="showEnableDialog" @delete="$emit('enable')" />
-  <DisableEventDialog v-model="showDisableDialog" @delete="$emit('disable')" />
+  <EnableEventDialog v-model="showEnableDialog" @enable="$emit('enable')" />
+  <DisableEventDialog v-model="showDisableDialog" @disable="$emit('disable')" />
 </template>
 
 <style scoped>

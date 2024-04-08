@@ -8,38 +8,17 @@ import { useEntityEventsStore } from '@/store/entity/events';
 const entityEventsStore = useEntityEventsStore();
 const router = useRouter();
 
-const sampleEvent = ref({
-  name: '',
-  beginDate: '',
-  beginCountry: '',
-  beginCity: '',
-  beginAddress: '',
-  beginLongitude: '',
-  beginLatitude: '',
-  endDate: '',
-  endCountry: '',
-  endCity: '',
-  endAddress: '',
-  endLongitude: '',
-  endLatitude: '',
-  categories: [],
-  openDay: '',
-  openTime: '',
-  description: '',
-  website: '',
-  logo: '',
-  photo: '',
-  active: true
-});
+const event = ref<any>(null);
 
-async function addEvent() {
-  await entityEventsStore.addEntityEvent(sampleEvent.value);
+async function addEvent(event: any) {
+  await entityEventsStore.addEntityEvent(event);
   router.push({ name: 'EntityEvents' })
 }
+entityEventsStore.initializeAdd().then(data => event.value=data)
 
 import EntityEventManager from '../helpers/EntityEventManager.vue';
 </script>
 
 <template>
-  <EntityEventManager is-add :event="sampleEvent" @add="addEvent" />
+  <EntityEventManager is-add :event="event" @add="addEvent" v-if="event"/>
 </template>

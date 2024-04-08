@@ -24,7 +24,7 @@ async function saveEvent() {
 
 async function toggleActive(active: boolean) {
   await entityEventsStore.toggleEntityEventActive(props.id, active);
-  // TODO: update locally
+  router.push({ name: 'EntityEvents' })
 }
 
 async function fetchEvent() {
