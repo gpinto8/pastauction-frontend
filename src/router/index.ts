@@ -158,7 +158,7 @@ const router = createRouter({
             children: [
               {
                 path: '/entity/profile',
-                name: 'Profile',
+                name: 'EntityProfile',
                 component: async () =>
                   await import(
                     /* webpackChunkName: "Profile" */ '@/views/entity/profile/Profile'
@@ -166,7 +166,7 @@ const router = createRouter({
               },
               {
                 path: '/entity/administration',
-                name: 'Administration',
+                name: 'EntityAdministration',
                 component: async () =>
                   await import(
                     /* webpackChunkName: "Administration" */ '@/views/entity/Administration'
@@ -174,7 +174,7 @@ const router = createRouter({
               },
               {
                 path: '/entity/services',
-                name: 'Services',
+                name: 'EntityServices',
                 component: async () =>
                   await import(
                     /* webpackChunkName: "Services" */ '@/views/entity/Services'
@@ -218,7 +218,7 @@ const router = createRouter({
               },
               {
                 path: '/entity/requests',
-                name: 'Requests',
+                name: 'EntityRequests',
                 component: async () =>
                   await import(
                     /* webpackChunkName: "Requests" */ '@/views/entity/Requests'

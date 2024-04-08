@@ -1,35 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEntityEventsStore } from '@/store/entity/events';
 
 const entityEventsStore = useEntityEventsStore();
-const { entityEvents, loadingEntityEvents } = storeToRefs(entityEventsStore);
+const { entityEvents, loadingEntityEvents, entityEventsYear, selectPast, selectOngoing, selectNext } = storeToRefs(entityEventsStore);
 
-const selectPast = ref(true);
-const selectOngoing = ref(true);
-const selectNext = ref(true);
-const year = ref(new Date().getFullYear());
+entityEventsStore.initializeFetch();
 
-function statusToColor(status: string) {
-  switch (status) {
-    case 'past':
-      return 'red';
-    case 'ongoing':
-      return 'green';
-    case 'next':
-      return 'blue';
-    default:
-      return 'red';
-  }
-}
-
-entityEventsStore.fetchEntityEvents();
-
-import ToggleButton from './helpers/ToggleButton.vue';
-import YearPaginator from './helpers/YearPaginator.vue';
-import Linguetta from './helpers/Linguetta.vue';
-import router from '@/router';
+import ToggleButton from '../helpers/ToggleButton.vue';
+import YearPaginator from '../helpers/YearPaginator.vue';
+import Linguetta from '../helpers/Linguetta.vue';
 </script>
 
 <template>
@@ -39,7 +19,7 @@ import router from '@/router';
       <ToggleButton v-model="selectOngoing" label="Ongoing" color="green" />
       <ToggleButton v-model="selectNext" label="Next" color="blue" />
       <v-spacer />
-      <YearPaginator v-model="year" />
+      <YearPaginator v-model="entityEventsYear" />
     </div>
     <v-sheet :elevation="1">
       <v-container v-if="loadingEntityEvents">
@@ -66,26 +46,26 @@ import router from '@/router';
             <v-btn :to="{ name: 'EntityEventsNew' }" icon="mdi-plus" color="#227AD2" density="compact" />
           </v-col>
         </v-row>
-        <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of entityEvents" :key="event.id">
+        <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of entityEvents" :key="event.event_id_key">
           <v-col class="mr-4" :cols="1">
-            <router-link :to="{ name: 'EntityEventsEvent', params: { id: event.id } }">
-              <v-avatar :image="event.avatar" :size="64" />
+            <router-link :to="{ name: 'EntityEventsEvent', params: { id: event.event_id_key } }">
+              <v-avatar :image="event.event_logo_url" alt="logo" :size="64" style="border: 1px solid black" />
             </router-link>
           </v-col>
           <v-col>
-            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.name" readonly
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_name" readonly
               label="Name" />
           </v-col>
           <v-col>
-            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.location" readonly
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_begin_city" readonly
               label="Location" />
           </v-col>
           <v-col class="d-flex align-center">
-            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.beginDate" readonly
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_begin_date" readonly
               label="Begin date">
               <template v-slot:append-inner>
                 <div class="d-flex align-top">
-                  <Linguetta class="ml-2" :color="statusToColor(event.status)" />
+                  <Linguetta class="ml-2" :color="entityEventsStore.statusToColor(entityEventsStore.getStatusFromEvent(event))" />
                 </div>
               </template>
             </v-text-field>

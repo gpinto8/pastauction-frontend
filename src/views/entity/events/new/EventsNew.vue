@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
+import { useRouter} from 'vue-router';
+
 import { useEntityEventsStore } from '@/store/entity/events';
+
+
+const entityEventsStore = useEntityEventsStore();
+const router = useRouter();
+
+const event = ref<any>(null);
+
+async function addEvent(event: any) {
+  await entityEventsStore.addEntityEvent(event);
+  router.push({ name: 'EntityEvents' })
+}
+entityEventsStore.initializeAdd().then(data => event.value=data)
+
+import EntityEventManager from '../helpers/EntityEventManager.vue';
 </script>
 
 <template>
-  <div class="px-14 mt-12">
-    New
-  </div>
+  <EntityEventManager is-add :event="event" @add="addEvent" v-if="event"/>
 </template>

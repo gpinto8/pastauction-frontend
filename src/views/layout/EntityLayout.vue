@@ -6,17 +6,17 @@ const tabs = ref([
   {
     name: 'profile',
     label: 'Profile',
-    to: './profile'
+    to: { name: 'EntityProfile'}
   },
   {
     name: 'administration',
     label: 'Administration',
-    to: './administration'
+    to: {name:'EntityAdministration'}
   },
   {
     name: 'services',
     label: 'Services',
-    to: './services'
+    to: {name:'EntityServices'}
   },
   {
     name: 'events',
@@ -26,7 +26,7 @@ const tabs = ref([
   {
     name: 'requests',
     label: 'Requests',
-    to: './requests'
+    to: {name:'EntityRequests'}
   }
 ]);
 </script> 
