@@ -249,6 +249,10 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     await httpPatch(`/entity_event/update/${id}`, {event_disabled: !active});
   }
 
+  async function duplicateEvent(event: any) {
+    await httpPost('/entity_event/create', {...event, event_id_key: undefined});
+  }
+
   return {
     entityEvents,
     loadingEntityEvents,
@@ -266,6 +270,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     addEntityEvent,
     deleteEntityEvent,
     updateEntityEvent,
-    toggleEntityEventActive
+    toggleEntityEventActive,
+    duplicateEvent
   }
 });

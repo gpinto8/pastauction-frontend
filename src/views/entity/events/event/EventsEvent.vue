@@ -17,8 +17,13 @@ async function deleteEvent() {
   router.push({ name: 'EntityEvents' })
 }
 
-async function saveEvent() {
-  await entityEventsStore.updateEntityEvent(props.id, event.value);
+async function saveEvent(event:any) {
+  await entityEventsStore.updateEntityEvent(props.id, event);
+  router.push({ name: 'EntityEvents' })
+}
+
+async function duplicateEvent(event: any) {
+  await entityEventsStore.duplicateEvent(event);
   router.push({ name: 'EntityEvents' })
 }
 
@@ -36,5 +41,5 @@ import EntityEventManager from '../helpers/EntityEventManager.vue';
 </script>
 
 <template>
-  <EntityEventManager :is-add="false" :event="event" @save="saveEvent" @delete="deleteEvent" @enable="toggleActive(true)" @disable="toggleActive(false)" v-if="event" />
+  <EntityEventManager :is-add="false" :event="event" @duplicate="duplicateEvent" @save="saveEvent" @delete="deleteEvent" @enable="toggleActive(true)" @disable="toggleActive(false)" v-if="event" />
 </template>
