@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue';
 import { defineStore, storeToRefs } from 'pinia';
-import { httpDelete, httpGet, httpPatch, httpPost } from '@/api/api';
+import { httpDelete, httpGet, httpPatch, httpPost, httpUpload } from '@/api/api';
 import { useEntityStore } from '@/store/entity';
 const entityStore = useEntityStore();
 const { generalInfo } = storeToRefs(entityStore);
@@ -132,7 +132,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
         logo: vistaEvent.event_logo,
         logo_url: vistaEvent.event_logo_url,
         main_photo: vistaEvent.event_main_photo,
-        logo_test: vistaEvent.event_logo_test,
+        logo_test: vistaEvent.event_logo,
         name: vistaEvent.event_name,
         open_to: vistaEvent.event_open_to,
         event_type: vistaEvent.event_event_type.split(','),
@@ -244,7 +244,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   }
 
   async function updateEntityEvent(id: number, event: any) {
-    const body = {...event, id_key: undefined, event_type: event.event_type.join(',')};
+    const body = {...event, id_key: undefined, main_photo: undefined, logo_test: undefined, logo: undefined, event_type: event.event_type.join(',')};
     await httpPatch(`/entity_event/update/${id}`, body);
   }
 
@@ -253,7 +253,29 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   }
 
   async function duplicateEvent(event: any) {
-    await httpPost('/entity_event/create', {...event, id_key: undefined});
+    await httpPost('/entity_event/create', {...event, id_key: undefined, main_photo: undefined, logo_test: undefined, logo: undefined, event_type: event.event_type.join(',')});
+  }
+
+  async function uploadMainPhoto(fileList: FileList | null, id: number): Promise<string> {
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const response = await httpUpload(`/entity_event/?nome_file=${id}`, formData);
+      return response.data.url;
+    } 
+    return '';
+  }
+
+  async function uploadLogo(fileList: FileList | null, id: number): Promise<string> {
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const response = await httpUpload(`/entity_event_logo/?nome_file=${id}`, formData);
+      return response.data.url;
+    } 
+    return '';
   }
 
   return {
@@ -275,6 +297,8 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     deleteEntityEvent,
     updateEntityEvent,
     toggleEntityEventActive,
-    duplicateEvent
+    duplicateEvent,
+    uploadMainPhoto,
+    uploadLogo,
   }
 });
