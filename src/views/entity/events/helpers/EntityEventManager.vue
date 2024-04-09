@@ -31,7 +31,7 @@ function addEvent() {
   emit('add', internalEvent.value);
 }
 function saveEvent() {
-  console.log('saveEvent');
+  emit('save', internalEvent.value);
 }
 function resetEvent() {
   internalEvent.value = deepClone(props.event);

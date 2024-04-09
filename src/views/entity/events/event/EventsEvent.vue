@@ -18,6 +18,7 @@ async function deleteEvent() {
 }
 
 async function saveEvent(event:any) {
+  console.log('dio')
   await entityEventsStore.updateEntityEvent(props.id, event);
   router.push({ name: 'EntityEvents' })
 }
@@ -33,7 +34,7 @@ async function toggleActive(active: boolean) {
 }
 
 async function fetchEvent() {
-  event.value = await entityEventsStore.fetchEntityEventByid(props.id);
+  event.value = entityEventsStore.vistaEventToEvent(await entityEventsStore.fetchEntityEventByid(props.id));
 }
 fetchEvent();
 

@@ -107,6 +107,40 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     }
   ]);
 
+  function vistaEventToEvent(vistaEvent: any) {
+    return {
+        id_key: vistaEvent.event_id_key,
+        begin_address: vistaEvent.event_begin_address,
+        begin_city: vistaEvent.event_begin_city,
+        begin_country: vistaEvent.event_begin_country,
+        begin_date: vistaEvent.event_begin_date,
+        begin_lat: vistaEvent.event_begin_lat,
+        begin_lon: vistaEvent.event_begin_lon,
+        collect_best_in_garage: vistaEvent.event_collect_best_in_garage,
+        collect_rank: vistaEvent.event_collect_rank,
+        collect_score: vistaEvent.event_collect_score,
+        collect_trophy: vistaEvent.event_collect_trophy,
+        collect_year_update: vistaEvent.event_collect_year_update,
+        cod_entity_id: vistaEvent.event_cod_entity_id,
+        date_end: vistaEvent.event_date_end,
+        description: vistaEvent.event_description,
+        end_address: vistaEvent.event_end_address,
+        end_city: vistaEvent.event_end_city,
+        end_country: vistaEvent.event_end_country,
+        end_lat: vistaEvent.event_end_lat,
+        end_lon: vistaEvent.event_end_lon,
+        logo: vistaEvent.event_logo,
+        logo_url: vistaEvent.event_logo_url,
+        main_photo: vistaEvent.event_main_photo,
+        logo_test: vistaEvent.event_logo_test,
+        name: vistaEvent.event_name,
+        open_to: vistaEvent.event_open_to,
+        event_type: vistaEvent.event_event_type.split(','),
+        website: vistaEvent.event_website,
+        disabled: vistaEvent.event_disabled,
+    }
+  }
+
   function statusToColor(status: string) {
     switch (status) {
       case 'past':
@@ -210,7 +244,8 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   }
 
   async function updateEntityEvent(id: number, event: any) {
-    await httpPatch(`/entity_event/update/${id}`, event);
+    const body = {...event, id_key: undefined, event_type: event.event_type.join(',')};
+    await httpPatch(`/entity_event/update/${id}`, body);
   }
 
   async function toggleEntityEventActive(id: number, active: boolean) {
@@ -218,7 +253,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   }
 
   async function duplicateEvent(event: any) {
-    await httpPost('/entity_event/create', {...event, event_id_key: undefined});
+    await httpPost('/entity_event/create', {...event, id_key: undefined});
   }
 
   return {
@@ -229,6 +264,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     selectPast,
     selectOngoing,
     selectNext,
+    vistaEventToEvent,
     initializeAdd,
     initializeFetch,
     statusToColor,
