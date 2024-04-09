@@ -18,7 +18,6 @@ async function deleteEvent() {
 }
 
 async function saveEvent(event:any) {
-  console.log('dio')
   await entityEventsStore.updateEntityEvent(props.id, event);
   router.push({ name: 'EntityEvents' })
 }
