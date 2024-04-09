@@ -33,7 +33,7 @@ async function toggleActive(active: boolean) {
 }
 
 async function fetchEvent() {
-  event.value = await entityEventsStore.fetchEntityEventByid(props.id);
+  event.value = entityEventsStore.vistaEventToEvent(await entityEventsStore.fetchEntityEventByid(props.id));
 }
 fetchEvent();
 

@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue';
 import { defineStore, storeToRefs } from 'pinia';
-import { httpDelete, httpGet, httpPatch, httpPost } from '@/api/api';
+import { httpDelete, httpGet, httpPatch, httpPost, httpUpload } from '@/api/api';
 import { useEntityStore } from '@/store/entity';
 const entityStore = useEntityStore();
 const { generalInfo } = storeToRefs(entityStore);
@@ -107,6 +107,40 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     }
   ]);
 
+  function vistaEventToEvent(vistaEvent: any) {
+    return {
+        id_key: vistaEvent.event_id_key,
+        begin_address: vistaEvent.event_begin_address,
+        begin_city: vistaEvent.event_begin_city,
+        begin_country: vistaEvent.event_begin_country,
+        begin_date: vistaEvent.event_begin_date,
+        begin_lat: vistaEvent.event_begin_lat,
+        begin_lon: vistaEvent.event_begin_lon,
+        collect_best_in_garage: vistaEvent.event_collect_best_in_garage,
+        collect_rank: vistaEvent.event_collect_rank,
+        collect_score: vistaEvent.event_collect_score,
+        collect_trophy: vistaEvent.event_collect_trophy,
+        collect_year_update: vistaEvent.event_collect_year_update,
+        cod_entity_id: vistaEvent.event_cod_entity_id,
+        date_end: vistaEvent.event_date_end,
+        description: vistaEvent.event_description,
+        end_address: vistaEvent.event_end_address,
+        end_city: vistaEvent.event_end_city,
+        end_country: vistaEvent.event_end_country,
+        end_lat: vistaEvent.event_end_lat,
+        end_lon: vistaEvent.event_end_lon,
+        logo: vistaEvent.event_logo,
+        logo_url: vistaEvent.event_logo_url,
+        main_photo: vistaEvent.event_main_photo,
+        logo_test: vistaEvent.event_logo,
+        name: vistaEvent.event_name,
+        open_to: vistaEvent.event_open_to,
+        event_type: vistaEvent.event_event_type.split(','),
+        website: vistaEvent.event_website,
+        disabled: vistaEvent.event_disabled,
+    }
+  }
+
   function statusToColor(status: string) {
     switch (status) {
       case 'past':
@@ -140,7 +174,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
         const begin = `event_begin_date=${entityEventsYearBegin.value}`;
         const end = `event_end_date=${entityEventsYearEnd.value}`;
         const status = statusFilter.value.length && statusFilter.value.length < 3 ? `&status=${statusFilter.value}` : '';
-        entityEvents.value = await fetchAllItems<any>(`/entity_event?search=${search}&${begin}&${end}${status}`);
+        entityEvents.value = await fetchAllItems<any>(`/entity_event?${search}&${begin}&${end}${status}`);
       }
       finally {
         loadingEntityEvents.value = false;
@@ -165,65 +199,32 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     await fetchEntityId();
     return {
       cod_entity_id: entityId.value,
-      event_cod_entity_id: entityId.value,
-      event_begin_address: "pippo",
-      event_begin_city: "string",
-      event_begin_country: "string",
-      event_begin_date: "2024-03-20",
-      event_begin_lat: 0.0,
-      event_begin_lon: 0.0,
-      event_collect_best_in_garage: "string",
-      event_collect_rank: "string",
-      event_collect_score: 0.0,
-      event_collect_trophy: "string",
-      event_collect_year_update: 0,
-      event_date_end: "2024-03-20",
-      event_description: "string",
-      event_end_address: "string",
-      event_end_city: "string",
-      event_end_country: "string",
-      event_end_lat: 0.0,
-      event_end_lon: 0.0,
-      event_logo: "\\x737472696e67",
-      event_logo_url: "string",
-      event_main_photo: "string",
-      event_name: "string",
-      event_peno_to: "string",
-      event_event_type: "string",
-      event_website: "string",
-      user_entity_id: 15796,
-      user_id: 64,
-      entity_id: 15796,
-      entity_address: "string",
-      entity_aging_period: "string",
-      entity_area_geo: "string",
-      entity_brand_main: "string",
-      entity_brand_secondary: "string",
-      entity_city: "string",
-      entity_city_latit: 0.0,
-      entity_city_longit: 0.0,
-      entity_country: "Italy",
-      entity_country_code: "string",
-      entity_days_activity: "Lun,Mar,Mer",
-      entity_descr_activity: "string",
-      entity_descr_history: "string",
-      entity_email: "string",
-      entity_logo: "string",
-      entity_logo_path: "string",
-      entity_logo_url: "string",
-      entity_main_photo: "string",
-      entity_main_photo_path: "string",
-      entity_main_photo_url: "string",
-      entity_name_complete: "string",
-      entity_name_short: "string",
-      entity_opening_descr: "string",
-      entity_phone: "string",
-      entity_phone_hand: "string",
-      entity_region_state: "string",
-      entity_social_media: "string",
-      entity_website: "string",
-      event_disabled: false,
-      categories: []
+      begin_address: "pippo",
+      begin_city: "string",
+      begin_country: "string",
+      begin_date: "2024-03-20",
+      begin_lat: 0.0,
+      begin_lon: 0.0,
+      collect_best_in_garage: "string",
+      collect_rank: "string",
+      collect_score: 0.0,
+      collect_trophy: "string",
+      collect_year_update: 0,
+      date_end: "2024-03-20",
+      description: "string",
+      end_address: "string",
+      end_city: "string",
+      end_country: "string",
+      end_lat: 0.0,
+      end_lon: 0.0,
+      logo: "",
+      logo_url: "",
+      main_photo: "",
+      name: "string",
+      peno_to: "string",
+      event_type: [],
+      website: "string",
+      disabled: false
   }
 }
 
@@ -234,7 +235,8 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   }
 
   async function addEntityEvent(event: any) {
-    await httpPost('/entity_event/create', event);
+    const body = {...event, event_type: event.event_type.join(',')};
+    await httpPost('/entity_event/create', body);
   }
 
   async function deleteEntityEvent(id: number) {
@@ -242,15 +244,38 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
   }
 
   async function updateEntityEvent(id: number, event: any) {
-    await httpPatch(`/entity_event/update/${id}`, event);
+    const body = {...event, id_key: undefined, main_photo: undefined, logo_test: undefined, logo: undefined, event_type: event.event_type.join(',')};
+    await httpPatch(`/entity_event/update/${id}`, body);
   }
 
   async function toggleEntityEventActive(id: number, active: boolean) {
-    await httpPatch(`/entity_event/update/${id}`, {event_disabled: !active});
+    await httpPatch(`/entity_event/update/${id}`, {disabled: !active});
   }
 
   async function duplicateEvent(event: any) {
-    await httpPost('/entity_event/create', {...event, event_id_key: undefined});
+    await httpPost('/entity_event/create', {...event, id_key: undefined, main_photo: undefined, logo_test: undefined, logo: undefined, event_type: event.event_type.join(',')});
+  }
+
+  async function uploadMainPhoto(fileList: FileList | null, id: number): Promise<string> {
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const response = await httpUpload(`/entity_event/?nome_file=${id}`, formData);
+      return response.data.url;
+    } 
+    return '';
+  }
+
+  async function uploadLogo(fileList: FileList | null, id: number): Promise<string> {
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const response = await httpUpload(`/entity_event_logo/?nome_file=${id}`, formData);
+      return response.data.url;
+    } 
+    return '';
   }
 
   return {
@@ -261,6 +286,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     selectPast,
     selectOngoing,
     selectNext,
+    vistaEventToEvent,
     initializeAdd,
     initializeFetch,
     statusToColor,
@@ -271,6 +297,8 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
     deleteEntityEvent,
     updateEntityEvent,
     toggleEntityEventActive,
-    duplicateEvent
+    duplicateEvent,
+    uploadMainPhoto,
+    uploadLogo,
   }
 });
