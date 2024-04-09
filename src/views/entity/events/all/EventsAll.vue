@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEntityEventsStore } from '@/store/entity/events';
+
+import config from '@/config';
 
 const entityEventsStore = useEntityEventsStore();
 const { entityEvents, loadingEntityEvents, entityEventsYear, selectPast, selectOngoing, selectNext } = storeToRefs(entityEventsStore);
 
 entityEventsStore.initializeFetch();
+
+const apiUrl = ref(config.apiUrl);
 
 import ToggleButton from '../helpers/ToggleButton.vue';
 import YearPaginator from '../helpers/YearPaginator.vue';
@@ -49,7 +54,7 @@ import Linguetta from '../helpers/Linguetta.vue';
         <v-row class="mb-2 pl-2 pr-4" align="center" v-for="event of entityEvents" :key="event.event_id_key">
           <v-col class="mr-4" :cols="1">
             <router-link :to="{ name: 'EntityEventsEvent', params: { id: event.event_id_key } }">
-              <v-avatar :image="event.event_logo_url" alt="logo" :size="64" style="border: 1px solid black" />
+              <v-avatar :image="`${apiUrl}/photo/${event.event_logo}`" :size="64" style="border: 1px solid black" />
             </router-link>
           </v-col>
           <v-col>
@@ -57,15 +62,16 @@ import Linguetta from '../helpers/Linguetta.vue';
               label="Name" />
           </v-col>
           <v-col>
-            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_begin_city" readonly
-              label="Location" />
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_begin_city"
+              readonly label="Location" />
           </v-col>
           <v-col class="d-flex align-center">
-            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_begin_date" readonly
-              label="Begin date">
+            <v-text-field hide-details variant="underlined" density="compact" :model-value="event.event_begin_date"
+              readonly label="Begin date">
               <template v-slot:append-inner>
                 <div class="d-flex align-top">
-                  <Linguetta class="ml-2" :color="entityEventsStore.statusToColor(entityEventsStore.getStatusFromEvent(event))" />
+                  <Linguetta class="ml-2"
+                    :color="entityEventsStore.statusToColor(entityEventsStore.getStatusFromEvent(event))" />
                 </div>
               </template>
             </v-text-field>
