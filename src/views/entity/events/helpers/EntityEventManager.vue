@@ -182,11 +182,11 @@ import DisableEventDialog from './DisableEventDialog.vue';
         </v-col>
         <v-col>
           <div class="d-flex align-center flex-column" style="width: 230px">
-            <img class="mb-4" :src="`${apiUrl}/photo/${internalEvent.main_photo}`" width="230" />
+            <img class="mb-4" :src="`${apiUrl}/photo/${internalEvent.main_photo}`" width="230" v-if="internalEvent.main_photo"/>
             <BtnFileInput @selected="updateMainPhotoCallback" v-if="!isAdd">
               <template #activator="{ activate }">
                 <v-btn class="ml-0 mx-2" color="primary" @click="activate">{{
-                  internalEvent.event_logo ? 'Change photo' : 'Add photo'
+                  internalEvent.main_photo ? 'Change photo' : 'Add photo'
                   }}</v-btn>
               </template>
             </BtnFileInput>
@@ -200,8 +200,8 @@ import DisableEventDialog from './DisableEventDialog.vue';
         </v-col>
         <v-col>
           <div class="d-flex align-center flex-column" style="width: 230px">
-            <img class="mb-4" :src="`${apiUrl}/photo/${internalEvent.logo_test}`" width="230"
-              v-if="internalEvent.logo_test" />
+            <img class="mb-4" :src="`${apiUrl}/photo/${internalEvent.event_logo}`" width="230"
+              v-if="internalEvent.event_logo" />
             <BtnFileInput @selected="updateLogoCallback" v-if="!isAdd">
               <template #activator="{ activate }">
                 <v-btn class="ml-0 mx-2" color="primary" @click="activate">{{

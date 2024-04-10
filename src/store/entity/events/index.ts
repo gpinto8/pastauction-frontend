@@ -132,7 +132,7 @@ export const useEntityEventsStore = defineStore('entityEvents', () => {
         logo: vistaEvent.event_logo,
         logo_url: vistaEvent.event_logo_url,
         main_photo: vistaEvent.event_main_photo,
-        logo_test: vistaEvent.event_logo,
+        event_logo: vistaEvent.event_logo,
         name: vistaEvent.event_name,
         open_to: vistaEvent.event_open_to,
         event_type: vistaEvent.event_event_type.split(','),
