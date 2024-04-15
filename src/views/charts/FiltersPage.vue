@@ -509,6 +509,7 @@ export default {
             categoryType: [],
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             countries: [],
+            countries2: [],
             periods: [],
             selectedPeriod: null,
             periodSelected: false,
@@ -809,9 +810,21 @@ export default {
             this.colorSelected = true;
         },
 
-        selectCountry(country) {
+        async selectCountry(country) {
             this.selectedCountry = country;
             this.countrySelected = true;
+
+            try {
+                const response = await axios.get('/filter/filter_charts_vehicles/body_shape/', {
+                    params: {
+                        area: `${country}`
+                    }
+                });
+                this.countries2 = response.data.items;
+            } catch (error) {
+                console.error('Errore nel recupero dei paesi:', error);
+            }
+
         },
 
         selectPeriod(period) {
