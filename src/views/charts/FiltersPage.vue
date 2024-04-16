@@ -1,6 +1,6 @@
 <template>
     <div class="m-5">
-      <v-container fluid>
+        <v-container fluid>
             <v-alert 
                 color="info"
                 variant="tonal"
@@ -21,7 +21,19 @@
                     <v-btn size="x-small" class="float-right" color="black" @click="clearFilters">Clear filters</v-btn>
                 </v-col>
             </v-row>
-
+        </v-container>
+        <v-container fluid v-if="loading">
+            <div class="m-5 d-flex align-center justify-center">
+                <v-progress-circular
+                    v-if="loading"
+                    :size="70"
+                    :width="7"
+                    color="primary"
+                    indeterminate
+                ></v-progress-circular>
+            </div>
+        </v-container>
+        <v-container fluid v-else>
             <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -424,9 +436,9 @@
                                     v-for="item in miscOptionsSold"
                                     :key="item"
                                     class="letter-button"
-                                    :variant="selectedMiscellaneous === item ? 'elevated' : 'outlined'"
-                                    @click="selectMiscellaneous(item)"
-                                    :color="selectedMiscellaneous === item ? 'black' : ''"
+                                    :variant="selectedMiscellaneous.miscOptionsSold === item ? 'elevated' : 'outlined'"
+                                    @click="selectMiscellaneous(item, 'miscOptionsSold')"
+                                    :color="selectedMiscellaneous.miscOptionsSold === item ? 'black' : ''"
                                     text
                                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                                 >
@@ -438,9 +450,9 @@
                                     v-for="item in miscOptionsQuote"
                                     :key="item"
                                     class="letter-button"
-                                    :variant="selectedMiscellaneous === item ? 'elevated' : 'outlined'"
-                                    @click="selectMiscellaneous(item)"
-                                    :color="selectedMiscellaneous === item ? 'black' : ''"
+                                    :variant="selectedMiscellaneous.miscOptionsQuote === item ? 'elevated' : 'outlined'"
+                                    @click="selectMiscellaneous(item, 'miscOptionsQuote')"
+                                    :color="selectedMiscellaneous.miscOptionsQuote === item ? 'black' : ''"
                                     text
                                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                                 >
@@ -452,9 +464,9 @@
                                     v-for="item in miscOptionChas"
                                     :key="item"
                                     class="letter-button"
-                                    :variant="selectedMiscellaneous === item ? 'elevated' : 'outlined'"
-                                    @click="selectMiscellaneous(item)"
-                                    :color="selectedMiscellaneous === item ? 'black' : ''"
+                                    :variant="selectedMiscellaneous.miscOptionChas === item ? 'elevated' : 'outlined'"
+                                    @click="selectMiscellaneous(item, 'miscOptionChas')"
+                                    :color="selectedMiscellaneous.miscOptionChas === item ? 'black' : ''"
                                     text
                                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                                 >
@@ -493,7 +505,6 @@ export default {
             selectedBrand: [],
             selectedBrandFull: [],
             selectedCoupleBrand: null,
-            selectedNameBrand: null,
             selectedFamily: null,
             selectedModel: null,
             selectedCountry: null,
@@ -522,7 +533,11 @@ export default {
             miscOptionsSold: ['Sold', 'Not sold'],
             miscOptionsQuote: ['Quoted', 'Not quoted'],
             miscOptionChas: ['With chassis', 'Without chassis'],
-            selectedMiscellaneous: null,
+            selectedMiscellaneous: {
+                miscOptionsSold: null,
+                miscOptionsQuote: null,
+                miscOptionChas: null
+            },
             miscellaneousSelected: false,
             selectedFilters: [],
             brandsCoupleLetter: [],
@@ -534,15 +549,23 @@ export default {
             selectedCategoryName: [],
             modelList: [],
             listaType: [],
+            loading: true,
         };
     },
 
     mounted() {
-        this.fetchCountries();
-        this.fetchAttributes();
-        this.fetchPeriods();
-        this.fetchColoursPrimary();
-        this.fetchType();
+        Promise.all([
+        this.fetchCountries(),
+        this.fetchAttributes(),
+        this.fetchPeriods(),
+        this.fetchColoursPrimary(),
+        this.fetchType(),
+        ]).then(() => {
+        this.loading = false;
+        }).catch((error) => {
+        console.error('Errore durante il recupero dei dati:', error);
+           this.loading = false;
+        });
     },
 
     methods: {
@@ -671,7 +694,6 @@ export default {
         },
 
         async selectModelName(model) {
-                console.log('Model selected:', model); 
             if (!this.selectedModelFull.includes(model)) {
                 this.selectedModelFull.push(model);
             }
@@ -740,7 +762,6 @@ export default {
         },
 
         async selectCategoryName(categoryName) {
-            console.log(categoryName)
             if (!this.selectedCategoryName.includes(categoryName)) {
                 this.selectedCategoryName.push(categoryName);
             }
@@ -799,7 +820,6 @@ export default {
                     }
                 });
                 this.sfumature = response.data.items;
-                console.log(colour)
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
@@ -832,39 +852,68 @@ export default {
             this.periodSelected = true;
         },
         
-        selectMiscellaneous(misc) {
-            this.selectedMiscellaneous = misc;
-            this.miscellaneousSelected = true;
+        selectMiscellaneous(item, arrayName) {
+            if (this.selectedMiscellaneous[arrayName] !== item) {
+                this.selectedMiscellaneous[arrayName] = item;
+            } else {
+                this.selectedMiscellaneous[arrayName] = null;
+            }
         },
 
         clearFilters() {
-            this.selectedBrand = null;
-            this.selectedFamily = null;
-            this.selectedModel = null;
-            this.selectedCountry = null;
-            this.selectedType = null;
-            this.selectedAttribute = null;
-            this.selectedPeriod = null;
-            this.selectedColour = null;
-            this.selectedMiscellaneous = null;
-            this.selectedCoupleBrand = null;
-            this.selectedNameBrand = null;
-            this.selectedBrand = [];
-            this.selectedBrandFull = [];
-
+            this.selectedBrand= [];
+            this.selectedBrandFull= [];
+            this.selectedCoupleBrand= null;
+            this.selectedFamily= null;
+            this.selectedModel= null;
+            this.selectedCountry= null;
+            this.selectedType= null;
+            this.selectedCategoryType= null;
+            this.selectedAttribute= null;
+            this.selectedPeriod= null;
+            this.selectedColour= null;
+            this.selectedColor= null;
+            this.selectedMiscellaneous= null;
+            this.selectedFilters= [];
+            this.selectedFamilyFull= [];
+            this.selectedModelFull= [];
+            this.selectedCategoryName= [];
         },
 
         goToDashboard() {
+            console.log(this.selectedBrand[0],
+                this.selectedBrandFull[0],
+                this.selectedCoupleBrand,
+                this.selectedFamily,
+                this.selectedCountry,
+                this.selectedType,
+                this.selectedCategoryType,
+                this.selectedAttribute,
+                this.selectedPeriod,
+                this.selectedColour,
+                this.selectedColor,
+                this.selectedMiscellaneous,
+                this.selectedFilters,
+                this.selectedFamilyFull,
+                this.selectedModelFull,
+                this.selectedCategoryName)
             if (
                 this.selectedBrand &&
+                this.selectedBrandFull &&
+                this.selectedCoupleBrand &&
                 this.selectedFamily &&
-                this.selectedModel &&
                 this.selectedCountry &&
                 this.selectedType &&
+                this.selectedCategoryType &&
                 this.selectedAttribute &&
                 this.selectedPeriod &&
                 this.selectedColour &&
-                this.selectedMiscellaneous
+                this.selectedColor &&
+                this.selectedMiscellaneous[0] &&
+                this.selectedFilters &&
+                this.selectedFamilyFull &&
+                this.selectedModelFull &&
+                this.selectedCategoryName
             ) {
                 this.$router.push({ path: '/charts/filters/brand' });
             } else {

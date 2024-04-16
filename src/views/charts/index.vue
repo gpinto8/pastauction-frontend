@@ -37,7 +37,7 @@
         v-if="loading"
         :size="70"
         :width="7"
-        color="purple"
+        color="primary"
         indeterminate
       ></v-progress-circular>
     </div>
