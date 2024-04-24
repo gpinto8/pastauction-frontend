@@ -520,7 +520,7 @@
                 <v-col cols="12">
                     <div class="d-flex justify-end">
                         <v-btn size="small" class="mr-2" variant="outlined" color="black" @click="this.$router.push({ name: 'Charts' });">Back</v-btn>
-                        <v-btn size="small" class="float-right" color="black" @click="goToDashboard">Preview data set</v-btn>
+                        <v-btn size="small" class="float-right" color="black" @click="previewDataset()">Preview data set</v-btn>
                     </div>
                 </v-col>
             </v-row>
@@ -949,45 +949,31 @@ export default {
             this.selectedCategoryName= [];
         },
 
-        goToDashboard() {
-            console.log(this.selectedBrand[0],
-                this.selectedBrandFull[0],
-                this.selectedCoupleBrand,
-                this.selectedFamily,
+        async previewDataset() {
+            console.log(
+                this.selectedBrandFull,
+                this.selectedFamilyFull,
+                this.selectedModelFull,
                 this.selectedCountry,
-                this.selectedType,
-                this.selectedCategoryType,
+                this.selectedCountryChip,
+                this.selectedCategoryName,
                 this.selectedAttribute,
                 this.selectedPeriod,
                 this.selectedColour,
                 this.selectedColor,
-                this.selectedMiscellaneous,
-                this.selectedFilters,
-                this.selectedFamilyFull,
-                this.selectedModelFull,
-                this.selectedCategoryName)
-            if (
-                this.selectedBrand &&
-                this.selectedBrandFull &&
-                this.selectedCoupleBrand &&
-                this.selectedFamily &&
-                this.selectedCountry &&
-                this.selectedType &&
-                this.selectedCategoryType &&
-                this.selectedAttribute &&
-                this.selectedPeriod &&
-                this.selectedColour &&
-                this.selectedColor &&
-                this.selectedMiscellaneous[0] &&
-                this.selectedFilters &&
-                this.selectedFamilyFull &&
-                this.selectedModelFull &&
-                this.selectedCategoryName
-            ) {
-                this.$router.push({ path: '/charts/filters/brand' });
-            } else {
-                console.log('Per favore, seleziona tutti i filtri prima di procedere.');
-            }
+                this.selectedMiscellaneous.miscOptionsSold,
+                this.selectedMiscellaneous.miscOptionsQuote,
+                this.selectedMiscellaneous.miscOptionChas)
+                try {
+                    const response = await axios.get('/bidwatcher_vehicle/query_v/', {
+                        params: {
+                            search: `brand_name:${this.selectedBrandFull},bw_family_name:${this.selectedFamilyFull}`
+                        }
+                    });
+                    this.countries2 = response.data.items;
+                } catch (error) {
+                    console.error('Errore nel recupero dei paesi:', error);
+                }
         }
     },
 };
