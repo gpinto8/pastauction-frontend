@@ -4,7 +4,7 @@
       <v-card-text class="text-center pt-2 pb-1">
         <img class="ms-11" src="@/assets/images/car-dialog-chart.svg" alt="Immagine" width="120">
         <div class="mt-2">
-          <small>{{ description }}</small>
+          <small>Brand is not included in your plan, you will be charged 150 Bolts</small>
         </div>
       </v-card-text>
       <v-card-actions class="col-12 d-flex justify-center">
@@ -15,11 +15,10 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
+<script>
 export default {
   props: {
-    modalOpen: Boolean,
-    description: String,
+    modalOpen: Boolean
   },
   data() {
     return {
@@ -35,7 +34,8 @@ export default {
     closeDialog() {
       this.$emit('update:modalOpen', false);
     },
-    goToFilters() {
+
+    goToFilters(){
       this.$emit('continueClicked');
     }
   }

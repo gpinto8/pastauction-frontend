@@ -32,15 +32,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <div class="m-5 d-flex align-center justify-center">
-      <v-progress-circular
-        v-if="loading"
-        :size="70"
-        :width="7"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
+
     <!-- Prima riga di card -->
     <v-container fluid>
       <v-row justify="center">
@@ -167,7 +159,6 @@ export default {
       selectedDescription: '',
       firstRowCards: [],
       secondRowCards: [],
-      loading: true
       }
   },
 
@@ -193,7 +184,12 @@ export default {
 
     async fetchChartSelection() {
       try {
-        const response = await axios.get('/chart/selection');
+        const response = await axios.get('/chart/selection', {
+          params: {
+            page: 1,
+            size: 50
+          }
+        });
         this.firstRowCards = response.data.items.slice(0, 3).map(item => ({
           ...item,
           isActive: item.available === 1 
@@ -202,8 +198,6 @@ export default {
           ...item,
           isActive: item.available === 1 
         }));
-        // Imposta lo stato di caricamento su falso quando le card sono caricate
-        this.loading = false;
       } catch (error) {
         throw new Error(error);
       }
@@ -246,3 +240,4 @@ export default {
   padding-right: 20px; 
 }
 </style>
+
