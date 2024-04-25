@@ -32,7 +32,15 @@
         </v-col>
       </v-row>
     </v-container>
-
+    <div class="m-5 d-flex align-center justify-center">
+      <v-progress-circular
+        v-if="loading"
+        :size="70"
+        :width="7"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
+    </div>
     <!-- Prima riga di card -->
     <v-container fluid>
       <v-row justify="center">
@@ -61,7 +69,6 @@
                 <div class="text-caption text-center h-100">{{ card.subtitle }}</div>
               </div>
             </v-card-item>
-
             <v-card-actions class="d-flex justify-center">
               <v-btn
                 size="small"
@@ -73,12 +80,10 @@
               {{ card.isSelected ? 'Selected' : 'Select' }}
               </v-btn>
             </v-card-actions>
-
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-
     <!-- Seconda riga di card -->
     <v-container fluid>
       <v-row justify="center">
@@ -107,7 +112,6 @@
                 <div class="text-caption text-center">{{ card.subtitle }}</div>
               </div>
             </v-card-item>
-
             <v-card-actions class="d-flex justify-center">
               <v-btn
                 size="small"
@@ -119,12 +123,10 @@
               {{ card.isSelected ? 'Selected' : 'Select' }}
               </v-btn>
             </v-card-actions>
-
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-
     <v-container fluid>
       <v-row>
         <v-col cols="12">
@@ -132,22 +134,18 @@
         </v-col>
       </v-row>
     </v-container>
-
     <ModalChartsType 
       :modalOpen="modalOpen" 
       :description="selectedDescription" 
       @update:modalOpen="updateModalOpen" 
       @continueClicked="continueProcess"
     />
-
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 import ModalChartsType from './components/ModalChartsType.vue';
 import router from '@/router/index';
-
 export default {
   components: {
     ModalChartsType
@@ -159,9 +157,9 @@ export default {
       selectedDescription: '',
       firstRowCards: [],
       secondRowCards: [],
+      loading: true
       }
   },
-
   async mounted() {
     try {
       await this.fetchChartSelection();
@@ -169,9 +167,7 @@ export default {
       console.error('Errore durante il recupero dei dati:', error);
     }
   },
-
   methods: {
-
     updateModalOpen(value) {
       this.modalOpen = value;
     },
@@ -181,15 +177,9 @@ export default {
         this.modalOpen = true;
       }
     },
-
     async fetchChartSelection() {
       try {
-        const response = await axios.get('/chart/selection', {
-          params: {
-            page: 1,
-            size: 50
-          }
-        });
+        const response = await axios.get('/chart/selection');
         this.firstRowCards = response.data.items.slice(0, 3).map(item => ({
           ...item,
           isActive: item.available === 1 
@@ -198,15 +188,15 @@ export default {
           ...item,
           isActive: item.available === 1 
         }));
+        // Imposta lo stato di caricamento su falso quando le card sono caricate
+        this.loading = false;
       } catch (error) {
         throw new Error(error);
       }
     },
-
     continueProcess() {
       router.push({ path: '/charts/filters' });
     },
-
     selectCard(card) {
       this.firstRowCards.forEach((c) => {
         c.isSelected = false;
@@ -216,22 +206,17 @@ export default {
       });
       card.isSelected = true;
       this.cardSelected = true;
-
       const selectedObject = this.firstRowCards.find(c => c === card) || this.secondRowCards.find(c => c === card);
       this.selectedDescription = selectedObject.description;
-
       this.$emit('cardSelected', selectedObject.description);
     },
-
     toggleSelect(card) {
       card.isSelected = !card.isSelected;
       this.cardSelected = card.isSelected;
     }
 }
-
 }
 </script>
-
 <style scoped>
 .custom-chip {
   background-color: #ffffff;
@@ -240,4 +225,3 @@ export default {
   padding-right: 20px; 
 }
 </style>
-
