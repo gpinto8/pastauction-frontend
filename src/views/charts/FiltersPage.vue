@@ -1000,8 +1000,7 @@ export default {
                 body_type = ``;
             }
 
-            let shape = "";
-            shape = `shape:${this.selectedAttributes},`; //TODO: selectedAttributes is an array now!
+            let shape = this.selectedAttributes.length > 0 ? `shape:${this.selectedAttributes.join("|")}` : "";
 
             let age_name = "";
             age_name = `age_name:${this.selectedPeriods},`;
