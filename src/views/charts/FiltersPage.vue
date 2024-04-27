@@ -402,9 +402,9 @@
                         v-for="period in periods"
                         :key="period.age_name"
                         class="letter-button"
-                        :variant="selectedPeriod === period.age_name ? 'elevated' : 'outlined'"
+                        :variant="selectedPeriods.includes(period.age_name) ? 'elevated' : 'outlined'"
                         @click="selectPeriod(period.age_name)"
-                        :color="selectedPeriod === period.age_name ? 'black' : ''"
+                        :color="selectedPeriods.includes(period.age_name) ? 'black' : ''"
                         text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
@@ -559,7 +559,7 @@ export default {
             countries: [],
             countries2: [],
             periods: [],
-            selectedPeriod: null,
+            selectedPeriods: [],
             periodSelected: false,
             colours: [],
             sfumature: [],
@@ -915,8 +915,7 @@ export default {
         },
 
         selectPeriod(period) {
-            this.selectedPeriod = period;
-            this.periodSelected = true;
+            toggleValueInArray(this.selectedPeriods, period)
         },
         
         selectMiscellaneous(item, arrayName) {
@@ -937,7 +936,7 @@ export default {
             this.selectedType= null;
             this.selectedCategoryType= null;
             this.selectedAttributes= [];
-            this.selectedPeriod= null;
+            this.selectedPeriods= [];
             this.selectedColour= null;
             this.selectedColor= null;
             this.selectedMiscellaneous.miscOptionsSold = null;
@@ -1005,7 +1004,7 @@ export default {
             shape = `shape:${this.selectedAttributes},`; //TODO: selectedAttributes is an array now!
 
             let age_name = "";
-            age_name = `age_name:${this.selectedPeriod},`;
+            age_name = `age_name:${this.selectedPeriods},`;
 
 
             let family_color_main_name = "";
@@ -1023,7 +1022,7 @@ export default {
                 this.selectedCountryChip,
                 this.selectedCategoryName,
                 this.selectedAttributes,
-                this.selectedPeriod,
+                this.selectedPeriods,
                 this.selectedColour,
                 this.selectedColor,
                 this.selectedMiscellaneous.miscOptionsSold,
@@ -1044,6 +1043,9 @@ export default {
     computed: {
         attributeSelected() {
             return this.selectedAttributes.length > 0
+        },
+        periodSelected() {
+            return this.selectedPeriods.length > 0
         }
     }
 };
