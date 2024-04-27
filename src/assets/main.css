@@ -12,3 +12,7 @@ body {
 .v-application {
   @apply bg-[#F8F9FA];
 }
+
+.flex-center{
+    @apply flex justify-center items-center
+}
