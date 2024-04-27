@@ -377,9 +377,9 @@
                         v-for="attribute in attributes"
                         :key="attribute.body_shape"
                         class="letter-button"
-                        :variant="selectedAttribute === attribute.body_shape ? 'elevated' : 'outlined'"
-                        @click="selectAttribute(attribute.body_shape)"
-                        :color="selectedAttribute === attribute.body_shape ? 'black' : ''"
+                        :variant="selectedAttributes.includes(attribute.body_shape) === true ? 'elevated' : 'outlined'"
+                        @click="toggleAttribute(attribute.body_shape)"
+                        :color="selectedAttributes.includes(attribute.body_shape) === true ? 'black' : ''"
                         text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
@@ -530,6 +530,7 @@
 
 <script>
 import router from '@/router/index';
+import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 
 export default {
@@ -551,8 +552,7 @@ export default {
             typeSelected: false,
             categoryTypeSelected: false, 
             attributes: [],
-            selectedAttribute: null,
-            attributeSelected: false,
+            selectedAttributes: [],
             types: [],
             categoryType: [],
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
@@ -824,9 +824,8 @@ export default {
             }
         },
 
-        selectAttribute(attribute) {
-            this.selectedAttribute = attribute;
-            this.attributeSelected = true;
+        toggleAttribute(attribute) {
+            toggleValueInArray(this.selectedAttributes, attribute)
         },
 
         async fetchPeriods() {
@@ -937,7 +936,7 @@ export default {
             this.selectedCountry= null;
             this.selectedType= null;
             this.selectedCategoryType= null;
-            this.selectedAttribute= null;
+            this.selectedAttributes= [];
             this.selectedPeriod= null;
             this.selectedColour= null;
             this.selectedColor= null;
@@ -1003,7 +1002,7 @@ export default {
             }
 
             let shape = "";
-            shape = `shape:${this.selectedAttribute},`;
+            shape = `shape:${this.selectedAttributes},`; //TODO: selectedAttributes is an array now!
 
             let age_name = "";
             age_name = `age_name:${this.selectedPeriod},`;
@@ -1023,7 +1022,7 @@ export default {
                 this.selectedCountry,
                 this.selectedCountryChip,
                 this.selectedCategoryName,
-                this.selectedAttribute,
+                this.selectedAttributes,
                 this.selectedPeriod,
                 this.selectedColour,
                 this.selectedColor,
@@ -1042,6 +1041,11 @@ export default {
                 }
         }
     },
+    computed: {
+        attributeSelected() {
+            return this.selectedAttributes.length > 0
+        }
+    }
 };
 </script>
 
