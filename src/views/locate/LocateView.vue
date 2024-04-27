@@ -4,8 +4,19 @@ import Modal from '@/components/modal/Modal.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import MySelect from './components/Select.vue';
+import UICombobox from '@/components/ui/ui-combobox.vue';
+import { storeToRefs} from 'pinia'
+import {useLocateStore} from '@/store/locate/locate'
+
+const google = (window as any).google as any;
+const map = null as any;
 
 
+const locateStore = useLocateStore();
+const {brands, areas, agings, brandsLoading} = storeToRefs(locateStore);
+
+// locateStore.fetchBrands();
+locateStore.fetchAreas();
 
 //BTN
 const activeButton = ref('Entity');
@@ -133,25 +144,39 @@ function searchLocation() {
 
         <div class="flex flex-col gap-3 rounded p-2 my_search_bar">
             <div class="flex items-stretch gap-5">
-                <MySelect table-name="bidwatcher_brand" column-name="name"></MySelect>
-                <MySelect table-name="bidwatcher_brand" column-name="name"></MySelect>
-                <MySelect table-name="bidwatcher_brand" column-name="name"></MySelect>
-                <MySelect table-name="bidwatcher_brand" column-name="name"></MySelect>
-                <MySelect table-name="bidwatcher_brand" column-name="name"></MySelect>
-                <v-btn class="bg-blue-700 text-white">
+				<!-- <UICombobox empty-selected="aaa" search="" model-value="a" :items="['aaa', 'bbb']"></UICombobox> -->
+                <MySelect placeholder="Area" table-name="bidwatcher_brand" column-name="name" :items="brands"></MySelect>
+                <MySelect placeholder="Country" table-name="bidwatcher_brand" column-name="name" :items="areas"></MySelect>
+                <MySelect placeholder="Cars" table-name="bidwatcher_brand" column-name="name"></MySelect>
+                <MySelect placeholder="Brand" table-name="bidwatcher_brand" column-name="name"></MySelect>
+                <MySelect placeholder="Aging" table-name="bidwatcher_brand" column-name="name" :items="agings"></MySelect>
+                <v-btn class="bg-blue-700 text-white h-7">
                     Search
                 </v-btn>
             </div>
             <div class="flex items-stretch gap-6">
 
-                <div class="flex flex-col gap-1">
-                    <div
-                        class="flex items-center justify-center bg-white border-4 border-blue-500 rounded my_tag_icon_box">
-                        <app-icon type="temple" color="#000" size="xl"></app-icon>
-                    </div>
-                    <div class="text-white text-center">
-                        Museum
-                    </div>
+				<!-- entity type/category selector -->
+                <div class="flex flex-row gap-1">
+					<div
+						v-for="entity of [
+							{name: 'Museum', iconName: 'temple'},
+							{name: 'Circuit', iconName: 'circuit'},
+							{name: 'Race car', iconName: 'temple'},
+							{name: 'Exhibition', iconName: 'temple'},
+							{name: 'Market', iconName: 'temple'},
+							{name: 'Rally', iconName: 'temple'},
+							{name: 'Tours', iconName: 'temple'},
+						]"
+						class="flex flex-col gap-1"
+					>
+						<div class="flex items-center justify-center bg-white border-4 border-blue-500 rounded my_tag_icon_box">
+							<app-icon :type="entity.iconName" color="#000" size="xl"></app-icon>
+						</div>
+						<div class="text-white text-center">{{ entity.name }}</div>
+					</div>
+
+					
                 </div>
             </div>
         </div>

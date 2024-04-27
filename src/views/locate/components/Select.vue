@@ -1,46 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import AppIcon from '@/components/common/AppIcon.vue';
-// import { fetchProductListById } from '@/components/locate/Api.js';
-import { storeToRefs} from 'pinia'
-
-import {useLocateStore} from '@/store/locate/locate'
-
-const locateStore = useLocateStore();
-const {fetchBrands} = locateStore;
-const {brands, brandsLoading} = storeToRefs(locateStore);
-
 
 // Definisci le proprietà del componente
-const props = defineProps({
+defineProps({
+  placeholder: String,
   tableName: String,
-  columnName: String
+  columnName: String,
+  items: Array,
 });
 
-
-fetchBrands(props.tableName, props.columnName);
-// Variabili reactive per mantenere lo stato
-const productList = ref([]);
-
-// Effettua la richiesta dei dati quando il componente viene montato
-// onMounted(() => {
-//   // Eseguire la richiesta solo se tableName e columnName sono stati forniti come props
-//   if (props.tableName && props.columnName) {
-//     fetchProductListById(props.tableName, props.columnName)
-//       .then((data: any) => {
-//         productList.value = data;
-//       })
-//       .catch((error: any) => {
-//         console.error('Errore durante la richiesta:', error);
-//       });
-//   }
-// });
 </script>
 
 <template>
     <div class="select-container w-100">
       <select class="custom-select" name="test" id="">
-        <option v-for="item of brands" :value=item>{{item}}</option>
+		<option class="hidden" value="">{{placeholder || 'Select a value'}}</option>
+        <option v-for="item of items" :value=item>{{item}}</option>
       </select>
       <app-icon class="custom-icon" type="small_arr_down" color="#000" size="sm"></app-icon>
     </div>
