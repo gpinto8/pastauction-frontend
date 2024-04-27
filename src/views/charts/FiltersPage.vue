@@ -268,15 +268,15 @@
                                 v-for="flag in countries2" 
                                 :key="flag" 
                                 cols="12" sm="2" md="2" lg="2"
-                                class="d-flex justify-center"
+                                class="flex-center object-cover"
                                 >
-                                    <a href="#" 
-                                    :class="{ 'selected': selectedBrandFull.includes(brand) }" 
-                                    class="m-3" 
+                                    <div 
+                                    :class="this.selectedCountryChip.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
+                                    class="m-3 w-14 h-9 border-2" 
                                     style="font-size: 16px;" 
                                     @click="selectFlag(flag)">
-                                    <v-img :src="getImageUrl(flag.country_brand_name)" width="120px"/>
-                                    </a>
+                                        <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
+                                    </div>
                             </v-col>
                         </v-row>
                     </div>
