@@ -5,6 +5,7 @@ import {
 
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
+import LocateView from '@/views/locate/LocateView.vue';
 import SignupView from '@/views/auth/SignupView.vue';
 
 import { authGuard } from './utils/guards';
@@ -145,6 +146,11 @@ const router = createRouter({
               /* webpackChunkName: "Charts" */ '@/views/charts/index.vue'
             ),
             meta: { authentication: true }
+        },
+        {
+          path: '/locate',
+          name: 'Locate',
+          component: LocateView,
         },
         {
           path: '/entity',
