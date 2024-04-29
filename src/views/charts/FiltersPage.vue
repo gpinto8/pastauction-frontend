@@ -52,7 +52,6 @@
                             :variant="selectedBrand === letter ? 'elevated' : 'outlined'"
                             @click="selectBrand(letter)"
                             color="black"
-                            text
                             style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                             >
                             {{ letter }}
@@ -69,7 +68,6 @@
                             :variant="selectedCoupleBrand === coupleLetters ? 'elevated' : 'outlined'"
                             @click="selectCoupleBrand(coupleLetters)"
                             color="black"
-                            text
                             style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
                             {{ coupleLetters }}
@@ -133,7 +131,6 @@
                         :variant="selectedFamily === family ? 'elevated' : 'outlined'"
                         @click="selectFamily(family)"
                         color="black"
-                        text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
                         {{ family }}
@@ -237,7 +234,6 @@
                         :variant="selectedCountry === country.country_brand_area ? 'elevated' : 'outlined'"
                         @click="selectCountry(country.country_brand_area)"
                         color="black"
-                        text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
                         {{ country.country_brand_area }}
@@ -271,7 +267,7 @@
                                 class="flex-center object-cover"
                                 >
                                     <div 
-                                    :class="this.selectedCountryChip.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
+                                    :class="selectedCountryChip.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
                                     class="m-3 w-14 h-9 border-2" 
                                     style="font-size: 16px;" 
                                     @click="selectFlag(flag)">
@@ -300,7 +296,6 @@
                         :variant="selectedType === type.body_type ? 'elevated' : 'outlined'"
                         @click="selectType(type.body_type)"
                         :color="selectedType === type.body_type ? 'black' : ''"
-                        text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
                         {{ type.body_type }}
@@ -315,9 +310,8 @@
                             :key="catType.body_category"
                             class="letter-button"
                             :variant="selectedCategoryType === catType.body_category ? 'elevated' : 'outlined'"
-                            @click="selectCategoryType(selectedType, catType.body_category)"
+                            @click="selectedType != null ? selectCategoryType(selectedType, catType.body_category) : ''"
                             color="black"
-                            text
                             style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
                             {{ catType.body_category }}
@@ -380,7 +374,6 @@
                         :variant="selectedAttributes.includes(attribute.body_shape) === true ? 'elevated' : 'outlined'"
                         @click="toggleAttribute(attribute.body_shape)"
                         :color="selectedAttributes.includes(attribute.body_shape) === true ? 'black' : ''"
-                        text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
                         {{ attribute.body_shape }}
@@ -405,7 +398,6 @@
                         :variant="selectedPeriods.includes(period.age_name) ? 'elevated' : 'outlined'"
                         @click="selectPeriod(period.age_name)"
                         :color="selectedPeriods.includes(period.age_name) ? 'black' : ''"
-                        text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
                         {{ period.age_name }}
@@ -430,7 +422,6 @@
                         :variant="selectedColour.includes(colour.colorfamily_name) ? 'elevated' : 'outlined'"
                         @click="selectColour(colour.colorfamily_name)"
                         :color="selectedColour.includes(colour.colorfamily_name) ? 'black' : ''"
-                        text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
                         {{ colour.colorfamily_name }}
@@ -447,7 +438,6 @@
                             :variant="selectedColor.includes(color.color_name) ? 'elevated' : 'outlined'"
                             @click="selectColorSfumatura(color.color_name)"
                             color="black"
-                            text
                             style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
                             {{ color.color_name }}
@@ -477,7 +467,6 @@
                                         :variant="selectedMiscellaneous.miscOptionsSold === item ? 'elevated' : 'outlined'"
                                         @click="selectMiscellaneous(item, 'miscOptionsSold')"
                                         :color="selectedMiscellaneous.miscOptionsSold === item ? 'black' : ''"
-                                        text
                                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                                     >
                                         {{ item }}
@@ -491,7 +480,6 @@
                                         :variant="selectedMiscellaneous.miscOptionsQuote === item ? 'elevated' : 'outlined'"
                                         @click="selectMiscellaneous(item, 'miscOptionsQuote')"
                                         :color="selectedMiscellaneous.miscOptionsQuote === item ? 'black' : ''"
-                                        text
                                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                                     >
                                         {{ item }}
@@ -505,7 +493,6 @@
                                         :variant="selectedMiscellaneous.miscOptionChas === item ? 'elevated' : 'outlined'"
                                         @click="selectMiscellaneous(item, 'miscOptionChas')"
                                         :color="selectedMiscellaneous.miscOptionChas === item ? 'black' : ''"
-                                        text
                                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                                     >
                                         {{ item }}
@@ -519,7 +506,7 @@
             <v-row>
                 <v-col cols="12">
                     <div class="d-flex justify-end">
-                        <v-btn size="small" class="mr-2" variant="outlined" color="black" @click="this.$router.push({ name: 'Charts' });">Back</v-btn>
+                        <v-btn size="small" class="mr-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
                         <v-btn size="small" class="float-right" color="black" @click="previewDataset()">Preview data set</v-btn>
                     </div>
                 </v-col>
@@ -529,9 +516,18 @@
 </template>
 
 <script lang="ts">
-import router from '@/router/index';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
+
+type MiscSoldType = "Sold" | "Not sold"
+type MiscQuoteType = "Quoted" | "Not Quoted"
+type MiscChasType = "With chassis" | "Without chassis"
+
+type MiscSelections = {
+    "miscOptionsSold": null | MiscSoldType,
+    "miscOptionsQuote":null | MiscQuoteType,
+    "miscOptionChas":null | MiscChasType
+}
 
 export default {
     data() {
@@ -540,54 +536,54 @@ export default {
             brandCoupleSelected: false,
             familySelected: false,
             modelSelected: false,
-            selectedBrand: [],
-            selectedBrandFull: [],
+            selectedBrand: null  as null | string,
+            selectedBrandFull: [] as string[],
             selectedCoupleBrand: null,
-            selectedFamily: null,
+            selectedFamily: null as null | string,
             selectedModel: null,
-            selectedCountry: null,
+            selectedCountry: null as null | string,
             countrySelected: false,
-            selectedType: null,
-            selectedCategoryType: null,
+            selectedType: null as null | string,
+            selectedCategoryType: null as null | string,
             typeSelected: false,
             categoryTypeSelected: false, 
-            attributes: [],
-            selectedAttributes: [],
-            types: [],
-            categoryType: [],
+            attributes: [] as any[],
+            selectedAttributes: [] as string[],
+            types: [] as any[],
+            categoryType: [] as any[],
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-            countries: [],
-            countries2: [],
-            periods: [],
-            selectedPeriods: [],
+            countries: [] as any[],
+            countries2: [] as any[],
+            periods: [] as any[],
+            selectedPeriods: [] as string[],
             // periodSelected: false,
-            colours: [],
-            sfumature: [],
-            selectedColour: [],
-            selectedColor: [],
+            colours: [] as any[],
+            sfumature: [] as any[],
+            selectedColour: [] as string[],
+            selectedColor: [] as string[] ,
             // colourSelected: false,
             // colorSelected: false,
-            miscOptionsSold: ['Sold', 'Not sold'],
-            miscOptionsQuote: ['Quoted', 'Not quoted'],
-            miscOptionChas: ['With chassis', 'Without chassis'],
+            miscOptionsSold: ['Sold', 'Not sold'] as MiscSoldType[],
+            miscOptionsQuote: ['Quoted', 'Not quoted'] as MiscQuoteType[],
+            miscOptionChas: ['With chassis', 'Without chassis'] as MiscChasType[],
             selectedMiscellaneous: {
                 miscOptionsSold: null,
                 miscOptionsQuote: null,
                 miscOptionChas: null
-            },
+            } as MiscSelections,
             miscellaneousSelected: false,
-            selectedFilters: [],
-            brandsCoupleLetter: [],
-            brandList: [],
-            familyOptionsLetter: [],
-            selectedFamilyFull: [],
-            familyList: [],
-            selectedModelFull: [],
-            selectedCategoryName: [],
-            modelList: [],
-            listaType: [],
-            loading: true,
-            selectedCountryChip: [],
+            selectedFilters: [] as string[],
+            brandsCoupleLetter: [] as any[],
+            brandList: [] as any[],
+            familyOptionsLetter: [] as any[],
+            selectedFamilyFull: [] as string[],
+            familyList: [] as any[],
+            selectedModelFull: [] as string[],
+            selectedCategoryName: [] as any[],
+            modelList: [] as any[],
+            listaType: [] as any[],
+            loading: false,
+            selectedCountryChip: [] as any[],
             selectedFlag: null,
         };
     },
@@ -608,7 +604,7 @@ export default {
     },
 
     methods: {
-        async selectBrand(letter) {
+        async selectBrand(letter: string) {
             try {
                 this.selectedBrand = letter;
                 this.brandSelected = true;
@@ -617,27 +613,27 @@ export default {
                 this.countrySelected = false;
 
                 const response = await axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${letter}`);
-                const brandsCoupleLetter = response.data.items.map(item => item.left_1);
+                const brandsCoupleLetter = response.data.items.map((item: any) => item.left_1);
                 this.brandsCoupleLetter = brandsCoupleLetter;
             } catch (error) {
                 console.error('Error fetching brands:', error);
             }
         },
 
-        async selectCoupleBrand(brandsCoupleLetter) {
+        async selectCoupleBrand(brandsCoupleLetter: any) {
             try {
                 this.selectedCoupleBrand = brandsCoupleLetter;
                 this.brandCoupleSelected = true;
 
                 const response = await axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${brandsCoupleLetter}`);
-                const brands = response.data.items.map(item => item.name);
+                const brands = response.data.items.map((item: any) => item.name);
                 this.brandList = brands;
             } catch (error) {
                 console.error('Error fetching brands:', error);
             }
         },
 
-        async selectBrandName(brand) {
+        async selectBrandName(brand: any) {
             try {
                 // Aggiungi o rimuovi il marchio selezionato dalla lista
                 if (!this.selectedBrandFull.includes(brand)) {
@@ -656,10 +652,10 @@ export default {
 
                 const familyOptions = response.data.items;
 
-                let letters = [];
-                let numbers = [];
+                let letters: string[] = [];
+                let numbers: string[] = [];
 
-                familyOptions.forEach(item => {
+                familyOptions.forEach((item: any) => {
                     const value = item.left_1;
                     if (isNaN(value)) {
                         letters.push(value); 
@@ -677,11 +673,11 @@ export default {
             }
         },
 
-        removeSelectedBrand(index) {
+        removeSelectedBrand(index: number) {
             this.selectedBrandFull.splice(index, 1);
         },
 
-        async selectFamily(letter) {
+        async selectFamily(letter: string) {
             try {
                 this.selectedFamily = letter;
                 this.modelSelected = false;
@@ -694,9 +690,9 @@ export default {
                     }
                 });
 
-                const filteredFamilies = response.data.items.filter(item => item.family_name.startsWith(letter));
+                const filteredFamilies = response.data.items.filter((item: any) => item.family_name.startsWith(letter));
 
-                const familyNames = filteredFamilies.map(item => item.family_name);
+                const familyNames = filteredFamilies.map((item: any) => item.family_name);
 
                 this.familyList = familyNames;
             } catch (error) {
@@ -704,7 +700,7 @@ export default {
             }
         },
 
-        async selectFamilyName(family) {
+        async selectFamilyName(family: string) {
             if (!this.selectedFamilyFull.includes(family)) {
                 this.selectedFamilyFull.push(family);
             }
@@ -718,7 +714,7 @@ export default {
                     }
                 });
 
-                this.modelList = response.data.items.map(item => item.model_name);
+                this.modelList = response.data.items.map((item: any) => item.model_name);
                 
                 this.selectedModel = null;
                 
@@ -728,11 +724,11 @@ export default {
             }
         },
 
-        removeSelectedFamily(index) {
+        removeSelectedFamily(index: number) {
             this.selectedFamilyFull.splice(index, 1);
         },
 
-        async selectModelName(model) {
+        async selectModelName(model: string) {
             if (!this.selectedModelFull.includes(model)) {
                 this.selectedModelFull.push(model);
             }
@@ -742,7 +738,7 @@ export default {
             this.familySelected = true;
         },
 
-        removeSelectedModel(index) {
+        removeSelectedModel(index: number) {
             this.selectedModelFull.splice(index, 1);
         },
 
@@ -764,7 +760,7 @@ export default {
             }
         },
 
-        async selectType(type) {
+        async selectType(type: string) {
             this.selectedType = type;
             this.typeSelected = true;
 
@@ -781,7 +777,7 @@ export default {
             }
         },
 
-        async selectCategoryType(type, categoryType) {
+        async selectCategoryType(type: string, categoryType: string) {
              this.selectedType = type;
              this.typeSelected = true;
 
@@ -800,14 +796,14 @@ export default {
              }
         },
 
-        async selectCategoryName(categoryName) {
+        async selectCategoryName(categoryName: string) {
             if (!this.selectedCategoryName.includes(categoryName)) {
                 this.selectedCategoryName.push(categoryName);
             }
 
         },
 
-        removeSelectedCategoryName(index) {
+        removeSelectedCategoryName(index: number) {
             this.selectedCategoryName.splice(index, 1);
         },
 
@@ -824,7 +820,7 @@ export default {
             }
         },
 
-        toggleAttribute(attribute) {
+        toggleAttribute(attribute: string) {
             toggleValueInArray(this.selectedAttributes, attribute)
         },
 
@@ -846,9 +842,9 @@ export default {
             }
         },
 
-        async selectColour(colour) {
+        async selectColour(colour: string) {
             toggleValueInArray(this.selectedColour, colour)
-
+            
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/color_name/', {
                     params: {
@@ -861,11 +857,11 @@ export default {
             }
         },
 
-        selectColorSfumatura(color){
+        selectColorSfumatura(color: string){
             toggleValueInArray(this.selectedColour, color)
         },
 
-        async selectCountry(country) {
+        async selectCountry(country: string) {
             this.selectedCountry = country;
             this.countrySelected = true;
 
@@ -882,12 +878,12 @@ export default {
 
         },
 
-        getImageUrl(countryFlag) {
+        getImageUrl(countryFlag: string) {
         const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
             return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${brandAbbreviation}.jpeg`;
         },
 
-        async selectFlag(flag) {
+        async selectFlag(flag: any) {
             try {
                 // Verifica se la bandiera è già stata selezionata
                 const index = this.selectedCountryChip.indexOf(flag.country_brand_name);
@@ -907,15 +903,15 @@ export default {
             }
         },
 
-        removeSelectedCountry(index) {
+        removeSelectedCountry(index: number) {
             this.selectedCountryChip.splice(index, 1);
         },
 
-        selectPeriod(period) {
+        selectPeriod(period: string) {
             toggleValueInArray(this.selectedPeriods, period)
         },
         
-        selectMiscellaneous(item, arrayName) {
+        selectMiscellaneous<T extends keyof MiscSelections>(item: MiscSelections[T], arrayName: T) {
             if (this.selectedMiscellaneous[arrayName] !== item) {
                 this.selectedMiscellaneous[arrayName] = item;
             } else {
@@ -924,7 +920,7 @@ export default {
         },
 
         clearFilters() {
-            this.selectedBrand= [];
+            this.selectedBrand= null;
             this.selectedBrandFull= [];
             this.selectedCoupleBrand= null;
             this.selectedFamily= null;
@@ -935,7 +931,7 @@ export default {
             this.selectedAttributes= [];
             this.selectedPeriods= [];
             this.selectedColour= [];
-            this.selectedColor= null;
+            this.selectedColor= [];
             this.selectedMiscellaneous.miscOptionsSold = null;
             this.selectedFilters= [];
             this.selectedFamilyFull= [];

@@ -1,4 +1,4 @@
-export function toggleValueInArray(array: any[], value: any) {
+export function toggleValueInArray<T>(array: T[], value: T) {
 
     let index = array.indexOf(value)
 

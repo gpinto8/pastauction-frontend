@@ -47,7 +47,6 @@
         <v-row justify="center">
           <v-col xs="12" v-for="(card, index) in firstRowCards" :key="index">
             <v-card
-              :variant="variant"
               class="mx-auto h-100"
             >
               <v-card-item>
@@ -90,7 +89,6 @@
         <v-row justify="center">
           <v-col v-for="(card, index) in secondRowCards" :key="index">
             <v-card
-              :variant="variant"
               class="mx-auto h-100"
             >
               <v-card-item>
@@ -157,8 +155,8 @@ export default {
       modalOpen: false,
       cardSelected: false,
       selectedDescription: '',
-      firstRowCards: [],
-      secondRowCards: [],
+      firstRowCards: [] as any[],
+      secondRowCards: [] as any[],
       loading: true
       }
   },
@@ -170,7 +168,7 @@ export default {
     }
   },
   methods: {
-    updateModalOpen(value) {
+    updateModalOpen(value: any) {
       this.modalOpen = value;
     },
     
@@ -182,37 +180,37 @@ export default {
     async fetchChartSelection() {
       try {
         const response = await axios.get('/chart/selection');
-        this.firstRowCards = response.data.items.slice(0, 3).map(item => ({
+        this.firstRowCards = response.data.items.slice(0, 3).map((item: any) => ({
           ...item,
           isActive: item.available === 1 
         }));
-        this.secondRowCards = response.data.items.slice(3).map(item => ({
+        this.secondRowCards = response.data.items.slice(3).map((item: any) => ({
           ...item,
           isActive: item.available === 1 
         }));
         // Imposta lo stato di caricamento su falso quando le card sono caricate
         this.loading = false;
       } catch (error) {
-        throw new Error(error);
+        throw new Error(JSON.stringify(error, null, 2));
       }
     },
     continueProcess() {
       router.push({ path: '/charts/filters' });
     },
-    selectCard(card) {
-      this.firstRowCards.forEach((c) => {
+    selectCard(card: any) {
+      this.firstRowCards.forEach((c: any) => {
         c.isSelected = false;
       });
-      this.secondRowCards.forEach((c) => {
+      this.secondRowCards.forEach((c: any) => {
         c.isSelected = false;
       });
       card.isSelected = true;
       this.cardSelected = true;
-      const selectedObject = this.firstRowCards.find(c => c === card) || this.secondRowCards.find(c => c === card);
+      const selectedObject: any = this.firstRowCards.find(c => c === card) || this.secondRowCards.find(c => c === card);
       this.selectedDescription = selectedObject.description;
       this.$emit('cardSelected', selectedObject.description);
     },
-    toggleSelect(card) {
+    toggleSelect(card: any) {
       card.isSelected = !card.isSelected;
       this.cardSelected = card.isSelected;
     }

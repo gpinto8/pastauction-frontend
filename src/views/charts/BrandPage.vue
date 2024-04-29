@@ -32,7 +32,7 @@
     <v-container fluid>
       <v-row justify="center">
         <v-col v-for="(card, index) in brandRow" :key="index">
-          <v-card :variant="variant" class="mx-auto">
+          <v-card class="mx-auto">
             <v-card-item>
               <div>
                 <div>
@@ -116,7 +116,7 @@
         <v-col cols="12">
           <div class="d-flex justify-end">
             <v-btn size="small" class="mr-2" variant="outlined" color="black"
-              @click="this.$router.push({ path: '/charts/filters/' });">Back</v-btn>
+              @click="$router.push({ path: '/charts/filters/' });">Back</v-btn>
             <v-btn @click="continueProcess" :disabled="!cardSelected" size="small" class="float-right"
               color="black">Continue</v-btn>
           </div>
@@ -165,12 +165,12 @@ export default {
       router.push({
         path: '/charts/filters/brand/preview',
         query: {
-          color: selectedCard.title === 'Dashboard' ? 'info' : selectedCard.title === 'Single chart' ? '#FFDA44' : 'success',
-          title: selectedCard.title
+          color: selectedCard?.title === 'Dashboard' ? 'info' : selectedCard?.title === 'Single chart' ? '#FFDA44' : 'success',
+          title: selectedCard?.title
         }
       });
     },
-    selectCard(card) {
+    selectCard(card: any) {
       this.brandRow.forEach((c) => {
         c.isSelected = false;
       });
