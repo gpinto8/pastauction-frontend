@@ -528,7 +528,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from '@/router/index';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';

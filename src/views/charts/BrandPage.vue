@@ -126,7 +126,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from '@/router/index';
 
 export default {
