@@ -444,7 +444,7 @@
                             v-for="color in sfumature" 
                             :key="color.color_name"
                             class="letter-button"
-                            :variant="selectedColor === color.color_name ? 'elevated' : 'outlined'"
+                            :variant="selectedColor.includes(color.color_name) ? 'elevated' : 'outlined'"
                             @click="selectColorSfumatura(color.color_name)"
                             color="black"
                             text
@@ -560,13 +560,13 @@ export default {
             countries2: [],
             periods: [],
             selectedPeriods: [],
-            periodSelected: false,
+            // periodSelected: false,
             colours: [],
             sfumature: [],
             selectedColour: [],
-            selectedColor: null,
-            colourSelected: false,
-            colorSelected: false,
+            selectedColor: [],
+            // colourSelected: false,
+            // colorSelected: false,
             miscOptionsSold: ['Sold', 'Not sold'],
             miscOptionsQuote: ['Quoted', 'Not quoted'],
             miscOptionChas: ['With chassis', 'Without chassis'],
@@ -862,8 +862,7 @@ export default {
         },
 
         selectColorSfumatura(color){
-            this.selectedColor = color;
-            this.colorSelected = true;
+            toggleValueInArray(this.selectedColour, color)
         },
 
         async selectCountry(country) {
@@ -1047,6 +1046,9 @@ export default {
         },
         colourSelected() {
             return this.selectedColour.length > 0
+        },
+        colorSelected() {
+            return this.selectedColor.length > 0
         }
     }
 };
