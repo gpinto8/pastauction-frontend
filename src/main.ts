@@ -6,13 +6,14 @@ import vuetify from '@/plugins/vuetify';
 import router from '@/router/index';
 import './assets/main.css';
 import axios from 'axios';
+import config from '@/config';
 
 const vue = createApp(App);
 vue.use(router);
 vue.use(store);
 vue.use(vuetify);
 
-axios.defaults.baseURL = 'https://pastauction.com/api/v1';
+axios.defaults.baseURL = config.apiUrl;
 
 axios.interceptors.request.use(
   (config: any) => {

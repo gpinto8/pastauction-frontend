@@ -2271,6 +2271,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deep-clone@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "deep-clone@npm:4.0.0"
+  checksum: 1068fe32728dcd438e3f8b5d93868d6cea593f35feb3c4c4a23f9270b12ec6789f58d8df7c3b35adef08d50502e9f1fa3c89c9d775b24d4c15b63c8fb93fb62d
+  languageName: node
+  linkType: hard
+
 "deep-eql@npm:^4.1.2":
   version: 4.1.3
   resolution: "deep-eql@npm:4.1.3"
@@ -7680,6 +7687,7 @@ eslint-config-standard-with-typescript@latest:
     axios: ^1.4.0
     chart.js: ^4.4.0
     core-js: ^3.32.0
+    deep-clone: ^4.0.0
     eslint: ^7.32.0
     eslint-config-standard-with-typescript: latest
     eslint-import-resolver-alias: ^1.1.2

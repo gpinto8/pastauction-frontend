@@ -18,12 +18,12 @@ const DIVISIONS = [
 export const relativeDate = (date: Date | string) => {
   let finalDate = date;
   if (typeof finalDate === "string") finalDate = new Date(finalDate);
-  let duration = (finalDate - new Date()) / 1000;
+  let duration = (finalDate as any - (new Date() as any) ) / 1000;
 
   for (let i = 0; i <= DIVISIONS.length; i++) {
     const division = DIVISIONS[i];
     if (Math.abs(duration) < division.amount) {
-      return formatter.format(Math.round(duration), division.name);
+      return formatter.format(Math.round(duration), division.name as any);
     }
     duration /= division.amount;
   }

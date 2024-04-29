@@ -1,11 +1,19 @@
 import axios from 'axios';
 
 export const httpPost = (url: string, item: any) => axios.post(url, item);
+export const httpUpload = (url: string, file: FormData) => {
+  return axios.post(url, file, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
 
 export const httpPut = (url: string, item: any) => axios.put(url, item);
+export const httpPatch = (url: string, item: any) => axios.patch(url, item);
 
 export const httpGet = (url: string) => axios.get(url);
-export const httpElimina = (url: string) => axios.delete(url);
+export const httpDelete = (url: string) => axios.delete(url);
 
 export const getHtml = (url: string) => {
   const config: any = {

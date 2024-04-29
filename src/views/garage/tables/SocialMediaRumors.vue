@@ -174,7 +174,7 @@ const updateFilter = (filterName: string) => {
             <tbody>
               <tr
                 v-for="item in store.getListItems?.items.filter(
-                  el => el.id !== -1
+                  (el: any) => el.id !== -1
                 )"
               >
                 <td class="py-1 border-b text-[#212529]">
@@ -208,7 +208,7 @@ const updateFilter = (filterName: string) => {
                   :class="{ 'bg-yellow-200': head.key === 'total' }"
                 >
                   {{
-                    store.getListItems?.items.filter(el => el.id === -1)[0][
+                    store.getListItems?.items.filter((el: any) => el.id === -1)[0][
                       head.key
                     ]
                   }}

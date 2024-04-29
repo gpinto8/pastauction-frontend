@@ -84,5 +84,18 @@ import AppIcon from '@/components/common/AppIcon.vue';
         <app-icon type="wallet" class="block mr-4" />
       </template>
     </v-list-item>
+
+    <v-list-item
+      title="Entity"
+      value="entity"
+      link
+      to="/entity"
+      class="text-white"
+      active-class="bg-[#0D6EFD]"
+    >
+      <template #prepend>
+        <app-icon type="wallet" class="block mr-4" />
+      </template>
+    </v-list-item>
   </v-list>
 </template>

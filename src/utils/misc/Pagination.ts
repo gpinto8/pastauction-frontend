@@ -1,4 +1,5 @@
 export const getPagination = <T>({ page, per_page }: { page?: number; per_page?: number }) => {
+    // @ts-ignore
     const p = reactive({
         page: page || 1,
         perPage: per_page,
