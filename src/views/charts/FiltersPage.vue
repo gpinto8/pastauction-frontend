@@ -438,6 +438,7 @@
                             :variant="selectedColor.includes(color.color_name) ? 'elevated' : 'outlined'"
                             @click="selectColorSfumatura(color.color_name)"
                             color="black"
+                            text=""
                             style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
                             {{ color.color_name }}
@@ -582,7 +583,7 @@ export default {
             selectedCategoryName: [] as any[],
             modelList: [] as any[],
             listaType: [] as any[],
-            loading: false,
+            loading: true,
             selectedCountryChip: [] as any[],
             selectedFlag: null,
         };
@@ -858,7 +859,7 @@ export default {
         },
 
         selectColorSfumatura(color: string){
-            toggleValueInArray(this.selectedColour, color)
+            toggleValueInArray(this.selectedColor, color)
         },
 
         async selectCountry(country: string) {
