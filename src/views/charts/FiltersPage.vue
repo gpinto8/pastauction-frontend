@@ -102,13 +102,13 @@
                                 v-for="brand in brandList" 
                                 :key="brand" 
                                 cols="12" sm="6" md="4" lg="3">
-                                <a href="#" 
+                                <div href="#" 
                                 :class="{ 'selected': selectedBrandFull.includes(brand) }" 
                                 class="m-3" 
                                 style="font-size: 16px;" 
                                 @click="selectBrandName(brand)">
                                     {{ brand }}
-                                </a>
+                                </div>
                             </v-col>
                         </v-row>
                     </div>
@@ -164,13 +164,13 @@
                                 v-for="family in familyList" 
                                 :key="family" 
                                 cols="12" sm="6" md="4" lg="3">
-                                <a href="#" 
+                                <div
                                 :class="{ 'selected': selectedFamilyFull.includes(family) }" 
                                 class="m-3" 
                                 style="font-size: 16px;" 
                                 @click="selectFamilyName(family)">
                                     {{ family }}
-                                </a>
+                                </div>
                             </v-col>
                         </v-row>
                     </div>
@@ -208,13 +208,13 @@
                             v-for="model in modelList" 
                             :key="model" 
                             cols="12" sm="6" md="4" lg="3">
-                            <a href="#" 
+                            <div href="#" 
                                 class="m-3"
                                 :class="{ 'selected': selectedModelFull.includes(model) }" 
                                 style="font-size: 16px;" 
                                 @click="selectModelName(model)">
                                 {{ model }}
-                            </a>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -350,13 +350,13 @@
                                 v-for="categoryName in listaType" 
                                 :key="categoryName.body_shape" 
                                 cols="12" sm="6" md="4" lg="3">
-                                <a href="#" 
+                                <div 
                                     class="m-3"
                                     :class="{ 'selected': selectedCategoryName.includes(categoryName.body_shape) }" 
                                     style="font-size: 16px;" 
                                     @click="selectCategoryName(categoryName.body_shape)">
                                     {{ categoryName.body_shape }}
-                                </a>
+                                </div>
                             </v-col>
                         </v-row>
                     </div>
@@ -427,9 +427,9 @@
                         v-for="colour in colours"
                         :key="colour.colorfamily_name"
                         class="letter-button"
-                        :variant="selectedColour === colour.colorfamily_name ? 'elevated' : 'outlined'"
+                        :variant="selectedColour.includes(colour.colorfamily_name) ? 'elevated' : 'outlined'"
                         @click="selectColour(colour.colorfamily_name)"
-                        :color="selectedColour === colour.colorfamily_name ? 'black' : ''"
+                        :color="selectedColour.includes(colour.colorfamily_name) ? 'black' : ''"
                         text
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
@@ -563,7 +563,7 @@ export default {
             periodSelected: false,
             colours: [],
             sfumature: [],
-            selectedColour: null,
+            selectedColour: [],
             selectedColor: null,
             colourSelected: false,
             colorSelected: false,
@@ -847,14 +847,12 @@ export default {
         },
 
         async selectColour(colour) {
-            this.selectedColour = colour;
-            this.colourSelected = true;
-    
+            toggleValueInArray(this.selectedColour, colour)
 
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/color_name/', {
                     params: {
-                        search: `colorfamily_name:${colour}`
+                        search: `colorfamily_name:${this.selectedColour.join("|")}`
                     }
                 });
                 this.sfumature = response.data.items;
@@ -937,7 +935,7 @@ export default {
             this.selectedCategoryType= null;
             this.selectedAttributes= [];
             this.selectedPeriods= [];
-            this.selectedColour= null;
+            this.selectedColour= [];
             this.selectedColor= null;
             this.selectedMiscellaneous.miscOptionsSold = null;
             this.selectedFilters= [];
@@ -1008,7 +1006,7 @@ export default {
 
 
             let family_color_main_name = "";
-            family_color_main_name = `family_color_main_name:${this.selectedColour},`;
+            family_color_main_name = `family_color_main_name:${this.selectedColour.join("|")},`;
 
             let color_main_name = "";
             color_main_name = `color_main_name:${this.selectedColor},`;
@@ -1046,6 +1044,9 @@ export default {
         },
         periodSelected() {
             return this.selectedPeriods.length > 0
+        },
+        colourSelected() {
+            return this.selectedColour.length > 0
         }
     }
 };
