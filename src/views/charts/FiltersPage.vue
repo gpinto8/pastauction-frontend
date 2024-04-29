@@ -1000,10 +1000,11 @@ export default {
                 body_type = ``;
             }
 
-            let shape = this.selectedAttributes.length > 0 ? `shape:${this.selectedAttributes.join("|")}` : "";
+            let shape = this.selectedAttributes.length > 0 ? `shape:${this.selectedAttributes.join("|")},` : "";
 
+            // `age_name:${this.selectedPeriods},`
             let age_name = "";
-            age_name = `age_name:${this.selectedPeriods},`;
+            age_name = this.selectedPeriods.length > 0 ? `age_name:${this.selectedPeriods.join("|")},` : "" ;
 
 
             let family_color_main_name = "";
@@ -1012,7 +1013,7 @@ export default {
             let color_main_name = "";
             color_main_name = `color_main_name:${this.selectedColor},`;
 
-
+            console.log(`${brand_name}${bw_family_name}${bw_model_name}${country_brand_name}${area_brand}${body_type}${shape}${age_name}${family_color_main_name}${color_main_name}`);
             console.log(
                 this.selectedBrandFull,
                 this.selectedFamilyFull,
