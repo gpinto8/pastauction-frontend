@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+
 interface Props {
   modelValue: boolean;
 }
@@ -13,7 +16,7 @@ const value = computed<typeof props.modelValue>({
   get() {
     return props.modelValue;
   },
-  set(value) {
+  set(value:any) {
     emit("update:modelValue", value);
   },
 });

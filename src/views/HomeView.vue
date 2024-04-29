@@ -91,7 +91,7 @@ const tab = ref(null);
       </div>
     </div>
     <div>
-      <v-tabs v-model="tab" color="blue" align-tabs="left">
+      <v-tabs v-model="tab" color="blue" align-tabs="start">
         <v-tab :value="1">Garage (0)</v-tab>
         <v-tab :value="2">Locate (0)</v-tab>
         <v-tab :value="3">Charts (0)</v-tab>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, defineProps } from 'vue';
 interface Props {
   image: string | number | null;
   color?: string;

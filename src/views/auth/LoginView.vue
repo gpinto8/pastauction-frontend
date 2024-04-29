@@ -31,11 +31,11 @@ const submit = () => {
   </div>
 
   <v-form @submit.prevent="submit" class="space-y-4">
-    <v-text-field v-model="user.email" :error-messages="v$.email.$errors.map(e => e.$message)"
+    <v-text-field v-model="user.email" :error-messages="(v$.email.$errors.map(e => e.$message) as any)"
       placeholder="Enter your email" label="Email" required variant="outlined" density="comfortable"
       @input="v$.email.$touch" @blur="v$.email.$touch"></v-text-field>
 
-    <v-text-field v-model="user.password" :error-messages="v$.password.$errors.map(e => e.$message)" :counter="10"
+    <v-text-field v-model="user.password" :error-messages="(v$.password.$errors.map(e => e.$message) as any)" :counter="10"
       density="comfortable" placeholder="Password" label="Password" type="password" required variant="outlined"
       @input="v$.password.$touch" @blur="v$.password.$touch"></v-text-field>
 

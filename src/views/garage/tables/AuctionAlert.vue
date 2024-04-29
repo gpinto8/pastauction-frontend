@@ -180,7 +180,7 @@ const updateFilter = (filterName: string) => {
             <tbody>
               <tr
                 v-for="item in store.getListItems?.items.filter(
-                  el => el.model_id !== -1
+                  (el: any) => el.model_id !== -1
                 )"
               >
                 <td class="py-1 border-b text-[#212529]">
@@ -213,7 +213,7 @@ const updateFilter = (filterName: string) => {
                 >
                   {{
                     store.getListItems?.items.filter(
-                      el => el.model_id === -1
+                      (el: any) => el.model_id === -1
                     )[0][head.key]
                   }}
                 </td>

@@ -55,6 +55,8 @@ globalStore
 const submit = () => {
   store.create(garage.value).then(res => {
     console.log('response create garage', res);
+    
+      // @ts-ignore
     generalStore.uploadMedia('garage_set', res.id, photo.value).then(res => {
       console.log('response upload media', res);
       router.push('/garage');
@@ -146,7 +148,7 @@ const uploadImage = (e: any) => {
           <label>Name garage*</label>
           <v-text-field
             v-model="garage.name"
-            :error-messages="v$.name.$errors.map(e => e.$message)"
+            :error-messages="(v$.name.$errors.map(e => e.$message) as any)"
             placeholder="Name garage*"
             required
             variant="outlined"

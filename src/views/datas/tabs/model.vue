@@ -75,10 +75,10 @@
       >
         <span class="hidden">{{ loadMedia(item.id, item.brand_logo) }}</span>
         <div>
-          <v-img
+          <!-- <v-img
             :src="loadedMedia.find(el => el.id === item.id)?.photo"
             width="200"
-            height="200"
+            height="200" -->
           />
         </div>
         <div class="grid grid-cols-2 gap-10 w-full">
@@ -338,8 +338,12 @@ const loadMedia = async (id: number, media: string) => {
   await generalStore.loadMedia(media).then(res => {
     if (
       loadedMedia.value?.length === 0 ||
+      
+      // @ts-ignore
       loadedMedia.value?.findIndex(el => el.id === id) === -1
     )
+    
+      // @ts-ignore
       loadedMedia.value.push({ id: id, photo: res });
   });
   console.log(loadedMedia);

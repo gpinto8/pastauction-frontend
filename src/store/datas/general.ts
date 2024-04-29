@@ -62,7 +62,7 @@ export const useGeneralStore = defineStore('general', () => {
     });
   }
 
-  function blobToBase64(blob) {
+  function blobToBase64(blob: any) {
     return new Promise((resolve, _) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);

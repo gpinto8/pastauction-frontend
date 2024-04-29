@@ -25,8 +25,10 @@ const loadMedia = async (id: number, media: string) => {
   await generalStore.loadMedia(media).then(res => {
     if (
       loadedMedia.value?.length === 0 ||
-      loadedMedia.value?.findIndex(el => el.id === id) === -1
+      loadedMedia.value?.findIndex((el: any) => el.id === id) === -1
     )
+    
+      // @ts-ignore
       loadedMedia.value.push({ id: id, photo: res });
   });
   return loadedMedia;
@@ -188,7 +190,7 @@ const loadMedia = async (id: number, media: string) => {
         <span class="hidden">{{ loadMedia(item.id, item.main_photo) }}</span>
         <v-img
           height="200"
-          :src="loadedMedia.find(el => el.id === item.id)?.photo"
+          :src="(loadedMedia.find((el: any) => el.id === item.id) as any)?.photo"
           cover
           class="text-white"
         >
