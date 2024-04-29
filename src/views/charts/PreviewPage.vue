@@ -126,7 +126,7 @@
 export default {
   data() {
     return {
-      selectedCheckboxes: [],
+      selectedCheckboxes: [] as number[],
       alertColor: '',
       alertTitle: '',
       items: [
@@ -136,8 +136,8 @@ export default {
     };
   },
   created() {
-    this.alertColor = this.$route.query.color || 'info';
-    this.alertTitle = this.$route.query.title || '';
+    this.alertColor = this.$route.query.color as string || 'info';
+    this.alertTitle = this.$route.query.title as string || '';
   },
   computed: {
     selectedItems() {
