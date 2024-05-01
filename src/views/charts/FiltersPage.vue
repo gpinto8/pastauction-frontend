@@ -216,7 +216,8 @@
                     </v-row>
                 </v-col>
             </v-row>
-            <v-row justify="start">
+            <CountriesFilter :continents="continents"/>
+            <!-- <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
                         class="custom-chip mr-3"
@@ -239,8 +240,8 @@
                         {{ country.country_brand_area }}
                     </v-btn>
                 </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
+            </v-row> -->
+            <!-- <v-row justify="start" class="align-center mt-0">
                 <v-col class="d-flex flex-wrap align-center pt-0">
                     <div :class="{ 'd-block': selectedCountry, 'd-none': !selectedCountry }" class="mt-3">
                         <v-row justify="start" class="align-center">
@@ -277,7 +278,7 @@
                         </v-row>
                     </div>
                 </v-col>
-            </v-row>
+            </v-row> -->
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -519,6 +520,7 @@
 <script lang="ts">
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
+import CountriesFilter from './filters/Countries.vue';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -531,6 +533,7 @@ type MiscSelections = {
 }
 
 export default {
+    components: { CountriesFilter, },
     data() {
         return {
             brandSelected: false,
@@ -553,7 +556,7 @@ export default {
             types: [] as any[],
             categoryType: [] as any[],
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-            countries: [] as any[],
+            continents: [] as any[],
             countries2: [] as any[],
             periods: [] as any[],
             selectedPeriods: [] as string[],
@@ -591,7 +594,7 @@ export default {
 
     mounted() {
         Promise.all([
-        this.fetchCountries(),
+        this.fetchContinents(),
         this.fetchAttributes(),
         this.fetchPeriods(),
         this.fetchColoursPrimary(),
@@ -743,10 +746,10 @@ export default {
             this.selectedModelFull.splice(index, 1);
         },
 
-        async fetchCountries() {
+        async fetchContinents() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/country_brand_area/');
-                this.countries = response.data.items; 
+                this.continents = response.data.items; 
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
@@ -1052,7 +1055,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
 .custom-chip {
   width: 100px;
   display: flex;
