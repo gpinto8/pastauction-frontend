@@ -343,7 +343,7 @@ export default {
             modelSelected: false,
             selectedBrand: null  as null | string,
             selectedBrandFull: [] as string[],
-            selectedCountry: null as null | string,
+            selectedContinent: null as null | string,
             selectedType: null as null | string,
             selectedCategoryType: null as null | string,
             categoryTypeSelected: false, 
@@ -377,7 +377,7 @@ export default {
             modelList: [] as any[],
             listaType: [] as any[],
             loading: true,
-            selectedCountryChip: [] as any[],
+            selectedCountries: [] as any[],
         };
     },
     mounted() {
@@ -546,7 +546,7 @@ export default {
         clearFilters() {
             this.selectedBrand= null;
             this.selectedBrandFull= [];
-            this.selectedCountry= null;
+            this.selectedContinent= null;
             this.selectedType= null;
             this.selectedCategoryType= null;
             this.selectedAttributes= [];
@@ -591,9 +591,9 @@ export default {
             }
 
             let country_brand_name = "";
-            country_brand_name = `country_brand_name:${this.selectedCountry},`;
+            country_brand_name = `country_brand_name:${this.selectedContinent},`;
 
-            const selectedAreaBrandArray = Array.from(this.selectedCountryChip);
+            const selectedAreaBrandArray = Array.from(this.selectedCountries);
             let area_brand = "";
             if (selectedAreaBrandArray.length > 1) {
                 area_brand = `area_brand:${selectedAreaBrandArray.join("|")},`;
@@ -631,8 +631,8 @@ export default {
                 this.selectedBrandFull,
                 this.selectedFamilies,
                 this.selectedModelFull,
-                this.selectedCountry,
-                this.selectedCountryChip,
+                this.selectedContinent,
+                this.selectedCountries,
                 this.selectedCategoryName,
                 this.selectedAttributes,
                 this.selectedPeriods,
