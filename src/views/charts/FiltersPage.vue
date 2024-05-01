@@ -36,6 +36,7 @@
         <v-container fluid v-else>
             <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
+            <ModelFilter :family="selectedFamilies" v-model="selectedModelFull"/>
             <!-- <div class="mt-3">
                 <v-chip
                     v-for="(model, index) in selectedModelFull"
@@ -321,6 +322,7 @@
 <script lang="ts">
 import BrandFilter from './filters/BrandFilter.vue';
 import FamilyFilter from './filters/Family.vue';
+import ModelFilter from './filters/Model.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -336,7 +338,7 @@ type MiscSelections = {
 }
 
 export default {
-    components: { BrandFilter, CountriesFilter, FamilyFilter },
+    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter },
     data() {
         return {
             familySelected: false,
