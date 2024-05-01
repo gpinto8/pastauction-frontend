@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ref, watch } from 'vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 
-
+const countries = defineModel('countries', { required: true })
 const props = defineProps<{
     continents: any[]
 }>()
@@ -31,8 +31,6 @@ watch(selectedContinents, async () => {
     }
 
 })
-
-let selectedCountry = ref<any[]>([])
 
 function getImageUrl(countryFlag: string) {
     const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
@@ -73,14 +71,14 @@ function getImageUrl(countryFlag: string) {
                     <v-row justify="start" class="align-center">
                         <v-col>
                             <v-chip
-                                v-for="(countryName, index) in selectedCountry"
+                                v-for="(countryName, index) in countries"
                                 :key="index"
                                 class="m-2"
                                 closable
                                 color="black"
                                 style="border-radius: 5px;"
                                 variant="flat"
-                                @click:close="toggleValueInArray(selectedCountry, countryName)"
+                                @click:close="toggleValueInArray(countries, countryName)"
                             >
                                 {{ countryName }}
                             </v-chip>
@@ -94,10 +92,10 @@ function getImageUrl(countryFlag: string) {
                             class="flex-center object-cover"
                             >
                                 <div 
-                                :class="selectedCountry.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
+                                :class="countries.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
                                 class="m-3 w-14 h-9 border-2" 
                                 style="font-size: 16px;" 
-                                @click="toggleValueInArray(selectedCountry, flag.country_brand_name)">
+                                @click="toggleValueInArray(countries, flag.country_brand_name)">
                                     <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
                                 </div>
                         </v-col>

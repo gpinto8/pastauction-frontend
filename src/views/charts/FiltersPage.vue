@@ -79,7 +79,7 @@
                     </v-row>
                 </v-col>
             </v-row>
-            <CountriesFilter :continents="continents"/>
+            <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
