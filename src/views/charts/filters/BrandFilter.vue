@@ -1,51 +1,38 @@
 <script setup lang="ts">
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
-import { computed, reactive, ref } from 'vue';
+import { ref, defineModel, watch } from 'vue';
 
 const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-let selectedBrandInitial = ref<null | string>(null)
-async function selectBrand(letter: string) {
+const selectedBrandNames = defineModel<string[]>({required: true})
+const selectedBrandInitial = ref<null | string>(null)
+
+// update the two-letter initials array when changing the brand initial letter
+watch(selectedBrandInitial, async () => {
     try {
-        selectedBrandInitial.value = letter;
-        const response = await axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${letter}`);
+        const response = await axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${selectedBrandInitial.value}`);
         brandsCoupleLetters.value = response.data.items.map((item: any) => item.left_1 as string);
     } catch (error) {
         console.error('Error fetching brands:', error);
     }
-}
-
-const brandSelected = computed(() => {
-    return selectedBrandInitial.value != null
 })
 
 // As soon as you choose a letter this array is populated with the first two letters for the choosen selectedBrandInitial variable
-let brandsCoupleLetters = ref<string[]>([])
-let selectedBrandFirstTwoLetters = ref<null | string>(null)
+const brandsCoupleLetters = ref<string[]>([])
+const selectedBrandFirstTwoLetters = ref<null | string>(null)
 
-async function selectCoupleBrand(brandsCoupleLetter: any) {
+let brandList = ref<string[]>([])
+
+// update brandList every time we choose new two-letter initials
+watch(selectedBrandFirstTwoLetters, async () => {
     try {
-        selectedBrandFirstTwoLetters.value = brandsCoupleLetter;
-
-        const response = await axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${brandsCoupleLetter}`);
+        const response = await axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${selectedBrandFirstTwoLetters.value}`);
         brandList.value = response.data.items.map((item: any) => item.name as string);
     } catch (error) {
         console.error('Error fetching brands:', error);
     }
-}
-
-const brandFirstTwoLettersIsSelected = computed(() => {
-    return selectedBrandFirstTwoLetters.value != null
 })
-
-let brandList = ref<string[]>([])
-
-let selectedBrandNames = defineModel<string[]>({required: true})
-
-function toggleSelectedBrandNames(valueToToggle: string) {
-    toggleValueInArray(selectedBrandNames.value, valueToToggle)
-}
 
 </script>
 
@@ -67,7 +54,7 @@ function toggleSelectedBrandNames(valueToToggle: string) {
                         :key="letter"
                         class="letter-button"
                         :variant="selectedBrandInitial === letter ? 'elevated' : 'outlined'"
-                        @click="selectBrand(letter)"
+                        @click="selectedBrandInitial = letter"
                         color="black"
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
@@ -83,7 +70,7 @@ function toggleSelectedBrandNames(valueToToggle: string) {
                         :key="coupleLetters"
                         class="letter-button"
                         :variant="selectedBrandFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
-                        @click="selectCoupleBrand(coupleLetters)"
+                        @click="selectedBrandFirstTwoLetters = coupleLetters"
                         color="black"
                         style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                     >
@@ -112,7 +99,7 @@ function toggleSelectedBrandNames(valueToToggle: string) {
                         </v-chip>
                         </v-col>
                     </v-row>
-                    <v-row class="letter-button border-brand" color="black" text>
+                    <v-row class="letter-button border-brand w-fit" color="black" text>
                         <v-col 
                             v-for="brand in brandList" 
                             :key="brand" 
