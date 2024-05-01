@@ -36,67 +36,6 @@
         <v-container fluid v-else>
             <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
-            <!-- <v-row justify="start" class="align-center">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="outlined"
-                        label
-                        size="large"
-                    >
-                        <small>Family</small> 
-                    </v-chip>
-                    <p v-if="selectedBrandFull.length === 0">Please, select the Brand of your interest first.</p>
-                    <v-btn v-if="familyOptionsLetter.length > 0"
-                        v-for="family in familyOptionsLetter"
-                        :key="'family_' + family"
-                        class="letter-button"
-                        :variant="selectedFamily === family ? 'elevated' : 'outlined'"
-                        @click="selectFamily(family)"
-                        color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                        {{ family }}
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedFamily, 'd-none': !selectedFamily }" class="mt-3">
-                        <v-row justify="start" class="align-center">
-                            <v-col>
-                                <v-chip
-                                    v-for="(family, index) in selectedFamilyFull"
-                                    :key="index"
-                                    class="m-2"
-                                    closable
-                                    color="black"
-                                    style="border-radius: 5px;"
-                                    variant="flat"
-                                    @click:close="removeSelectedFamily(index)"
-                                >
-                                    {{ family }}
-                                </v-chip>
-                            </v-col>
-                        </v-row>
-                        <v-row class="letter-button border-brand" color="black" text>
-                            <v-col 
-                                v-for="family in familyList" 
-                                :key="family" 
-                                cols="12" sm="6" md="4" lg="3">
-                                <div
-                                :class="{ 'selected': selectedFamilyFull.includes(family) }" 
-                                class="m-3" 
-                                style="font-size: 16px;" 
-                                @click="selectFamilyName(family)">
-                                    {{ family }}
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </div>
-                </v-col>
-            </v-row> -->
             <div class="mt-3">
                 <v-chip
                     v-for="(model, index) in selectedModelFull"
@@ -141,68 +80,6 @@
                 </v-col>
             </v-row>
             <CountriesFilter :continents="continents"/>
-            <!-- <v-row justify="start">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="flat"
-                        label
-                        size="large"
-                    >
-                        <small>Countries</small>
-                    </v-chip>
-                    <v-btn
-                        v-for="country in countries"
-                        :key="country.country_brand_area"
-                        class="letter-button"
-                        :variant="selectedCountry === country.country_brand_area ? 'elevated' : 'outlined'"
-                        @click="selectCountry(country.country_brand_area)"
-                        color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                        {{ country.country_brand_area }}
-                    </v-btn>
-                </v-col>
-            </v-row> -->
-            <!-- <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedCountry, 'd-none': !selectedCountry }" class="mt-3">
-                        <v-row justify="start" class="align-center">
-                            <v-col>
-                                <v-chip
-                                    v-for="(countryName, index) in selectedCountryChip"
-                                    :key="index"
-                                    class="m-2"
-                                    closable
-                                    color="black"
-                                    style="border-radius: 5px;"
-                                    variant="flat"
-                                    @click:close="removeSelectedCountry(index)"
-                                >
-                                    {{ countryName }}
-                                </v-chip>
-                            </v-col>
-                        </v-row>
-                        <v-row class="letter-button border-brand" color="black" text>
-                            <v-col 
-                                v-for="flag in countries2" 
-                                :key="flag" 
-                                cols="12" sm="2" md="2" lg="2"
-                                class="flex-center object-cover"
-                                >
-                                    <div 
-                                    :class="selectedCountryChip.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
-                                    class="m-3 w-14 h-9 border-2" 
-                                    style="font-size: 16px;" 
-                                    @click="selectFlag(flag)">
-                                        <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
-                                    </div>
-                            </v-col>
-                        </v-row>
-                    </div>
-                </v-col>
-            </v-row> -->
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -467,14 +344,9 @@ export default {
             modelSelected: false,
             selectedBrand: null  as null | string,
             selectedBrandFull: [] as string[],
-            selectedCoupleBrand: null,
-            selectedFamily: null as null | string,
-            selectedModel: null,
             selectedCountry: null as null | string,
-            countrySelected: false,
             selectedType: null as null | string,
             selectedCategoryType: null as null | string,
-            typeSelected: false,
             categoryTypeSelected: false, 
             attributes: [] as any[],
             selectedAttributes: [] as string[],
@@ -500,19 +372,13 @@ export default {
                 miscOptionChas: null
             } as MiscSelections,
             miscellaneousSelected: false,
-            selectedFilters: [] as string[],
-            brandsCoupleLetter: [] as any[],
-            brandList: [] as any[],
-            familyOptionsLetter: [] as any[],
             selectedFamilies: [] as string[],
-            familyList: [] as any[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
             modelList: [] as any[],
             listaType: [] as any[],
             loading: true,
             selectedCountryChip: [] as any[],
-            selectedFlag: null,
         };
     },
     mounted() {
@@ -565,7 +431,6 @@ export default {
 
         async selectType(type: string) {
             this.selectedType = type;
-            this.typeSelected = true;
 
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/body_category/', {
@@ -582,7 +447,6 @@ export default {
 
         async selectCategoryType(type: string, categoryType: string) {
              this.selectedType = type;
-             this.typeSelected = true;
 
              this.selectedCategoryType = categoryType;
              this.categoryTypeSelected = true;
@@ -663,51 +527,9 @@ export default {
         selectColorSfumatura(color: string){
             toggleValueInArray(this.selectedColor, color)
         },
-
-        async selectCountry(country: string) {
-            this.selectedCountry = country;
-            this.countrySelected = true;
-
-            try {
-                const response = await axios.get('/filter/filter_charts_vehicles/country_brand_name/', {
-                    params: {
-                        search: `country_brand_area:${country}`
-                    }
-                });
-                this.countries2 = response.data.items;
-            } catch (error) {
-                console.error('Errore nel recupero dei paesi:', error);
-            }
-
-        },
-
         getImageUrl(countryFlag: string) {
         const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
             return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${brandAbbreviation}.jpeg`;
-        },
-
-        async selectFlag(flag: any) {
-            try {
-                // Verifica se la bandiera è già stata selezionata
-                const index = this.selectedCountryChip.indexOf(flag.country_brand_name);
-                
-                // Se la bandiera è già stata selezionata, rimuovila dall'array
-                if (index !== -1) {
-                    this.selectedCountryChip.splice(index, 1);
-                } else {
-                    // Altrimenti, aggiungila all'array
-                    this.selectedCountryChip.push(flag.country_brand_name);
-                }
-
-                // Imposta il resto del codice come prima
-                this.selectedFlag = flag;
-            } catch (error) {
-                console.error('Error fetching brands:', error);
-            }
-        },
-
-        removeSelectedCountry(index: number) {
-            this.selectedCountryChip.splice(index, 1);
         },
 
         selectPeriod(period: string) {
@@ -725,9 +547,6 @@ export default {
         clearFilters() {
             this.selectedBrand= null;
             this.selectedBrandFull= [];
-            this.selectedCoupleBrand= null;
-            this.selectedFamily= null;
-            this.selectedModel= null;
             this.selectedCountry= null;
             this.selectedType= null;
             this.selectedCategoryType= null;
@@ -736,7 +555,6 @@ export default {
             this.selectedColour= [];
             this.selectedColor= [];
             this.selectedMiscellaneous.miscOptionsSold = null;
-            this.selectedFilters= [];
             this.selectedFamilies= [];
             this.selectedModelFull= [];
             this.selectedCategoryName= [];
