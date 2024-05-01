@@ -1,16 +1,39 @@
 <script setup lang="ts">
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
-import { ref } from 'vue';
-
+import axios from 'axios';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     family: {
+        required: true,
         type: String
     }
 })
 
 // Selected models
-const models = defineModel<string[]>({required: true})
+const model = defineModel<string[]>({required: true})
+const modelList = ref<string[]>([])
+
+watch(props.family, async () => {
+    try {
+        const response = await axios.get(
+            "/filter/filter_charts_vehicles/model_name/",
+            {
+            params: {
+                search: `family_name:${props.family}`,
+            },
+            }
+        );
+
+        modelList.value = response.data.items.map((item: any) => item.model_name);
+
+        models = null;
+
+        this.familySelected = true;
+    } catch (error) {
+        console.error("Errore nella richiesta GET:", error);
+    }
+})
 
 </script>
 
