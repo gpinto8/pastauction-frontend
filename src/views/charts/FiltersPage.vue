@@ -34,7 +34,7 @@
             </div>
         </v-container>
         <v-container fluid v-else>
-            <BrandFilter v-model="selectedBrandFull"/>
+            <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
             <!-- <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -113,7 +113,8 @@
                     </div>
                 </v-col>
             </v-row> -->
-            <v-row justify="start" class="align-center">
+            <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilyFull"/>
+            <!-- <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
                         class="custom-chip mr-3"
@@ -173,7 +174,7 @@
                         </v-row>
                     </div>
                 </v-col>
-            </v-row>
+            </v-row> -->
             <div class="mt-3">
                 <v-chip
                     v-for="(model, index) in selectedModelFull"
@@ -520,6 +521,7 @@
 
 <script lang="ts">
 import BrandFilter from './filters/BrandFilter.vue';
+import FamilyFilter from './filters/Family.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -535,7 +537,7 @@ type MiscSelections = {
 }
 
 export default {
-    components: { BrandFilter, CountriesFilter },
+    components: { BrandFilter, CountriesFilter, FamilyFilter },
     data() {
         return {
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
