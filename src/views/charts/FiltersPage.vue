@@ -36,7 +36,7 @@
         <v-container fluid v-else>
             <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
-            <div class="mt-3">
+            <!-- <div class="mt-3">
                 <v-chip
                     v-for="(model, index) in selectedModelFull"
                     :key="index"
@@ -78,7 +78,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-            </v-row>
+            </v-row> -->
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
