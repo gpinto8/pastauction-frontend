@@ -97,7 +97,7 @@ function getImageUrl(countryFlag: string) {
                                 :class="selectedCountry.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
                                 class="m-3 w-14 h-9 border-2" 
                                 style="font-size: 16px;" 
-                                @click="toggleValueInArray(selectedCountry, flag)">
+                                @click="toggleValueInArray(selectedCountry, flag.country_brand_name)">
                                     <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
                                 </div>
                         </v-col>
