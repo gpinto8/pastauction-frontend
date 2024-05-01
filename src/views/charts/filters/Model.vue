@@ -12,6 +12,9 @@ const models = defineModel<string[]>({required: true})
 const modelList = ref<string[]>([])
 
 watch(props.families, async () => {
+
+    if (props.families.length == 0) { resetFilter() }
+
     try {
         const response = await axios.get(
             "/filter/filter_charts_vehicles/model_name/",
@@ -29,6 +32,11 @@ watch(props.families, async () => {
 }, {
     deep: true
 })
+
+function resetFilter() {
+    models.value.splice(0, models.value.length)
+    modelList.value.splice(0, modelList.value.length)
+}
 
 </script>
 
@@ -60,7 +68,7 @@ watch(props.families, async () => {
                     <small>Model</small>
                 </v-chip>
 
-                <p v-if="!families">Please, select the Family of your interest first.</p>
+                <p v-if="families.length == 0">Please, select the Family of your interest first.</p>
                 <v-row v-else class="letter-button border-brand" color="black" text>
                     <v-col 
                         v-for="model in modelList" 

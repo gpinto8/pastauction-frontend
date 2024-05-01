@@ -547,7 +547,7 @@ export default {
 
         clearFilters() {
             this.selectedBrand= null;
-            this.selectedBrandFull= [];
+            this.selectedBrandFull.splice(0, this.selectedBrandFull.length); // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
             this.selectedContinent= null;
             this.selectedType= null;
             this.selectedCategoryType= null;

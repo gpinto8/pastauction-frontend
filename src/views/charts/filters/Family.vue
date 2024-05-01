@@ -71,7 +71,9 @@ watch(selectedFamilyInitial, async () => {
 })
 
 function resetFilter() {
-    families.value = []
+    families.value.splice(0, families.value.length)
+    familyInitials.value.splice(0, familyInitials.value.length)
+    availableFamilies.value.splice(0, availableFamilies.value.length)
     selectedFamilyInitial.value = null
 }
 
