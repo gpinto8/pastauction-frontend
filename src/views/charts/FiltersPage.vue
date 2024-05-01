@@ -35,85 +35,7 @@
         </v-container>
         <v-container fluid v-else>
             <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
-            <!-- <v-row justify="start" class="align-center">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="flat"
-                        label
-                        size="large"
-                        >
-                        <small>Brands</small>
-                    </v-chip>
-                        <v-btn
-                            v-for="letter in alphabet"
-                            :key="letter"
-                            class="letter-button"
-                            :variant="selectedBrand === letter ? 'elevated' : 'outlined'"
-                            @click="selectBrand(letter)"
-                            color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                            >
-                            {{ letter }}
-                        </v-btn>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedBrand, 'd-none': !selectedBrand }" class="mt-3" justify="start" >
-                        <v-btn
-                            v-for="coupleLetters in brandsCoupleLetter" 
-                            :key="coupleLetters"
-                            class="letter-button"
-                            :variant="selectedCoupleBrand === coupleLetters ? 'elevated' : 'outlined'"
-                            @click="selectCoupleBrand(coupleLetters)"
-                            color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                            {{ coupleLetters }}
-                        </v-btn>
-                    </div>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedCoupleBrand, 'd-none': !selectedCoupleBrand }" class="mt-3">
-                        <v-row justify="start" class="align-center">
-                            <v-col
-                            >
-                            <v-chip
-                                v-for="(brand, index) in selectedBrandFull"
-                                :key="index"
-                                class="m-2"
-                                closable
-                                color="black"
-                                style="border-radius: 5px;"
-                                variant="flat"
-                                @click:close="removeSelectedBrand(index)"
-                            >
-                                {{ brand }}
-                            </v-chip>
-                            </v-col>
-                        </v-row>
-                        <v-row class="letter-button border-brand" color="black" text>
-                            <v-col 
-                                v-for="brand in brandList" 
-                                :key="brand" 
-                                cols="12" sm="6" md="4" lg="3">
-                                <div href="#" 
-                                :class="{ 'selected': selectedBrandFull.includes(brand) }" 
-                                class="m-3" 
-                                style="font-size: 16px;" 
-                                @click="selectBrandName(brand)">
-                                    {{ brand }}
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </div>
-                </v-col>
-            </v-row> -->
-            <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilyFull"/>
+            <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
             <!-- <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -541,8 +463,6 @@ export default {
     data() {
         return {
             alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-            brandSelected: false,
-            brandCoupleSelected: false,
             familySelected: false,
             modelSelected: false,
             selectedBrand: null  as null | string,
@@ -584,7 +504,7 @@ export default {
             brandsCoupleLetter: [] as any[],
             brandList: [] as any[],
             familyOptionsLetter: [] as any[],
-            selectedFamilyFull: [] as string[],
+            selectedFamilies: [] as string[],
             familyList: [] as any[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
@@ -611,130 +531,6 @@ export default {
     },
 
     methods: {
-        async selectBrand(letter: string) {
-            try {
-                this.selectedBrand = letter;
-                this.brandSelected = true;
-                this.familySelected = false;
-                this.modelSelected = false;
-                this.countrySelected = false;
-
-                const response = await axios.get(`/filter/bidwatcher_brand/name_left_2/?search=name_left_1:${letter}`);
-                const brandsCoupleLetter = response.data.items.map((item: any) => item.left_1);
-                this.brandsCoupleLetter = brandsCoupleLetter;
-            } catch (error) {
-                console.error('Error fetching brands:', error);
-            }
-        },
-
-        async selectCoupleBrand(brandsCoupleLetter: any) {
-            try {
-                this.selectedCoupleBrand = brandsCoupleLetter;
-                this.brandCoupleSelected = true;
-
-                const response = await axios.get(`/filter/bidwatcher_brand/name/?search=name_left_2:${brandsCoupleLetter}`);
-                const brands = response.data.items.map((item: any) => item.name);
-                this.brandList = brands;
-            } catch (error) {
-                console.error('Error fetching brands:', error);
-            }
-        },
-
-        async selectBrandName(brand: any) {
-            try {
-                // Aggiungi o rimuovi il marchio selezionato dalla lista
-                if (!this.selectedBrandFull.includes(brand)) {
-                    this.selectedBrandFull.push(brand);
-                } else {
-                    this.selectedBrandFull = this.selectedBrandFull.filter(selectedBrand => selectedBrand !== brand);
-                }
-
-                const brandNames = this.selectedBrandFull.join('|');
-
-                const response = await axios.get('/filter/filter_charts_vehicles/family_name_left_1/', {
-                    params: {
-                        search: `brand_name:${brandNames}`,
-                    }
-                });
-
-                const familyOptions = response.data.items;
-
-                let letters: string[] = [];
-                let numbers: string[] = [];
-
-                familyOptions.forEach((item: any) => {
-                    const value = item.left_1;
-                    if (isNaN(value)) {
-                        letters.push(value); 
-                    } else {
-                        numbers.push(value); 
-                    }
-                });
-
-                letters.sort();
-                numbers.sort((a, b) => parseInt(a) - parseInt(b));
-
-                this.familyOptionsLetter = letters.concat(numbers);
-            } catch (error) {
-                console.error('Errore nella richiesta GET:', error);
-            }
-        },
-
-        removeSelectedBrand(index: number) {
-            this.selectedBrandFull.splice(index, 1);
-        },
-
-        async selectFamily(letter: string) {
-            try {
-                this.selectedFamily = letter;
-                this.modelSelected = false;
-                this.countrySelected = false; 
-
-                const response = await axios.get('/filter/filter_charts_vehicles/family_name/', {
-                    params: {
-                        search: `brand_name:${this.selectedBrandFull.join('|')}`,
-                        family_name: letter
-                    }
-                });
-
-                const filteredFamilies = response.data.items.filter((item: any) => item.family_name.startsWith(letter));
-
-                const familyNames = filteredFamilies.map((item: any) => item.family_name);
-
-                this.familyList = familyNames;
-            } catch (error) {
-                console.error('Errore nella richiesta GET:', error);
-            }
-        },
-
-        async selectFamilyName(family: string) {
-            if (!this.selectedFamilyFull.includes(family)) {
-                this.selectedFamilyFull.push(family);
-            }
-
-            try {
-                this.familySelected = true;
-
-                const response = await axios.get('/filter/filter_charts_vehicles/model_name/', {
-                    params: {
-                        search: `family_name:${family}`
-                    }
-                });
-
-                this.modelList = response.data.items.map((item: any) => item.model_name);
-                
-                this.selectedModel = null;
-                
-                this.familySelected = true;
-            } catch (error) {
-                console.error('Errore nella richiesta GET:', error);
-            }
-        },
-
-        removeSelectedFamily(index: number) {
-            this.selectedFamilyFull.splice(index, 1);
-        },
-
         async selectModelName(model: string) {
             if (!this.selectedModelFull.includes(model)) {
                 this.selectedModelFull.push(model);
@@ -941,7 +737,7 @@ export default {
             this.selectedColor= [];
             this.selectedMiscellaneous.miscOptionsSold = null;
             this.selectedFilters= [];
-            this.selectedFamilyFull= [];
+            this.selectedFamilies= [];
             this.selectedModelFull= [];
             this.selectedCategoryName= [];
         },
@@ -957,7 +753,7 @@ export default {
                 brand_name = ``;
             }
 
-            const selectedFamilyArray = Array.from(this.selectedFamilyFull);
+            const selectedFamilyArray = Array.from(this.selectedFamilies);
             let bw_family_name = "";
             if (selectedFamilyArray.length > 1) {
                 bw_family_name = `bw_family_name:${selectedFamilyArray.join("|")},`;
@@ -1016,7 +812,7 @@ export default {
             console.log(`${brand_name}${bw_family_name}${bw_model_name}${country_brand_name}${area_brand}${body_type}${shape}${age_name}${family_color_main_name}${color_main_name}`);
             console.log(
                 this.selectedBrandFull,
-                this.selectedFamilyFull,
+                this.selectedFamilies,
                 this.selectedModelFull,
                 this.selectedCountry,
                 this.selectedCountryChip,
