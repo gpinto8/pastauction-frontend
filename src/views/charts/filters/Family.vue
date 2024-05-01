@@ -14,6 +14,8 @@ const familyInitials = ref<string[]>([])
 
 // When brands change update hte family initials
 watch(props.brands, async () => {
+
+    if (props.brands.length == 0) { resetFilter() }
     const response = await axios.get('/filter/filter_charts_vehicles/family_name_left_1/', {
         params: {
             search: `brand_name:${props.brands.join('|')}`,
@@ -68,6 +70,11 @@ watch(selectedFamilyInitial, async () => {
     }
 })
 
+function resetFilter() {
+    families.value = []
+    selectedFamilyInitial.value = null
+}
+
 </script>
 
 <template>
@@ -104,7 +111,7 @@ watch(selectedFamilyInitial, async () => {
                         <v-col>
                             <v-chip
                                 v-for="(family, index) in families"
-                                :key="index"
+                                :key="family"
                                 class="m-2"
                                 closable
                                 color="black"

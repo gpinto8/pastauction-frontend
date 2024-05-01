@@ -87,15 +87,15 @@ watch(selectedBrandFirstTwoLetters, async () => {
                         >
                         <v-chip
                             v-for="(brand, index) in selectedBrandNames"
-                            :key="index"
+                            :key="`${brand}-index`"
                             class="m-2"
                             closable
                             color="black"
                             style="border-radius: 5px;"
                             variant="flat"
+                            :text="brand"
                             @click:close="toggleValueInArray(selectedBrandNames, brand)"
                         >
-                            {{ brand }}
                         </v-chip>
                         </v-col>
                     </v-row>

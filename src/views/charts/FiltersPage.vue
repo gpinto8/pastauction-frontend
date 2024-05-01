@@ -36,7 +36,7 @@
         <v-container fluid v-else>
             <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
-            <ModelFilter :family="selectedFamilies" v-model="selectedModelFull"/>
+            <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
             <!-- <div class="mt-3">
                 <v-chip
                     v-for="(model, index) in selectedModelFull"

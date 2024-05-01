@@ -3,36 +3,31 @@ import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
 
-const props = defineProps({
-    family: {
-        required: true,
-        type: String
-    }
-})
+const props = defineProps<{
+    families: string[]
+}>()
 
 // Selected models
-const model = defineModel<string[]>({required: true})
+const models = defineModel<string[]>({required: true})
 const modelList = ref<string[]>([])
 
-watch(props.family, async () => {
+watch(props.families, async () => {
     try {
         const response = await axios.get(
             "/filter/filter_charts_vehicles/model_name/",
             {
-            params: {
-                search: `family_name:${props.family}`,
-            },
+                params: {
+                    search: `family_name:${props.families.join("|")}`,
+                },
             }
         );
 
         modelList.value = response.data.items.map((item: any) => item.model_name);
-
-        models = null;
-
-        this.familySelected = true;
     } catch (error) {
         console.error("Errore nella richiesta GET:", error);
     }
+}, {
+    deep: true
 })
 
 </script>
@@ -42,7 +37,7 @@ watch(props.family, async () => {
         <div class="mt-3">
             <v-chip
                 v-for="(model, index) in models"
-                :key="index"
+                :key="model"
                 class="m-2"
                 closable
                 color="black"
@@ -65,7 +60,7 @@ watch(props.family, async () => {
                     <small>Model</small>
                 </v-chip>
 
-                <p v-if="!family">Please, select the Family of your interest first.</p>
+                <p v-if="!families">Please, select the Family of your interest first.</p>
                 <v-row v-else class="letter-button border-brand" color="black" text>
                     <v-col 
                         v-for="model in modelList" 
