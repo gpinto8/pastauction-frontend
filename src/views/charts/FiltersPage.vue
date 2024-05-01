@@ -34,7 +34,8 @@
             </div>
         </v-container>
         <v-container fluid v-else>
-            <v-row justify="start" class="align-center">
+            <BrandFilter v-model="selectedBrandFull"/>
+            <!-- <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
                         class="custom-chip mr-3"
@@ -111,7 +112,7 @@
                         </v-row>
                     </div>
                 </v-col>
-            </v-row>
+            </v-row> -->
             <v-row justify="start" class="align-center">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -518,6 +519,7 @@
 </template>
 
 <script lang="ts">
+import BrandFilter from './filters/BrandFilter.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -533,9 +535,10 @@ type MiscSelections = {
 }
 
 export default {
-    components: { CountriesFilter, },
+    components: { BrandFilter, CountriesFilter },
     data() {
         return {
+            alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             brandSelected: false,
             brandCoupleSelected: false,
             familySelected: false,
@@ -555,7 +558,6 @@ export default {
             selectedAttributes: [] as string[],
             types: [] as any[],
             categoryType: [] as any[],
-            alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             continents: [] as any[],
             countries2: [] as any[],
             periods: [] as any[],
@@ -591,7 +593,6 @@ export default {
             selectedFlag: null,
         };
     },
-
     mounted() {
         Promise.all([
         this.fetchContinents(),
