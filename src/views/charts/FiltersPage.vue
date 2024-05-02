@@ -40,30 +40,7 @@
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
             <TypesFilter v-model="types" :familiesOfTypes="typesFamilies"/>
             <AttributesFilter v-model="selectedAttributes" :attributes="attributes" />
-            <v-row justify="start">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="outlined"
-                        label
-                        size="large"
-                    >
-                        <small>Periods</small>
-                    </v-chip>
-                    <v-btn
-                        v-for="period in periods"
-                        :key="period.age_name"
-                        class="letter-button"
-                        :variant="selectedPeriods.includes(period.age_name) ? 'elevated' : 'outlined'"
-                        @click="selectPeriod(period.age_name)"
-                        :color="selectedPeriods.includes(period.age_name) ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                        {{ period.age_name }}
-                    </v-btn>
-                </v-col>
-            </v-row>
+            <PeriodsFilter v-model="selectedPeriods" :periods="periods"/>
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -182,6 +159,7 @@ import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
 import AttributesFilter from './filters/Attributes.vue';
+import PeriodsFilter from './filters/Periods.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -197,7 +175,7 @@ type MiscSelections = {
 }
 
 export default {
-    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter, TypesFilter, AttributesFilter },
+    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter, TypesFilter, AttributesFilter, PeriodsFilter },
     data() {
         return {
             familySelected: false,

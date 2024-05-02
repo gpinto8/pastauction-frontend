@@ -2,9 +2,9 @@
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 
 const props = defineProps<{
-    attributes: any[]
+    periods: any[]
 }>()
-const selectedAttributes = defineModel<string[]>({ required: true })
+const selectedPeriods = defineModel<string[]>({ required: true })
 
 </script>
 
@@ -19,18 +19,18 @@ const selectedAttributes = defineModel<string[]>({ required: true })
                     label
                     size="large"
                 >
-                    <small>Attributes</small>
+                    <small>Periods</small>
                 </v-chip>
                 <v-btn
-                    v-for="attribute in attributes"
-                    :key="attribute.body_shape"
+                    v-for="period in periods"
+                    :key="period.age_name"
                     class="letter-button"
-                    :variant="selectedAttributes.includes(attribute.body_shape) === true ? 'elevated' : 'outlined'"
-                    @click="toggleValueInArray(selectedAttributes, attribute.body_shape)"
-                    :color="selectedAttributes.includes(attribute.body_shape) === true ? 'black' : ''"
+                    :variant="selectedPeriods.includes(period.age_name) ? 'elevated' : 'outlined'"
+                    @click="toggleValueInArray(selectedPeriods, period.age_name)"
+                    :color="selectedPeriods.includes(period.age_name) ? 'black' : ''"
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
-                    {{ attribute.body_shape }}
+                    {{ period.age_name }}
                 </v-btn>
             </v-col>
         </v-row>
