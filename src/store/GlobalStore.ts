@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref, type Ref } from 'vue';
+import { ref, watch, type Ref } from 'vue';
 import { httpPost, httpGet } from '@/api/api';
+import { useDisplay } from 'vuetify';
 
 /** Global Store */
 export const useGlobalStore = defineStore('global', () => {
@@ -67,10 +68,27 @@ export const useGlobalStore = defineStore('global', () => {
     });
   }
 
+	const vuetifyDisplay = useDisplay();
+
+	/** a state that represens the current user's size/type of display, this is to sync vuetify with tailwnid media queries sizes*/
+	const displayMediaQuery = ref({
+		sm: vuetifyDisplay.width.value >= 640,
+		md: vuetifyDisplay.width.value >= 768,
+		lg: vuetifyDisplay.width.value >= 1024,
+	});
+	watch([vuetifyDisplay.width], ()=>{
+		displayMediaQuery.value = {
+			sm: vuetifyDisplay.width.value >= 640,
+			md: vuetifyDisplay.width.value >= 768,
+			lg: vuetifyDisplay.width.value >= 1024,
+		}
+	});
+
   return {
     loading,
     progress,
     message,
+		displayMediaQuery,
     setLoading,
     setProgress,
     setMessage,
