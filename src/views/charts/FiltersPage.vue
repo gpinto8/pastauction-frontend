@@ -33,8 +33,8 @@
                 ></v-progress-circular>
             </div>
         </v-container>
-        <v-container fluid v-else>
-            <BrandFilter v-model="selectedBrandFull" class="mb-3"/>
+        <v-container fluid v-else class="space-y-3">
+            <BrandFilter v-model="selectedBrandFull"/>
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
             <!-- <div class="mt-3">
@@ -81,7 +81,8 @@
                 </v-col>
             </v-row> -->
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
-            <v-row justify="start">
+            <TypesFilter v-model="types" :familiesOfTypes="typesFamilies"/>
+            <!-- <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
                         class="custom-chip mr-3"
@@ -158,7 +159,7 @@
                         </v-row>
                     </div>
                 </v-col>
-            </v-row>
+            </v-row> -->
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -323,6 +324,7 @@
 import BrandFilter from './filters/BrandFilter.vue';
 import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
+import TypesFilter from './filters/Types.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -338,7 +340,7 @@ type MiscSelections = {
 }
 
 export default {
-    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter },
+    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter, TypesFilter },
     data() {
         return {
             familySelected: false,
@@ -352,6 +354,7 @@ export default {
             attributes: [] as any[],
             selectedAttributes: [] as string[],
             types: [] as any[],
+            typesFamilies: [] as any[],
             categoryType: [] as any[],
             continents: [] as any[],
             countries2: [] as any[],
@@ -398,20 +401,6 @@ export default {
     },
 
     methods: {
-        async selectModelName(model: string) {
-            if (!this.selectedModelFull.includes(model)) {
-                this.selectedModelFull.push(model);
-            }
-
-            this.modelSelected = true;
-
-            this.familySelected = true;
-        },
-
-        removeSelectedModel(index: number) {
-            this.selectedModelFull.splice(index, 1);
-        },
-
         async fetchContinents() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/country_brand_area/');
@@ -420,61 +409,14 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-
         async fetchType() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/body_type/');
-                this.types = response.data.items; 
+                this.typesFamilies = response.data.items; 
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-
-        async selectType(type: string) {
-            this.selectedType = type;
-
-            try {
-                const response = await axios.get('/filter/filter_charts_vehicles/body_category/', {
-                    params: {
-                        search: `body_type:${type}`
-                    }
-                });
-                this.categoryType = response.data.items; 
-                
-            } catch (error) {
-                console.error('Errore nel recupero dei paesi:', error);
-            }
-        },
-
-        async selectCategoryType(type: string, categoryType: string) {
-             this.selectedType = type;
-
-             this.selectedCategoryType = categoryType;
-             this.categoryTypeSelected = true;
-
-            try {
-               const response = await axios.get('/filter/filter_charts_vehicles/body_shape/', {
-                     params: {
-                         search: `body_type:${type},body_category:${categoryType}`
-                    }
-                });
-                this.listaType = response.data.items; 
-            } catch (error) {
-                console.error('Errore nel recupero dei paesi:', error);
-             }
-        },
-
-        async selectCategoryName(categoryName: string) {
-            if (!this.selectedCategoryName.includes(categoryName)) {
-                this.selectedCategoryName.push(categoryName);
-            }
-
-        },
-
-        removeSelectedCategoryName(index: number) {
-            this.selectedCategoryName.splice(index, 1);
-        },
-
         async fetchAttributes() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/body_shape/', {
@@ -487,11 +429,9 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-
         toggleAttribute(attribute: string) {
             toggleValueInArray(this.selectedAttributes, attribute)
         },
-
         async fetchPeriods() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/age_name/');
@@ -500,7 +440,6 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-
         async fetchColoursPrimary() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/colorfamily_name/');
@@ -509,7 +448,6 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-
         async selectColour(colour: string) {
             toggleValueInArray(this.selectedColour, colour)
             
@@ -524,7 +462,6 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-
         selectColorSfumatura(color: string){
             toggleValueInArray(this.selectedColor, color)
         },
@@ -532,11 +469,9 @@ export default {
         const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
             return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${brandAbbreviation}.jpeg`;
         },
-
         selectPeriod(period: string) {
             toggleValueInArray(this.selectedPeriods, period)
         },
-        
         selectMiscellaneous<T extends keyof MiscSelections>(item: MiscSelections[T], arrayName: T) {
             if (this.selectedMiscellaneous[arrayName] !== item) {
                 this.selectedMiscellaneous[arrayName] = item;
@@ -544,7 +479,6 @@ export default {
                 this.selectedMiscellaneous[arrayName] = null;
             }
         },
-
         clearFilters() {
             this.selectedBrand= null;
             this.selectedBrandFull.splice(0, this.selectedBrandFull.length); // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
@@ -560,7 +494,6 @@ export default {
             this.selectedModelFull= [];
             this.selectedCategoryName= [];
         },
-
         async previewDataset() {
             const selectedBrandArray = Array.from(this.selectedBrandFull);
             let brand_name = "";
