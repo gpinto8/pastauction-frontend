@@ -37,153 +37,9 @@
             <BrandFilter v-model="selectedBrandFull"/>
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
-            <!-- <div class="mt-3">
-                <v-chip
-                    v-for="(model, index) in selectedModelFull"
-                    :key="index"
-                    class="m-2"
-                    closable
-                    color="black"
-                    style="border-radius: 5px;"
-                    variant="flat"
-                    @click:close="removeSelectedModel(index)"
-                >
-                    {{ model }}
-                </v-chip>
-            </div>
-            <v-row justify="start" class="align-center">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="outlined"
-                        label
-                        size="large"
-                    >
-                        <small>Model</small>
-                    </v-chip>
-
-                    <p v-if="!familySelected">Please, select the Family of your interest first.</p>
-                    <v-row v-else class="letter-button border-brand" color="black" text>
-                        <v-col 
-                            v-for="model in modelList" 
-                            :key="model" 
-                            cols="12" sm="6" md="4" lg="3">
-                            <div href="#" 
-                                class="m-3"
-                                :class="{ 'selected': selectedModelFull.includes(model) }" 
-                                style="font-size: 16px;" 
-                                @click="selectModelName(model)">
-                                {{ model }}
-                            </div>
-                        </v-col>
-                    </v-row>
-                </v-col>
-            </v-row> -->
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
             <TypesFilter v-model="types" :familiesOfTypes="typesFamilies"/>
-            <!-- <v-row justify="start">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="flat"
-                        label
-                        size="large"
-                    >
-                        <small>Types</small>
-                    </v-chip>
-                    <v-btn
-                        v-for="type in types"
-                        :key="type.body_type"
-                        class="letter-button"
-                        :variant="selectedType === type.body_type ? 'elevated' : 'outlined'"
-                        @click="selectType(type.body_type)"
-                        :color="selectedType === type.body_type ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                        {{ type.body_type }}
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedType, 'd-none': !selectedType }" class="mt-3" justify="start" >
-                        <v-btn
-                            v-for="catType in categoryType" 
-                            :key="catType.body_category"
-                            class="letter-button"
-                            :variant="selectedCategoryType === catType.body_category ? 'elevated' : 'outlined'"
-                            @click="selectedType != null ? selectCategoryType(selectedType, catType.body_category) : ''"
-                            color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                            {{ catType.body_category }}
-                        </v-btn>
-                    </div>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedCategoryType, 'd-none': !selectedCategoryType }" class="mt-3">
-                        <v-row justify="start" class="align-center">
-                            <v-col
-                            >
-                            <v-chip
-                                v-for="(categoryName, index) in selectedCategoryName"
-                                :key="index"
-                                class="m-2"
-                                closable
-                                color="black"
-                                style="border-radius: 5px;"
-                                variant="flat"
-                                @click:close="removeSelectedCategoryName(index)"
-                            >
-                                {{ categoryName }}
-                            </v-chip>
-                            </v-col>
-                        </v-row>
-                        <v-row class="letter-button border-brand" color="black" text>
-                            <v-col 
-                                v-for="categoryName in listaType" 
-                                :key="categoryName.body_shape" 
-                                cols="12" sm="6" md="4" lg="3">
-                                <div 
-                                    class="m-3"
-                                    :class="{ 'selected': selectedCategoryName.includes(categoryName.body_shape) }" 
-                                    style="font-size: 16px;" 
-                                    @click="selectCategoryName(categoryName.body_shape)">
-                                    {{ categoryName.body_shape }}
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </div>
-                </v-col>
-            </v-row> -->
-            <v-row justify="start">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="outlined"
-                        label
-                        size="large"
-                    >
-                        <small>Attributes</small>
-                    </v-chip>
-                    <v-btn
-                        v-for="attribute in attributes"
-                        :key="attribute.body_shape"
-                        class="letter-button"
-                        :variant="selectedAttributes.includes(attribute.body_shape) === true ? 'elevated' : 'outlined'"
-                        @click="toggleAttribute(attribute.body_shape)"
-                        :color="selectedAttributes.includes(attribute.body_shape) === true ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                        {{ attribute.body_shape }}
-                    </v-btn>
-                </v-col>
-            </v-row>
+            <AttributesFilter v-model="selectedAttributes" :attributes="attributes" />
             <v-row justify="start">
                 <v-col class="d-flex flex-wrap align-center">
                     <v-chip
@@ -325,6 +181,7 @@ import BrandFilter from './filters/BrandFilter.vue';
 import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
+import AttributesFilter from './filters/Attributes.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -340,7 +197,7 @@ type MiscSelections = {
 }
 
 export default {
-    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter, TypesFilter },
+    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter, TypesFilter, AttributesFilter },
     data() {
         return {
             familySelected: false,
