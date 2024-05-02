@@ -22,7 +22,7 @@ const activeMenuItem = ref<(typeof menuItems)[number]>(menuItems[0]);
 
 
 <template>
-	<div class="flex flex-col px-3 md:!px-6 py-4 gap-4 h-screen">
+	<div class="flex flex-col px-3 md:!px-6 py-4 gap-4 h-screen !pb-6 overflow-y-auto">
 		<v-list-item nav class="hidden md:block">
 			<v-img class="hidden lg:block" src="@/assets/images/logo.svg" alt="Logo" />
 			<div class="hidden md:flex lg:hidden justify-center"><app-icon class="w-6 h-12" type="logo" color="#fff" size="xl"></app-icon></div>
@@ -48,12 +48,11 @@ const activeMenuItem = ref<(typeof menuItems)[number]>(menuItems[0]);
 
 		<div class="flex-1"></div>
 
-		<div @click="store.logout" class="aspect-square md:aspect-auto py-3 flex flex-col lg:flex-row justify-center items-center gap-x-3 bg-[#6C747C] text-white text-none font-normal rounded-lg">
+		<div @click="store.logout" class="aspect-square cursor-pointer md:aspect-auto hover:opacity-80 duration-75 py-3 flex flex-col lg:flex-row justify-center items-center gap-x-3 bg-[#6C747C] text-white text-none font-normal rounded-lg">
 			<app-icon type="logout" size="lg" />
 			<span class="hidden md:inline text-lg">Logout</span>
 		</div>
 
 		<div class="flex-1"></div>
-
 	</div>
 </template>
