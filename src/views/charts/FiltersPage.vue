@@ -41,48 +41,7 @@
             <TypesFilter v-model="types" :familiesOfTypes="typesFamilies"/>
             <AttributesFilter v-model="selectedAttributes" :attributes="attributes" />
             <PeriodsFilter v-model="selectedPeriods" :periods="periods"/>
-            <v-row justify="start">
-                <v-col class="d-flex flex-wrap align-center">
-                    <v-chip
-                        class="custom-chip mr-3"
-                        color="#0D6EFD"
-                        variant="flat"
-                        label
-                        size="large"
-                    >
-                        <small>Colours</small>
-                    </v-chip>
-                    <v-btn
-                        v-for="colour in colours"
-                        :key="colour.colorfamily_name"
-                        class="letter-button"
-                        :variant="selectedColour.includes(colour.colorfamily_name) ? 'elevated' : 'outlined'"
-                        @click="selectColour(colour.colorfamily_name)"
-                        :color="selectedColour.includes(colour.colorfamily_name) ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                        {{ colour.colorfamily_name }}
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedBrand, 'd-none': !selectedBrand }" class="mt-3" justify="start" >
-                        <v-btn
-                            v-for="color in sfumature" 
-                            :key="color.color_name"
-                            class="letter-button"
-                            :variant="selectedColor.includes(color.color_name) ? 'elevated' : 'outlined'"
-                            @click="selectColorSfumatura(color.color_name)"
-                            color="black"
-                            text=""
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                            {{ color.color_name }}
-                        </v-btn>
-                    </div>
-                </v-col>
-            </v-row>
+            <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies"/>
             <v-row justify="start">
                 <v-col>
                     <div class="d-flex flex-wrap align-center">
@@ -160,6 +119,7 @@ import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
 import AttributesFilter from './filters/Attributes.vue';
 import PeriodsFilter from './filters/Periods.vue';
+import ColorsFilter from './Colors.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
@@ -175,7 +135,16 @@ type MiscSelections = {
 }
 
 export default {
-    components: { BrandFilter, CountriesFilter, FamilyFilter, ModelFilter, TypesFilter, AttributesFilter, PeriodsFilter },
+    components: { 
+        BrandFilter, 
+        CountriesFilter, 
+        FamilyFilter, 
+        ModelFilter, 
+        TypesFilter, 
+        AttributesFilter, 
+        PeriodsFilter, 
+        ColorsFilter
+    },
     data() {
         return {
             familySelected: false,
@@ -196,10 +165,10 @@ export default {
             periods: [] as any[],
             selectedPeriods: [] as string[],
             // periodSelected: false,
-            colours: [] as any[],
+            colorsFamilies: [] as any[],
             sfumature: [] as any[],
             selectedColour: [] as string[],
-            selectedColor: [] as string[] ,
+            selectedColors: [] as string[] ,
             // colourSelected: false,
             // colorSelected: false,
             miscOptionsSold: ['Sold', 'Not sold'] as MiscSoldType[],
@@ -225,7 +194,7 @@ export default {
         this.fetchContinents(),
         this.fetchAttributes(),
         this.fetchPeriods(),
-        this.fetchColoursPrimary(),
+        this.fetchColorsFamilies(),
         this.fetchType(),
         ]).then(() => {
         this.loading = false;
@@ -275,10 +244,10 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-        async fetchColoursPrimary() {
+        async fetchColorsFamilies() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/colorfamily_name/');
-                this.colours = response.data.items; 
+                this.colorsFamilies = response.data.items; 
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
@@ -298,7 +267,7 @@ export default {
             }
         },
         selectColorSfumatura(color: string){
-            toggleValueInArray(this.selectedColor, color)
+            toggleValueInArray(this.selectedColors, color)
         },
         getImageUrl(countryFlag: string) {
         const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
@@ -323,7 +292,7 @@ export default {
             this.selectedAttributes= [];
             this.selectedPeriods= [];
             this.selectedColour= [];
-            this.selectedColor= [];
+            this.selectedColors= [];
             this.selectedMiscellaneous.miscOptionsSold = null;
             this.selectedFamilies= [];
             this.selectedModelFull= [];
@@ -394,7 +363,7 @@ export default {
             family_color_main_name = `family_color_main_name:${this.selectedColour.join("|")},`;
 
             let color_main_name = "";
-            color_main_name = `color_main_name:${this.selectedColor},`;
+            color_main_name = `color_main_name:${this.selectedColors},`;
 
             console.log(`${brand_name}${bw_family_name}${bw_model_name}${country_brand_name}${area_brand}${body_type}${shape}${age_name}${family_color_main_name}${color_main_name}`);
             console.log(
@@ -407,7 +376,7 @@ export default {
                 this.selectedAttributes,
                 this.selectedPeriods,
                 this.selectedColour,
-                this.selectedColor,
+                this.selectedColors,
                 this.selectedMiscellaneous.miscOptionsSold,
                 this.selectedMiscellaneous.miscOptionsQuote,
                 this.selectedMiscellaneous.miscOptionChas)
@@ -434,7 +403,7 @@ export default {
             return this.selectedColour.length > 0
         },
         colorSelected() {
-            return this.selectedColor.length > 0
+            return this.selectedColors.length > 0
         }
     }
 };
