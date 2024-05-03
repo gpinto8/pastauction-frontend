@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 const types = defineModel<string[]>({ required: true })
 
-const selectedFamilyName = ref<string | null>(null)
+const selectedFamilyName = defineModel<string | null>('selectedFamily', { required: true })
 const categoriesOfSelectedFamily = ref<any[]>([])
 
 watch(selectedFamilyName, async () => {
@@ -25,7 +25,7 @@ watch(selectedFamilyName, async () => {
     }
 })
 
-const selectedCategoryName = ref<string | null>(null)
+const selectedCategoryName = defineModel<string | null>('selectedCategory', { required: true })
 const typesList = ref<any[]>([])
 
 async function selectCategoryType(type: string, categoryType: string) {
