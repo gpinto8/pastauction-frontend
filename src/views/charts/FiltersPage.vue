@@ -38,7 +38,12 @@
             <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
-            <TypesFilter v-model="types" :familiesOfTypes="typesFamilies"/>
+            <TypesFilter 
+                v-model="types" 
+                v-model:selectedFamily="selectedFamilyType" 
+                v-model:selectedCategory="selectedCatergoryType"
+                :familiesOfTypes="typesFamilies"
+            />
             <AttributesFilter v-model="selectedAttributes" :attributes="attributes" />
             <PeriodsFilter v-model="selectedPeriods" :periods="periods"/>
             <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies"/>
@@ -152,6 +157,8 @@ export default {
             selectedAttributes: [] as string[],
             types: [] as any[],
             typesFamilies: [] as any[],
+            selectedFamilyType: null as null | string,
+            selectedCatergoryType: null as null | string,
             continents: [] as any[],
             periods: [] as any[],
             selectedPeriods: [] as string[],
@@ -243,16 +250,25 @@ export default {
         },
         clearFilters() {
             // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
-            this.selectedBrandFull.splice(0, this.selectedBrandFull.length);
+            this.emptyArray(this.selectedBrandFull)
             this.selectedContinent= null;
-            this.selectedAttributes.splice(0, this.selectedAttributes.length);
-            this.selectedPeriods.splice(0, this.selectedPeriods.length);
-            this.selectedColour.splice(0, this.selectedColour.length);
-            this.selectedColors.splice(0, this.selectedColors.length);
+            this.emptyArray(this.selectedAttributes)
+            this.emptyArray(this.selectedPeriods)
+            this.emptyArray(this.selectedColour)
+            this.emptyArray(this.selectedColors)
             this.selectedMiscellaneous.miscOptionsSold = null;
-            this.selectedFamilies.splice(0, this.selectedFamilies.length);
-            this.selectedModelFull.splice(0, this.selectedModelFull.length);
-            this.selectedCategoryName.splice(0, this.selectedCategoryName.length);
+            this.emptyArray(this.selectedFamilies)
+            this.emptyArray(this.selectedModelFull)
+            this.emptyArray(this.selectedCategoryName)
+
+            // Reset types filters
+            this.emptyArray(this.types)
+            this.selectedFamilyType = null
+            this.selectedCatergoryType = null
+
+        },
+        emptyArray(arr: any[]) {
+            arr.splice(0, arr.length)
         },
         async previewDataset() {
             const selectedBrandArray = Array.from(this.selectedBrandFull);
