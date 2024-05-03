@@ -242,16 +242,17 @@ export default {
             }
         },
         clearFilters() {
-            this.selectedBrandFull.splice(0, this.selectedBrandFull.length); // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
+            // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
+            this.selectedBrandFull.splice(0, this.selectedBrandFull.length);
             this.selectedContinent= null;
-            this.selectedAttributes= [];
-            this.selectedPeriods= [];
-            this.selectedColour= [];
-            this.selectedColors= [];
+            this.selectedAttributes.splice(0, this.selectedAttributes.length);
+            this.selectedPeriods.splice(0, this.selectedPeriods.length);
+            this.selectedColour.splice(0, this.selectedColour.length);
+            this.selectedColors.splice(0, this.selectedColors.length);
             this.selectedMiscellaneous.miscOptionsSold = null;
-            this.selectedFamilies= [];
-            this.selectedModelFull= [];
-            this.selectedCategoryName= [];
+            this.selectedFamilies.splice(0, this.selectedFamilies.length);
+            this.selectedModelFull.splice(0, this.selectedModelFull.length);
+            this.selectedCategoryName.splice(0, this.selectedCategoryName.length);
         },
         async previewDataset() {
             const selectedBrandArray = Array.from(this.selectedBrandFull);
