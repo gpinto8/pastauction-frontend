@@ -34,8 +34,8 @@
             </div>
         </v-container>
         <v-container fluid v-else class="space-y-3">
-            <BrandFilter v-model="selectedBrandFull"/>
-            <FamilyFilter :brands="selectedBrandFull" v-model="selectedFamilies"/>
+            <BrandFilter v-model="selectedBrands"/>
+            <FamilyFilter :brands="selectedBrands" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
             <TypesFilter 
@@ -151,7 +151,7 @@ export default {
     },
     data() {
         return {
-            selectedBrandFull: [] as string[],
+            selectedBrands: [] as string[],
             selectedContinent: null as null | string,
             attributes: [] as any[],
             selectedAttributes: [] as string[],
@@ -177,7 +177,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: true,
+            loading: false,
             selectedCountries: [] as any[],
         };
     },
@@ -250,7 +250,7 @@ export default {
         },
         clearFilters() {
             // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
-            this.emptyArray(this.selectedBrandFull)
+            this.emptyArray(this.selectedBrands)
             this.selectedContinent= null;
             this.emptyArray(this.selectedAttributes)
             this.emptyArray(this.selectedPeriods)
@@ -271,97 +271,40 @@ export default {
             arr.splice(0, arr.length)
         },
         async previewDataset() {
-            const selectedBrandArray = Array.from(this.selectedBrandFull);
-            let brand_name = "";
-            if (selectedBrandArray.length > 1) {
-                brand_name = `brand_name:${selectedBrandArray.join("|")},`;
-            } else if (selectedBrandArray.length === 1) {
-                brand_name = `brand_name:${selectedBrandArray[0]},`;
-            } else {
-                brand_name = ``;
-            }
+            
+            let searchParams = [
+                this.getBrandsSearchParams(),
+                this.getPeriodsSearchParams(),
+            ]
 
-            const selectedFamilyArray = Array.from(this.selectedFamilies);
-            let bw_family_name = "";
-            if (selectedFamilyArray.length > 1) {
-                bw_family_name = `bw_family_name:${selectedFamilyArray.join("|")},`;
-            } else if (selectedFamilyArray.length === 1) {
-                bw_family_name = `bw_family_name:${selectedFamilyArray[0]},`;
-            } else {
-                bw_family_name = ``;
-            }
-
-            const selectedModelArray = Array.from(this.selectedModelFull);
-            let bw_model_name = "";
-            if (selectedModelArray.length > 1) {
-                bw_model_name = `bw_model_name:${selectedModelArray.join("|")},`;
-            } else if (selectedModelArray.length === 1) {
-                bw_model_name = `bw_model_name:${selectedModelArray[0]},`;
-            } else {
-                bw_model_name = ``;
-            }
-
-            let country_brand_name = "";
-            country_brand_name = `country_brand_name:${this.selectedContinent},`;
-
-            const selectedAreaBrandArray = Array.from(this.selectedCountries);
-            let area_brand = "";
-            if (selectedAreaBrandArray.length > 1) {
-                area_brand = `area_brand:${selectedAreaBrandArray.join("|")},`;
-            } else if (selectedAreaBrandArray.length === 1) {
-                area_brand = `area_brand:${selectedAreaBrandArray[0]},`;
-            } else {
-                area_brand = ``;
-            }
-
-            const selectedCategoryNameArray = Array.from(this.selectedCategoryName);
-            let body_type = "";
-            if (selectedCategoryNameArray.length > 1) {
-                body_type = `body_type:${selectedCategoryNameArray.join("|")},`;
-            } else if (selectedCategoryNameArray.length === 1) {
-                body_type = `body_type:${selectedCategoryNameArray[0]},`;
-            } else {
-                body_type = ``;
-            }
-
-            let shape = this.selectedAttributes.length > 0 ? `shape:${this.selectedAttributes.join("|")},` : "";
-
-            // `age_name:${this.selectedPeriods},`
-            let age_name = "";
-            age_name = this.selectedPeriods.length > 0 ? `age_name:${this.selectedPeriods.join("|")},` : "" ;
-
-
-            let family_color_main_name = "";
-            family_color_main_name = `family_color_main_name:${this.selectedColour.join("|")},`;
-
-            let color_main_name = "";
-            color_main_name = `color_main_name:${this.selectedColors},`;
-
-            console.log(`${brand_name}${bw_family_name}${bw_model_name}${country_brand_name}${area_brand}${body_type}${shape}${age_name}${family_color_main_name}${color_main_name}`);
-            console.log(
-                this.selectedBrandFull,
-                this.selectedFamilies,
-                this.selectedModelFull,
-                this.selectedContinent,
-                this.selectedCountries,
-                this.selectedCategoryName,
-                this.selectedAttributes,
-                this.selectedPeriods,
-                this.selectedColour,
-                this.selectedColors,
-                this.selectedMiscellaneous.miscOptionsSold,
-                this.selectedMiscellaneous.miscOptionsQuote,
-                this.selectedMiscellaneous.miscOptionChas)
+            console.log(searchParams.join(','));
+            // console.log(
+            //     this.selectedBrands,
+            //     this.selectedFamilies,
+            //     this.selectedModelFull,
+            //     this.selectedContinent,
+            //     this.selectedCountries,
+            //     this.selectedCategoryName,
+            //     this.selectedAttributes,
+            //     this.selectedPeriods,
+            //     this.selectedColour,
+            //     this.selectedColors,
+            //     this.selectedMiscellaneous.miscOptionsSold,
+            //     this.selectedMiscellaneous.miscOptionsQuote,
+            //     this.selectedMiscellaneous.miscOptionChas)
                 try {
-                    const response = await axios.get('/bidwatcher_vehicle/query_v/', {
-                        params: {
-                            search: `${brand_name}${bw_family_name}${bw_model_name}${country_brand_name}${area_brand}${body_type}${shape}${age_name}${family_color_main_name}${color_main_name}`
-                        }
-                    });
-                    // this.countries2 = response.data.items;
+                    const response = await axios.get(`/bidwatcher_vehicle/query_v?search=${searchParams.join(',')}`);
+                    // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
+                    console.log(response);
                 } catch (error) {
-                    console.error('Errore nel recupero dei paesi:', error);
+                    console.error('Preview dataset error:', error);
                 }
+        },
+        getBrandsSearchParams() {
+            return `brand_name:${this.selectedBrands.join('|')}`
+        },
+        getPeriodsSearchParams() {
+            return `age_name:${this.selectedPeriods.join('|')}`
         }
     },
     computed: {
