@@ -120,7 +120,6 @@ import TypesFilter from './filters/Types.vue';
 import AttributesFilter from './filters/Attributes.vue';
 import PeriodsFilter from './filters/Periods.vue';
 import ColorsFilter from './Colors.vue';
-import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
 
@@ -147,30 +146,18 @@ export default {
     },
     data() {
         return {
-            familySelected: false,
-            modelSelected: false,
-            selectedBrand: null  as null | string,
             selectedBrandFull: [] as string[],
             selectedContinent: null as null | string,
-            selectedType: null as null | string,
-            selectedCategoryType: null as null | string,
-            categoryTypeSelected: false, 
             attributes: [] as any[],
             selectedAttributes: [] as string[],
             types: [] as any[],
             typesFamilies: [] as any[],
-            categoryType: [] as any[],
             continents: [] as any[],
-            countries2: [] as any[],
             periods: [] as any[],
             selectedPeriods: [] as string[],
-            // periodSelected: false,
             colorsFamilies: [] as any[],
-            sfumature: [] as any[],
             selectedColour: [] as string[],
             selectedColors: [] as string[] ,
-            // colourSelected: false,
-            // colorSelected: false,
             miscOptionsSold: ['Sold', 'Not sold'] as MiscSoldType[],
             miscOptionsQuote: ['Quoted', 'Not quoted'] as MiscQuoteType[],
             miscOptionChas: ['With chassis', 'Without chassis'] as MiscChasType[],
@@ -183,8 +170,6 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            modelList: [] as any[],
-            listaType: [] as any[],
             loading: true,
             selectedCountries: [] as any[],
         };
@@ -233,9 +218,6 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-        toggleAttribute(attribute: string) {
-            toggleValueInArray(this.selectedAttributes, attribute)
-        },
         async fetchPeriods() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/age_name/');
@@ -252,30 +234,6 @@ export default {
                 console.error('Errore nel recupero dei paesi:', error);
             }
         },
-        async selectColour(colour: string) {
-            toggleValueInArray(this.selectedColour, colour)
-            
-            try {
-                const response = await axios.get('/filter/filter_charts_vehicles/color_name/', {
-                    params: {
-                        search: `colorfamily_name:${this.selectedColour.join("|")}`
-                    }
-                });
-                this.sfumature = response.data.items;
-            } catch (error) {
-                console.error('Errore nel recupero dei paesi:', error);
-            }
-        },
-        selectColorSfumatura(color: string){
-            toggleValueInArray(this.selectedColors, color)
-        },
-        getImageUrl(countryFlag: string) {
-        const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
-            return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${brandAbbreviation}.jpeg`;
-        },
-        selectPeriod(period: string) {
-            toggleValueInArray(this.selectedPeriods, period)
-        },
         selectMiscellaneous<T extends keyof MiscSelections>(item: MiscSelections[T], arrayName: T) {
             if (this.selectedMiscellaneous[arrayName] !== item) {
                 this.selectedMiscellaneous[arrayName] = item;
@@ -284,11 +242,8 @@ export default {
             }
         },
         clearFilters() {
-            this.selectedBrand= null;
             this.selectedBrandFull.splice(0, this.selectedBrandFull.length); // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
             this.selectedContinent= null;
-            this.selectedType= null;
-            this.selectedCategoryType= null;
             this.selectedAttributes= [];
             this.selectedPeriods= [];
             this.selectedColour= [];
@@ -386,7 +341,7 @@ export default {
                             search: `${brand_name}${bw_family_name}${bw_model_name}${country_brand_name}${area_brand}${body_type}${shape}${age_name}${family_color_main_name}${color_main_name}`
                         }
                     });
-                    this.countries2 = response.data.items;
+                    // this.countries2 = response.data.items;
                 } catch (error) {
                     console.error('Errore nel recupero dei paesi:', error);
                 }
