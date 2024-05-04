@@ -3,26 +3,24 @@ import axios from 'axios';
 import { ref, watch } from 'vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 
+defineExpose({
+    resetFilter
+})
 const countries = defineModel('countries', { required: true })
 const props = defineProps<{
     continents: any[]
 }>()
-let selectedContinents = ref<null | string>(null)
+let selectedContinent = ref<null | string>(null)
 
 let countriesOfContinent = ref<any[]>([])
 
-async function selectCountry(country: string) {
-    selectedContinents.value = country;
-    // countrySelected = true;
-}
-
 // Refresh the countries displayed when changing the selected continent
-watch(selectedContinents, async () => {
+watch(selectedContinent, async () => {
 
     try {
         const response = await axios.get('/filter/filter_charts_vehicles/country_brand_name/', {
             params: {
-                search: `country_brand_area:${selectedContinents.value}`
+                search: `country_brand_area:${selectedContinent.value}`
             }
         });
         countriesOfContinent.value = response.data.items;
@@ -35,6 +33,10 @@ watch(selectedContinents, async () => {
 function getImageUrl(countryFlag: string) {
     const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
     return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${brandAbbreviation}.jpeg`;
+}
+
+function resetFilter() {
+    selectedContinent.value = null
 }
 
 </script>
@@ -56,8 +58,8 @@ function getImageUrl(countryFlag: string) {
                     v-for="country in props.continents"
                     :key="country.country_brand_area"
                     class="letter-button"
-                    :variant="selectedContinents === country.country_brand_area ? 'elevated' : 'outlined'"
-                    @click="selectCountry(country.country_brand_area)"
+                    :variant="selectedContinent === country.country_brand_area ? 'elevated' : 'outlined'"
+                    @click="selectedContinent =  country.country_brand_area"
                     color="black"
                     style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                 >
@@ -67,7 +69,7 @@ function getImageUrl(countryFlag: string) {
         </v-row>
         <v-row justify="start" class="align-center mt-0">
             <v-col class="d-flex flex-wrap align-center pt-0">
-                <div :class="{ 'd-block': selectedContinents, 'd-none': !selectedContinents }" class="mt-3">
+                <div :class="{ 'd-block': selectedContinent, 'd-none': !selectedContinent }" class="mt-3">
                     <v-row justify="start" class="align-center">
                         <v-col>
                             <v-chip

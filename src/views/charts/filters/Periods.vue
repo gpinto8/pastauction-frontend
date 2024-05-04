@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 
+defineExpose({
+    resetFilter
+})
 const props = defineProps<{
     periods: any[]
 }>()
 const selectedPeriods = defineModel<string[]>({ required: true })
+
+function resetFilter() {
+    emptyArray(selectedPeriods.value)
+}
 
 </script>
 

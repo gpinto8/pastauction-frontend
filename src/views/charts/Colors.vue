@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
 
+defineExpose({
+    resetFilter
+})
 const props = defineProps<{
     colorFamilies: any[]
 }>()
@@ -24,6 +28,11 @@ watch(selectedColorFamilies, async () => {
 }, {
     deep: true
 })
+
+function resetFilter() {
+    emptyArray(selectedColorFamilies.value)
+    emptyArray(colors.value)
+}
 
 </script>
 

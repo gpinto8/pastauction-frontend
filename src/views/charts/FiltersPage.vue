@@ -37,7 +37,7 @@
             <BrandFilter v-model="selectedBrands" ref="brandsFilter"/>
             <FamilyFilter :brands="selectedBrands" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
-            <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
+            <CountriesFilter :continents="continents" v-model:countries="selectedCountries" ref="countriesFilter"/>
             <TypesFilter 
                 ref="typesFilter"
                 v-model="types" 
@@ -45,9 +45,9 @@
                 v-model:selectedCategory="selectedCatergoryType"
                 :familiesOfTypes="typesFamilies"
             />
-            <AttributesFilter v-model="selectedAttributes" :attributes="attributes" />
-            <PeriodsFilter v-model="selectedPeriods" :periods="periods"/>
-            <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies"/>
+            <AttributesFilter v-model="selectedAttributes" :attributes="attributes" ref="attributesFilter"/>
+            <PeriodsFilter v-model="selectedPeriods" :periods="periods" ref="periodsFilter"/>
+            <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies" ref="colorsFilter"/>
             <v-row justify="start">
                 <v-col>
                     <div class="d-flex flex-wrap align-center">
@@ -251,19 +251,16 @@ export default {
         },
         clearFilters() {
             // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
-            (this.$refs.brandsFilter as any).resetFilter()
-            this.selectedContinent= null;
-            this.emptyArray(this.selectedAttributes)
-            this.emptyArray(this.selectedPeriods)
-            this.emptyArray(this.selectedColour)
-            this.emptyArray(this.selectedColors)
-            this.selectedMiscellaneous.miscOptionsSold = null;
-            this.emptyArray(this.selectedFamilies)
-            this.emptyArray(this.selectedModelFull)
-            this.emptyArray(this.selectedCategoryName);
-            // Reset types filters
+            (this.$refs.brandsFilter as any).resetFilter();
+            (this.$refs.countriesFilter as any).resetFilter();
+            (this.$refs.attributesFilter as any).resetFilter();
+            (this.$refs.periodsFilter as any).resetFilter();
+            (this.$refs.colorsFilter as any).resetFilter();
             (this.$refs.typesFilter as any).resetFilter();
-
+            
+            this.selectedMiscellaneous.miscOptionsSold = null;
+            this.selectedMiscellaneous.miscOptionChas = null;
+            this.selectedMiscellaneous.miscOptionsQuote = null;
         },
         emptyArray(arr: any[]) {
             arr.splice(0, arr.length)
