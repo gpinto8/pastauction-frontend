@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { defineModel, ref, watch } from 'vue';
 
+defineExpose({
+    resetFilter
+})
 const props = defineProps<{
     familiesOfTypes: any[]
 }>()
@@ -42,6 +46,14 @@ async function selectCategoryType(type: string, categoryType: string) {
     } catch (error) {
         console.error('Errore nel recupero dei paesi:', error);
     }
+}
+
+function resetFilter() {
+
+    selectedFamilyName.value = null
+    selectedCategoryName.value = null
+    emptyArray(types.value)
+
 }
 </script>
 

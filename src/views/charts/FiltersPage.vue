@@ -39,6 +39,7 @@
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
             <TypesFilter 
+                ref="typesFilter"
                 v-model="types" 
                 v-model:selectedFamily="selectedFamilyType" 
                 v-model:selectedCategory="selectedCatergoryType"
@@ -177,7 +178,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: false,
+            loading: true,
             selectedCountries: [] as any[],
         };
     },
@@ -259,12 +260,9 @@ export default {
             this.selectedMiscellaneous.miscOptionsSold = null;
             this.emptyArray(this.selectedFamilies)
             this.emptyArray(this.selectedModelFull)
-            this.emptyArray(this.selectedCategoryName)
-
+            this.emptyArray(this.selectedCategoryName);
             // Reset types filters
-            this.emptyArray(this.types)
-            this.selectedFamilyType = null
-            this.selectedCatergoryType = null
+            (this.$refs.typesFilter as any).resetFilter();
 
         },
         emptyArray(arr: any[]) {
