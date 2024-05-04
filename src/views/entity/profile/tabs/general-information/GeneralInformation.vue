@@ -12,6 +12,24 @@ const { generalInfo } = storeToRefs(entityStore);
 const { fetchGeneralInfo, saveGeneralInfo } = entityStore;
 
 const editPassword = ref(false);
+const agingPeriods = ref([
+  { type: 'antique', label: 'Antique (1880-1904)' },
+  { type: 'veteran', label: 'Veteran (1905-1918)' },
+  { type: 'vintage', label: 'Vintage (1919-1930)' },
+  { type: 'postVintage', label: 'Post Vintage (1931-1945)' },
+  { type: 'classic', label: 'Classic (1946-1964)' },
+  { type: 'postClassic', label: 'Post Classic (1965-1974)' },
+  { type: 'modern', label: 'Modern (1975-1999)' },
+  { type: 'contemporary', label: 'Contemporary (2000-2020)' }
+]);
+const vehicleTypes = ref([
+  { type: 'car', label: 'Cars' },
+  { type: 'motorcycle', label: 'Motorcycles' },
+  { type: 'tractor', label: 'Tractors' },
+  { type: 'boat', label: 'Boats' },
+  { type: 'plane', label: 'Planes' },
+  { type: 'military', label: 'Military' }
+]);
 
 onMounted(async () => {
   await fetchGeneralInfo();
@@ -33,8 +51,9 @@ onMounted(async () => {
       </v-row>
       <v-row>
         <v-col :cols="4">
-          <v-text-field :variant="props.editInputVariant.value" density="compact" label="ID" v-model="props.data.value.id"
-            :readonly="props.editInputDisabled.value" v-if="props.editInputDisabled.value" />
+          <v-text-field :variant="props.editInputVariant.value" density="compact" label="ID"
+            v-model="props.data.value.id" :readonly="props.editInputDisabled.value"
+            :disabled="!props.editInputDisabled.value" />
         </v-col>
         <v-col :cols="4">
           <v-text-field :variant="props.editInputVariant.value" density="compact" label="Year beginning"
@@ -113,9 +132,28 @@ onMounted(async () => {
           </v-text-field>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="12">
+          <h2 class="font-weight-bold">Aging Periods</h2>
+        </v-col>
+        <v-col cols="12">
+          <v-checkbox class="d-inline-flex mr-4" v-for="agingPeriod of agingPeriods"
+            v-model="props.data.value.agePeriods" :value="agingPeriod.type" :label="agingPeriod.label"
+            :variant="props.editInputVariant.value" :readonly="props.editInputDisabled.value" />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <h2 class="font-weight-bold">Types of Vehicles</h2>
+        </v-col>
+        <v-col cols="12">
+          <v-checkbox class="d-inline-flex mr-4" v-for="vehicleType of vehicleTypes"
+            v-model="props.data.value.typesOfVehicle" :value="vehicleType.type" :label="vehicleType.label"
+            :variant="props.editInputVariant.value" :readonly="props.editInputDisabled.value" />
+        </v-col>
+      </v-row>
     </template>
   </ManagingSheet>
 
   <ChangePasswordDialog v-model="editPassword" />
 </template>
-
