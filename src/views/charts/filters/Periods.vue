@@ -18,9 +18,8 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start">
-            <v-col class="d-flex flex-wrap align-center">
-                <v-chip
+        <v-row justify="start" no-gutters>
+            <v-chip
                     class="custom-chip mr-3"
                     color="#0D6EFD"
                     variant="outlined"
@@ -29,6 +28,7 @@ function resetFilter() {
                 >
                     <small>Periods</small>
                 </v-chip>
+            <v-col class="d-flex flex-wrap align-center">
                 <v-btn
                     v-for="period in periods"
                     :key="period.age_name"

@@ -48,64 +48,58 @@
             <AttributesFilter v-model="selectedAttributes" :attributes="attributes" ref="attributesFilter"/>
             <PeriodsFilter v-model="selectedPeriods" :periods="periods" ref="periodsFilter"/>
             <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies" ref="colorsFilter"/>
-            <v-row justify="start">
-                <v-col>
-                    <div class="d-flex flex-wrap align-center">
-                        <v-chip
-                            class="custom-chip mr-3"
-                            color="#0D6EFD"
-                            variant="outlined"
-                            size="large"
-                            label
+            <div class="flex">
+                <v-chip
+                    class="custom-chip mr-3 shrink-0"
+                    color="#0D6EFD"
+                    variant="outlined"
+                    size="large"
+                    label
+                >
+                    <small>Miscellaneous</small>
+                </v-chip>
+                <v-row no-gutters>
+                    <div class="flex space-x-4 mr-4">
+                        <v-btn
+                            v-for="item in miscOptionsSold"
+                            :key="item"
+                            class="letter-button"
+                            :variant="selectedMiscellaneous.miscOptionsSold === item ? 'elevated' : 'outlined'"
+                            @click="selectMiscellaneous(item, 'miscOptionsSold')"
+                            :color="selectedMiscellaneous.miscOptionsSold === item ? 'black' : ''"
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                         >
-                            <small>Miscellaneous</small>
-                        </v-chip>
-                        <div>
-                            <div class="d-flex justify-space-between">
-                                <div class="me-4">
-                                    <v-btn
-                                        v-for="item in miscOptionsSold"
-                                        :key="item"
-                                        class="letter-button"
-                                        :variant="selectedMiscellaneous.miscOptionsSold === item ? 'elevated' : 'outlined'"
-                                        @click="selectMiscellaneous(item, 'miscOptionsSold')"
-                                        :color="selectedMiscellaneous.miscOptionsSold === item ? 'black' : ''"
-                                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                                    >
-                                        {{ item }}
-                                    </v-btn>
-                                </div>
-                                <div class="me-4">
-                                    <v-btn
-                                        v-for="item in miscOptionsQuote"
-                                        :key="item"
-                                        class="letter-button"
-                                        :variant="selectedMiscellaneous.miscOptionsQuote === item ? 'elevated' : 'outlined'"
-                                        @click="selectMiscellaneous(item, 'miscOptionsQuote')"
-                                        :color="selectedMiscellaneous.miscOptionsQuote === item ? 'black' : ''"
-                                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                                    >
-                                        {{ item }}
-                                    </v-btn>
-                                </div>
-                                <div class="me-4">
-                                    <v-btn
-                                        v-for="item in miscOptionChas"
-                                        :key="item"
-                                        class="letter-button"
-                                        :variant="selectedMiscellaneous.miscOptionChas === item ? 'elevated' : 'outlined'"
-                                        @click="selectMiscellaneous(item, 'miscOptionChas')"
-                                        :color="selectedMiscellaneous.miscOptionChas === item ? 'black' : ''"
-                                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                                    >
-                                        {{ item }}
-                                    </v-btn>
-                                </div>
-                            </div>
-                        </div>
+                            {{ item }}
+                        </v-btn>
                     </div>
-                </v-col>
-            </v-row>
+                    <div class="flex space-x-4 mr-4">
+                        <v-btn
+                            v-for="item in miscOptionsQuote"
+                            :key="item"
+                            class="letter-button"
+                            :variant="selectedMiscellaneous.miscOptionsQuote === item ? 'elevated' : 'outlined'"
+                            @click="selectMiscellaneous(item, 'miscOptionsQuote')"
+                            :color="selectedMiscellaneous.miscOptionsQuote === item ? 'black' : ''"
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        >
+                            {{ item }}
+                        </v-btn>
+                    </div>
+                    <div class="flex space-x-4">
+                        <v-btn
+                            v-for="item in miscOptionChas"
+                            :key="item"
+                            class="letter-button"
+                            :variant="selectedMiscellaneous.miscOptionChas === item ? 'elevated' : 'outlined'"
+                            @click="selectMiscellaneous(item, 'miscOptionChas')"
+                            :color="selectedMiscellaneous.miscOptionChas === item ? 'black' : ''"
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        >
+                            {{ item }}
+                        </v-btn>
+                    </div>
+                </v-row>
+            </div>
             <v-row>
                 <v-col cols="12">
                     <div class="d-flex justify-end">
@@ -178,7 +172,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: true,
+            loading: false,
             selectedCountries: [] as any[],
         };
     },

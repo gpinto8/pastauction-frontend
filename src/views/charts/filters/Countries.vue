@@ -43,17 +43,17 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start">
+        <v-row justify="start" no-gutters>
+            <v-chip
+                class="custom-chip mr-3"
+                color="#0D6EFD"
+                variant="flat"
+                label
+                size="large"
+            >
+                <small>Countries</small>
+            </v-chip>
             <v-col class="d-flex flex-wrap align-center">
-                <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="flat"
-                    label
-                    size="large"
-                >
-                    <small>Countries</small>
-                </v-chip>
                 <v-btn
                     v-for="country in props.continents"
                     :key="country.country_brand_area"
@@ -65,44 +65,43 @@ function resetFilter() {
                 >
                     {{ country.country_brand_area }}
                 </v-btn>
-            </v-col>
-        </v-row>
-        <v-row justify="start" class="align-center mt-0">
-            <v-col class="d-flex flex-wrap align-center pt-0">
-                <div :class="{ 'd-block': selectedContinent, 'd-none': !selectedContinent }" class="mt-3">
-                    <v-row justify="start" class="align-center">
-                        <v-col>
-                            <v-chip
-                                v-for="(countryName, index) in countries"
-                                :key="index"
-                                class="m-2"
-                                closable
-                                color="black"
-                                style="border-radius: 5px;"
-                                variant="flat"
-                                @click:close="toggleValueInArray(countries, countryName)"
-                            >
-                                {{ countryName }}
-                            </v-chip>
-                        </v-col>
-                    </v-row>
-                    <v-row class="letter-button border-brand" color="black" text>
-                        <v-col 
-                            v-for="flag in countriesOfContinent" 
-                            :key="flag" 
-                            cols="12" sm="2" md="2" lg="2"
-                            class="flex-center object-cover"
-                            >
-                                <div 
-                                :class="countries.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
-                                class="m-3 w-14 h-9 border-2" 
-                                style="font-size: 16px;" 
-                                @click="toggleValueInArray(countries, flag.country_brand_name)">
-                                    <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
-                                </div>
-                        </v-col>
-                    </v-row>
-                </div>
+                <v-row justify="start" class="align-center mt-0">
+                    <v-col class="d-flex flex-wrap align-center pt-0">
+                        <div :class="{ 'd-block': selectedContinent, 'd-none': !selectedContinent }" class="mt-3">
+                            <v-row justify="start" class="align-center">
+                                <v-col>
+                                    <v-chip
+                                        v-for="(countryName, index) in countries"
+                                        :key="index"
+                                        class="m-2"
+                                        closable
+                                        color="black"
+                                        style="border-radius: 5px;"
+                                        variant="flat"
+                                        @click:close="toggleValueInArray(countries, countryName)"
+                                    >
+                                        {{ countryName }}
+                                    </v-chip>
+                                </v-col>
+                            </v-row>
+                            <v-row class="letter-button border-brand" color="black" text>
+                                <class
+                                    v-for="flag in countriesOfContinent" 
+                                    :key="flag" 
+                                    class="flex-center object-cover grid"
+                                    >
+                                        <div 
+                                        :class="countries.includes(flag.country_brand_name) == true ? 'border-blue-400' : 'border-transparent'" 
+                                        class="m-3 w-14 h-9 border-2" 
+                                        style="font-size: 16px;" 
+                                        @click="toggleValueInArray(countries, flag.country_brand_name)">
+                                            <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
+                                        </div>
+                                </class>
+                            </v-row>
+                        </div>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
     </div>

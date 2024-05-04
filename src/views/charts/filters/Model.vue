@@ -42,32 +42,17 @@ function resetFilter() {
 
 <template>
     <div>
-        <div class="mt-3">
+        <v-row justify="start" class="align-center" no-gutters>
             <v-chip
-                v-for="(model, index) in models"
-                :key="model"
-                class="m-2"
-                closable
-                color="black"
-                style="border-radius: 5px;"
-                variant="flat"
-                @click:close="toggleValueInArray(models, model)"
+                class="custom-chip mr-3 align-self-start"
+                color="#0D6EFD"
+                variant="outlined"
+                label
+                size="large"
             >
-                {{ model }}
+                <small>Model</small>
             </v-chip>
-        </div>
-        <v-row justify="start" class="align-center">
-            <v-col class="d-flex flex-wrap align-center">
-                <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="outlined"
-                    label
-                    size="large"
-                >
-                    <small>Model</small>
-                </v-chip>
-
+            <v-col class="">
                 <p v-if="families.length == 0">Please, select the Family of your interest first.</p>
                 <v-row v-else class="letter-button border-brand" color="black" text>
                     <v-col 
@@ -83,6 +68,20 @@ function resetFilter() {
                         </div>
                     </v-col>
                 </v-row>
+                <div class="mt-3">
+                    <v-chip
+                        v-for="(model, index) in models"
+                        :key="model"
+                        class="m-2"
+                        closable
+                        color="black"
+                        style="border-radius: 5px;"
+                        variant="flat"
+                        @click:close="toggleValueInArray(models, model)"
+                    >
+                        {{ model }}
+                    </v-chip>
+                </div>
             </v-col>
         </v-row>
     </div>

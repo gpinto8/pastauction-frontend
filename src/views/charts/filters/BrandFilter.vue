@@ -49,7 +49,7 @@ function resetFilter() {
 
 <template>
     <div class="flex flex-col">
-        <v-row>
+        <v-row no-gutters>
             <v-chip
                 class="custom-chip mr-3 align-self-start"
                 color="#0D6EFD"

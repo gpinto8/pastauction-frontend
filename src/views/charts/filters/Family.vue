@@ -81,65 +81,68 @@ function resetFilter() {
 
 <template>
     <div class="flex flex-col">
-        <v-row justify="start" class="align-center">
-            <v-col class="d-flex flex-wrap align-center">
-                <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="outlined"
-                    label
-                    size="large"
-                >
-                    <small>Family</small> 
-                </v-chip>
-                <p v-if="brands.length === 0">Please, select the Brand of your interest first.</p>
-                <v-btn v-if="familyInitials.length > 0"
-                    v-for="familyInitial in familyInitials"
-                    :key="'family_' + familyInitial"
-                    class="letter-button"
-                    :variant="selectedFamilyInitial === familyInitial ? 'elevated' : 'outlined'"
-                    @click="selectedFamilyInitial = familyInitial"
-                    color="black"
-                    style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                    {{ familyInitial }}
-                </v-btn>
-            </v-col>
-        </v-row>
-        <v-row justify="start" class="align-center mt-0">
-            <v-col class="d-flex flex-wrap align-center pt-0">
-                <div :class="{ 'd-block': selectedFamilyInitial, 'd-none': !selectedFamilyInitial }" class="mt-3">
-                    <v-row justify="start" class="align-center">
-                        <v-col>
-                            <v-chip
-                                v-for="(family, index) in families"
-                                :key="family"
-                                class="m-2"
-                                closable
-                                color="black"
-                                style="border-radius: 5px;"
-                                variant="flat"
-                                @click:close="toggleValueInArray(families, family)"
+        <v-row no-gutters>
+            <v-chip
+                class="custom-chip mr-3"
+                color="#0D6EFD"
+                variant="outlined"
+                label
+                size="large">
+                <small>Family</small> 
+            </v-chip>
+            <v-col>
+                <v-row justify="start" class="align-center">
+                    <v-col class="d-flex flex-wrap align-center">
+                        <p v-if="brands.length === 0">Please, select the Brand of your interest first.</p>
+                        <v-btn v-if="familyInitials.length > 0"
+                            v-for="familyInitial in familyInitials"
+                            :key="'family_' + familyInitial"
+                            class="letter-button"
+                            :variant="selectedFamilyInitial === familyInitial ? 'elevated' : 'outlined'"
+                            @click="selectedFamilyInitial = familyInitial"
+                            color="black"
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                             >
-                                {{ family }}
-                            </v-chip>
-                        </v-col>
-                    </v-row>
-                    <v-row class="letter-button border-brand" color="black" text>
-                        <v-col 
-                            v-for="family in availableFamilies" 
-                            :key="family" 
-                            cols="12" sm="6" md="4" lg="3">
-                            <div
-                            :class="{ 'selected': families.includes(family) }" 
-                            class="m-3" 
-                            style="font-size: 16px;" 
-                            @click="toggleValueInArray(families, family)">
-                                {{ family }}
-                            </div>
-                        </v-col>
-                    </v-row>
-                </div>
+                            {{ familyInitial }}
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-row justify="start" class="align-center mt-0">
+                    <v-col class="d-flex flex-wrap align-center pt-0">
+                        <div :class="{ 'd-block': selectedFamilyInitial, 'd-none': !selectedFamilyInitial }" class="mt-3">
+                            <v-row justify="start" class="align-center">
+                                <v-col>
+                                    <v-chip
+                                        v-for="(family, index) in families"
+                                        :key="family"
+                                        class="m-2"
+                                        closable
+                                        color="black"
+                                        style="border-radius: 5px;"
+                                        variant="flat"
+                                        @click:close="toggleValueInArray(families, family)"
+                                    >
+                                        {{ family }}
+                                    </v-chip>
+                                </v-col>
+                            </v-row>
+                            <v-row class="letter-button border-brand" color="black" text>
+                                <v-col 
+                                    v-for="family in availableFamilies" 
+                                    :key="family" 
+                                    cols="12" sm="6" md="4" lg="3">
+                                    <div
+                                    :class="{ 'selected': families.includes(family) }" 
+                                    class="m-3" 
+                                    style="font-size: 16px;" 
+                                    @click="toggleValueInArray(families, family)">
+                                        {{ family }}
+                                    </div>
+                                </v-col>
+                            </v-row>
+                        </div>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
     </div>

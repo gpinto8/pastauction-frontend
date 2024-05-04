@@ -18,17 +18,17 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start">
+        <v-row justify="start" no-gutters>
+            <v-chip
+                class="custom-chip mr-3"
+                color="#0D6EFD"
+                variant="outlined"
+                label
+                size="large"
+            >
+                <small>Attributes</small>
+            </v-chip>
             <v-col class="d-flex flex-wrap align-center">
-                <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="outlined"
-                    label
-                    size="large"
-                >
-                    <small>Attributes</small>
-                </v-chip>
                 <v-btn
                     v-for="attribute in attributes"
                     :key="attribute.body_shape"
