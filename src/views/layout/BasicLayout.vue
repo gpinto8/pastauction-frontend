@@ -49,7 +49,7 @@ const isAvatarMenuOpen = ref(false);
 			v-model="drawer"
 			:absolute="!displayMediaQuery.md"
 			:permanent="displayMediaQuery.md"
-			class="!bg-primary rounded-e-2xl !sticky top-0"
+			class="!bg-primary rounded-e-2xl  top-0"
 			:width="
 				!displayMediaQuery.md ? '90' :
 				displayMediaQuery.lg ? '250' :
