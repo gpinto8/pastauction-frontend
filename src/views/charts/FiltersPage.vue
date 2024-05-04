@@ -275,6 +275,9 @@ export default {
                 this.getPeriodsSearchParams(),
             ]
 
+            // Filter empty params
+            searchParams = searchParams.filter(param => param != '')
+
             console.log(searchParams.join(','));
             // console.log(
             //     this.selectedBrands,
@@ -291,7 +294,12 @@ export default {
             //     this.selectedMiscellaneous.miscOptionsQuote,
             //     this.selectedMiscellaneous.miscOptionChas)
                 try {
-                    const response = await axios.get(`/bidwatcher_vehicle/query_v?search=${searchParams.join(',')}`);
+                    const response = await axios.get(`/bidwatcher_vehicle/query_v`, {
+                        params: {
+                            search: searchParams.join(','),
+                            size: 100
+                        }
+                    });
                     // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
                     console.log(response);
                 } catch (error) {
@@ -302,7 +310,7 @@ export default {
             return `brand_name:${this.selectedBrands.join('|')}`
         },
         getPeriodsSearchParams() {
-            return `age_name:${this.selectedPeriods.join('|')}`
+            return this.selectedPeriods.length > 0 ? `age_name:${this.selectedPeriods.join('|')}` : ''
         }
     },
     computed: {
