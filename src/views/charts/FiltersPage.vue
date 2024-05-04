@@ -250,7 +250,6 @@ export default {
             }
         },
         clearFilters() {
-            // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
             (this.$refs.brandsFilter as any).resetFilter();
             (this.$refs.countriesFilter as any).resetFilter();
             (this.$refs.attributesFilter as any).resetFilter();

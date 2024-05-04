@@ -49,82 +49,88 @@ function resetFilter() {
 
 <template>
     <div class="flex flex-col">
-        <v-row justify="start" class="align-center">
-            <v-col class="d-flex flex-wrap align-center">
-                <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="flat"
-                    label
-                    size="large"
-                    >
-                    <small>Brands</small>
-                </v-chip>
-                    <v-btn
-                        v-for="letter in alphabet"
-                        :key="letter"
-                        class="letter-button"
-                        :variant="selectedBrandInitial === letter ? 'elevated' : 'outlined'"
-                        @click="selectedBrandInitial = letter"
-                        color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                        {{ letter }}
-                    </v-btn>
-            </v-col>
-        </v-row>
-        <v-row justify="start" class="align-center mt-0">
-            <v-col class="d-flex flex-wrap align-center pt-0">
-                <div :class="{ 'd-block': selectedBrandInitial, 'd-none': !selectedBrandInitial }" class="mt-3" justify="start" >
-                    <v-btn
-                        v-for="coupleLetters in brandsCoupleLetters" 
-                        :key="coupleLetters"
-                        class="letter-button"
-                        :variant="selectedBrandFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
-                        @click="selectedBrandFirstTwoLetters = coupleLetters"
-                        color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                    >
-                        {{ coupleLetters }}
-                    </v-btn>
-                </div>
-            </v-col>
-        </v-row>
-        <v-row justify="start" class="align-center mt-0">
-            <v-col class="d-flex flex-wrap align-center pt-0">
-                <div :class="{ 'd-block': selectedBrandFirstTwoLetters, 'd-none': !selectedBrandFirstTwoLetters }" class="mt-3">
-                    <v-row justify="start" class="align-center">
-                        <v-col
-                        >
-                        <v-chip
-                            v-for="(brand, index) in selectedBrandNames"
-                            :key="`${brand}-index`"
-                            class="m-2"
-                            closable
+        <v-row>
+            <v-chip
+                class="custom-chip mr-3 align-self-start"
+                color="#0D6EFD"
+                variant="flat"
+                label
+                size="large"
+                >
+                <small>Brands</small>
+            </v-chip>
+            <v-col>
+                <v-row justify="start" class="align-center" no-gutters>
+            
+                    <v-col class="d-flex flex-wrap align-center" no-gutters>
+                        <v-btn
+                            v-for="letter in alphabet"
+                            :key="letter"
+                            class="letter-button w-10 h-10"
+                            :variant="selectedBrandInitial === letter ? 'elevated' : 'outlined'"
+                            @click="selectedBrandInitial = letter"
                             color="black"
-                            style="border-radius: 5px;"
-                            variant="flat"
-                            :text="brand"
-                            @click:close="toggleValueInArray(selectedBrandNames, brand)"
-                        >
-                        </v-chip>
-                        </v-col>
-                    </v-row>
-                    <v-row class="letter-button border-brand w-fit" color="black" text>
-                        <v-col 
-                            v-for="brand in brandList" 
-                            :key="brand" 
-                            cols="12" sm="6" md="4" lg="3">
-                            <div href="#" 
-                            :class="{ 'selected': selectedBrandNames.includes(brand) }" 
-                            style="font-size: 16px;" 
-                            @click="toggleValueInArray(selectedBrandNames, brand)">
-                                {{ brand }}
-                            </div>
-                        </v-col>
-                    </v-row>
-                </div>
+                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                            >
+                            {{ letter }}
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-row justify="start" class="align-center mt-0">
+                    <v-col class="d-flex flex-wrap align-center pt-0">
+                        <div :class="{ 'd-block': selectedBrandInitial, 'd-none': !selectedBrandInitial }" class="mt-3" justify="start" >
+                            <v-btn
+                                v-for="coupleLetters in brandsCoupleLetters" 
+                                :key="coupleLetters"
+                                class="letter-button w-10 h-10"
+                                :variant="selectedBrandFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
+                                @click="selectedBrandFirstTwoLetters = coupleLetters"
+                                color="black"
+                                style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                            >
+                                {{ coupleLetters }}
+                            </v-btn>
+                        </div>
+                    </v-col>
+                </v-row>
+                <v-row justify="start" class="align-center mt-0">
+                    <v-col class="d-flex flex-wrap align-center pt-0">
+                        <div :class="{ 'd-block': selectedBrandFirstTwoLetters, 'd-none': !selectedBrandFirstTwoLetters }" class="mt-3">
+                            <v-row justify="start" class="align-center">
+                                <v-col
+                                >
+                                <v-chip
+                                    v-for="(brand, index) in selectedBrandNames"
+                                    :key="`${brand}-index`"
+                                    class="m-2"
+                                    closable
+                                    color="black"
+                                    style="border-radius: 5px;"
+                                    variant="flat"
+                                    :text="brand"
+                                    @click:close="toggleValueInArray(selectedBrandNames, brand)"
+                                >
+                                </v-chip>
+                                </v-col>
+                            </v-row>
+                            <v-row class="letter-button border-brand w-fit" color="black" text>
+                                <v-col 
+                                    v-for="brand in brandList" 
+                                    :key="brand" 
+                                    cols="12" sm="6" md="4" lg="3">
+                                    <div href="#" 
+                                    :class="{ 'selected': selectedBrandNames.includes(brand) }" 
+                                    style="font-size: 16px;" 
+                                    @click="toggleValueInArray(selectedBrandNames, brand)">
+                                        {{ brand }}
+                                    </div>
+                                </v-col>
+                            </v-row>
+                        </div>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
+        
     </div>
 </template>
