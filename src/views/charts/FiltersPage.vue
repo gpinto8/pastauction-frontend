@@ -34,7 +34,7 @@
             </div>
         </v-container>
         <v-container fluid v-else class="space-y-3">
-            <BrandFilter v-model="selectedBrands"/>
+            <BrandFilter v-model="selectedBrands" ref="brandsFilter"/>
             <FamilyFilter :brands="selectedBrands" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
             <CountriesFilter :continents="continents" v-model:countries="selectedCountries"/>
@@ -251,7 +251,7 @@ export default {
         },
         clearFilters() {
             // Don't do this.selectedBrandFull = [] or it will break vue's reactivnes
-            this.emptyArray(this.selectedBrands)
+            (this.$refs.brandsFilter as any).resetFilter()
             this.selectedContinent= null;
             this.emptyArray(this.selectedAttributes)
             this.emptyArray(this.selectedPeriods)

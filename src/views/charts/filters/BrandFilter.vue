@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, defineModel, watch } from 'vue';
 
 const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
+defineExpose({
+    resetFilter
+})
 const selectedBrandNames = defineModel<string[]>({required: true})
 const selectedBrandInitial = ref<null | string>(null)
 
@@ -33,6 +37,13 @@ watch(selectedBrandFirstTwoLetters, async () => {
         console.error('Error fetching brands:', error);
     }
 })
+
+function resetFilter() {
+    emptyArray(selectedBrandNames.value)
+    selectedBrandInitial.value = null
+    selectedBrandFirstTwoLetters.value = null
+    emptyArray(brandsCoupleLetters.value)
+}
 
 </script>
 
@@ -106,7 +117,6 @@ watch(selectedBrandFirstTwoLetters, async () => {
                             cols="12" sm="6" md="4" lg="3">
                             <div href="#" 
                             :class="{ 'selected': selectedBrandNames.includes(brand) }" 
-                            class="m-3" 
                             style="font-size: 16px;" 
                             @click="toggleValueInArray(selectedBrandNames, brand)">
                                 {{ brand }}
