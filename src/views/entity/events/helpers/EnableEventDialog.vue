@@ -9,8 +9,6 @@ const showDialog = computed({
 });
 
 
-// commento inutile
-
 const emit = defineEmits(['update:modelValue', 'cancel', 'enable']);
 
 function cancel() {
