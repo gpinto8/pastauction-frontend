@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue';
+import { defineModel } from "vue";
 
 // Definisci le proprietà del componente
 defineProps({
@@ -9,11 +10,17 @@ defineProps({
   items: Array,
 });
 
+const emit = defineEmits<{
+	(e: 'change', newValue: string): void
+}>();
+
+const model = defineModel<string>();
+
 </script>
 
 <template>
-    <div class="select-container w-100">
-      <select class="custom-select" name="test" id="">
+    <div class="select-container">
+      <select v-model="model" @change="(e) => $emit('change', (e.target as HTMLSelectElement).value)" class="custom-select" name="test" id="">
 		<option class="hidden" value="">{{placeholder || 'Select a value'}}</option>
         <option v-for="item of items" :value=item>{{item}}</option>
       </select>

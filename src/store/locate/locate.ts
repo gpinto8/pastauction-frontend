@@ -3,22 +3,26 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useLocateStore = defineStore('locate', () => {
-    const brandsLoading = ref(false);
-    const areas = ref<string[]>([]);
-    const countries = ref<string[]>([]);
-    const cars = ref<string[]>([]);
-    const brands = ref<string[]>([]);
-    const agings = [
-		{name: "Antique", startYear: 1880, endYear: 1904},
-		{name: "Veteran", startYear: 1905, endYear: 1918},
-		{name: "Vintage", startYear: 1919, endYear: 1930},
-		{name: "Post Vintage", startYear: 1931, endYear: 1945},
-		{name: "Classic", startYear: 1946, endYear: 1964},
-		{name: "Post Classic", startYear: 1965, endYear: 1974},
-		{name: "Modern", startYear: 1975, endYear: 1999},
-		{name: "Conteporary", startYear: 2000, endYear: 2020},
-	];
+	const filterValues = ref({
+		brandsLoading: false,
+		areas: [] as string[],
+		countries: [] as string[],
+		cities: [] as string[],
+		cars: [] as string[],
+		brands: [] as string[],
+		agings: [
+			{name: "Antique", startYear: 1880, endYear: 1904},
+			{name: "Veteran", startYear: 1905, endYear: 1918},
+			{name: "Vintage", startYear: 1919, endYear: 1930},
+			{name: "Post Vintage", startYear: 1931, endYear: 1945},
+			{name: "Classic", startYear: 1946, endYear: 1964},
+			{name: "Post Classic", startYear: 1965, endYear: 1974},
+			{name: "Modern", startYear: 1975, endYear: 1999},
+			{name: "Conteporary", startYear: 2000, endYear: 2020},
+		] as {name: string, startYear: number, endYear: number}[]
 
+	})
+    
     async function fetchAllItems<T>(url: string, cb?: (data:T[]) => void): Promise<T[]> {
         function addToUrl(url: string, params: string): string {
           return url.includes('?') ? `${url}&${params}` : `${url}?${params}`;
@@ -40,19 +44,19 @@ export const useLocateStore = defineStore('locate', () => {
   
     async function fetchBrands() : Promise<string[]> {
         try {
-          brandsLoading.value = true;
-          return (await fetchAllItems<{name:string}>(`filter/entity_model_managed_query/brand_main/?sort_by=name:asc`, (items)=> brands.value.push(...items.map(e=>e.name)))).map(e=>e.name);
+			filterValues.value.brandsLoading = true;
+          return (await fetchAllItems<{name:string}>(`filter/entity_entity/brand_main/?sort_by=name:asc`, (items)=> filterValues.value.brands.push(...items.map(e=>e.name)))).map(e=>e.name);
         }catch (e){
 			return [];
 		}
         finally {
-          brandsLoading.value = false;
+			filterValues.value.brandsLoading = false;
         }
       }
 
 	  async function fetchAreas(): Promise<string[]> {
         try {
-			return (await fetchAllItems<{name:string}>(`filter/entity_model_managed_query/area_geo/?sort_by=name:asc`, (items)=> areas.value.push(...items.map(e=>e.name)))).map(e=>e.name);
+			return (await fetchAllItems<{name:string}>(`filter/entity_entity/area_geo/?sort_by=name:asc`, (items)=> filterValues.value.areas.push(...items.map(e=>e.name)))).map(e=>e.name);
         }
 		catch (e){
 			return [];
@@ -62,9 +66,9 @@ export const useLocateStore = defineStore('locate', () => {
         }
       }
 
-	  async function fetchCountries(): Promise<string[]> {
+	  async function fetchCountries(area?: string): Promise<string[]> {
         try {
-			return (await (fetchAllItems<{name:string}>(`filter/entity_model_managed_query/country/?sort_by=name:asc`, (items)=> countries.value.push(...items.map(e=>e.name))))).map(e=>e.name);
+			return (await (fetchAllItems<{name:string}>(`filter/entity_entity/country/?sort_by=name:asc`, (items)=> filterValues.value.countries.push(...items.map(e=>e.name))))).map(e=>e.name);
         }
 		catch (e){
 			return [];
@@ -76,7 +80,7 @@ export const useLocateStore = defineStore('locate', () => {
 
 	  async function fetchCars(): Promise<string[]> {
         try {
-			return (await (fetchAllItems<{name:string}>(`filter/entity_model_managed_query/country/?sort_by=name:asc`, (items)=> cars.value.push(...items.map(e=>e.name))))).map(e=>e.name);
+			return (await (fetchAllItems<{name:string}>(`filter/entity_entity/car/?sort_by=name:asc`, (items)=> filterValues.value.cars.push(...items.map(e=>e.name))))).map(e=>e.name);
         }
 		catch (e){
 			return [];
@@ -86,15 +90,20 @@ export const useLocateStore = defineStore('locate', () => {
         }
       }
 
+	  async function fetchCities(country?: string): Promise<string[]> {
+        try {
+			return (await (fetchAllItems<{name:string}>(`filter/entity_entity/country/?sort_by=name:asc${country ? '&' + encodeURI('search=country:' + country) : ''}`, (items)=> filterValues.value.cities.push(...items.map(e=>e.name))))).map(e=>e.name);
+        }
+		catch (e){
+			return [];
+		}
+        finally {
+          return [];
+        }
+      }
 
 	return { 
-		brands,
-		areas,
-		cars,
-		countries,
-		agings,
-		fetchBrands,
-		fetchAreas,
-		brandsLoading,
+		filterValues,
+		filterValuesFunctions: { fetchBrands, fetchAreas , fetchCountries, fetchCars, fetchCities },
 	};
 });
