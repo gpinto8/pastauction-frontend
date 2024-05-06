@@ -2,6 +2,9 @@
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
+import GenericFilter from './GenericFilter.vue'
+
+const toggle = ref(false)
 
 const props = defineProps({
     brands: {
@@ -80,17 +83,9 @@ function resetFilter() {
 </script>
 
 <template>
-    <div class="flex flex-col">
-        <v-row no-gutters>
-            <v-chip
-                class="custom-chip mr-3"
-                color="#0D6EFD"
-                variant="outlined"
-                label
-                size="large">
-                <small>Family</small> 
-            </v-chip>
-            <v-col>
+    <div class="flex flex-col sm:flex-row">
+        <GenericFilter filterName="Family">
+            <div class="flex flex-col">
                 <v-row justify="start" class="align-center">
                     <v-col class="d-flex flex-wrap align-center">
                         <p v-if="brands.length === 0">Please, select the Brand of your interest first.</p>
@@ -143,7 +138,7 @@ function resetFilter() {
                         </div>
                     </v-col>
                 </v-row>
-            </v-col>
-        </v-row>
+            </div>
+        </GenericFilter>
     </div>
 </template>
