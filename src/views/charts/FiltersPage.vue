@@ -172,7 +172,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: false,
+            loading: true,
             selectedCountries: [] as any[],
         };
     },
@@ -269,20 +269,6 @@ export default {
             searchParams = searchParams.filter(param => param != '')
 
             console.log(searchParams.join(','));
-            // console.log(
-            //     this.selectedBrands,
-            //     this.selectedFamilies,
-            //     this.selectedModelFull,
-            //     this.selectedContinent,
-            //     this.selectedCountries,
-            //     this.selectedCategoryName,
-            //     this.selectedAttributes,
-            //     this.selectedPeriods,
-            //     this.selectedColour,
-            //     this.selectedColors,
-            //     this.selectedMiscellaneous.miscOptionsSold,
-            //     this.selectedMiscellaneous.miscOptionsQuote,
-            //     this.selectedMiscellaneous.miscOptionChas)
                 try {
                     const response = await axios.get(`/bidwatcher_vehicle/query_v`, {
                         params: {
@@ -323,10 +309,13 @@ export default {
 
 <style>
 .custom-chip {
-  width: 100px;
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
+  @apply w-full bg-blue-500 rounded-md flex justify-center items-center py-2 text-white
+}
+
+@media screen(sm) {
+    .custom-chip{
+        @apply w-32
+    }
 }
 
 .selected{
