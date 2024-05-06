@@ -7,7 +7,8 @@ import { storeToRefs } from 'pinia';
 
 /** Config Store */
 const configStore = useConfig();
-const { isAvatarMenuOpen } = defineProps(['isAvatarMenuOpen']);
+const { isMobileAvatarMenuOpen } = defineProps(['isMobileAvatarMenuOpen']);
+
 const { displayMediaQuery } = storeToRefs(useGlobalStore());
 
 
@@ -22,7 +23,7 @@ const menuItems = [
 
 <template>
 	<!-- mobile only -->
-	<div v-if="isAvatarMenuOpen" class="md:hidden bg-white z-10 shadow-gray-600 shadow-lg rounded-b-lg absolute top-full right-0 flex flex-col gap-x-2 gap-y-3 p-4 text-xl items-center">
+	<div v-if="isMobileAvatarMenuOpen" class="md:hidden bg-white z-10 shadow-gray-600 shadow-lg rounded-b-lg absolute top-full right-0 flex flex-col gap-x-2 gap-y-3 p-4 text-xl items-center">
 		
 		<div class="flex flex-row items-center gap-2 pl-3 border-b-[2px] border-[#21252940] w-full pb-[2px] pr-6">
 			<img class="h-10 !w-10 aspect-square" src="@/assets/images/user-photo-sample.png" alt="Logo" />
