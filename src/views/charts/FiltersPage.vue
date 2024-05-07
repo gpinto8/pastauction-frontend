@@ -48,17 +48,8 @@
             <AttributesFilter v-model="selectedAttributes" :attributes="attributes" ref="attributesFilter"/>
             <PeriodsFilter v-model="selectedPeriods" :periods="periods" ref="periodsFilter"/>
             <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies" ref="colorsFilter"/>
-            <div class="flex">
-                <v-chip
-                    class="custom-chip custom-light-chip mr-3 shrink-0"
-                    color="#0D6EFD"
-                    variant="outlined"
-                    size="large"
-                    label
-                >
-                    <small>Miscellaneous</small>
-                </v-chip>
-                <v-row no-gutters>
+            <GenericFilter filterName="Miscellaneous" class="flex">
+                <div class="flex flex-wrap" no-gutters>
                     <div class="flex space-x-4 mr-4">
                         <v-btn
                             v-for="item in miscOptionsSold"
@@ -98,8 +89,8 @@
                             {{ item }}
                         </v-btn>
                     </div>
-                </v-row>
-            </div>
+                </div>
+            </GenericFilter>
             <v-row>
                 <v-col cols="12">
                     <div class="d-flex justify-end">
@@ -122,6 +113,7 @@ import PeriodsFilter from './filters/Periods.vue';
 import ColorsFilter from './Colors.vue';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
+import GenericFilter from './filters/GenericFilter.vue';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -142,7 +134,8 @@ export default {
         TypesFilter, 
         AttributesFilter, 
         PeriodsFilter, 
-        ColorsFilter
+        ColorsFilter,
+        GenericFilter
     },
     data() {
         return {
@@ -172,7 +165,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: true,
+            loading: false,
             selectedCountries: [] as any[],
         };
     },
