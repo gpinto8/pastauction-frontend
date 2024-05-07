@@ -3,6 +3,7 @@ import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
+import GenericFilter from './filters/GenericFilter.vue';
 
 defineExpose({
     resetFilter
@@ -38,17 +39,8 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start" no-gutters>
-            <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="flat"
-                    label
-                    size="large"
-                >
-                    <small>Colours</small>
-                </v-chip>
-            <v-col class="d-flex flex-wrap align-center">
+        <GenericFilter filterName="Colors">
+            <div class="flex flex-wrap align-center">
                 <v-btn
                     v-for="color in colorFamilies"
                     :key="color.colorfamily_name"
@@ -76,7 +68,7 @@ function resetFilter() {
                         </v-btn>
                     </v-col>
                 </v-row>
-            </v-col>
-        </v-row>
+            </div>
+        </GenericFilter>
     </div>
 </template>

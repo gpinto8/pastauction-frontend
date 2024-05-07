@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
+import GenericFilter from './GenericFilter.vue';
 
 defineExpose({
     resetFilter
@@ -18,17 +19,8 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start" no-gutters>
-            <v-chip
-                    class="custom-chip mr-3"
-                    color="#0D6EFD"
-                    variant="outlined"
-                    label
-                    size="large"
-                >
-                    <small>Periods</small>
-                </v-chip>
-            <v-col class="d-flex flex-wrap align-center">
+        <GenericFilter filterName="Periods" justify="start" light>
+            <class class="flex flex-wrap align-center">
                 <v-btn
                     v-for="period in periods"
                     :key="period.age_name"
@@ -40,7 +32,7 @@ function resetFilter() {
                 >
                     {{ period.age_name }}
                 </v-btn>
-            </v-col>
-        </v-row>
+            </class>
+        </GenericFilter>
     </div>
 </template>

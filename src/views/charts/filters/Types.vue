@@ -3,6 +3,7 @@ import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { defineModel, ref, watch } from 'vue';
+import GenericFilter from './GenericFilter.vue';
 
 defineExpose({
     resetFilter
@@ -57,27 +58,21 @@ function resetFilter() {
 
 <template>
     <div class="flex flex-col">
-        <v-row justify="start" no-gutters>
-            <v-chip
-                class="custom-chip mr-3"
-                color="#0D6EFD"
-                variant="flat"
-                label
-                size="large">
-                <small>Types</small>
-            </v-chip>
-            <v-col class="d-flex flex-wrap align-center">
-                <v-btn
-                    v-for="type in familiesOfTypes"
-                    :key="type.body_type"
-                    class="letter-button"
-                    :variant="selectedFamilyName === type.body_type ? 'elevated' : 'outlined'"
-                    @click="selectedFamilyName = type.body_type"
-                    :color="selectedFamilyName === type.body_type ? 'black' : ''"
-                    style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                >
-                    {{ type.body_type }}
-                </v-btn>
+        <GenericFilter filterName="types">
+            <div class="flex flex-col">
+                <div class="flex flex-wrap">
+                    <v-btn
+                        v-for="type in familiesOfTypes"
+                        :key="type.body_type"
+                        class="letter-button"
+                        :variant="selectedFamilyName === type.body_type ? 'elevated' : 'outlined'"
+                        @click="selectedFamilyName = type.body_type"
+                        :color="selectedFamilyName === type.body_type ? 'black' : ''"
+                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                    >
+                        {{ type.body_type }}
+                    </v-btn>
+                </div>
                 <v-row justify="start" class="align-center mt-0">
                     <v-col class="d-flex flex-wrap align-center pt-0">
                         <div :class="{ 'd-block': selectedFamilyName, 'd-none': !selectedFamilyName }" class="mt-3" justify="start" >
@@ -132,7 +127,7 @@ function resetFilter() {
                         </div>
                     </v-col>
                 </v-row>
-            </v-col>
-        </v-row>
+            </div>
+        </GenericFilter>
     </div>
 </template>

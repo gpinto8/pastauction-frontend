@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ref, watch } from 'vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import { emptyArray } from '@/utils/functions/EmptyArray';
+import GenericFilter from './GenericFilter.vue';
 
 defineExpose({
     resetFilter
@@ -45,17 +46,8 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start" no-gutters>
-            <v-chip
-                class="custom-chip mr-3"
-                color="#0D6EFD"
-                variant="flat"
-                label
-                size="large"
-            >
-                <small>Countries</small>
-            </v-chip>
-            <v-col>
+        <GenericFilter filterName="Countries" class="flex">
+            <div class="flex flex-col">
                 <div>
                     <v-btn
                         v-for="country in props.continents"
@@ -69,7 +61,7 @@ function resetFilter() {
                         {{ country.country_brand_area }}
                     </v-btn>
                 </div>
-                <v-row justify="start" class="align-center mt-0">
+                <div class="flex align-center mt-0">
                     <div v-if="countriesOfContinent.length > 0" class="flex flex-col mt-3">
                         <v-row justify="start" class="align-center">
                             <v-col>
@@ -103,8 +95,8 @@ function resetFilter() {
                             </class>
                         </v-row>
                     </div>
-                </v-row>
-            </v-col>
-        </v-row>
+                </div>
+            </div>
+        </GenericFilter>
     </div>
 </template>

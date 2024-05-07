@@ -50,7 +50,7 @@
             <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies" ref="colorsFilter"/>
             <div class="flex">
                 <v-chip
-                    class="custom-chip mr-3 shrink-0"
+                    class="custom-chip custom-light-chip mr-3 shrink-0"
                     color="#0D6EFD"
                     variant="outlined"
                     size="large"

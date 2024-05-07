@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
+import GenericFilter from './GenericFilter.vue';
 
 defineExpose({
     resetFilter
@@ -18,17 +19,8 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start" no-gutters>
-            <v-chip
-                class="custom-chip mr-3"
-                color="#0D6EFD"
-                variant="outlined"
-                label
-                size="large"
-            >
-                <small>Attributes</small>
-            </v-chip>
-            <v-col class="d-flex flex-wrap align-center">
+        <GenericFilter filterName="Attributes" light>
+            <div class="flex flex-wrap">
                 <v-btn
                     v-for="attribute in attributes"
                     :key="attribute.body_shape"
@@ -40,7 +32,7 @@ function resetFilter() {
                 >
                     {{ attribute.body_shape }}
                 </v-btn>
-            </v-col>
-        </v-row>
+            </div>
+        </GenericFilter>
     </div>
 </template>
