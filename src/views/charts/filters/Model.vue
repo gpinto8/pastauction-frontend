@@ -2,6 +2,7 @@
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
+import GenericFilter from './GenericFilter.vue';
 
 const props = defineProps<{
     families: string[]
@@ -42,23 +43,13 @@ function resetFilter() {
 
 <template>
     <div>
-        <v-row justify="start" class="align-center" no-gutters>
-            <v-chip
-                class="custom-chip mr-3 align-self-start"
-                color="#0D6EFD"
-                variant="outlined"
-                label
-                size="large"
-            >
-                <small>Model</small>
-            </v-chip>
-            <v-col class="">
+        <GenericFilter filterName="Model" :light="true">
+            <div  class="flex flex-col" no-gutters>
                 <p v-if="families.length == 0">Please, select the Family of your interest first.</p>
-                <v-row v-else class="letter-button border-brand" color="black" text>
-                    <v-col 
+                <div v-else class="flex letter-button border-brand" color="black" text no-gutters>
+                    <div class="flex flex-col"
                         v-for="model in modelList" 
-                        :key="model" 
-                        cols="12" sm="6" md="4" lg="3">
+                        :key="model">
                         <div href="#" 
                             class="m-3"
                             :class="{ 'selected': models.includes(model) }" 
@@ -66,8 +57,8 @@ function resetFilter() {
                             @click="toggleValueInArray(models, model)">
                             {{ model }}
                         </div>
-                    </v-col>
-                </v-row>
+                    </div>
+                </div>
                 <div class="mt-3">
                     <v-chip
                         v-for="(model, index) in models"
@@ -82,7 +73,7 @@ function resetFilter() {
                         {{ model }}
                     </v-chip>
                 </div>
-            </v-col>
-        </v-row>
+            </div>
+        </GenericFilter>
     </div>
 </template>

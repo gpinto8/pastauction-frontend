@@ -312,6 +312,10 @@ export default {
   @apply w-full bg-blue-500 rounded-md flex justify-center items-center py-2 text-white
 }
 
+.custom-light-chip{
+    @apply bg-white text-blue-500 border border-blue-500
+}
+
 @media screen(sm) {
     .custom-chip{
         @apply w-32

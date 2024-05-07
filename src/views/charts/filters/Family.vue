@@ -84,7 +84,7 @@ function resetFilter() {
 
 <template>
     <div class="flex flex-col sm:flex-row">
-        <GenericFilter filterName="Family">
+        <GenericFilter filterName="Family" :light="true">
             <div class="flex flex-col">
                 <v-row justify="start" class="align-center">
                     <v-col class="d-flex flex-wrap align-center">
