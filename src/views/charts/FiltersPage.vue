@@ -91,14 +91,11 @@
                     </div>
                 </div>
             </GenericFilter>
-            <v-row>
-                <v-col cols="12">
-                    <div class="d-flex justify-end">
-                        <v-btn size="small" class="mr-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
-                        <v-btn size="small" class="float-right" color="black" @click="previewDataset()">Preview data set</v-btn>
-                    </div>
-                </v-col>
-            </v-row>
+            <div class="flex flex-col space-y-2 mt-5 
+                        sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
+                <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()">Preview data set</v-btn>
+                <v-btn size="default" height="40" class="rounded-md" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
+            </div>
     </v-container>
     </div>
 </template>
@@ -247,9 +244,6 @@ export default {
             this.selectedMiscellaneous.miscOptionsSold = null;
             this.selectedMiscellaneous.miscOptionChas = null;
             this.selectedMiscellaneous.miscOptionsQuote = null;
-        },
-        emptyArray(arr: any[]) {
-            arr.splice(0, arr.length)
         },
         async previewDataset() {
             
