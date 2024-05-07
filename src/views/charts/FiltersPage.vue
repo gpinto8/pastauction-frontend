@@ -296,7 +296,7 @@ export default {
 
 <style>
 .custom-chip {
-  @apply w-full bg-blue-500 rounded-md flex justify-center items-center py-2 text-white
+  @apply w-full bg-blue-500 rounded-md flex justify-center items-center text-white
 }
 
 .custom-light-chip{
