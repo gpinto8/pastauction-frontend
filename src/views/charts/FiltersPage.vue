@@ -33,7 +33,7 @@
                 ></v-progress-circular>
             </div>
         </v-container>
-        <v-container fluid v-else class="space-y-3">
+        <v-container fluid v-else class="space-y-7">
             <BrandFilter v-model="selectedBrands" ref="brandsFilter"/>
             <FamilyFilter :brands="selectedBrands" v-model="selectedFamilies"/>
             <ModelFilter :families="selectedFamilies" v-model="selectedModelFull"/>
@@ -303,10 +303,26 @@ export default {
     @apply bg-white text-blue-500 border border-blue-500
 }
 
+.selection {
+    @apply rounded-md 
+}
+
 @media screen(sm) {
     .custom-chip{
         @apply w-32
     }
+    
+    .selection {
+        @apply rounded-sm 
+    }
+}
+
+
+.filters-grid-selection{
+    @apply  grid gap-2 grid-cols-2 
+            sm:grid-cols-3 
+            md:grid-cols-4 
+            lg:flex lg:gap-0 lg:space-x-3 lg:[&>*]:flex-1
 }
 
 .selected{

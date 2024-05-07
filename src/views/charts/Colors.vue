@@ -40,19 +40,21 @@ function resetFilter() {
 <template>
     <div>
         <GenericFilter filterName="Colors">
-            <div class="flex flex-wrap align-center">
-                <v-btn
-                    v-for="color in colorFamilies"
-                    :key="color.colorfamily_name"
-                    class="letter-button"
-                    :variant="selectedColorFamilies.includes(color.colorfamily_name) ? 'elevated' : 'outlined'"
-                    @click="toggleValueInArray(selectedColorFamilies, color.colorfamily_name)"
-                    :color="selectedColorFamilies.includes(color.colorfamily_name) ? 'black' : ''"
-                    style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                >
-                    {{ color.colorfamily_name }}
-                </v-btn>
-                <v-row justify="start" class="align-center mt-0">
+            <div class="flex flex-col">
+                <div class="filters-grid-selection">
+                    <v-btn
+                        v-for="color in colorFamilies"
+                        :key="color.colorfamily_name"
+                        class="letter-button selection"
+                        :variant="selectedColorFamilies.includes(color.colorfamily_name) ? 'elevated' : 'outlined'"
+                        @click="toggleValueInArray(selectedColorFamilies, color.colorfamily_name)"
+                        :color="selectedColorFamilies.includes(color.colorfamily_name) ? 'black' : ''"
+                        style="min-width: 20px; margin: 2px; font-size: 10px;"
+                    >
+                        {{ color.colorfamily_name }}
+                    </v-btn>
+                </div>
+                <v-row justify="start" class="align-center mt-3">
                     <v-col class="d-flex flex-wrap align-center pt-0">
                         <v-btn
                             v-for="color in colorsList" 

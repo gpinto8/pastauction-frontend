@@ -58,17 +58,17 @@ function resetFilter() {
 
 <template>
     <div class="flex flex-col">
-        <GenericFilter filterName="types">
+        <GenericFilter filterName="Types">
             <div class="flex flex-col">
-                <div class="flex flex-wrap">
+                <div class="filters-grid-selection">
                     <v-btn
                         v-for="type in familiesOfTypes"
                         :key="type.body_type"
-                        class="letter-button"
+                        class="letter-button selection"
                         :variant="selectedFamilyName === type.body_type ? 'elevated' : 'outlined'"
                         @click="selectedFamilyName = type.body_type"
                         :color="selectedFamilyName === type.body_type ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        style="min-width: 20px; margin: 2px; font-size: 10px;"
                     >
                         {{ type.body_type }}
                     </v-btn>

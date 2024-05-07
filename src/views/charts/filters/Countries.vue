@@ -48,15 +48,15 @@ function resetFilter() {
     <div>
         <GenericFilter filterName="Countries" class="flex">
             <div class="flex flex-col">
-                <div>
+                <div class="filters-grid-selection">
                     <v-btn
                         v-for="country in props.continents"
                         :key="country.country_brand_area"
-                        class="letter-button"
+                        class="letter-button selection"
                         :variant="selectedContinent === country.country_brand_area ? 'elevated' : 'outlined'"
-                        @click="selectedContinent =  country.country_brand_area"
+                        @click="selectedContinent = country.country_brand_area"
                         color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        style="min-width: 20px; margin: 2px; font-size: 10px;"
                     >
                         {{ country.country_brand_area }}
                     </v-btn>
@@ -68,7 +68,7 @@ function resetFilter() {
                                 <v-chip
                                     v-for="(countryName, index) in countries"
                                     :key="index"
-                                    class="m-2"
+                                    class="m-2 "
                                     closable
                                     color="black"
                                     style="border-radius: 5px;"
@@ -80,7 +80,7 @@ function resetFilter() {
                             </v-col>
                         </v-row>
                         <v-row class="letter-button border-brand" color="black" text>
-                            <class
+                            <div
                                 v-for="flag in countriesOfContinent" 
                                 :key="flag" 
                                 class="flex-center object-cover grid"
@@ -92,7 +92,7 @@ function resetFilter() {
                                     @click="toggleValueInArray(countries, flag.country_brand_name)">
                                         <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
                                     </div>
-                            </class>
+                            </div>
                         </v-row>
                     </div>
                 </div>
