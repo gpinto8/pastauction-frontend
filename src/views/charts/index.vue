@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 w-full flex-center">
+  <div class="mt-5 w-full flex-center">
     <div class="max-w-[1000px]">
       <v-container fluid>
         <v-alert>
