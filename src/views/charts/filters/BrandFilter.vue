@@ -55,7 +55,6 @@ function resetFilter() {
     <GenericFilter filterName="Brands">
         <div class="flex flex-col">
             <v-row justify="start" class="align-center" no-gutters>
-        
                 <v-col class="d-flex flex-wrap align-center" no-gutters>
                     <v-btn
                         v-for="letter in alphabet"
@@ -89,37 +88,35 @@ function resetFilter() {
             </v-row>
             <v-row justify="start" class="align-center mt-0">
                 <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedBrandFirstTwoLetters, 'd-none': !selectedBrandFirstTwoLetters }" class="mt-3">
-                        <v-row justify="start" class="align-center">
-                            <v-col
-                            >
-                            <v-chip
-                                v-for="(brand, index) in selectedBrandNames"
-                                :key="`${brand}-index`"
-                                class="m-2"
-                                closable
-                                color="black"
-                                style="border-radius: 5px;"
-                                variant="flat"
-                                :text="brand"
-                                @click:close="toggleValueInArray(selectedBrandNames, brand)"
-                            >
-                            </v-chip>
+                    <div :class="{ 'd-block': selectedBrandFirstTwoLetters, 'd-none': !selectedBrandFirstTwoLetters }" class="mt-3 w-full">
+                        <div class="flex flex-col align-center">
+                            <v-col no-gutters>
+                                <v-chip
+                                    noGutters
+                                    v-for="(brand, index) in selectedBrandNames"
+                                    :key="`${brand}-index`"
+                                    class="m-2"
+                                    closable
+                                    color="black"
+                                    style="border-radius: 5px;"
+                                    variant="flat"
+                                    :text="brand"
+                                    @click:close="toggleValueInArray(selectedBrandNames, brand)"
+                                >
+                                </v-chip>
                             </v-col>
-                        </v-row>
-                        <v-row class="letter-button border-brand w-fit" color="black" text>
-                            <v-col 
-                                v-for="brand in brandList" 
-                                :key="brand" 
-                                cols="12" sm="6" md="4" lg="3">
-                                <div href="#" 
-                                :class="{ 'selected': selectedBrandNames.includes(brand) }" 
-                                style="font-size: 16px;" 
-                                @click="toggleValueInArray(selectedBrandNames, brand)">
-                                    {{ brand }}
-                                </div>
-                            </v-col>
-                        </v-row>
+                        </div>
+                        <div class="border !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
+                            <div
+                            v-for="brand in brandList" 
+                            :key="brand"
+                            class="flex-center"
+                            :class="{ 'selected': selectedBrandNames.includes(brand) }" 
+                            style="font-size: 16px;" 
+                            @click="toggleValueInArray(selectedBrandNames, brand)">
+                                {{ brand }}
+                            </div>
+                        </div>
                     </div>
                 </v-col>
             </v-row>

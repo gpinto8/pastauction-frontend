@@ -85,7 +85,7 @@ function resetFilter() {
 <template>
     <div class="flex flex-col sm:flex-row">
         <GenericFilter filterName="Family" :light="true">
-            <div class="flex flex-col">
+            <div class="flex flex-col w-full">
                 <v-row justify="start" class="align-center">
                     <v-col class="d-flex flex-wrap align-center">
                         <p v-if="brands.length === 0">Please, select the Brand of your interest first.</p>
@@ -102,12 +102,12 @@ function resetFilter() {
                         </v-btn>
                     </v-col>
                 </v-row>
-                <v-row justify="start" class="align-center mt-0">
-                    <v-col class="d-flex flex-wrap align-center pt-0">
-                        <div :class="{ 'd-block': selectedFamilyInitial, 'd-none': !selectedFamilyInitial }" class="mt-3">
-                            <v-row justify="start" class="align-center">
-                                <v-col>
-                                    <v-chip
+                <div class="flex align-center mt-0 w-full">
+                    <div class="flex flex-col flex-wrap align-center pt-0 w-full">
+                        <div :class="{ 'd-block': selectedFamilyInitial, 'd-none': !selectedFamilyInitial }" class="mt-3 w-full">
+                            <div class="flex align-center" no-gutters>
+                                <div class="flex flex-col" no-gutters>
+                                    <v-chip no-gutters
                                         v-for="(family, index) in families"
                                         :key="family"
                                         class="m-2"
@@ -119,10 +119,10 @@ function resetFilter() {
                                     >
                                         {{ family }}
                                     </v-chip>
-                                </v-col>
-                            </v-row>
-                            <v-row class="letter-button border-brand" color="black" text>
-                                <v-col 
+                                </div>
+                            </div>
+                            <v-row class="letter-button border-brand" color="black" text no-gutters>
+                                <v-col no-gutters 
                                     v-for="family in availableFamilies" 
                                     :key="family" 
                                     cols="12" sm="6" md="4" lg="3">
@@ -136,8 +136,8 @@ function resetFilter() {
                                 </v-col>
                             </v-row>
                         </div>
-                    </v-col>
-                </v-row>
+                    </div>
+                </div>
             </div>
         </GenericFilter>
     </div>

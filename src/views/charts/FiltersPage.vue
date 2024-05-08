@@ -162,7 +162,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: false,
+            loading: true,
             selectedCountries: [] as any[],
         };
     },
