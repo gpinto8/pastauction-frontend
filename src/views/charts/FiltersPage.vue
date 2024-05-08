@@ -94,12 +94,12 @@
             <div class="flex flex-col space-y-2 mt-5 
                         sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
                 <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()">Preview data set</v-btn>
-                <!-- <v-btn size="default" height="40" class="rounded-md" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn> -->
             </div>
-            <div class="flex flex-col">
-                <PreviewData v-if="previewData != null" :data="previewData"/>
-                <div class="flex flex-col mt-5">
-                    <v-btn size="default" height="40" class="rounded-md" color="black">Request chart</v-btn>
+            <div v-if="previewData != null" class="flex flex-col">
+                <PreviewData :data="previewData"/>
+                <div class="flex flex-col justify-end sm:flex-row sm:space-x-2 mt-5">
+                    <v-btn size="default" height="40" class="rounded-md w-full sm:w-32 mb-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
+                    <v-btn size="default" height="40" class="rounded-md w-full sm:w-32" color="black">Request chart</v-btn>
                 </div>
             </div>
     </v-container>
