@@ -250,6 +250,7 @@ export default {
             let searchParams = [
                 this.getBrandsSearchParams(),
                 this.getPeriodsSearchParams(),
+                this.getColorsSearchParams(),
             ]
 
             // Filter empty params
@@ -274,6 +275,9 @@ export default {
         },
         getPeriodsSearchParams() {
             return this.selectedPeriods.length > 0 ? `age_name:${this.selectedPeriods.join('|')}` : ''
+        },
+        getColorsSearchParams() {
+            return this.selectedColors.length > 0 ? `color_name:${this.selectedColors.join('|')}` : ''
         }
     },
     computed: {
