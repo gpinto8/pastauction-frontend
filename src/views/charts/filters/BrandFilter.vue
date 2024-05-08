@@ -89,7 +89,7 @@ function resetFilter() {
             <v-row justify="start" class="align-center mt-0">
                 <v-col class="d-flex flex-wrap align-center pt-0">
                     <div :class="{ 'd-block': selectedBrandFirstTwoLetters, 'd-none': !selectedBrandFirstTwoLetters }" class="mt-3 w-full">
-                        <div class="flex flex-col align-center">
+                        <div class="flex flex-col">
                             <div class="flex flex-wrap" noGutters>
                                 <v-chip
                                     noGutters
