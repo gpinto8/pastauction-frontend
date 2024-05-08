@@ -90,12 +90,12 @@ function resetFilter() {
                 <v-col class="d-flex flex-wrap align-center pt-0">
                     <div :class="{ 'd-block': selectedBrandFirstTwoLetters, 'd-none': !selectedBrandFirstTwoLetters }" class="mt-3 w-full">
                         <div class="flex flex-col align-center">
-                            <v-col no-gutters>
+                            <div class="flex flex-wrap" noGutters>
                                 <v-chip
                                     noGutters
                                     v-for="(brand, index) in selectedBrandNames"
                                     :key="`${brand}-index`"
-                                    class="m-2"
+                                    class="mr-2 mb-2"
                                     closable
                                     color="black"
                                     style="border-radius: 5px;"
@@ -104,13 +104,13 @@ function resetFilter() {
                                     @click:close="toggleValueInArray(selectedBrandNames, brand)"
                                 >
                                 </v-chip>
-                            </v-col>
+                            </div>
                         </div>
                         <div class="border !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
                             <div
                             v-for="brand in brandList" 
                             :key="brand"
-                            class="flex-center"
+                            class="flex-center text-center"
                             :class="{ 'selected': selectedBrandNames.includes(brand) }" 
                             style="font-size: 16px;" 
                             @click="toggleValueInArray(selectedBrandNames, brand)">
