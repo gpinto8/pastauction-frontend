@@ -94,7 +94,13 @@
             <div class="flex flex-col space-y-2 mt-5 
                         sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
                 <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()">Preview data set</v-btn>
-                <v-btn size="default" height="40" class="rounded-md" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
+                <!-- <v-btn size="default" height="40" class="rounded-md" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn> -->
+            </div>
+            <div class="flex flex-col">
+                <PreviewData v-if="previewData != null" :data="previewData"/>
+                <div class="flex flex-col mt-5">
+                    <v-btn size="default" height="40" class="rounded-md" color="black">Request chart</v-btn>
+                </div>
             </div>
     </v-container>
     </div>
@@ -111,6 +117,7 @@ import ColorsFilter from './Colors.vue';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
 import GenericFilter from './filters/GenericFilter.vue';
+import PreviewData from './previewData/PreviewData.vue';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -132,7 +139,8 @@ export default {
         AttributesFilter, 
         PeriodsFilter, 
         ColorsFilter,
-        GenericFilter
+        GenericFilter,
+        PreviewData,
     },
     data() {
         return {
@@ -164,6 +172,7 @@ export default {
             selectedCategoryName: [] as any[],
             loading: true,
             selectedCountries: [] as any[],
+            previewData: null as any,
         };
     },
     mounted() {
@@ -258,14 +267,14 @@ export default {
 
             console.log(searchParams.join(','));
                 try {
-                    const response = await axios.get(`/bidwatcher_vehicle/query_v`, {
+                    const response = await axios.get(`/bidwatcher_auction/query_2v`, {
                         params: {
                             search: searchParams.join(','),
-                            size: 100
                         }
                     });
                     // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
                     console.log(response);
+                    this.previewData = response.data.items[0] 
                 } catch (error) {
                     console.error('Preview dataset error:', error);
                 }
