@@ -99,7 +99,9 @@
                 <PreviewData :data="previewData"/>
                 <div class="flex flex-col justify-end sm:flex-row sm:space-x-2 mt-5">
                     <v-btn size="default" height="40" class="rounded-md w-full sm:w-32 mb-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
-                    <v-btn size="default" height="40" class="rounded-md w-full sm:w-32" color="black">Request chart</v-btn>
+                    <RouterLink :to="{ name: 'Brand'} ">
+                        <v-btn size="default" height="40" class="rounded-md w-full sm:w-32" color="black">Request chart</v-btn>
+                    </RouterLink>
                 </div>
             </div>
     </v-container>
