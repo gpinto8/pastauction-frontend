@@ -177,7 +177,7 @@ const router = createRouter({
                 name: 'EntityServices',
                 component: async () =>
                   await import(
-                    /* webpackChunkName: "Services" */ '@/views/entity/Services'
+                    /* webpackChunkName: "Services" */ '@/views/entity/services/Services'
                   ),
               },
               {
