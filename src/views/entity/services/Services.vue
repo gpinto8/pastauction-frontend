@@ -10,6 +10,8 @@ const brands = ref([
   'Lotus'
 ]);
 const selectedBrands = ref([]);
+
+import Tegola from './helpers/Tegola.vue';
 </script>
 
 <template>
@@ -23,8 +25,18 @@ const selectedBrands = ref([]);
           </v-col>
         </v-row>
         <v-row class="brands">
-          <v-col class="d-flex flex-row ">
+          <v-col class="d-flex flex-row brands">
             <v-checkbox v-model="selectedBrands" v-for="brand of brands" density="compact" :value="brand" :label="brand" />
+          </v-col>
+        </v-row>
+        <v-row class="subheader rounded-lg mb-4">
+          <v-col>
+            <div class="title font-weight-bold text-center">Manage the brand Mercedes</div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <Tegola label="Services" :logo="''" :size="44" />
           </v-col>
         </v-row>
       </v-container>
