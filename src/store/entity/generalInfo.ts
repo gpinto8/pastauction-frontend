@@ -47,8 +47,8 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
       website: entity.website ?? '',
       phone: entity.phone ?? '',
       email: entity.email ?? '',
-      agePeriods: entity.aging_period && entity.aging_period !== 'string' ? entity.aging_period.split(',') : [],
-      typesOfVehicle: entity.temp_tipo && entity.temp_tipo !== 'string' ? entity.temp_tipo.split(',') : []
+      agePeriods: entity.aging_period_j && entity.aging_period_j !== 'string' ? entity.aging_period_j.split(',') : [],
+      typesOfVehicle: entity.temp_tipo_j && entity.temp_tipo_j !== 'string' ? entity.temp_tipo_j.split(',') : []
     }
   }
 
@@ -69,8 +69,8 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
       website: info.website,
       phone: info.phone,
       email: info.email,
-      aging_period: info.agePeriods.join(','),
-      temp_tipo: info.typesOfVehicle.join(',')
+      aging_period_j: info.agePeriods.join(','),
+      temp_tipo_j: info.typesOfVehicle.join(',')
     });
   }
 
