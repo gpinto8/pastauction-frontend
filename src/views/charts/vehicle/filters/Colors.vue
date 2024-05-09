@@ -3,7 +3,8 @@ import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
-import GenericFilter from './filters/GenericFilter.vue';
+import GenericFilter from '../../components/GenericFilter.vue'
+
 
 defineExpose({
     resetFilter

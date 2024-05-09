@@ -115,11 +115,11 @@ import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
 import AttributesFilter from './filters/Attributes.vue';
 import PeriodsFilter from './filters/Periods.vue';
-import ColorsFilter from './Colors.vue';
+import ColorsFilter from './filters/Colors.vue';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
-import GenericFilter from './filters/GenericFilter.vue';
-import PreviewData from './previewData/PreviewData.vue';
+import GenericFilter from '../components/GenericFilter.vue';
+import PreviewData from '../previewData/PreviewData.vue';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"

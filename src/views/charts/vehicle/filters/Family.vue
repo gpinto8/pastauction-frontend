@@ -2,7 +2,7 @@
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { ref, watch } from 'vue';
-import GenericFilter from './GenericFilter.vue'
+import GenericFilter from '../../components/GenericFilter.vue'
 
 const toggle = ref(false)
 

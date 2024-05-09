@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
-import GenericFilter from './GenericFilter.vue';
+import GenericFilter from '../../components/GenericFilter.vue'
 
 defineExpose({
     resetFilter

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { emptyArray } from '@/utils/functions/EmptyArray';
-import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
 import { defineModel, ref, watch } from 'vue';
-import GenericFilter from '../../filters/GenericFilter.vue';
+import SearchByInitials from '../../components/filters/SearchByInitials.vue';
 
 const toggle = ref(false)
 
@@ -51,74 +50,12 @@ function resetFilter() {
 </script>
 
 <template>
-    <GenericFilter filterName="Maison">
-        <div class="flex flex-col">
-            <v-row justify="start" class="align-center" no-gutters>
-                <v-col class="d-flex flex-wrap align-center" no-gutters>
-                    <v-btn
-                        v-for="letter in alphabet"
-                        :key="letter"
-                        class="letter-button w-10 h-10"
-                        :variant="selectedMaisonInitial === letter ? 'elevated' : 'outlined'"
-                        @click="selectedMaisonInitial = letter"
-                        color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                        {{ letter }}
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedMaisonInitial, 'd-none': !selectedMaisonInitial }" class="mt-3" justify="start" >
-                        <v-btn
-                            v-for="coupleLetters in maisonsCoupleLetters" 
-                            :key="coupleLetters"
-                            class="letter-button w-10 h-10"
-                            :variant="selectedMaisonsFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
-                            @click="selectedMaisonsFirstTwoLetters = coupleLetters"
-                            color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                        >
-                            {{ coupleLetters }}
-                        </v-btn>
-                    </div>
-                </v-col>
-            </v-row>
-            <v-row justify="start" class="align-center mt-0">
-                <v-col class="d-flex flex-wrap align-center pt-0">
-                    <div :class="{ 'd-block': selectedMaisonsFirstTwoLetters, 'd-none': !selectedMaisonsFirstTwoLetters }" class="mt-3 w-full">
-                        <div class="flex flex-col">
-                            <div class="flex flex-wrap" noGutters>
-                                <v-chip
-                                    noGutters
-                                    v-for="(maison, index) in selectedMaisonNames"
-                                    :key="`${maison}-index`"
-                                    class="mr-2 mb-2"
-                                    closable
-                                    color="black"
-                                    style="border-radius: 5px;"
-                                    variant="flat"
-                                    :text="maison"
-                                    @click:close="toggleValueInArray(selectedMaisonNames, maison)"
-                                >
-                                </v-chip>
-                            </div>
-                        </div>
-                        <div class="border !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
-                            <div
-                            v-for="maison in maisonList" 
-                            :key="maison"
-                            class="flex-center text-center"
-                            :class="{ 'selected': selectedMaisonNames.includes(maison) }" 
-                            style="font-size: 16px;" 
-                            @click="toggleValueInArray(selectedMaisonNames, maison)">
-                                {{ maison }}
-                            </div>
-                        </div>
-                    </div>
-                </v-col>
-            </v-row>
-        </div>
-    </GenericFilter>
+    <SearchByInitials
+        filterName="Maison"
+        v-model="selectedMaisonNames"
+        v-model:initials="selectedMaisonInitial"
+        v-model:twoLettersInitialsList="maisonsCoupleLetters"
+        v-model:twoLettersInitials="selectedMaisonsFirstTwoLetters"
+        v-model:values="maisonList"
+        />
 </template>

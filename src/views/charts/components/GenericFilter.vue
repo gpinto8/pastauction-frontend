@@ -20,7 +20,7 @@ const toggle = ref(false)
         </div>
         <div class="grid sm:block grid-rows-[0fr] transition-[grid-template-rows] duration-500 w-full" :class="toggle ? 'grid-rows-[1fr]' : ''">
             <div class="flex flex-col overflow-hidden transition-[padding] duration-500 w-full" :class="toggle == true ? 'pt-3 sm:pt-0' : ''">
-                <slot class="ciaoooooooooooooo"></slot>
+                <slot></slot>
             </div>
         </div>
     </div>
