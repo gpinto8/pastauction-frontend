@@ -168,7 +168,7 @@ const router = createRouter({
           name: 'Preview',
           component: async () =>
           await import(
-              /* webpackChunkName: "PreviewPage" */ '@/views/charts/PreviewPage.vue'
+              /* webpackChunkName: "PreviewPage" */ '@/views/charts/previewPage/PreviewPage.vue'
           ),
         },
         {
