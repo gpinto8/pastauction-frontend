@@ -52,7 +52,7 @@ const emits = defineEmits<{
                 </div>
             </v-card-item>
             <v-card-actions class="d-flex justify-center">
-                <v-btn size="small" class="float-right px-15" :variant="card.isSelected ? 'elevated' : 'outlined'"
+                <v-btn size="small" class="float-right px-15" :disabled="!card.isActive" :variant="card.isSelected ? 'elevated' : 'outlined'"
                     :color="card.isSelected ? 'black' : ''" @click="emits('change', card); /*selectCard(card)*/">
                     {{ card.isSelected ? 'Selected' : 'Select' }}
                 </v-btn>

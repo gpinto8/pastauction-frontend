@@ -152,9 +152,17 @@ const router = createRouter({
           name: 'Filters',
           component: async () =>
           await import(
-          /* webpackChunkName: "FiltersPage" */ '@/views/charts/FiltersPage.vue'
+          /* webpackChunkName: "FiltersPage" */ '@/views/charts/BrandFiltersPage.vue'
           )
         },
+        {
+            path: '/charts/filters/maison',
+            name: 'Maison filter',
+            component: async () =>
+            await import(
+            /* webpackChunkName: "BrandPage" */ '@/views/charts/maison/MaisonFilterPage.vue'
+            )
+          },
         {
           path: '/charts/filters/brand',
           name: 'Brand',
