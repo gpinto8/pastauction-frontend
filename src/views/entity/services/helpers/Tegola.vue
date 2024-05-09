@@ -6,6 +6,7 @@ import config from '@/config';
   label: string;
   logo: string;
   size: number;
+  status: 'disabled' | 'actived' | 'selected'
 }>();
 
 const apiUrl = ref(config.apiUrl);
@@ -13,7 +14,8 @@ const apiUrl = ref(config.apiUrl);
 
 <template>
   <div class="px-14 mt-12">
-    <v-sheet :elevation="1" class="container d-flex flex-column justify-center align-center">
+    <v-sheet :elevation="1" class="container d-flex flex-column justify-center align-center"
+      :class="{actived: status === 'actived', selected: status ==='selected'}">
       <div class="img-container d-flex justify-center align-center">
         <img :src="`${apiUrl}/photo/${logo}`" :width="size" :height="size" />
       </div>
@@ -27,6 +29,7 @@ const apiUrl = ref(config.apiUrl);
   border-radius: 12px;
   width: 138px;
   height: 160px;
+  cursor: pointer;
 }
 
 .img-container {
@@ -39,5 +42,15 @@ const apiUrl = ref(config.apiUrl);
 .label {
   text-align: center;
   font-size: 15px;
+}
+
+.actived {
+  border: 2px solid #0D6EFD;
+}
+.selected {
+  background: #0D6EFD;
+}
+.selected .label {
+  color: white;
 }
 </style>
