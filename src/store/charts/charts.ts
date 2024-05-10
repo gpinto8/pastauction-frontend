@@ -8,13 +8,19 @@ export const useChartsStore = defineStore('charts', () => {
   const list = ref();
   const loading = ref(false);
   const detail = ref();
+  const selectedChartCategory = ref<null | string>(null)
 
   // getters
   const getList = computed(() => list.value);
   const getLoading = computed(() => loading.value);
   const getDetail = computed(() => detail.value);
+  const getSelectedChartCategory = computed(() => selectedChartCategory.value);
 
   // actions
+
+  function setSelectedChartCategory(newValue: string | null) {
+    selectedChartCategory.value = newValue
+  }
 
   async function getCharts() {
     loading.value = true;
@@ -37,8 +43,9 @@ export const useChartsStore = defineStore('charts', () => {
     getList,
     getLoading,
     getDetail,
-
+    getSelectedChartCategory,
     // actions
     getCharts,
+    setSelectedChartCategory,
   };
 });
