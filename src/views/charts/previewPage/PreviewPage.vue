@@ -1,5 +1,5 @@
 <template>
-    <div class="m-5">
+    <div class="m-5 max-w-[1000px] m-auto">
         <v-container fluid>
             <v-alert :color="alertColor">
                 <v-row justify="center">
@@ -20,7 +20,7 @@
                 </v-col>
             </v-row>
             <div class="flex flex-col mt-10 space-y-5">
-                <Selection :value="0" title="Minidashboard" description="description">
+                <!-- <Selection :value="0" title="Minidashboard" description="description">
                     <template #preview>
                         <v-row>
                             <v-col cols="12" sm="4">
@@ -79,12 +79,8 @@
                             </v-col>
                         </v-row>
                     </template>
-                </Selection>
-                <Selection v-for="(chart, index) of availableCharts" :value="index" :title="chart.name" :description="chart.subtitle">
-                    <template class="flex-center" #preview>
-                        <img :src="getChartImageUrl(chart)" alt="">
-                    </template>
-                </Selection>
+                </Selection> -->
+                <Selection v-for="(chart, index) of availableCharts" :chart="chart" :value="index" :title="chart.name" :description="chart.subtitle"/>
             </div>
             <v-row v-if="selectedItems.length > 0">
                 <v-col cols="12" sm="12">
@@ -159,9 +155,6 @@ export default {
                 `type:${this.chartStore.getSelectedChartType}`
             ].join(',')
         },
-        getChartImageUrl(chart) {
-            return `https://pastauction.com/api/v1/photo/${chart.path}`
-        }
     },
     computed: {
         selectedItems() {

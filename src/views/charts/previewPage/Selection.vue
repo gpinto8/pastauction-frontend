@@ -6,32 +6,41 @@ const props = defineProps<{
     previews?: string[],
     title: string,
     description: string,
+    chart: any
 }>()
+
+function getChartImageUrl() {
+    return `https://pastauction.com/api/v1/photo/${props.chart.path}`
+}
 
 </script>
 
 <template>
     <v-row justify="start">
         <v-expansion-panels>
-            <v-expansion-panel :rounded="''">
+            <v-expansion-panel :rounded="'lg'">
                 <v-expansion-panel-title class="h-20" collapse-icon="mdi-minus-circle" expand-icon="mdi-plus-circle">
                     <div class="flex-center">
                         <div class="flex-center rounded-md bg-gray-100 p-2 shadow-md">
                             <input type="checkbox" class="h-5 w-5 z-10 accent-blue-500" @click="emits('checked', 0)" :value="value" @click.stop/>
                         </div>
                         <div class="flex flex-col pl-5">
-                            <div class="text-lg font-semibold">
+                            <div class="text-lg font-semibold line-clamp-1">
                                 {{title}}
                             </div>
-                            <div class="text-zinc-600 text-sm">
+                            <div class="text-zinc-600 text-sm line-clamp-2">
                                 {{description}}
                             </div>
                         </div>
                     </div>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                    <slot name="preview">
-                    </slot>
+                    <div class="lg:px-32 flex-center flex-col lg:pb-20">
+                        <img :src="getChartImageUrl(chart)">
+                        <div class="w-full px-10 py-5 bg-gray-100 shadow-md rounded-md">
+                            {{ chart.description }}
+                        </div>
+                    </div>
                 </v-expansion-panel-text>
             </v-expansion-panel>
         </v-expansion-panels>
