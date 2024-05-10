@@ -43,6 +43,7 @@ export const useChartsStore = defineStore('charts', () => {
 
   return {
     // state
+    selectedChartCategory,
     // getters
     getList,
     getLoading,
