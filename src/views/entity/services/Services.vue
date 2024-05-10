@@ -45,6 +45,12 @@ import Tegola from './helpers/Tegola.vue';
           </v-col>
         </v-row>
         <v-row>
+          <v-col>
+            <v-text-field style="width: 150px;" value="Mercedes" placeholder="Brand" density="compact" hide-details
+              variant="underlined" readonly />
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col class="d-flex flex-row flex-wrap">
             <Tegola v-for="service of entityServicesSchema.slice(0, 1)" :key="service.id" :label="service.label"
               :logo="service.logo" :size="44" status="selected" />
@@ -52,6 +58,18 @@ import Tegola from './helpers/Tegola.vue';
               :logo="service.logo" :size="44" status="actived" />
             <Tegola v-for="service of entityServicesSchema.slice(2)" :key="service.id" :label="service.label"
               :logo="service.logo" :size="44" status="disabled" />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="d-flex flex-row px-8" :cols="12">
+            <v-text-field style="flex: 1" :value="entityServicesSchema[0].label" density="compact" hide-details
+              variant="outlined" readonly />
+            <v-checkbox class="ml-4" style="flex: 0" :value="true" disabled density="compact" hide-details />
+          </v-col>
+          <v-col class="d-flex flex-row px-8" :cols="12">
+            <v-text-field style="flex: 1" :value="entityServicesSchema[1].label" density="compact" hide-details
+              variant="outlined" readonly />
+            <v-checkbox class="ml-4" style="flex: 0" :value="true" disabled density="compact" hide-details />
           </v-col>
         </v-row>
         <!-- parts a -->
@@ -62,6 +80,14 @@ import Tegola from './helpers/Tegola.vue';
           </v-col>
         </v-row>
         <v-row>
+          <v-col>
+            <v-text-field style="width: 150px;" value="Mercedes" placeholder="Brand" density="compact" hide-details
+              variant="underlined" readonly />
+            <v-text-field style="width: 150px;" :value="entityServicesSchema[0].label" placeholder="Service"
+              density="compact" hide-details variant="underlined" readonly />
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col class="d-flex flex-row flex-wrap">
             <Tegola v-for="partA of entityServicesSchema[0].partsA.slice(0, 1)" :key="partA.id" :label="partA.label"
               :logo="partA.logo" :size="44" status="selected" />
@@ -69,17 +95,47 @@ import Tegola from './helpers/Tegola.vue';
               :logo="partA.logo" :size="44" status="disabled" />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col class="d-flex flex-row px-8" :cols="12">
+            <v-text-field style="flex: 1" :value="entityServicesSchema[0].partsA[0].label" density="compact"
+              hide-details variant="outlined" readonly />
+            <v-checkbox class="ml-4" style="flex: 0" :value="true" disabled density="compact" hide-details />
+          </v-col>
+        </v-row>
         <!-- parts b -->
         <v-row class="subheader rounded-lg mt-12 mb-4">
           <v-col>
-            <div class="title font-weight-bold text-center">Manage subcategory "{{entityServicesSchema[0].partsA[0].label }}"
+            <div class="title font-weight-bold text-center">Manage subcategory
+              "{{entityServicesSchema[0].partsA[0].label }}"
             </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field style="width: 150px;" value="Mercedes" placeholder="Brand" density="compact" hide-details
+              variant="underlined" readonly />
+            <v-text-field style="width: 150px;" :value="entityServicesSchema[0].label" placeholder="Service"
+              density="compact" hide-details variant="underlined" readonly />
+            <v-text-field style="width: 150px;" :value="entityServicesSchema[0].partsA[0].label" placeholder="Part A"
+              density="compact" hide-details variant="underlined" readonly />
           </v-col>
         </v-row>
         <v-row>
           <v-col class="d-flex flex-row flex-wrap">
             <Tegola v-for="partB of entityServicesSchema[0].partsA[0].partsB" :key="partB.id" :label="partB.name"
               :logo="partB.logo" :size="44" status="disabled" />
+          </v-col>
+        </v-row>
+        <!-- <v-col class="d-flex flex-row px-8" :cols="12">
+          <v-text-field style="flex: 1" :value="entityServicesSchema[0].partsA[0].partsB[0].name" density="compact"
+            hide-details variant="outlined" readonly />
+          <v-checkbox class="ml-4" style="flex: 0" :value="true" disabled density="compact" hide-details />
+        </v-col> -->
+
+        <v-row class="mt-16 mb-8">
+          <v-col class="d-flex justify-end" :cols="12">
+            <v-btn class="px-16 mr-4" color="grey">Reset</v-btn>
+            <v-btn class="px-16" color="primary">Save</v-btn>
           </v-col>
         </v-row>
       </v-container>
