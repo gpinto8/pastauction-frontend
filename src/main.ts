@@ -16,7 +16,7 @@ vue.use(vuetify);
 axios.defaults.baseURL = config.apiUrl;
 
 axios.interceptors.request.use(
-  (config: any) => {
+  (config) => {
     const token = window.localStorage.getItem('past_token')
       ? window.localStorage.getItem('past_token')
       : null;

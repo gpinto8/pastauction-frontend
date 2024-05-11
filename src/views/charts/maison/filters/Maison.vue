@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { requestListOfFirstTwoLettersMaisonName, requestListOfMaisonNamesStartingWith } from '@/api/filter/maison/maison';
 import { emptyArray } from '@/utils/functions/EmptyArray';
 import axios from 'axios';
 import { defineModel, ref, watch } from 'vue';
@@ -16,11 +17,12 @@ const selectedMaisonInitial = ref<null | string>(null)
 
 // update the two-letter initials array when changing the brand initial letter
 watch(selectedMaisonInitial, async () => {
+    if (selectedMaisonInitial.value == null) return
     try {
-        const response = await axios.get(`/filter/bidwatcher_auction/name_left_2/?search=name_left_1:${selectedMaisonInitial.value}`);
+        const response = await requestListOfFirstTwoLettersMaisonName(selectedMaisonInitial.value)
         maisonsCoupleLetters.value = response.data.items.map((item: any) => item.left_1 as string);
     } catch (error) {
-        console.error('Error fetching brands:', error);
+        console.error('Error fetching maison names:', error);
     }
 })
 
@@ -32,9 +34,12 @@ let maisonList = ref<string[]>([])
 
 // update brandList every time we choose new two-letter initials
 watch(selectedMaisonsFirstTwoLetters, async () => {
+    if (selectedMaisonsFirstTwoLetters.value == null) return
     try {
-        const response = await axios.get(`/filter/bidwatcher_auction/name/?search=name_left_2:${selectedMaisonsFirstTwoLetters.value}`);
-        maisonList.value = response.data.items.map((item: any) => item.name as string);
+        const response = await requestListOfMaisonNamesStartingWith(selectedMaisonsFirstTwoLetters.value)
+        console.log(response);
+        
+        maisonList.value = response.data.items.map((item: any) => item.name_event as string);
     } catch (error) {
         console.error('Error fetching brands:', error);
     }
