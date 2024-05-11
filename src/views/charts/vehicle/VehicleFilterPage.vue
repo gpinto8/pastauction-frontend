@@ -114,7 +114,7 @@ import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
 import AttributesFilter from './filters/Attributes.vue';
-import PeriodsFilter from './filters/Periods.vue';
+import PeriodsFilter from '../components/filters/Periods.vue';
 import ColorsFilter from './filters/Colors.vue';
 import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';

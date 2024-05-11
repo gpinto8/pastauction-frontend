@@ -2,9 +2,27 @@
 import { ref } from 'vue';
 import Maison from './filters/Maison.vue'
 import AuctionCity from './filters/AuctionCity.vue';
+import Periods from '../components/filters/Periods.vue';
+import { sendFilterRequest } from '@/api/filter/filterApi';
+
+const loading = ref<boolean>(true)
 
 const selectedMaisonNames = ref<string[]>([])
 const selectedCityNames = ref<string[]>([])
+
+const selectedPeriods = ref<string[]>([])
+const periods = ref<string[]>([])
+
+async function fetchPeriods() {
+    const response = await sendFilterRequest('bidwatcher_age', 'name')
+    console.log(response.data.items);
+    periods.value = response.data.items.map((el: any) => ({ age_name: el.name }))
+}
+
+Promise.all([fetchPeriods()])
+.finally(() => {
+    loading.value = false
+})
 
 function clearFilters() {
     
@@ -31,9 +49,21 @@ function clearFilters() {
                 <v-btn size="x-small" class="float-right" color="black" @click="clearFilters()">Clear filters</v-btn>
             </v-col>
         </v-row>
-        <div class="flex flex-col space-y-7">
+        <v-container fluid v-if="loading">
+            <div class="m-5 d-flex align-center justify-center">
+                <v-progress-circular
+                    v-if="loading"
+                    :size="70"
+                    :width="7"
+                    color="primary"
+                    indeterminate
+                ></v-progress-circular>
+            </div>
+        </v-container>
+        <div class="flex flex-col space-y-7" v-else>
             <Maison v-model="selectedMaisonNames"/>
             <AuctionCity v-model="selectedCityNames"/>
+            <Periods :periods="periods" v-model="selectedPeriods"/>
         </div>
     </div>
 </template>

@@ -7,7 +7,8 @@ defineExpose({
     resetFilter
 })
 const props = defineProps<{
-    periods: any[]
+    periods: any[],
+    filterName?: string
 }>()
 const selectedPeriods = defineModel<string[]>({ required: true })
 
@@ -19,7 +20,7 @@ function resetFilter() {
 
 <template>
     <div>
-        <GenericFilter filterName="Periods" justify="start" light>
+        <GenericFilter :filterName="filterName || 'Periods'" justify="start" light>
             <div class="grid gap-2 grid-cols-2 
                         sm:grid-cols-3 
                         md:grid-cols-4 
