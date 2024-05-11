@@ -15,31 +15,10 @@ defineExpose({
 const selectedValues = defineModel<string[]>({required: true})
 const initials = defineModel<null | string>('initials', { required: true })
 
-/* // update the two-letter initials array when changing the brand initial letter
-watch(initials, async () => {
-    try {
-        const response = await axios.get(`/filter/bidwatcher_auction/name_left_2/?search=name_left_1:${initials.value}`);
-        twoLettersInitialsList.value = response.data.items.map((item: any) => item.left_1 as string);
-    } catch (error) {
-        console.error('Error fetching brands:', error);
-    }
-}) */
-
-// As soon as you choose a letter this array is populated with the first two letters for the choosen selectedBrandInitial variable
 const twoLettersInitialsList = defineModel<string[]>('twoLettersInitialsList', { required: true })
 const twoLettersInitials = defineModel<null | string>('twoLettersInitials', { required: true })
 
 let listOfValues = defineModel<string[]>('values', { required: true })
-
-/* // update brandList every time we choose new two-letter initials
-watch(twoLettersInitials, async () => {
-    try {
-        const response = await axios.get(`/filter/bidwatcher_auction/name/?search=name_left_2:${twoLettersInitials.value}`);
-        listOfValues.value = response.data.items.map((item: any) => item.name as string);
-    } catch (error) {
-        console.error('Error fetching brands:', error);
-    }
-}) */
 
 function resetFilter() {
     emptyArray(selectedValues.value)

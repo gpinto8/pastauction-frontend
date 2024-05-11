@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Maison from './filters/Maison.vue'
+import AuctionCity from './filters/AuctionCity.vue';
 
-let selectedMaisonNames = ref<string[]>([])
+const selectedMaisonNames = ref<string[]>([])
+const selectedCityNames = ref<string[]>([])
 
 function clearFilters() {
     
@@ -29,8 +31,9 @@ function clearFilters() {
                 <v-btn size="x-small" class="float-right" color="black" @click="clearFilters()">Clear filters</v-btn>
             </v-col>
         </v-row>
-        <div class="flex flex-col">
+        <div class="flex flex-col space-y-7">
             <Maison v-model="selectedMaisonNames"/>
+            <AuctionCity v-model="selectedCityNames"/>
         </div>
     </div>
 </template>
