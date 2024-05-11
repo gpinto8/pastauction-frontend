@@ -1,5 +1,5 @@
 <template>
-    <div class="m-5">
+    <div class="m-5 max-w-[1000px] m-auto">
         <v-container fluid>
             <v-alert :color="alertColor">
                 <v-row justify="center">
@@ -19,8 +19,8 @@
                         dataset</span>
                 </v-col>
             </v-row>
-            <div class="flex flex-col mt-10">
-                <Selection :value="0" title="Minidashboard" description="description" class="mb-2">
+            <div class="flex flex-col mt-10 space-y-5">
+                <!-- <Selection :value="0" title="Minidashboard" description="description">
                     <template #preview>
                         <v-row>
                             <v-col cols="12" sm="4">
@@ -79,7 +79,8 @@
                             </v-col>
                         </v-row>
                     </template>
-                </Selection>
+                </Selection> -->
+                <Selection v-for="(chart, index) of availableCharts" :chart="chart" :value="index" :title="chart.name" :description="chart.subtitle"/>
             </div>
             <v-row v-if="selectedItems.length > 0">
                 <v-col cols="12" sm="12">
@@ -115,6 +116,8 @@
 <script lang="ts">
 
 import Selection from './Selection.vue';
+import { useChartsStore } from '../../../store/charts/charts';
+import axios from 'axios';
 
 export default {
     components: { Selection, },
@@ -126,12 +129,32 @@ export default {
             items: [
                 { index: 0, title: 'Item 1' },
                 { index: 1, title: 'Item 2' },
-            ]
+            ],
+            chartStore: useChartsStore(),
+            availableCharts: [] as any[]
         };
     },
     created() {
         this.alertColor = this.$route.query.color as string || 'info';
         this.alertTitle = this.$route.query.title as string || '';
+    },
+    async mounted() {
+        let response = await axios.get('/bidwatcher_product_chart/query', {
+            params: {
+                search: this.buildSearchSting()
+            }
+        })
+        console.log(response.data.items);
+        this.availableCharts = response.data.items
+    },
+    methods: {
+        buildSearchSting() {
+            return [
+                'versatility:1',
+                `category:${this.chartStore.getSelectedChartCategory}`,
+                `type:${this.chartStore.getSelectedChartType}`
+            ].join(',')
+        },
     },
     computed: {
         selectedItems() {

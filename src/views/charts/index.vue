@@ -60,6 +60,7 @@ import MenuSelection from './components/MenuSelection.vue';
 import axios from 'axios';
 import ModalChartsType from './components/ModalChartsType.vue';
 import router from '@/router/index';
+import { useChartsStore } from '../../store/charts/charts';
 export default {
     components: {
         ModalChartsType, MenuSelection
@@ -71,7 +72,8 @@ export default {
             selectedDescription: '',
             firstRowCards: [] as any[],
             secondRowCards: [] as any[],
-            loading: true
+            loading: true,
+            chartStore: useChartsStore()
         }
     },
     async mounted() {
@@ -109,6 +111,7 @@ export default {
             }
         },
         continueProcess() {
+            this.chartStore.setSelectedChartCategory(this.selectedCard.title)
             // If the selected card is from the top row
             if (this.firstRowCards.reduce((accummulator: boolean, card: any) => card.isSelected || accummulator, false))
                 router.push({ path: '/charts/filters' });
@@ -128,6 +131,11 @@ export default {
             this.selectedDescription = selectedObject.description;
             this.$emit('cardSelected', selectedObject.description);
         },
+    },
+    computed: {
+        selectedCard() {
+            return this.firstRowCards.find((card: any) => card.isSelected) || this.secondRowCards.find((card: any) => card.isSelected)
+        }
     }
 }
 </script>

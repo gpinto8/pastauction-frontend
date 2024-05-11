@@ -131,11 +131,13 @@
 <script lang="ts">
 import router from '@/router/index';
 import d from 'lodash.deburr';
+import { useChartsStore } from '../../store/charts/charts';
 
 export default {
   data() {
     return {
       cardSelected: false,
+      chartStore: useChartsStore(),
       brandRow: [
         {
           'title': 'Single chart',
@@ -143,7 +145,7 @@ export default {
           'boltReq': 3,
           'chartsToday': 20,
           'chartsMonth': 15,
-
+          type: 'Single'
         },
         {
           'title': 'Minidashboard',
@@ -151,6 +153,7 @@ export default {
           'boltReq': 3,
           'chartsToday': 2,
           'chartsMonth': 15,
+          type: 'Minidashboard'
         },
         {
           'title': 'Dashboard',
@@ -158,6 +161,7 @@ export default {
           'boltReq': 4,
           'chartsToday': 27,
           'chartsMonth': 1,
+          type: 'Fulldashboard'
         }
       ]
     }
@@ -165,6 +169,7 @@ export default {
   methods: {
     continueProcess() {
       const selectedCard = this.brandRow.find(card => card.isSelected);
+      this.chartStore.setSelectedChartType(selectedCard.type)
       router.push({
         path: '/charts/filters/brand/preview',
         query: {
