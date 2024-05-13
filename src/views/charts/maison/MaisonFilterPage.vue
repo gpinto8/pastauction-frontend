@@ -71,9 +71,9 @@ function clearFilters() {
         <div class="flex flex-col space-y-7" v-else>
             <Maison v-model="selectedMaisonNames"/>
             <AuctionCity v-model="selectedCityNames"/>
-            <Periods :periods="periods" v-model="selectedPeriods"/>
             <AuctionYear v-model="selectedYears"/>
             <Month v-model="selectedMonths"/>
+            <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods"/>
             <Miscellaneous :miscellaneousOptions="{
                 soldStatus: [{
                         name: 'Sold',
