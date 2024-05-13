@@ -4,6 +4,7 @@ import Maison from './filters/Maison.vue'
 import AuctionCity from './filters/AuctionCity.vue';
 import Periods from '../components/filters/Periods.vue';
 import { sendFilterRequest } from '@/api/filter/filterApi';
+import AuctionYear from './filters/AuctionYear.vue';
 
 const loading = ref<boolean>(true)
 
@@ -64,6 +65,7 @@ function clearFilters() {
             <Maison v-model="selectedMaisonNames"/>
             <AuctionCity v-model="selectedCityNames"/>
             <Periods :periods="periods" v-model="selectedPeriods"/>
+            <AuctionYear/>
         </div>
     </div>
 </template>
