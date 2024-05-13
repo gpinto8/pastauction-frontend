@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import Maison from './filters/Maison.vue'
 import AuctionCity from './filters/AuctionCity.vue';
 import Periods from '../components/filters/Periods.vue';
 import { sendFilterRequest } from '@/api/filter/filterApi';
 import AuctionYear from './filters/AuctionYear.vue';
 import Month from './filters/Month.vue';
+import Miscellaneous from './filters/Miscellaneous.vue';
 
 const loading = ref<boolean>(true)
 
@@ -19,9 +20,10 @@ const selectedYears = ref<number[]>([])
 
 const selectedMonths = ref<string[]>([])
 
+const miscOptions = reactive({})
+
 async function fetchPeriods() {
     const response = await sendFilterRequest('bidwatcher_age', 'name')
-    console.log(response.data.items);
     periods.value = response.data.items.map((el: any) => ({ age_name: el.name }))
 }
 
@@ -72,6 +74,50 @@ function clearFilters() {
             <Periods :periods="periods" v-model="selectedPeriods"/>
             <AuctionYear v-model="selectedYears"/>
             <Month v-model="selectedMonths"/>
+            <Miscellaneous :miscellaneousOptions="{
+                soldStatus: [{
+                        name: 'Sold',
+                        value: 'sold'
+                    },
+                    {
+                        name: 'Not sold',
+                        value: 'not sold'
+                    }
+                ],
+                quotedStats: [{
+                        name: 'Quoted',
+                        value: 'quoted'
+                    },
+                    {
+                        name: 'Not quoted',
+                        value: 'not quoted'
+                    }
+                ],
+                chassisStatus: [{
+                        name: 'With Chassis',
+                        value: 'with chassis'
+                    },
+                    {
+                        name: 'Without Chassis',
+                        value: 'without chassis'
+                    }
+                ],
+                currency: [
+                    { name: 'AUD', value: 'aud' },
+                    { name: 'CAD', value: 'cad' },
+                    { name: 'CHF', value: 'chf' },
+                    { name: 'DKK', value: 'dkk' },
+                    { name: 'EAD', value: 'ead' },
+                    { name: 'GBP', value: 'gbp' },
+                    { name: 'JPY', value: 'jpy' },
+                    { name: 'PLN', value: 'pln' },
+                    { name: 'RNB', value: 'rnb' },
+                    { name: 'RUB', value: 'rub' },
+                    { name: 'SEK', value: 'sek' },
+                    { name: 'USD', value: 'usd' },
+                ]
+            }"
+            v-model="miscOptions"/>
         </div>
     </div>
 </template>
