@@ -5,6 +5,7 @@ import AuctionCity from './filters/AuctionCity.vue';
 import Periods from '../components/filters/Periods.vue';
 import { sendFilterRequest } from '@/api/filter/filterApi';
 import AuctionYear from './filters/AuctionYear.vue';
+import Month from './filters/Month.vue';
 
 const loading = ref<boolean>(true)
 
@@ -15,6 +16,8 @@ const selectedPeriods = ref<string[]>([])
 const periods = ref<string[]>([])
 
 const selectedYears = ref<number[]>([])
+
+const selectedMonths = ref<string[]>([])
 
 async function fetchPeriods() {
     const response = await sendFilterRequest('bidwatcher_age', 'name')
@@ -68,6 +71,7 @@ function clearFilters() {
             <AuctionCity v-model="selectedCityNames"/>
             <Periods :periods="periods" v-model="selectedPeriods"/>
             <AuctionYear v-model="selectedYears"/>
+            <Month v-model="selectedMonths"/>
         </div>
     </div>
 </template>
