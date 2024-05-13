@@ -54,7 +54,7 @@ const selectedYears = defineModel<number[]>({ required: true })
                 <v-btn
                     v-for="timeFrame in timeFrames"
                     :key="timeFrame.startYear"
-                    class="letter-button selection lg:flex-1"
+                    class="letter-button selection !text-base lg:flex-1"
                     :variant="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'elevated' : 'outlined'"
                     @click="selectedTimeFrame = timeFrame"
                     :color="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'black' : ''"
@@ -78,14 +78,12 @@ const selectedYears = defineModel<number[]>({ required: true })
                 >
             </v-chip>
             </div>
-            <div v-if="selectedTimeFrame != null" class="grid gap-2 grid-cols-2 
-                        sm:grid-cols-3 
-                        md:grid-cols-4 
-                        lg:flex lg:gap-0 lg:space-x-7 lg:flex-wrap lg:bg-red-300">
+            <div v-if="selectedTimeFrame != null" class="grid gap-2 grid-cols-4
+                        lg:flex lg:gap-0 lg:space-x-7 lg:flex-wrap">
                 <v-btn
                 v-for="index of selectedTimeFrame.endYear - selectedTimeFrame.startYear + 1"
                 :key="index"
-                class="letter-button selection lg:flex-1"
+                class="letter-button selection !text-base lg:flex-1"
                 :variant="selectedYears.includes(selectedTimeFrame.startYear + index - 1) ? 'elevated' : 'outlined'"
                 @click="toggleValueInArray(selectedYears, selectedTimeFrame.startYear + index - 1)"
                 :color="selectedYears.includes(selectedTimeFrame.startYear + index - 1)?  'black' : ''"
