@@ -19,8 +19,8 @@ function toggleSelection(optionName: string, value: string) {
 
 <template>
     <GenericFilter :filterName="filterName || 'Miscellaneous'">
-        <div class="flex flex-wrap flex-col sm:flex-row space-y-4 sm:space-y-0">
-            <div class="flex flex-wrap space-x-4 mr-4" v-for="(misc, optionName) of miscellaneousOptions">
+        <div class="flex flex-wrap flex-col sm:flex-row">
+            <div class="flex flex-wrap mb-4 sm:mb-0 sm:mr-4" v-for="(misc, optionName) of miscellaneousOptions">
                 <v-btn
                     v-for="option of misc"
                     class="letter-button flex-1 sm:w-fit"
