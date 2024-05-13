@@ -40,7 +40,7 @@ const timeFrames: TimeFrame[] = [
 ]
 
 const selectedTimeFrame = ref<TimeFrame | null>(null)
-const selectedYears = ref<number[]>([])
+const selectedYears = defineModel<number[]>({ required: true })
 
 </script>
 

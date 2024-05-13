@@ -14,6 +14,8 @@ const selectedCityNames = ref<string[]>([])
 const selectedPeriods = ref<string[]>([])
 const periods = ref<string[]>([])
 
+const selectedYears = ref<number[]>([])
+
 async function fetchPeriods() {
     const response = await sendFilterRequest('bidwatcher_age', 'name')
     console.log(response.data.items);
@@ -65,7 +67,7 @@ function clearFilters() {
             <Maison v-model="selectedMaisonNames"/>
             <AuctionCity v-model="selectedCityNames"/>
             <Periods :periods="periods" v-model="selectedPeriods"/>
-            <AuctionYear/>
+            <AuctionYear v-model="selectedYears"/>
         </div>
     </div>
 </template>
