@@ -20,7 +20,12 @@ const selectedYears = ref<number[]>([])
 
 const selectedMonths = ref<string[]>([])
 
-const miscOptions = reactive({})
+const miscOptions = reactive({
+    soldStatus: null,
+    quotedStats: null,
+    chassisStatus: null,
+    currency: null,
+})
 
 async function fetchPeriods() {
     const response = await sendFilterRequest('bidwatcher_age', 'name')

@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends { [key: string]: { name: string, value: string }[] }">
 import GenericFilter from '../../components/GenericFilter.vue';
 import { reactive, defineModel } from 'vue';
+import { wait } from '../../../../utils/functions/wait';
 
 const props = defineProps<{
     filterName?: string,
@@ -8,11 +9,11 @@ const props = defineProps<{
 }>()
 
 const selection = defineModel<{
-    [keyof in T]: string
+    [K in keyof T]: string | null
 }>({ required: true })
 
-function toggleSelection(optionName: string, value: string) {
-    selection.value[optionName] = selection.value[optionName] == value ? selection.value = null : selection.value = value
+function toggleSelection(optionName: keyof T, value: string) {
+    selection.value[optionName] = selection.value[optionName] == value ? null : value
 }
 
 </script>
@@ -20,7 +21,8 @@ function toggleSelection(optionName: string, value: string) {
 <template>
     <GenericFilter :filterName="filterName || 'Miscellaneous'">
         <div class="flex flex-wrap flex-col sm:flex-row">
-            <div class="flex flex-wrap mb-4 sm:mb-0 sm:mr-4" v-for="(misc, optionName) of miscellaneousOptions">
+            <div class="flex flex-wrap mb-4 sm:mb-0 sm:mr-4" v-for="(misc, optionName) of props.miscellaneousOptions">
+                <!-- {{ optionName }} - {{ misc }} -->
                 <v-btn
                     v-for="option of misc"
                     class="letter-button flex-1 sm:w-fit"

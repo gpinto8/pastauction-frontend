@@ -130,7 +130,6 @@
 
 <script lang="ts">
 import router from '@/router/index';
-import d from 'lodash.deburr';
 import { useChartsStore } from '../../store/charts/charts';
 
 export default {
@@ -169,6 +168,7 @@ export default {
   methods: {
     continueProcess() {
       const selectedCard = this.brandRow.find(card => card.isSelected);
+      if (selectedCard == null) return
       this.chartStore.setSelectedChartType(selectedCard.type)
       router.push({
         path: '/charts/filters/brand/preview',

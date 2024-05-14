@@ -36,7 +36,7 @@ function getChartImageUrl() {
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                     <div class="lg:px-32 flex-center flex-col lg:pb-20">
-                        <img :src="getChartImageUrl(chart)">
+                        <img :src="getChartImageUrl()">
                         <div class="w-full px-10 py-5 bg-gray-100 shadow-md rounded-md">
                             {{ chart.description }}
                         </div>
