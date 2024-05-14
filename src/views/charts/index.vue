@@ -45,13 +45,11 @@
             <v-container fluid>
                 <v-row>
                     <v-col cols="12">
-                        <v-btn @click="openModal" :disabled="!cardSelected" size="small" class="float-right"
+                        <v-btn @click="continueProcess" :disabled="!cardSelected" size="small" class="float-right"
                             color="black">Continue</v-btn>
                     </v-col>
                 </v-row>
             </v-container>
-            <ModalChartsType :modalOpen="modalOpen" :description="selectedDescription"
-                @update:modalOpen="updateModalOpen" @continueClicked="continueProcess" />
         </div>
     </div>
 </template>
@@ -67,7 +65,6 @@ export default {
     },
     data() {
         return {
-            modalOpen: false,
             cardSelected: false,
             selectedDescription: '',
             firstRowCards: [] as any[],
@@ -84,15 +81,6 @@ export default {
         }
     },
     methods: {
-        updateModalOpen(value: any) {
-            this.modalOpen = value;
-        },
-
-        openModal() {
-            if (this.cardSelected) {
-                this.modalOpen = true;
-            }
-        },
         async fetchChartSelection() {
             try {
                 const response = await axios.get('/chart/selection');

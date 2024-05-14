@@ -112,8 +112,8 @@ watch(isMobileAvatarMenuOpen, ()=>{
     </div>
 
 		<!-- main page / content box -->
-		<div class="overflow-auto flex-center bg-red-100 md:col-start-2">
-            <div class="overflow-auto p-4 duration-150 max-w-[1000px]">
+		<div class="overflow-auto flex-center md:col-start-2 h-full w-full">
+            <div class="    p-4 duration-150 max-w-[1000px] h-full w-full">
                 <router-view v-slot="{ Component, route }">
                     <transition>
                         <component :is="Component" :key="route.name" />
