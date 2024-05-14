@@ -6,10 +6,12 @@ import {
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
 import LocateView from '@/views/locate/LocateView.vue';
+import LocateRoadmapsView from '@/views/locate/LocateRoadmapsView.vue';
 import SignupView from '@/views/auth/SignupView.vue';
 
 import { authGuard } from './utils/guards';
 import { scrollBehaviour } from './utils/scrollBehaviours';
+import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -174,7 +176,27 @@ const router = createRouter({
         {
           path: '/locate',
           name: 'Locate',
-          component: LocateView,
+					component: async () =>
+						await import(
+						/* webpackChunkName: "Login" */ '@/views/layout/LocateLayout.vue'
+					),
+					children: [
+						{
+							path: '/locate',
+							name: 'Locate ',
+							component: LocateView,
+						},
+						{
+							path: '/locate/roadmaps',
+							name: 'Locate',
+							component: LocateRoadmapsView,
+						},
+						{
+							path: "/locate/roadmap-detail",
+							name: 'Locate  ',
+							component: LocateRoadmapDetailView,
+						}
+					],
         },
         {
           path: '/entity',

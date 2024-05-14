@@ -13,7 +13,7 @@ const handleOverlayClick = (event: MouseEvent) => {
 };
 const closeModal = () => {
     // Emetti un evento per notificare al genitore la chiusura della modale
-    emits('close-modal');
+    emits('overlay-click');
 };
 </script>
 
