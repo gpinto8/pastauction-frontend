@@ -108,7 +108,7 @@ function resetFilter() {
                             </div>
                         </div>
                         <div class="border !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
-                            <div
+                            <button
                             v-for="brand in brandList" 
                             :key="brand"
                             class="flex-center text-center"
@@ -116,7 +116,7 @@ function resetFilter() {
                             style="font-size: 16px;" 
                             @click="toggleValueInArray(selectedBrandNames, brand)">
                                 {{ brand }}
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </v-col>
