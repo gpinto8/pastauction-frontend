@@ -4,6 +4,7 @@ import { useConfig } from '@/store';
 import AppIcon from './common/AppIcon.vue';
 import useGlobalStore from '@/store/GlobalStore';
 import { storeToRefs } from 'pinia';
+import { RouterLink , useRouter } from 'vue-router';
 
 /** Config Store */
 const configStore = useConfig();
@@ -13,11 +14,11 @@ const { displayMediaQuery } = storeToRefs(useGlobalStore());
 
 
 const menuItems = [
-	{ iconName: "help", label: "Currency"},
-	{ iconName: "tabler", label: "Tabler"},
-	{ iconName: "map", label: "Maps"},
-	{ iconName: "coins", label: "Currency"},
-	{ iconName: "bell", label: "Notifications"},
+	{ iconName: "help", label: "Currency", to: "" },
+	{ iconName: "tabler", label: "Tabler", to: "" },
+	{ iconName: "map", label: "Maps", to: "/locate/roadmaps" },
+	{ iconName: "coins", label: "Currency", to: "" },
+	{ iconName: "bell", label: "Notifications", to: "" },
 ]
 </script>
 
@@ -31,13 +32,15 @@ const menuItems = [
 		</div>
 
 		<div v-for="item in menuItems" class="flex items-center flex-row gap-2 pl-3 border-b-[1px] border-[#21252940] w-full pb-3 pr-6">
-			<v-btn
-				class="text-white text-none font-normal !bg-primary"
-				icon
-				size="small"
-			>
-				<app-icon :type="item.iconName" size="20" />
-			</v-btn>
+			<RouterLink :to="item.to">
+				<v-btn
+					class="text-white text-none font-normal !bg-primary"
+					icon
+					size="small"
+				>
+					<app-icon :type="item.iconName" size="20" />
+				</v-btn>
+			</RouterLink>
 			<span class="text-[#475467]">{{ item.label }}</span>
 		</div>
 	</div>
@@ -49,19 +52,18 @@ const menuItems = [
 			variant="flat"
 			@click="configStore.toggleTheme"
 		/-->
-		<v-btn
-			v-for="item in menuItems"
-      class="text-white text-none font-normal !bg-primary"
-      icon
-      size="small"
-    >
-      <app-icon :type="item.iconName" size="20" />
-    </v-btn>
+		<RouterLink v-for="item in menuItems" :to="item.to" >
+			<v-btn
+				class="text-white text-none font-normal !bg-primary"
+				icon
+				size="small"
+			>
+				<app-icon :type="item.iconName" size="20" />
+			</v-btn>
+		</RouterLink>
 		<!-- <v-avatar color="info" class="mr-6">
       <v-icon icon="mdi-account-circle" />
     </v-avatar> -->
 		<img class="h-10 !w-10 aspect-square mr-6" src="@/assets/images/user-photo-sample.png" alt="Logo" />
   </div>
-</template>import useGlobalStore from '@/store/GlobalStore';
-import { storeToRefs } from 'pinia';
-
+</template>
