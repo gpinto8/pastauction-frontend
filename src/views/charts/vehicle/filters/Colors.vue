@@ -55,7 +55,22 @@ function resetFilter() {
                         {{ color.colorfamily_name }}
                     </v-btn>
                 </div>
-                <v-row justify="start" class="align-center mt-3">
+                <div class="flex flex-wrap my-3" noGutters>
+                    <v-chip
+                        noGutters
+                        v-for="color in colors"
+                        :key="`${color}-index`"
+                        class="mr-2 mb-2"
+                        closable
+                        color="black"
+                        style="border-radius: 5px;"
+                        variant="flat"
+                        :text="color"
+                        @click:close="toggleValueInArray(colors, color)"
+                    >
+                    </v-chip>
+                </div>
+                <v-row justify="start" class="align-center">
                     <v-col class="d-flex flex-wrap align-center pt-0">
                         <v-btn
                             v-for="color in colorsList" 
