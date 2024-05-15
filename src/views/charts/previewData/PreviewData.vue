@@ -8,11 +8,11 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="bg-white shadow-2xl p-2">
+    <div class="bg-white shadow-2xl px-2 py-5">
 
-        <div class="font-bold text-2xl">Statistic Results</div>
+        <div class="font-bold text-xl mb-5">Statistic Results</div>
 
-        <div class="space-y-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="space-y-3 sm:space-y-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <SingleData name="Largest sale" :value="data.max_sales_price_gt.toLocaleString()"/>
             <SingleData name="Lower estimation avg" :value="data.total_estimation_min_value_all.toLocaleString()"/>
             <SingleData name="Higher estimation avg" :value="data.total_estimation_max_value_all.toLocaleString()"/>
