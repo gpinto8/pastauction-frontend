@@ -106,7 +106,7 @@ function resetFilter() {
                     <div class="flex flex-col flex-wrap align-center pt-0 w-full">
                         <div :class="{ 'd-block': selectedFamilyInitial, 'd-none': !selectedFamilyInitial }" class="mt-3 w-full">
                             <div class="flex align-center" no-gutters>
-                                <div class="flex flex-col" no-gutters>
+                                <div class="flex" no-gutters>
                                     <v-chip no-gutters
                                         v-for="(family, index) in families"
                                         :key="family"
