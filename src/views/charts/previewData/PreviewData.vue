@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="bg-white shadow-2xl px-2 py-5">
+    <div class="bg-white shadow-2xl px-2 py-5" v-if="data != null">
 
         <div class="font-bold text-xl mb-5">Statistic Results</div>
 

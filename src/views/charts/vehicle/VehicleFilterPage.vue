@@ -95,7 +95,7 @@
                         sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
                 <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()" :disabled="!canPreviewData">Preview data set</v-btn>
             </div>
-            <div v-if="previewData != null" class="flex flex-col">
+            <div :class="previewData == null ? 'hidden' : 'block'" class="flex flex-col" ref="previewdata">
                 <PreviewData :data="previewData"/>
                 <div class="flex flex-col justify-end sm:flex-row sm:space-x-2 mt-5">
                     <v-btn size="default" height="40" class="rounded-md w-full sm:w-32 mb-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
@@ -120,6 +120,7 @@ import axios from 'axios';
 import CountriesFilter from './filters/Countries.vue';
 import GenericFilter from '../components/GenericFilter.vue';
 import PreviewData from '../previewData/PreviewData.vue';
+import { nextTick } from 'process';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -266,19 +267,21 @@ export default {
             // Filter empty params
             searchParams = searchParams.filter(param => param != '')
 
-            console.log(searchParams.join(','));
-                try {
-                    const response = await axios.get(`/bidwatcher_auction/query_2v`, {
-                        params: {
-                            search: searchParams.join(','),
-                        }
-                    });
-                    // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
-                    console.log(response);
-                    this.previewData = response.data.items[0] 
-                } catch (error) {
-                    console.error('Preview dataset error:', error);
-                }
+            try {
+                const response = await axios.get(`/bidwatcher_auction/query_2v`, {
+                    params: {
+                        search: searchParams.join(','),
+                    }
+                });
+                // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
+                console.log(response);
+                this.previewData = response.data.items[0];
+                this.$nextTick(() => {
+                    (this.$refs.previewdata as any).scrollIntoView({ behavior: 'smooth' })
+                })
+            } catch (error) {
+                console.error('Preview dataset error:', error);
+            }
         },
         getBrandsSearchParams() {
             return `brand_name:${this.selectedBrands.join('|')}`
@@ -334,8 +337,7 @@ export default {
                 this.colorIsSelected,
                 this.miscellaneousIsSelected,
             ]
-
-            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) > 3
+            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) >= 3
         }
     }
 };
