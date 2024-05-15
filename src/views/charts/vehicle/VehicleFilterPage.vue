@@ -132,6 +132,7 @@ import CountriesFilter from './filters/Countries.vue';
 import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
+import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/maison/maisonSearchParams';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -272,9 +273,15 @@ export default {
             
             this.isLoadingPreviewData = true
             let searchParams = [
-                this.getBrandsSearchParams(),
-                this.getPeriodsSearchParams(),
-                this.getColorsSearchParams(),
+                getBrandsSearchParams(this.selectedBrands),
+                getFamilySearchParams(this.selectedFamilies),
+                getModelSearchParams(this.selectedModelFull),
+                getCountriesSearchParams(this.selectedCountries),
+                getTypesSearchParams(this.types),
+                getAttributesSearchParams(this.selectedAttributes),
+                getPeriodsSearchParams(this.selectedPeriods),
+                getColorsSearchParams(this.selectedColors),
+                getMiscSearchParams(),
             ]
 
             this.$nextTick(() => {
@@ -283,32 +290,25 @@ export default {
 
             // Filter empty params
             searchParams = searchParams.filter(param => param != '')
-
+            console.log(searchParams.join(','));
+            
             try {
                 const response = await axios.get(`/bidwatcher_auction/query_2v`, {
                     params: {
                         search: searchParams.join(','),
                     }
                 });
-                this.isLoadingPreviewData = false
                 // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
+                this.isLoadingPreviewData = false
                 console.log(response);
                 this.previewData = response.data.items[0];
                 this.$nextTick(() => {
                     (this.$refs.previewdata as any).scrollIntoView({ behavior: 'smooth' })
                 })
             } catch (error) {
+                this.isLoadingPreviewData = false
                 console.error('Preview dataset error:', error);
             }
-        },
-        getBrandsSearchParams() {
-            return `brand_name:${this.selectedBrands.join('|')}`
-        },
-        getPeriodsSearchParams() {
-            return this.selectedPeriods.length > 0 ? `age_name:${this.selectedPeriods.join('|')}` : ''
-        },
-        getColorsSearchParams() {
-            return this.selectedColors.length > 0 ? `color_name:${this.selectedColors.join('|')}` : ''
         }
     },
     computed: {
@@ -355,7 +355,7 @@ export default {
                 this.colorIsSelected,
                 this.miscellaneousIsSelected,
             ]
-            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) >= 3
+            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) >= 1
         }
     }
 };
