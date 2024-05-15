@@ -126,13 +126,13 @@ function resetFilter() {
                                     v-for="family in availableFamilies" 
                                     :key="family" 
                                     cols="12" sm="6" md="4" lg="3">
-                                    <div
+                                    <button
                                     :class="{ 'selected': families.includes(family) }" 
-                                    class="m-3" 
+                                    class="m-3 cursor-pointer" 
                                     style="font-size: 16px;" 
                                     @click="toggleValueInArray(families, family)">
                                         {{ family }}
-                                    </div>
+                                    </button>
                                 </v-col>
                             </v-row>
                         </div>

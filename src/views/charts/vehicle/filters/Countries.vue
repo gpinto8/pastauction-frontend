@@ -80,7 +80,7 @@ function resetFilter() {
                             </v-col>
                         </v-row>
                         <v-row class="letter-button border-brand" color="black" text>
-                            <div
+                            <button
                                 v-for="flag in countriesOfContinent" 
                                 :key="flag" 
                                 class="flex-center object-cover grid"
@@ -92,7 +92,7 @@ function resetFilter() {
                                     @click="toggleValueInArray(countries, flag.country_brand_name)">
                                         <v-img :src="getImageUrl(flag.country_brand_name)" cover class="w-full h-full"/>
                                     </div>
-                            </div>
+                            </button>
                         </v-row>
                     </div>
                 </div>

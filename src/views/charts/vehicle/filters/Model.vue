@@ -47,7 +47,7 @@ function resetFilter() {
             <div  class="flex flex-col" no-gutters>
                 <p v-if="families.length == 0">Please, select the Family of your interest first.</p>
                 <div v-else class="flex letter-button border-brand" color="black" text no-gutters>
-                    <div class="flex flex-col"
+                    <button class="flex flex-col"
                         v-for="model in modelList" 
                         :key="model">
                         <div href="#" 
@@ -57,11 +57,11 @@ function resetFilter() {
                             @click="toggleValueInArray(models, model)">
                             {{ model }}
                         </div>
-                    </div>
+                    </button>
                 </div>
                 <div class="mt-3">
                     <v-chip
-                        v-for="(model, index) in models"
+                        v-for="model in models"
                         :key="model"
                         class="m-2"
                         closable

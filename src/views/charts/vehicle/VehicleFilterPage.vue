@@ -385,7 +385,6 @@ export default {
     }
 }
 
-
 .filters-grid-selection{
     @apply  grid gap-2 grid-cols-2 
             sm:grid-cols-3 
