@@ -93,7 +93,7 @@
             </GenericFilter>
             <div class="flex flex-col space-y-2 mt-5 
                         sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
-                <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()">Preview data set</v-btn>
+                <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()" :disabled="!canPreviewData">Preview data set</v-btn>
             </div>
             <div v-if="previewData != null" class="flex flex-col">
                 <PreviewData :data="previewData"/>
@@ -158,7 +158,6 @@ export default {
             periods: [] as any[],
             selectedPeriods: [] as string[],
             colorsFamilies: [] as any[],
-            selectedColour: [] as string[],
             selectedColors: [] as string[] ,
             miscOptionsSold: ['Sold', 'Not sold'] as MiscSoldType[],
             miscOptionsQuote: ['Quoted', 'Not quoted'] as MiscQuoteType[],
@@ -292,17 +291,51 @@ export default {
         }
     },
     computed: {
-        attributeSelected() {
+        brandIsSelected() {
+            return this.selectedBrands.length > 0
+        },
+        familyIsSelected() {
+            return this.selectedFamilies.length > 0
+        },
+        modelsAreSelected() {
+            return this.selectedModelFull.length > 0
+        },
+        coutriesAreSelected() {
+            return this.selectedCountries.length > 0
+        },
+        typeIsSelected() {
+            return this.types.length > 0
+        },
+        attributesAreSelected() {
             return this.selectedAttributes.length > 0
         },
-        periodSelected() {
+        periodIsSelected() {
             return this.selectedPeriods.length > 0
         },
-        colourSelected() {
-            return this.selectedColour.length > 0
-        },
-        colorSelected() {
+        colorIsSelected() {
             return this.selectedColors.length > 0
+        },
+        miscellaneousIsSelected() {
+            for (const key in this.selectedMiscellaneous) {
+                if (this.selectedMiscellaneous[key as keyof MiscSelections] != null) return true
+            }
+            return false
+        },
+        canPreviewData() {
+            const selectedConditions = [
+                this.brandIsSelected,
+                this.familyIsSelected,
+                this.modelsAreSelected,
+                this.coutriesAreSelected,
+                this.typeIsSelected,
+                this.attributesAreSelected,
+                this.attributesAreSelected,
+                this.periodIsSelected,
+                this.colorIsSelected,
+                this.miscellaneousIsSelected,
+            ]
+
+            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) > 3
         }
     }
 };
