@@ -95,13 +95,25 @@
                         sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
                 <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()" :disabled="!canPreviewData">Preview data set</v-btn>
             </div>
-            <div :class="previewData == null ? 'hidden' : 'block'" class="flex flex-col" ref="previewdata">
-                <PreviewData :data="previewData"/>
-                <div class="flex flex-col justify-end sm:flex-row sm:space-x-2 mt-5">
-                    <v-btn size="default" height="40" class="rounded-md w-full sm:w-32 mb-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
-                    <RouterLink :to="{ name: 'Brand'} ">
-                        <v-btn size="default" height="40" class="rounded-md w-full sm:w-32" color="black">Request chart</v-btn>
-                    </RouterLink>
+            <div ref="previewdata">
+                <v-container fluid v-if="isLoadingPreviewData">
+                    <div class="m-5 d-flex align-center justify-center h-96">
+                        <v-progress-circular
+                            :size="70"
+                            :width="7"
+                            color="primary"
+                            indeterminate
+                        ></v-progress-circular>
+                    </div>
+                </v-container>
+                <div v-else :class="previewData == null ? 'hidden' : 'block'" class="flex flex-col">
+                    <PreviewData :data="previewData"/>
+                    <div class="flex flex-col justify-end sm:flex-row sm:space-x-2 mt-5">
+                        <v-btn size="default" height="40" class="rounded-md w-full sm:w-32 mb-2" variant="outlined" color="black" @click="$router.push({ name: 'Charts' });">Back</v-btn>
+                        <RouterLink :to="{ name: 'Brand'} ">
+                            <v-btn size="default" height="40" class="rounded-md w-full sm:w-32" color="black">Request chart</v-btn>
+                        </RouterLink>
+                    </div>
                 </div>
             </div>
     </v-container>
@@ -109,18 +121,17 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios';
+import PeriodsFilter from '../components/filters/Periods.vue';
+import GenericFilter from '../components/GenericFilter.vue';
+import PreviewData from '../previewData/PreviewData.vue';
+import AttributesFilter from './filters/Attributes.vue';
 import BrandFilter from './filters/BrandFilter.vue';
+import ColorsFilter from './filters/Colors.vue';
+import CountriesFilter from './filters/Countries.vue';
 import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
-import AttributesFilter from './filters/Attributes.vue';
-import PeriodsFilter from '../components/filters/Periods.vue';
-import ColorsFilter from './filters/Colors.vue';
-import axios from 'axios';
-import CountriesFilter from './filters/Countries.vue';
-import GenericFilter from '../components/GenericFilter.vue';
-import PreviewData from '../previewData/PreviewData.vue';
-import { nextTick } from 'process';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -175,6 +186,7 @@ export default {
             loading: true,
             selectedCountries: [] as any[],
             previewData: null as any,
+            isLoadingPreviewData: false
         };
     },
     mounted() {
@@ -258,11 +270,16 @@ export default {
         },
         async previewDataset() {
             
+            this.isLoadingPreviewData = true
             let searchParams = [
                 this.getBrandsSearchParams(),
                 this.getPeriodsSearchParams(),
                 this.getColorsSearchParams(),
             ]
+
+            this.$nextTick(() => {
+                (this.$refs.previewdata as any).scrollIntoView({ behavior: 'smooth' })
+            })
 
             // Filter empty params
             searchParams = searchParams.filter(param => param != '')
@@ -273,6 +290,7 @@ export default {
                         search: searchParams.join(','),
                     }
                 });
+                this.isLoadingPreviewData = false
                 // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
                 console.log(response);
                 this.previewData = response.data.items[0];
