@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="T extends { [key: string]: { name: string, value: string }[] }">
+import { defineModel } from 'vue';
 import GenericFilter from '../../components/GenericFilter.vue';
-import { reactive, defineModel } from 'vue';
-import { wait } from '../../../../utils/functions/wait';
 
 const props = defineProps<{
     filterName?: string,
@@ -21,6 +20,7 @@ function toggleSelection(optionName: keyof T, value: string) {
 <template>
     <GenericFilter :filterName="filterName || 'Miscellaneous'">
         <div class="flex flex-wrap flex-col sm:flex-row">
+            <!-- @vue-ignore -->
             <div class="flex flex-wrap mb-4 sm:mb-0 sm:mr-4" v-for="(misc, optionName) of props.miscellaneousOptions">
                 <!-- {{ optionName }} - {{ misc }} -->
                 <v-btn
