@@ -1,0 +1,2 @@
+#!/bin/bash
+# No-op script to prevent double pushing of the Docker image
