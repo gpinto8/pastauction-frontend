@@ -46,7 +46,7 @@
                 :familiesOfTypes="typesFamilies"
             />
             <AttributesFilter v-model="selectedAttributes" :attributes="attributes" ref="attributesFilter"/>
-            <PeriodsFilter v-model="selectedPeriods" :periods="periods" ref="periodsFilter"/>
+            <PeriodsFilter v-model="selectedPeriods" ref="periodsFilter"/>
             <ColorsFilter v-model="selectedColors" :colorFamilies="colorsFamilies" ref="colorsFilter"/>
             <GenericFilter filterName="Miscellaneous" class="flex">
                 <div class="flex flex-wrap" no-gutters>
@@ -194,7 +194,7 @@ export default {
         Promise.all([
         this.fetchContinents(),
         this.fetchAttributes(),
-        this.fetchPeriods(),
+        // this.fetchPeriods(),
         this.fetchColorsFamilies(),
         this.fetchType(),
         ]).then(() => {
