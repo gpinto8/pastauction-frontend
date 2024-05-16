@@ -8,7 +8,7 @@
                 <v-row justify="center">
                     <v-col cols="12">
                     <div class="text-center text-black">
-                        <h3><strong>Brand Filter</strong></h3>
+                        <h3><strong>{{ chartStore.selectedChartCategory }} Filter</strong></h3>
                     </div>
                     </v-col>
                 </v-row>
@@ -133,6 +133,7 @@ import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
 import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/maison/maisonSearchParams';
+import { useChartsStore } from '@/store/charts/charts';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -159,6 +160,7 @@ export default {
     },
     data() {
         return {
+            chartStore: useChartsStore(),
             selectedBrands: [] as string[],
             selectedContinent: null as null | string,
             attributes: [] as any[],
