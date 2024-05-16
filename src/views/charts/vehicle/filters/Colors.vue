@@ -137,11 +137,15 @@ function resetFilter() {
         <GenericFilter filterName="Colors">
             <div class="flex flex-col">
                 <div class="filters-grid-selection">
+                    <!-- :variant="selectedColorFamilies.includes(color.name) ? 'elevated' : 'outlined'" -->
+                    <!-- :color="selectedColorFamilies.includes(color.name) ? 'black' : ''" -->
                     <v-btn v-for="color in availableColors" :key="color.code" class="letter-button selection"
-                        :variant="selectedColorFamilies.includes(color.name) ? 'elevated' : 'outlined'"
+                        variant="outlined"
                         @click="toggleValueInArray(selectedColorFamilies, color.name)"
-                        :color="selectedColorFamilies.includes(color.name) ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px;">
+                        style="min-width: 20px; margin: 2px;"
+                        :style="{
+                            backgroundColor: selectedColorFamilies.includes(color.name) ? `${color.hex}` : 'transparent'
+                        }">
                         {{ color.name }}
                     </v-btn>
                 </div>
