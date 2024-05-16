@@ -141,7 +141,7 @@ function resetFilter() {
                         :variant="selectedColorFamilies.includes(color.name) ? 'elevated' : 'outlined'"
                         @click="toggleValueInArray(selectedColorFamilies, color.name)"
                         :color="selectedColorFamilies.includes(color.name) ? 'black' : ''"
-                        style="min-width: 20px; margin: 2px; font-size: 10px;">
+                        style="min-width: 20px; margin: 2px;">
                         {{ color.name }}
                     </v-btn>
                 </div>
@@ -165,11 +165,11 @@ function resetFilter() {
                                         sm:grid-cols-3 
                                         md:grid-cols-4
                                         lg:grid-cols-8">
-                                <v-btn v-for="color in getColorsOfFamily(family)" :key="color.code"
-                                    class="letter-button"
-                                    :variant="colors.includes(color.name) ? 'elevated' : 'outlined'"
+                                    <v-btn v-for="color in getColorsOfFamily(family)" :key="color.code"
+                                        class="letter-button"
+                                        :variant="colors.includes(color.name) ? 'outlined' : 'text'"
                                     @click="toggleValueInArray(colors, color.name)" color="black"
-                                    style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;" :style="{
+                                    style="min-width: 20px; margin: 2px; border-radius: 0px;" :style="{
                                         backgroundColor: color.hex
                                     }">
                                     {{ color.name }}
@@ -183,8 +183,8 @@ function resetFilter() {
     </div>
 </template>
 
-<style>
-.v-chip__content{
-    mix-blend-mode: difference;
+<style scoped>
+.letter-button{
+    font-size: 15px
 }
 </style>
