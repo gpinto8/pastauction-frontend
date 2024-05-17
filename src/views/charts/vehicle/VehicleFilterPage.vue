@@ -186,7 +186,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: true,
+            loading: false,
             selectedCountries: [] as any[],
             previewData: null as any,
             isLoadingPreviewData: false
@@ -368,7 +368,8 @@ export default {
 
 .letter-button{
     text-transform: capitalize;
-    font-size: 15px !important;
+    font-size: 13px !important;
+    @apply !h-8 !rounded-[3.2px]
 }
 
 .custom-chip {

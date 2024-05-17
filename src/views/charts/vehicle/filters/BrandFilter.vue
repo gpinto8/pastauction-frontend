@@ -60,11 +60,11 @@ function resetFilter() {
                     <v-btn
                         v-for="letter in alphabet"
                         :key="letter"
-                        class="letter-button !w-10 !h-10"
+                        class="letter-button !h-10 aspect-square"
                         :variant="selectedBrandInitial === letter ? 'elevated' : 'outlined'"
                         @click="selectedBrandInitial = letter"
                         color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px"
+                        style="min-width: 20px; margin: 2px; border-radius: 2px !important"
                         >
                         {{ letter }}
                     </v-btn>
@@ -76,11 +76,11 @@ function resetFilter() {
                         <v-btn
                             v-for="coupleLetters in brandsCoupleLetters" 
                             :key="coupleLetters"
-                            class="letter-button w-10 h-10"
+                            class="letter-button h-10 aspect-square"
                             :variant="selectedBrandFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
                             @click="selectedBrandFirstTwoLetters = coupleLetters"
                             color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                            style="min-width: 20px; margin: 2px; border-radius: 2px !important; font-size: 10px;"
                         >
                             {{ coupleLetters }}
                         </v-btn>
@@ -113,7 +113,7 @@ function resetFilter() {
                             :key="brand"
                             class="flex-center text-center"
                             :class="{ 'selected': selectedBrandNames.includes(brand) }" 
-                            style="font-size: 16px;" 
+                            style="font-size: 16px; border-radius: 2px !important" 
                             @click="toggleValueInArray(selectedBrandNames, brand)">
                                 {{ brand }}
                             </button>

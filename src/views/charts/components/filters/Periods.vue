@@ -40,7 +40,7 @@ function resetFilter() {
                 <v-btn
                     v-for="(period, name) of periods"
                     :key="name"
-                    class="letter-button selection !h-14"
+                    class="capitalize selection !h-14 !text-[13px] text-left"
                     :variant="selectedPeriods.includes(name) ? 'elevated' : 'outlined'"
                     @click="toggleValueInArray(selectedPeriods, name)"
                     :color="selectedPeriods.includes(name) ? 'black' : ''"
@@ -51,7 +51,7 @@ function resetFilter() {
                             {{ name }}
                         </div>
                         <div>
-                            {{ period.startYear }} - {{ period.endYear }}
+                            {{ name == 'N/A' ? 'none' : `${period.startYear} - ${period.endYear}` }}
                         </div>
                     </div>
                 </v-btn>
