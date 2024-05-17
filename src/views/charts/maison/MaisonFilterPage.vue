@@ -131,6 +131,12 @@ function clearFilters() {
 </template>
 
 <style>
+
+.letter-button{
+    text-transform: capitalize;
+    font-size: 15px !important;
+}
+
 .custom-chip {
   @apply w-full bg-blue-500 rounded-md flex justify-center items-center text-white
 }
