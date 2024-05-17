@@ -2,6 +2,11 @@
 import { ref } from 'vue';
 import GenericFilter from '../../components/GenericFilter.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
+import { emptyArray } from '@/utils/functions/EmptyArray';
+
+defineExpose({
+    resetFilter
+})
 
 const months = [
   "Gen",
@@ -19,6 +24,11 @@ const months = [
 ];
 
 const selectedMonths = defineModel<string[]>({ required: true })
+
+function resetFilter() {
+    emptyArray(selectedMonths.value)
+}
+
 </script>
 
 <template>

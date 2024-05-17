@@ -22,6 +22,7 @@ const periods = ref<string[]>([])
 const auctioYearFilter = ref(null)
 const selectedYears = ref<number[]>([])
 
+const monthFilter = ref(null)
 const selectedMonths = ref<string[]>([])
 
 const miscOptions = reactive({
@@ -43,6 +44,7 @@ Promise.all([fetchPeriods()])
 
 function clearFilters() {
     (auctioYearFilter.value as any).resetFilter();
+    (monthFilter.value as any).resetFilter();
 }
 
 </script>
@@ -81,7 +83,7 @@ function clearFilters() {
             <Maison v-model="selectedMaisonNames"/>
             <AuctionCity v-model="selectedCityNames"/>
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter"/>
-            <Month v-model="selectedMonths"/>
+            <Month v-model="selectedMonths" ref="monthFilter"/>
             <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods"/>
             <Miscellaneous :miscellaneousOptions="{
                 soldStatus: [{
