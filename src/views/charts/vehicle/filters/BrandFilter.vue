@@ -57,17 +57,17 @@ function resetFilter() {
         <div class="flex flex-col">
             <v-row justify="start" class="align-center" no-gutters>
                 <v-col class="d-flex flex-wrap align-center" no-gutters>
-                    <v-btn
+                    <button
                         v-for="letter in alphabet"
                         :key="letter"
-                        class="letter-button !h-10 aspect-square"
+                        class="h-7 w-7 !border-black border"
                         :variant="selectedBrandInitial === letter ? 'elevated' : 'outlined'"
                         @click="selectedBrandInitial = letter"
                         color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 2px !important"
+                        style="margin: 2px; border-radius: 2px !important"
                         >
                         {{ letter }}
-                    </v-btn>
+                    </button>
                 </v-col>
             </v-row>
             <v-row justify="start" class="align-center mt-0">

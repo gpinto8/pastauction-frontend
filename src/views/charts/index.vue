@@ -1,6 +1,6 @@
 <template>
     <div class="mt-5 w-full flex-center">
-        <div class="max-w-[1000px]">
+        <div class="max-w-[100px]">
             <v-container fluid>
                 <v-alert>
                     <v-row justify="center">

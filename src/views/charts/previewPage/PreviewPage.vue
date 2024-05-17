@@ -1,5 +1,5 @@
 <template>
-    <div class="m-5 max-w-[1000px] m-auto">
+    <div class="m-5 max-w-[2000px] m-auto">
         <v-container fluid>
             <v-alert :color="alertColor">
                 <v-row justify="center">

@@ -186,7 +186,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: false,
+            loading: true,
             selectedCountries: [] as any[],
             previewData: null as any,
             isLoadingPreviewData: false
@@ -373,7 +373,7 @@ export default {
 }
 
 .custom-chip {
-  @apply w-full bg-blue-500 rounded-md flex justify-center items-center text-white
+  @apply w-full bg-blue-500 rounded-[3.2px] flex justify-center items-center text-white
 }
 
 .custom-light-chip{
