@@ -73,17 +73,17 @@ function resetFilter() {
             <v-row justify="start" class="align-center mt-0">
                 <v-col class="d-flex flex-wrap align-center pt-0">
                     <div :class="{ 'd-block': selectedBrandInitial, 'd-none': !selectedBrandInitial }" class="mt-3" justify="start" >
-                        <v-btn
+                        <button
                             v-for="coupleLetters in brandsCoupleLetters" 
                             :key="coupleLetters"
-                            class="letter-button h-10 aspect-square"
+                            class="h-7 w-7 !border-black border"
                             :variant="selectedBrandFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
                             @click="selectedBrandFirstTwoLetters = coupleLetters"
                             color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 2px !important; font-size: 10px;"
+                            style="margin: 2px; border-radius: 2px !important"
                         >
                             {{ coupleLetters }}
-                        </v-btn>
+                        </button>
                     </div>
                 </v-col>
             </v-row>
