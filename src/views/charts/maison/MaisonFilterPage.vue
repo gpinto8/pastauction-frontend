@@ -11,7 +11,7 @@ import { useChartsStore } from '@/store/charts/charts';
 
 const chartStore = useChartsStore()
 
-const loading = ref<boolean>(true)
+const loading = ref<boolean>(false)
 
 const selectedMaisonNames = ref<string[]>([])
 const selectedCityNames = ref<string[]>([])
@@ -19,6 +19,7 @@ const selectedCityNames = ref<string[]>([])
 const selectedPeriods = ref<string[]>([])
 const periods = ref<string[]>([])
 
+const auctioYearFilter = ref(null)
 const selectedYears = ref<number[]>([])
 
 const selectedMonths = ref<string[]>([])
@@ -41,7 +42,7 @@ Promise.all([fetchPeriods()])
 })
 
 function clearFilters() {
-    
+    (auctioYearFilter.value as any).resetFilter();
 }
 
 </script>
@@ -79,7 +80,7 @@ function clearFilters() {
         <div class="flex flex-col space-y-7" v-else>
             <Maison v-model="selectedMaisonNames"/>
             <AuctionCity v-model="selectedCityNames"/>
-            <AuctionYear v-model="selectedYears"/>
+            <AuctionYear v-model="selectedYears" ref="auctioYearFilter"/>
             <Month v-model="selectedMonths"/>
             <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods"/>
             <Miscellaneous :miscellaneousOptions="{

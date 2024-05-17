@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import GenericFilter from '../../components/GenericFilter.vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
+import { emptyArray } from '@/utils/functions/EmptyArray';
+
+defineExpose({
+    resetFilter
+})
 
 type TimeFrame = {
     startYear: number,
@@ -41,6 +46,11 @@ const timeFrames: TimeFrame[] = [
 
 const selectedTimeFrame = ref<TimeFrame | null>(null)
 const selectedYears = defineModel<number[]>({ required: true })
+
+function resetFilter() {
+    selectedTimeFrame.value = null
+    emptyArray(selectedYears.value)
+}
 
 </script>
 
