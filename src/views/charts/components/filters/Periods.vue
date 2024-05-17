@@ -44,7 +44,7 @@ function resetFilter() {
                     :variant="selectedPeriods.includes(name) ? 'elevated' : 'outlined'"
                     @click="toggleValueInArray(selectedPeriods, name)"
                     :color="selectedPeriods.includes(name) ? 'black' : ''"
-                    style="min-width: 20px; margin: 2px; font-size: 10px;"
+                    style="min-width: 20px; margin: 2px; font-size: 10px; height: 50px !important; font-family: sans-serif !important"
                 >
                     <div class="flex flex-col">
                         <div>

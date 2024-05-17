@@ -186,7 +186,7 @@ export default {
             selectedFamilies: [] as string[],
             selectedModelFull: [] as string[],
             selectedCategoryName: [] as any[],
-            loading: true,
+            loading: false,
             selectedCountries: [] as any[],
             previewData: null as any,
             isLoadingPreviewData: false
@@ -219,7 +219,8 @@ export default {
         async fetchType() {
             try {
                 const response = await axios.get('/filter/filter_charts_vehicles/body_type/');
-                this.typesFamilies = response.data.items; 
+                // Remove attributes from family types 🤷‍♀️
+                this.typesFamilies = response.data.items.filter((el: any) => el.body_type != 'Attribute');
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
@@ -369,19 +370,15 @@ export default {
 .letter-button{
     text-transform: capitalize;
     font-size: 14px !important;
-    @apply !h-8 !rounded-[3.2px]
+    @apply !h-8 !rounded-[2.8px]
 }
 
 .custom-chip {
-  @apply w-full bg-blue-500 rounded-[3.2px] flex justify-center items-center text-white
+  @apply w-full bg-blue-500 rounded-[2.5px] flex justify-center items-center text-white
 }
 
 .custom-light-chip{
     @apply bg-white text-blue-500 border border-blue-500
-}
-
-.selection {
-    @apply rounded-md 
 }
 
 @media screen(sm) {

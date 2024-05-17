@@ -56,7 +56,7 @@ function resetFilter() {
                         :variant="selectedContinent === country.country_brand_area ? 'elevated' : 'outlined'"
                         @click="selectedContinent = country.country_brand_area"
                         color="black"
-                        style="min-width: 20px; margin: 2px; font-size: 10px;"
+                        style="min-width: 20px; margin: 2px; font-size: 10px"
                     >
                         {{ country.country_brand_area }}
                     </v-btn>

@@ -18,7 +18,8 @@ const toggle = ref(false)
                 <img v-else src="@/assets/icons/arrow_with_base_blue.svg" type="arrow_with_base" class="transition-transform duration-500" style="width: 100%" :class="toggle == true ? 'rotate-180' : 'rotate-0'"/>
             </div> 
         </div>
-        <div class="grid sm:block grid-rows-[0fr] transition-[grid-template-rows] duration-500 w-full" :class="toggle ? 'grid-rows-[1fr]' : ''">
+        <div class="grid sm:block grid-rows-[0fr] transition-[grid-template-rows] duration-500 w-full" :class="toggle ? 'grid-rows-[1fr]' : ''"
+            style="font-family: sans-serif">
             <div class="flex flex-col overflow-hidden transition-[padding] duration-500 w-full" :class="toggle == true ? 'pt-3 sm:pt-0' : ''">
                 <slot></slot>
             </div>
