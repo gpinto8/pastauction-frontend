@@ -18,7 +18,7 @@ function toggleSelection(optionName: keyof T, value: string) {
 </script>
 
 <template>
-    <GenericFilter :filterName="filterName || 'Miscellaneous'">
+    <GenericFilter :filterName="filterName || 'Miscellaneous'" light>
         <div class="flex flex-wrap flex-col sm:flex-row">
             <!-- @vue-ignore -->
             <div class="flex flex-wrap mb-4 sm:mb-0 sm:mr-4" v-for="(misc, optionName) of props.miscellaneousOptions">
