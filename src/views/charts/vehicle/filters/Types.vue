@@ -60,7 +60,7 @@ const selectedCategoryName = defineModel<string | null>('selectedCategory', { re
 
 function resetFilter() {
     selectedFamilyName.value = null
-    selectedCategoryName.value = null
+    emptyReactiveObject(bodyShapesByCategory)
     emptyArray(types.value)
 }
 </script>
@@ -84,7 +84,7 @@ function resetFilter() {
                 </div>
                 <v-row justify="start" class="align-center mt-0">
                     <v-col class="d-flex flex-wrap align-center pt-0">
-                        <div :class="{ 'd-block': selectedCategoryName, 'd-none': !selectedCategoryName }" class="mt-3 w-full">
+                        <div class="mt-3 w-full">
                             <v-row justify="start" class="align-center w-full">
                                 <v-col
                                 >
@@ -112,6 +112,9 @@ function resetFilter() {
                                     ></v-progress-circular>
                                 </div>
                             </v-container>
+                            <div v-else-if="selectedFamilyName == null">
+                                <!-- Don't show anything if no family name is selected -->
+                            </div>
                             <div v-else class="flex border rounded-md w-full p-5 space-x-8">
                                 <div v-for="(bodyShapes, value) in bodyShapesByCategory">
                                     <div class="font-semibold text-xl mb-3">{{ value }}</div>
