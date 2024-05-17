@@ -38,7 +38,7 @@ watch(selectedFamilyName, async () => {
     let categoriesOfFamily = (await categoryOfFamilyType(selectedFamilyName.value)).data.items.map((el: any) => el.body_category)
     // Retrieve for each category its own list of body shapes
     let results = (await Promise.all(categoriesOfFamily.map((categoryName: any) => {
-        return bodyShapeOfCategoryType(categoryName, selectedFamilyName.value)
+        return bodyShapeOfCategoryType(categoryName, selectedFamilyName.value!)
     })))
     .map((response: any) => response.data.items)
     .map((bodyShapes: any) => bodyShapes.map((bodyShape: any) => bodyShape.body_shape) )
@@ -69,7 +69,7 @@ function resetFilter() {
     <div class="flex flex-col">
         <GenericFilter filterName="Types">
             <div class="flex flex-col">
-                <div class="filters-grid-selection">
+                <div class="filters-grid-selection lg:!space-x-4">
                     <v-btn
                         v-for="type in familiesOfTypes"
                         :key="type.body_type"

@@ -368,7 +368,7 @@ export default {
 
 .letter-button{
     text-transform: capitalize;
-    font-size: 13px !important;
+    font-size: 14px !important;
     @apply !h-8 !rounded-[3.2px]
 }
 

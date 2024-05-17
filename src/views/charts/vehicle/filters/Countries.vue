@@ -48,7 +48,7 @@ function resetFilter() {
     <div>
         <GenericFilter filterName="Countries" class="flex">
             <div class="flex flex-col">
-                <div class="filters-grid-selection">
+                <div class="filters-grid-selection lg:!space-x-4">
                     <v-btn
                         v-for="country in props.continents"
                         :key="country.country_brand_area"
@@ -79,7 +79,7 @@ function resetFilter() {
                                 </v-chip>
                             </v-col>
                         </v-row>
-                        <v-row class="letter-button border-brand" color="black" text>
+                        <v-row class="border-brand" color="black" text>
                             <button
                                 v-for="flag in countriesOfContinent" 
                                 :key="flag" 
