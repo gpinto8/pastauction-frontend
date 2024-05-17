@@ -2,6 +2,10 @@
 import { defineModel } from 'vue';
 import GenericFilter from '../../components/GenericFilter.vue';
 
+defineExpose({
+    resetFilter
+})
+
 const props = defineProps<{
     filterName?: string,
     miscellaneousOptions: T
@@ -13,6 +17,10 @@ const selection = defineModel<{
 
 function toggleSelection(optionName: keyof T, value: string) {
     selection.value[optionName] = selection.value[optionName] == value ? null : value
+}
+
+function resetFilter() {
+    for(let key in selection.value) selection.value[key] = null
 }
 
 </script>

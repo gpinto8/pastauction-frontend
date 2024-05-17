@@ -16,6 +16,7 @@ const loading = ref<boolean>(false)
 const selectedMaisonNames = ref<string[]>([])
 const selectedCityNames = ref<string[]>([])
 
+const periodsFilter = ref(null)
 const selectedPeriods = ref<string[]>([])
 const periods = ref<string[]>([])
 
@@ -25,6 +26,7 @@ const selectedYears = ref<number[]>([])
 const monthFilter = ref(null)
 const selectedMonths = ref<string[]>([])
 
+const miscFilter = ref(null)
 const miscOptions = reactive({
     soldStatus: null,
     quotedStats: null,
@@ -45,6 +47,8 @@ Promise.all([fetchPeriods()])
 function clearFilters() {
     (auctioYearFilter.value as any).resetFilter();
     (monthFilter.value as any).resetFilter();
+    (periodsFilter.value as any).resetFilter();
+    (miscFilter.value as any).resetFilter();
 }
 
 </script>
@@ -84,8 +88,11 @@ function clearFilters() {
             <AuctionCity v-model="selectedCityNames"/>
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter"/>
             <Month v-model="selectedMonths" ref="monthFilter"/>
-            <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods"/>
-            <Miscellaneous :miscellaneousOptions="{
+            <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods" ref="periodsFilter"/>
+            <Miscellaneous 
+            v-model="miscOptions"
+            ref="miscFilter"
+            :miscellaneousOptions="{
                 soldStatus: [{
                         name: 'Sold',
                         value: 'sold'
@@ -128,7 +135,7 @@ function clearFilters() {
                     { name: 'USD', value: 'usd' },
                 ]
             }"
-            v-model="miscOptions"/>
+            />
         </div>
     </div>
 </template>
