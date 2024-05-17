@@ -2,8 +2,10 @@
 import { emptyArray } from '@/utils/functions/EmptyArray';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import axios from 'axios';
-import { defineModel, ref, watch } from 'vue';
+import { defineModel, reactive, ref, watch } from 'vue';
 import GenericFilter from '../../components/GenericFilter.vue'
+import { bodyShapeOfCategoryType, categoryOfFamilyType } from '@/api/filter/vehicles/vehicles';
+import { emptyReactiveObject } from '@/utils/functions/emptyReactiveObject';
 
 defineExpose({
     resetFilter
@@ -16,38 +18,45 @@ const types = defineModel<string[]>({ required: true })
 const selectedFamilyName = defineModel<string | null>('selectedFamily', { required: true })
 const categoriesOfSelectedFamily = ref<any[]>([])
 
+const bodyShapesByCategory = reactive<{ [key in string]: string[]}>({})
+const cacheBodyShapesByCategory = reactive<{ [key in string]: { [key in string]: string[]}}>({})
+const loadingBodyShapes = ref(false)
+
 watch(selectedFamilyName, async () => {
-    try {
-        const response = await axios.get('/filter/filter_charts_vehicles/body_category/', {
-            params: {
-                search: `body_type:${selectedFamilyName.value}`
-            }
-        });
-        categoriesOfSelectedFamily.value = response.data.items; 
-        
-    } catch (error) {
-        console.error('Errore nel recupero dei paesi:', error);
+    if (selectedFamilyName.value == null) return
+
+    emptyReactiveObject(bodyShapesByCategory)
+
+    // Don't request already request bodyshapes
+    if (cacheBodyShapesByCategory[selectedFamilyName.value] != null) {
+        Object.assign(bodyShapesByCategory, cacheBodyShapesByCategory[selectedFamilyName.value])
+        return
     }
+
+    loadingBodyShapes.value = true
+    // Find categories given the selected family name
+    let categoriesOfFamily = (await categoryOfFamilyType(selectedFamilyName.value)).data.items.map((el: any) => el.body_category)
+    // Retrieve for each category its own list of body shapes
+    let results = (await Promise.all(categoriesOfFamily.map((categoryName: any) => {
+        return bodyShapeOfCategoryType(categoryName)
+    })))
+    .map((response: any) => response.data.items)
+    .map((bodyShapes: any) => bodyShapes.map((bodyShape: any) => bodyShape.body_shape) )
+
+    for(let i = 0; i < categoriesOfFamily.length; i++) {
+        let categoryName = categoriesOfFamily[i]
+        bodyShapesByCategory[categoryName] = results[i]
+    }
+
+    loadingBodyShapes.value = false
+    
+    // Cache the result
+    if (cacheBodyShapesByCategory[selectedFamilyName.value] == null) 
+        cacheBodyShapesByCategory[selectedFamilyName.value] = {}
+    Object.assign(cacheBodyShapesByCategory[selectedFamilyName.value], bodyShapesByCategory)
 })
 
 const selectedCategoryName = defineModel<string | null>('selectedCategory', { required: true })
-const typesList = ref<any[]>([])
-
-async function selectCategoryType(type: string, categoryType: string) {
-    selectedFamilyName.value = type;
-    selectedCategoryName.value = categoryType;
-
-    try {
-        const response = await axios.get('/filter/filter_charts_vehicles/body_shape/', {
-                params: {
-                    search: `body_type:${type},body_category:${categoryType}`
-            }
-        });
-        typesList.value = response.data.items; 
-    } catch (error) {
-        console.error('Errore nel recupero dei paesi:', error);
-    }
-}
 
 function resetFilter() {
     selectedFamilyName.value = null
@@ -75,25 +84,8 @@ function resetFilter() {
                 </div>
                 <v-row justify="start" class="align-center mt-0">
                     <v-col class="d-flex flex-wrap align-center pt-0">
-                        <div :class="{ 'd-block': selectedFamilyName, 'd-none': !selectedFamilyName }" class="mt-3" justify="start" >
-                            <v-btn
-                                v-for="catType in categoriesOfSelectedFamily" 
-                                :key="catType.body_category"
-                                class="letter-button"
-                                :variant="selectedCategoryName === catType.body_category ? 'elevated' : 'outlined'"
-                                @click="selectedFamilyName != null ? selectCategoryType(selectedFamilyName, catType.body_category) : ''"
-                                color="black"
-                                style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
-                            >
-                                {{ catType.body_category }}
-                            </v-btn>
-                        </div>
-                    </v-col>
-                </v-row>
-                <v-row justify="start" class="align-center mt-0">
-                    <v-col class="d-flex flex-wrap align-center pt-0">
-                        <div :class="{ 'd-block': selectedCategoryName, 'd-none': !selectedCategoryName }" class="mt-3">
-                            <v-row justify="start" class="align-center">
+                        <div :class="{ 'd-block': selectedCategoryName, 'd-none': !selectedCategoryName }" class="mt-3 w-full">
+                            <v-row justify="start" class="align-center w-full">
                                 <v-col
                                 >
                                 <v-chip
@@ -110,20 +102,26 @@ function resetFilter() {
                                 </v-chip>
                                 </v-col>
                             </v-row>
-                            <v-row class="letter-button border-brand" color="black" text>
-                                <v-col 
-                                    v-for="categoryName in typesList" 
-                                    :key="categoryName.body_shape" 
-                                    cols="12" sm="6" md="4" lg="3">
-                                    <div 
-                                        class="m-3"
-                                        :class="{ 'selected': types.includes(categoryName.body_shape) }" 
-                                        style="font-size: 16px;" 
-                                        @click="toggleValueInArray(types, categoryName.body_shape)">
-                                        {{ categoryName.body_shape }}
+                            <v-container fluid v-if="loadingBodyShapes">
+                                <div class="m-5 d-flex align-center justify-center h-32">
+                                    <v-progress-circular
+                                        :size="70"
+                                        :width="7"
+                                        color="primary"
+                                        indeterminate
+                                    ></v-progress-circular>
+                                </div>
+                            </v-container>
+                            <div v-else class="flex border rounded-md w-full p-5 space-x-8">
+                                <div v-for="(bodyShapes, value) in bodyShapesByCategory">
+                                    <div class="font-semibold text-xl mb-3">{{ value }}</div>
+                                    <div class="flex flex-col border-gray-300 border-l-[2px] pl-2">
+                                        <div v-for="shape in bodyShapes" class="text-lg" @click="toggleValueInArray(types, shape)" :class="{ 'selected': types.includes(shape) }">
+                                            {{shape}}
+                                        </div>
                                     </div>
-                                </v-col>
-                            </v-row>
+                                </div>
+                            </div>
                         </div>
                     </v-col>
                 </v-row>
