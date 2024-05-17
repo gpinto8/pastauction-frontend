@@ -7,6 +7,9 @@ import { sendFilterRequest } from '@/api/filter/filterApi';
 import AuctionYear from './filters/AuctionYear.vue';
 import Month from './filters/Month.vue';
 import Miscellaneous from './filters/Miscellaneous.vue';
+import { useChartsStore } from '@/store/charts/charts';
+
+const chartStore = useChartsStore()
 
 const loading = ref<boolean>(true)
 
@@ -49,7 +52,7 @@ function clearFilters() {
             <v-row justify="center">
                 <v-col cols="12">
                     <div class="text-center text-black">
-                        <h3><strong>Auction Filter</strong></h3>
+                        <h3><strong>{{ chartStore.selectedChartCategory }} Filter</strong></h3>
                     </div>
                 </v-col>
             </v-row>
