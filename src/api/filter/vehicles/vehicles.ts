@@ -8,10 +8,10 @@ export function categoryOfFamilyType(familyName: string) {
     });
 }
 
-export function bodyShapeOfCategoryType(categoryName: string) {
+export function bodyShapeOfCategoryType(categoryName: string, familyName: string) {
     return axios.get('/filter/filter_charts_vehicles/body_shape/', {
         params: {
-            search: `body_category:${categoryName}`
+            search: `body_category:${categoryName},body_type:${familyName}`
         }
     });
 }

@@ -38,7 +38,7 @@ watch(selectedFamilyName, async () => {
     let categoriesOfFamily = (await categoryOfFamilyType(selectedFamilyName.value)).data.items.map((el: any) => el.body_category)
     // Retrieve for each category its own list of body shapes
     let results = (await Promise.all(categoriesOfFamily.map((categoryName: any) => {
-        return bodyShapeOfCategoryType(categoryName)
+        return bodyShapeOfCategoryType(categoryName, selectedFamilyName.value)
     })))
     .map((response: any) => response.data.items)
     .map((bodyShapes: any) => bodyShapes.map((bodyShape: any) => bodyShape.body_shape) )
