@@ -137,11 +137,10 @@ function resetFilter() {
         <GenericFilter filterName="Colors">
             <div class="flex flex-col">
                 <div class="filters-grid-selection">
-                    <!-- :variant="selectedColorFamilies.includes(color.name) ? 'elevated' : 'outlined'" -->
-                    <!-- :color="selectedColorFamilies.includes(color.name) ? 'black' : ''" -->
+                    <!-- I do @click="selectedColorFamilies[0] = color.name" because previously you were able to choose multiplt color families -->
                     <v-btn v-for="color in availableColors" :key="color.code" class="letter-button selection"
                         variant="outlined"
-                        @click="toggleValueInArray(selectedColorFamilies, color.name)"
+                        @click="selectedColorFamilies[0] = color.name"
                         style="min-width: 20px; margin: 2px;"
                         :style="{
                             backgroundColor: selectedColorFamilies.includes(color.name) ? `${color.hex}` : 'transparent'
