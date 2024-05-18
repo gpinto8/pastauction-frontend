@@ -27,7 +27,7 @@ function resetFilter() {
                 <v-btn
                     v-for="attribute in attributes"
                     :key="attribute.body_shape"
-                    class="letter-button selection lg:mr-4 lg:mb-2"
+                    class="letter-button selection lg:mr-2 lg:mb-2"
                     :variant="selectedAttributes.includes(attribute.body_shape) === true ? 'elevated' : 'outlined'"
                     @click="toggleValueInArray(selectedAttributes, attribute.body_shape)"
                     :color="selectedAttributes.includes(attribute.body_shape) === true ? 'black' : ''"
