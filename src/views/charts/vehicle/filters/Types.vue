@@ -25,6 +25,7 @@ const loadingBodyShapes = ref(false)
 watch(selectedFamilyName, async () => {
     if (selectedFamilyName.value == null) return
 
+    types.value = []
     emptyReactiveObject(bodyShapesByCategory)
 
     // Don't request already request bodyshapes
