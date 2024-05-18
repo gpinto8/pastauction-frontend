@@ -107,7 +107,7 @@ function resetFilter() {
                                 </v-chip>
                             </div>
                         </div>
-                        <div class="optionborder !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
+                        <div class="optionborder !border-black border option grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
                             <button
                             v-for="brand in brandList" 
                             :key="brand"
