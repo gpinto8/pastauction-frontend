@@ -367,10 +367,14 @@ export default {
 
 <style>
 
+.option{
+    @apply rounded-[2.8px]
+}
+
 .letter-button{
     text-transform: capitalize;
     font-size: 14px !important;
-    @apply !h-8 !rounded-[2.8px]
+    @apply !h-8 !rounded-[2.8px] transition-colors
 }
 
 .custom-chip {

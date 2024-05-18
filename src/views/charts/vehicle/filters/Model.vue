@@ -46,7 +46,7 @@ function resetFilter() {
         <GenericFilter filterName="Model" :light="true">
             <div  class="flex flex-col" no-gutters>
                 <p v-if="families.length == 0">Please, select the Family of your interest first.</p>
-                <div v-else class="flex letter-button border-brand" color="black" text no-gutters>
+                <div v-else class="option flex border-brand" color="black" text no-gutters>
                     <button class="flex flex-col"
                         v-for="model in modelList" 
                         :key="model">

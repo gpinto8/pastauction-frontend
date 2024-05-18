@@ -89,17 +89,15 @@ function resetFilter() {
                 <v-row justify="start" class="align-center">
                     <v-col class="d-flex flex-wrap align-center">
                         <p v-if="brands.length === 0">Please, select the Brand of your interest first.</p>
-                        <v-btn v-if="familyInitials.length > 0"
+                        <button v-if="familyInitials.length > 0"
                             v-for="familyInitial in familyInitials"
                             :key="'family_' + familyInitial"
-                            class="letter-button"
-                            :variant="selectedFamilyInitial === familyInitial ? 'elevated' : 'outlined'"
+                            class="!border-black border option m-[2px] !h-7 !w-7 transition-colors"
+                            :class="selectedFamilyInitial === familyInitial ? 'bg-black text-white' : ''"
                             @click="selectedFamilyInitial = familyInitial"
-                            color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
                             >
                             {{ familyInitial }}
-                        </v-btn>
+                        </button>
                     </v-col>
                 </v-row>
                 <div class="flex align-center mt-0 w-full">
@@ -121,7 +119,7 @@ function resetFilter() {
                                     </v-chip>
                                 </div>
                             </div>
-                            <v-row class="letter-button border-brand" color="black" text no-gutters>
+                            <v-row class="option border-brand" color="black" text no-gutters>
                                 <v-col no-gutters 
                                     v-for="family in availableFamilies" 
                                     :key="family" 

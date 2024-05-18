@@ -61,7 +61,7 @@ function resetFilter() {
                         v-for="letter in alphabet"
                         :key="letter"
                         class="h-7 w-7 !border-black border"
-                        :variant="selectedBrandInitial === letter ? 'elevated' : 'outlined'"
+                        :class="selectedBrandInitial === letter ? 'bg-black text-white' : ''"
                         @click="selectedBrandInitial = letter"
                         color="black"
                         style="margin: 2px; border-radius: 2px !important"
@@ -77,7 +77,7 @@ function resetFilter() {
                             v-for="coupleLetters in brandsCoupleLetters" 
                             :key="coupleLetters"
                             class="h-7 w-7 !border-black border"
-                            :variant="selectedBrandFirstTwoLetters === coupleLetters ? 'elevated' : 'outlined'"
+                            :class="selectedBrandFirstTwoLetters === coupleLetters ? 'bg-black text-white' : ''"
                             @click="selectedBrandFirstTwoLetters = coupleLetters"
                             color="black"
                             style="margin: 2px; border-radius: 2px !important"
@@ -107,7 +107,7 @@ function resetFilter() {
                                 </v-chip>
                             </div>
                         </div>
-                        <div class="border !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
+                        <div class="optionborder !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
                             <button
                             v-for="brand in brandList" 
                             :key="brand"
