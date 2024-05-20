@@ -120,7 +120,7 @@ function resetFilter() {
                                 <div v-for="(bodyShapes, value) in bodyShapesByCategory">
                                     <div class="font-semibold text-xl mb-3">{{ value }}</div>
                                     <div class="flex flex-col border-gray-300 border-l-[2px] pl-2">
-                                        <div v-for="shape in bodyShapes" class="text-lg" @click="toggleValueInArray(types, shape)" :class="{ 'selected': types.includes(shape) }">
+                                        <div v-for="shape in bodyShapes" class="text-lg cursor-pointer" @click="toggleValueInArray(types, shape)" :class="{ 'selected': types.includes(shape) }">
                                             {{shape}}
                                         </div>
                                     </div>
