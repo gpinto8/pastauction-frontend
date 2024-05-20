@@ -46,7 +46,7 @@ const chartCategory = ref<ChartCategory | null>(null)
             </select>
         </div>
 
-        <div class="space-y-10 pt-10">
+        <div class="space-y-10 py-10">
             <HistoryElement v-for="i in 10"/>
         </div>
     </div>

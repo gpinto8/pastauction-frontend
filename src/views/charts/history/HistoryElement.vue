@@ -10,15 +10,20 @@
             <v-expansion-panel :rounded="'lg'">
                 <v-expansion-panel-title collapse-icon="mdi-minus-circle" expand-icon="mdi-plus-circle">
                     <div class="flex-center">
-                        <div class="flex-center rounded-md bg-gray-100 p-2 shadow-md">
-                            <input type="checkbox" class="h-5 w-5 z-10 accent-blue-500" @click.stop/>
-                        </div>
                         <div class="flex flex-col pl-5">
                             <div class="text-lg font-semibold line-clamp-1">
                                 Titolo
                             </div>
-                            <div class="text-zinc-600 text-sm line-clamp-2">
-                                Descrizione
+                            <div class="text-black text-sm line-clamp-2">
+                                Single Chart
+                            </div>
+                            <div class="flex">
+                                <div class="text-zinc-600 text-sm line-clamp-2 w-52">
+                                    <span class="text-black">Date requested:</span> 12.05.2024
+                                </div>
+                                <div class="text-zinc-600 text-sm line-clamp-2">
+                                    <span class="text-black">Deadline date:</span> 12.05.2024
+                                </div>
                             </div>
                         </div>
                     </div>
