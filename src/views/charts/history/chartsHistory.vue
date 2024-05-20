@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { requestChartsSelection } from '@/api/charts/charts';
 import { ref } from 'vue';
-import ChartTypeFilter from './ChartTypeFilter.vue'
+import ChartTypeFilter from './ChartTypeFilter.vue';
+import YearSelector from './YearSelector.vue'
 
 const charTypes = ref<string[]>([])
 requestChartsSelection()
@@ -11,6 +12,7 @@ requestChartsSelection()
     })
 
 const selectedChartTypes = ref<string[]>([])
+const year = ref<number>(new Date().getFullYear())
 
 </script>
 
@@ -24,7 +26,11 @@ const selectedChartTypes = ref<string[]>([])
             Here you can see all your purchased charts
         </div>
 
-        <ChartTypeFilter class="w-full" :availableChartTypes="charTypes" v-model="selectedChartTypes"/>
+        <ChartTypeFilter class="w-full mb-5" :availableChartTypes="charTypes" v-model="selectedChartTypes"/>
+
+        <div class="flex-center w-full">
+            <YearSelector v-model="year"/>
+        </div>
 
     </div>
 </template>

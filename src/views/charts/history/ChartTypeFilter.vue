@@ -11,7 +11,7 @@ const chartTypes = defineModel<string[]>({ required: true })
 
 <template>
     <div class="flex [&>*]:shadow-[0px_3px_10px_0px_#00000040]">
-        <div v-for="(chartType, index) of availableChartTypes" class="bg-grey-100 flex-1 flex-center text-white text-2xl py-2 transition-colors"
+        <div v-for="(chartType, index) of availableChartTypes" class="bg-[#CECECE] flex-1 flex-center text-white text-2xl py-2 transition-colors"
         :class="{
             'bg-black': chartTypes.includes(chartType)
         }" 
