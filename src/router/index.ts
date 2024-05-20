@@ -10,6 +10,7 @@ import SignupView from '@/views/auth/SignupView.vue';
 
 import { authGuard } from './utils/guards';
 import { scrollBehaviour } from './utils/scrollBehaviours';
+import { CHART_HISTORY } from './routesNames';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -179,6 +180,14 @@ const router = createRouter({
               /* webpackChunkName: "PreviewPage" */ '@/views/charts/previewPage/PreviewPage.vue'
           ),
         },
+        {
+            path: '/charts/history',
+            name: CHART_HISTORY,
+            component: async () =>
+            await import(
+                '@/views/charts/history/chartsHistory.vue'
+            ),
+          },
         {
           path: '/locate',
           name: 'Locate',
