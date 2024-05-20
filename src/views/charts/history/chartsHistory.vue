@@ -2,7 +2,9 @@
 import { requestChartsSelection } from '@/api/charts/charts';
 import { ref } from 'vue';
 import ChartTypeFilter from './ChartTypeFilter.vue';
-import YearSelector from './YearSelector.vue'
+import YearSelector from './YearSelector.vue';
+import ChartCategoryFilter from './ChartCategory.vue';
+import type { ChartCategory } from '../chart';
 
 const charTypes = ref<string[]>([])
 requestChartsSelection()
@@ -13,6 +15,7 @@ requestChartsSelection()
 
 const selectedChartTypes = ref<string[]>([])
 const year = ref<number>(new Date().getFullYear())
+const chartCategory = ref<ChartCategory | null>(null)
 
 </script>
 
@@ -28,8 +31,18 @@ const year = ref<number>(new Date().getFullYear())
 
         <ChartTypeFilter class="w-full mb-5" :availableChartTypes="charTypes" v-model="selectedChartTypes"/>
 
-        <div class="flex-center w-full">
+        <div class="flex items-center justify-between w-full ">
+            <ChartCategoryFilter v-model="chartCategory"/>
             <YearSelector v-model="year"/>
+            <select class="w-64 h-8 px-4 border border-black rounded-md"
+            placeholder="Select value">
+                <option disabled selected value class="text-white"> Select value </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
 
     </div>
