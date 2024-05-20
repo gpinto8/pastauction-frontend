@@ -11,7 +11,7 @@
                         </v-chip>
                     </v-col>
                     <div class="flex-center">
-                        <router-link :to="{name: CHART_HISTORY}" class="bg-blue-500 text-white px-10 py-1 h-8 rounded-md">
+                        <router-link :to="{name: CHART_HISTORY}" class="bg-blue-500 text-white px-10 py-[3px] rounded-sm">
                             My Charts
                         </router-link>
                     </div>
@@ -67,6 +67,7 @@ import ModalChartsType from './components/ModalChartsType.vue';
 import router from '@/router/index';
 import { useChartsStore } from '../../store/charts/charts';
 import { CHART_HISTORY } from '@/router/routesNames';
+import { requestChartsSelection } from '@/api/charts/charts';
 export default {
     components: {
         ModalChartsType, MenuSelection
@@ -92,7 +93,7 @@ export default {
     methods: {
         async fetchChartSelection() {
             try {
-                const response = await axios.get('/chart/selection');
+                const response = await requestChartsSelection()
                 this.firstRowCards = response.data.items.slice(0, 3).map((item: any) => ({
                     ...item,
                     isActive: item.available === 1

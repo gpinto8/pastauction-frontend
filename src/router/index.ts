@@ -185,7 +185,7 @@ const router = createRouter({
             name: CHART_HISTORY,
             component: async () =>
             await import(
-                '@/views/charts/history/chartsHistory.vue'
+                '@/views/charts/history/ChartsHistory.vue'
             ),
           },
         {
