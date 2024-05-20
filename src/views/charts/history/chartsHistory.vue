@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { requestChartsSelection } from '@/api/charts/charts';
 import { ref } from 'vue';
+import type { ChartCategory } from '../chart';
+import ChartCategoryFilter from './ChartCategory.vue';
 import ChartTypeFilter from './ChartTypeFilter.vue';
 import YearSelector from './YearSelector.vue';
-import ChartCategoryFilter from './ChartCategory.vue';
-import type { ChartCategory } from '../chart';
+import HistoryElement from './HistoryElement.vue';
 
 const charTypes = ref<string[]>([])
 requestChartsSelection()
@@ -45,5 +46,8 @@ const chartCategory = ref<ChartCategory | null>(null)
             </select>
         </div>
 
+        <div class="space-y-10 pt-10">
+            <HistoryElement v-for="i in 10"/>
+        </div>
     </div>
 </template>
