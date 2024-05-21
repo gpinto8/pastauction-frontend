@@ -61,7 +61,7 @@ const placeholderIsDisplayed = computed(() => {
 
 <template>
     <div
-			class="rounded-lg bg-slate-100 pr-2 flex gap-2 items-center justify-between duration-100 cursor-pointer overflow-visible relative border-[1px] border-[#CED4DA] whitespace-nowrap lg:h-[32px]"
+			class="rounded-lg bg-slate-100 pr-2 flex gap-2 items-center justify-between duration-100 cursor-pointer overflow-visible relative border-[1px] border-[#CED4DA] whitespace-nowrap lg:h-[36px]"
 			:class="{
 				'hover:opacity-90': !isOpen,
 				'z-10': isOpen,
