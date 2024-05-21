@@ -74,9 +74,11 @@ export const useLocateServiceStore = defineStore('locateServiceStore', () => {
           fetchServices({ ...searchParams, service_cod_service: service_cod_service }, [], false);
         }
       } else {
-        services.value = await fetchAllItems<LocateServicesData>(
+        const items = await fetchAllItems<LocateServicesData>(
           `/entity_service/?sort_by=name:asc${searchQueryString ? '&' + encodeURI(searchQueryString) : ''}`
         );
+
+				services.value.push(...items);
       }
     } catch (error) {
     } finally {

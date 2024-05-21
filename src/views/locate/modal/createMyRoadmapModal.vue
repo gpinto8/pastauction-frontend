@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Modal from '@/components/modal/Modal.vue';
+import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { useLocateRoadmapStore } from '@/store/locate/locateRoadmapStore';
 import { storeToRefs } from 'pinia';
@@ -67,8 +68,8 @@ async function  handleSaveRoadmapClick(){
 					<input type="text" v-model="newRoadmapData.name" placeholder="Type here" class="w-full outline-none border-[2px] border-[#CED4DA] border-solid rounded py-2 px-4 text-[16px] font-normal palceholder:text-[#ADB5BD] text-black" >
 				</div>
 				<div class="flex flex-col md:flex-row gap-4">
-					<v-btn @click="modalStates.createMyRoadmap = false;" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</v-btn>
-					<v-btn @click="handleSaveRoadmapClick()" class="bg-black text-white md:flex-1">Save</v-btn>
+					<LocateBtn @click="modalStates.createMyRoadmap = false;" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</LocateBtn>
+					<LocateBtn @click="handleSaveRoadmapClick()" class="bg-black text-white md:flex-1">Save</LocateBtn>
 				</div>
 			</div>
 		</Modal>

@@ -2,6 +2,7 @@
 import Modal from '@/components/modal/Modal.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
+import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 
 const locateStore = useLocateStore();
 const { modalStates, currentUserLocationMarker } = storeToRefs(locateStore);
@@ -36,8 +37,8 @@ async function getUserLocation() {
 			</div>
 			<p class="font-bold text-center">Do you want to use your current location?</p>
 			<div class="flex flex-col md:flex-row gap-4">
-				<v-btn @click="modalStates.useMyLocationModalIsOpen = false	" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</v-btn>
-				<v-btn @click="()=>{modalStates.useMyLocationModalIsOpen = false; useCurrentUserLocation()}" class="bg-black text-white md:flex-1">Accept</v-btn>
+				<LocateBtn @click="modalStates.useMyLocationModalIsOpen = false	" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</LocateBtn>
+				<LocateBtn @click="()=>{modalStates.useMyLocationModalIsOpen = false; useCurrentUserLocation()}" class="bg-black text-white md:flex-1">Accept</LocateBtn>
 			</div>
 		</div>
 	</Modal>

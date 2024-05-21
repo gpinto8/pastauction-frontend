@@ -2,6 +2,7 @@
 import Modal from '@/components/modal/Modal.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
+import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 
 const locateStore = useLocateStore();
 const {modalStates} = storeToRefs(locateStore);
@@ -19,8 +20,8 @@ const {modalStates} = storeToRefs(locateStore);
 				<p class="mx-auto mb-4 font-normal text-[#475467] text-center">To save your roadmap, you must update your plan.</p>
 
 				<div class="flex flex-col md:flex-row gap-4">
-					<v-btn @click="modalStates.upgradeMyPlan = false;" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</v-btn>
-					<v-btn @click="modalStates.upgradeMyPlan = false;" class="bg-black text-white md:flex-1">Upgrade my plan</v-btn>
+					<LocateBtn @click="modalStates.upgradeMyPlan = false;" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</LocateBtn>
+					<LocateBtn @click="modalStates.upgradeMyPlan = false;" class="bg-black text-white md:flex-1">Upgrade my plan</LocateBtn>
 				</div>
 			</div>
 		</Modal>

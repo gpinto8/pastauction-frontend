@@ -6,10 +6,13 @@ import {
   computed,
 } from 'vue';
 import MySelect from './components/Select.vue';
+import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import { storeToRefs } from 'pinia';
 import { useLocateStore } from '@/store/locate/locate';
 import {
+	isEntityRoadmapData,
   useLocateRoadmapStore,
+  type EntityRoadmapData,
   type RoadmapData,
 } from '@/store/locate/locateRoadmapStore';
 
@@ -51,20 +54,30 @@ const { fetchEvents } = eventStore;
 const { events, eventsLoading } = storeToRefs(eventStore);
 
 const roadmapStore = useLocateRoadmapStore();
-const { fetchRoadmaps } = roadmapStore;
-const { roadmaps, roadmapsLoading , detailRoadmap } = storeToRefs(roadmapStore);
+const { fetchEntityRoadmaps, fetchEventRoadmaps } = roadmapStore;
+const { entityRoadmaps, eventsRoadmaps, roadmapsLoading , detailRoadmap } = storeToRefs(roadmapStore);
 
-onMounted(()=>{
-	fetchRoadmaps();
-})
+
+
+const router = useRouter();
+
 const orderBy = ref<typeof orderByOptions[number]>('');
 const orderByOptions = ['More new', 'More old'];
 
-function formatDate(dateString: string) {
-	const today = new Date().toDateString();
-	const yesterday = new Date(Date.now() - 86400000).toDateString();
-	return (new Date(dateString).toDateString() === today) ? 'today' : (new Date(dateString).toDateString() === yesterday) ? 'yesterday' : dateString;
-}
+onMounted(()=>{
+	if(activeLocateSearchCategory.value.name === "Entity") fetchEntityRoadmaps();
+	if(activeLocateSearchCategory.value.name === "Events") fetchEventRoadmaps();
+});
+
+const isEntitySelected = computed(()=> activeLocateSearchCategory.value.name === "Entity");
+
+const roadmaps = computed(() => {
+	if(isEntitySelected.value){
+		return entityRoadmaps.value;
+	} else {
+		return eventsRoadmaps.value;
+	};
+});
 
 const orderedRoadmaps = computed(() => {
 	return roadmaps.value.sort((a, b) => {
@@ -75,11 +88,20 @@ const orderedRoadmaps = computed(() => {
 	});
 });
 
-const router = useRouter();
+
+function formatDate(dateString: string) {
+	const today = new Date().toDateString();
+	const yesterday = new Date(Date.now() - 86400000).toDateString();
+	return (new Date(dateString).toDateString() === today) ? 'today' : (new Date(dateString).toDateString() === yesterday) ? 'yesterday' : dateString;
+}
 
 function gotToRoadmapDetailPage(roadmap: RoadmapData) {
 	detailRoadmap.value = roadmap;
 	router.push('/locate/roadmap-detail');
+}
+
+function formatRoadmapKinds(kinds: string){
+	return (kinds || "").split(",").map(e => e.trim()).filter(e => !!e).map(e=> ` • ${e.charAt(0).toUpperCase() + e.slice(1).toLowerCase()} `).join("");
 }
 </script>
 
@@ -110,7 +132,7 @@ function gotToRoadmapDetailPage(roadmap: RoadmapData) {
 	<div v-if="!roadmapsLoading && !roadmaps.length" class="flex flex-col pt-24 gap-12 items-center">
 		<span class="text-[#21252999] text-center">There are no roadmaps saved yet: create the first tour roadmap</span>
 		<RouterLink to="/locate">
-			<v-btn class="text-black bg-white border-black text-none font-normal text-[16px]" border>Create roadmap</v-btn>
+			<LocateBtn class="text-black bg-white border-black text-none font-normal text-[16px]" border>Create roadmap</LocateBtn>
 		</RouterLink>
 	</div>
 
@@ -121,17 +143,17 @@ function gotToRoadmapDetailPage(roadmap: RoadmapData) {
 			<div class="flex flex-col shadow-[0px_0px_8px_0px_#5b5b5b1f]  rounded-lg p-[12px] gap-[8px]">
 
 				<div class="flex flex-row w-full pb-[12px] border-b-[1px] border-[#F2F2F2] border-solid">
-					<div class="flex-1 text-lg font-[500] tex-black">{{ roadmap.name }}</div>
+					<div class="flex-1 text-lg font-[500] tex-black">{{ isEntityRoadmapData(roadmap) ?  roadmap.name : roadmap.event_name }}</div>
 					
 					<app-icon @click="gotToRoadmapDetailPage(roadmap)" type="arrow-right-circle" class="hover:brightness-90 cursor-pointer" />
 				</div>
 
 				<div class="pl-1">
-					{{  `• ${roadmap.begin_address} • Date: ${roadmap.date_tour_planned} to ${roadmap.date_tour_planned}` }}
+					{{  `• ${roadmap.begin_address}    • Date: ${roadmap.date_tour_planned}` }}
 				</div>
 
 				<div class="pl-1">
-					{{  `• Museums • Exhibitions • Concours` }}
+					{{ formatRoadmapKinds(roadmap.roadmap_entity_kinds || "") }}
 				</div>
 
 			</div>

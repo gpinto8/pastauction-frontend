@@ -2,6 +2,7 @@
 import Modal from '@/components/modal/Modal.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
+import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 
 const locateStore = useLocateStore();
 const { modalStates } = storeToRefs(locateStore);
@@ -19,7 +20,7 @@ const { modalStates } = storeToRefs(locateStore);
 				</div>
 			</div>
 			<p>Before you create your roadmap, you have to select your points of interest</p>
-			<v-btn @click="modalStates.cannotCreateRoadmapWarning = false" class="bg-black text-white">Accept</v-btn>
+			<LocateBtn @click="modalStates.cannotCreateRoadmapWarning = false" class="bg-black text-white">Accept</LocateBtn>
 		</div>
 	</Modal>
 </template>

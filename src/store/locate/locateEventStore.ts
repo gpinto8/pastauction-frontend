@@ -83,6 +83,8 @@ export type LocateEventData = {
 /** this type extends the raw data with properties that will be used only in frontend */
 export type LocateExtendedEventData = LocateEventData & {
 	isSelected?: boolean;
+	isOpenDetails?: boolean;
+	isOpenDescription?: boolean;
 }
 
 export const useLocateEventStore = defineStore('locateEventStore', () => {
@@ -109,9 +111,10 @@ export const useLocateEventStore = defineStore('locateEventStore', () => {
           fetchEvents({ ...searchParams, kind_name: kind_name }, [], false);
         }
       } else {
-        events.value = await fetchAllItems<LocateEventData>(
-          `/entity_entity/query_user?sort_by=name:asc${searchQueryString ? '&' + encodeURI(searchQueryString) : ''}`
+				const items = await fetchAllItems<LocateEventData>(
+          `/entity_event?sort_by=name:asc${searchQueryString ? '&' + encodeURI(searchQueryString) : ''}`
         );
+        events.value.push(...items);
       }
     } catch (error) {
     } finally {

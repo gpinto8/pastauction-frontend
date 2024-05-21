@@ -75,30 +75,43 @@ export const useLocateEntityStore = defineStore('locateEntityStore', () => {
 	const entitiesLoading = ref(false);
 
   const entities = ref<LocateExtendedEntityData[]>([]);
-  async function fetchEntities(searchParams?: Partial<LocateEntityData>, kind_names?: string[], cleanEntitiesBeforeFetch = true, maxCount = 20) {
+  async function fetchEntities(searchParams?: Partial<LocateEntityData>, kind_names?: string[], maxCount = 20) {
     entitiesLoading.value = true;
-		if(cleanEntitiesBeforeFetch) entities.value = [];
+
     try {
-      let searchQueryString = searchParams
+			const allItemes: LocateEntityData[] = [];
+
+			for(const kind_name of (kind_names || [""])){
+				if(searchParams && kind_name) searchParams.kind_name = kind_name;
+
+				let searchQueryString = "&search=";
+				if(searchParams) {
+					for (const key in searchParams) {
+						const value = searchParams[key as keyof typeof searchParams] as string;
+						if(value.replace(/\"/g,"")) searchQueryString += `${key}:${value}`;
+					}
+				}
+
+				let searchQueryString1 = searchParams
         ? Object.keys(searchParams).filter(k=>!!((searchParams as any)[k]).replace(/\"/g,"")).map(
             k => k + ':' + (searchParams as any)[k]
           ).join(',')
         : '';
 
-			if(kind_names?.length && kind_names.length !== 0){
-				for (const kind_name of kind_names) {
-					fetchEntities({...searchParams, 'kind_name': kind_name}, [], false, maxCount);
-				}
-			} else {
-				entities.value = await fetchAllItems<LocateEntityData>(
-					`/entity_entity/query_user?sort_by=name:asc${searchQueryString ? '&search=' + encodeURI(searchQueryString) : ''}`,
+				const items = await fetchAllItems<LocateEntityData>(
+					`/entity_entity/query_user?sort_by=name:asc${encodeURI(searchQueryString)}`,
 					undefined,
-					maxCount
+					maxCount,
 				);
+
+				allItemes.push(...items);
 			}
+
+			entities.value = allItemes;
+
     } catch (error) {
     } finally {
-      entitiesLoading.value = false;
+			entitiesLoading.value = false;
     }
   }
 

@@ -61,7 +61,7 @@ const placeholderIsDisplayed = computed(() => {
 
 <template>
     <div
-			class="rounded-lg bg-slate-100 pr-2 flex gap-2 items-center justify-between duration-100 cursor-pointer overflow-visible relative border-[1px] border-[#CED4DA] whitespace-nowrap"
+			class="rounded-lg bg-slate-100 pr-2 flex gap-2 items-center justify-between duration-100 cursor-pointer overflow-visible relative border-[1px] border-[#CED4DA] whitespace-nowrap lg:h-[32px]"
 			:class="{
 				'hover:opacity-90': !isOpen,
 				'z-10': isOpen,
@@ -81,7 +81,7 @@ const placeholderIsDisplayed = computed(() => {
 			</span>
       <app-icon :class="{'rotate-180': isOpen, 'text-white': placeholderIsDisplayed && placeholderColor === 'white'}" type="small_arr_down" size="sm"></app-icon>
 
-			<div @click.stop="" ref=selectOptionsContainerRef v-if="isOpen" class="absolute  mt-1 w-full top-full lfet-0 rounded-lg border-2 p-2 border-gray-300 flex flex-col gap-2 bg-white">
+			<div @click.stop="" ref=selectOptionsContainerRef v-if="isOpen" class="absolute  mt-1 w-full top-full left-0 rounded-lg border-2 p-2 border-gray-300 flex flex-col gap-2 bg-white">
 				<div v-if="useOptionSearchFeature" class="flex bg-white flex-row gap-2 pb-1 border-b-[1px] items-center border-gray-300">
 					<app-icon class="text-gray-500" type="search"  size="sm"></app-icon>
 					<input v-model="searchQuery" class="w-full outline-none" type="text">
