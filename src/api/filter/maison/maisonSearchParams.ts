@@ -1,4 +1,4 @@
-function arrayToParamsArray(values: string[]) { return values.join("|") }
+import { arrayToParamsArray } from "../helpers"
 
 export function getBrandsSearchParams(brands: string[]) {
     return brands.length > 0 ? `brand_name:${arrayToParamsArray(brands)}` : ''
