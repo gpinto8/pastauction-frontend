@@ -9,7 +9,7 @@ export type Coordinates = google.maps.LatLngLiteral & { title?: string, bounds?:
 
 /** this type represents the search category that the user can search for in the locate page, for example entity, serives or events */
 export type LocateSearchCategory =  {
-	name: string,
+	name: "Entity" | "Services" | "Events",
 	iconName: string,
 	subcategories: {
 		name: string;
@@ -43,6 +43,7 @@ export const useLocateStore = defineStore('locate',
 				roadmapSuccessfullySaved: false,
 				upgradeMyPlan: false,
 				cannotCreateRoadmapWarning: false,
+				confirmRoadmapDeletionModal: false,
 			});
 		
 			const currentUserLocationMarker =  ref<google.maps.marker.AdvancedMarkerElement | null>(null);
@@ -209,12 +210,35 @@ export const useLocateStore = defineStore('locate',
 					loadingStates.value.carsLoading = true;
 					filterValues.value.cars = [];
 		
+					const carsSample = [
+						{
+							"temp_tipo_j": {
+								"temp_tipo": "Military"
+							}
+						},
+						{
+							"temp_tipo_j": {}
+						},
+						{
+							"temp_tipo_j": {
+								"Vehicles": [
+									"Cars",
+									"Motorcycles",
+									"Tractors",
+									"Boats",
+									"Planes",
+									"Military"
+								]
+							}
+						}
+					];
+
 					return (
-						await fetchAllItems<{ temp_tipo_j: string }>(
+						await fetchAllItems<(typeof carsSample)[number]>(
 							`filter/entity_entity_query/temp_tipo_j/?sort_by=name:asc`,
-							items => filterValues.value.cars.push(...items.map(e => e.temp_tipo_j))
+							items => filterValues.value.cars.push(...items.map(e => e.temp_tipo_j.Vehicles || e.temp_tipo_j.temp_tipo || "").flat().filter(e => !!e))
 						)
-					).map(e => e.temp_tipo_j);
+					).map(e => e.temp_tipo_j.Vehicles || e.temp_tipo_j.temp_tipo || "").flat().filter(e => !!e);
 				} catch (e) {
 					return [];
 				} finally {
@@ -314,25 +338,18 @@ export const useLocateStore = defineStore('locate',
 			/** this state indicates if the current displayed items are loading/fething (based on the search category: entity/services/events) */
 			itemsLoading : (state) => {
 				const entityStore = useLocateEntityStore();
-				const { fetchEntities } = entityStore;
-				const { entities, entitiesLoading } = storeToRefs(entityStore);
-	
 				const serviceStore = useLocateServiceStore();
-				const { fetchServices } = serviceStore;
-				const { services , servicesLoading} = storeToRefs(serviceStore);
-	
 				const eventStore = useLocateEventStore();
-				const { fetchEvents } = eventStore;
-				const { events, eventsLoading } = storeToRefs(eventStore);
 	
 				switch (state.activeLocateSearchCategory.name) {
 					case "Entity":
-						return entitiesLoading.value;
+						return entityStore.entitiesLoading;
 					case "Services":
-						return servicesLoading.value;
+						return serviceStore.servicesLoading;
 					case "Events":
-						return eventsLoading.value;
+						return eventStore.eventsLoading;
 					default:
+						console.log("default");
 						return false;
 				}
 			},

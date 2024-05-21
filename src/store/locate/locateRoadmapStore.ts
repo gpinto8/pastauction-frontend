@@ -38,14 +38,48 @@ export type EventRoadmapData = typeof sampleEventRoadmapData;
 
 export type RoadmapData = EntityRoadmapData | EventRoadmapData;
 
-// Overload declarations
-function createRoadmap(roadmap: EntityRoadmapData): Promise<EntityRoadmapData>;
-function createRoadmap(roadmap: EventRoadmapData): Promise<EventRoadmapData>;
+const sampleCreateEntityRoadmapBody = {
+  "date_creation": "2024-05-21",
+  "date_tour_planned": "2024-05-21",
+  "begin_country": "string",
+  "begin_city": "string",
+  "begin_address": "string",
+  "name": "string",
+  "image_url": "string",
+  "image_path": "string"
+};
+export type CreateEntityRoadmapBody = typeof sampleCreateEntityRoadmapBody;
 
-// Implementation
-async function createRoadmap(roadmap: EntityRoadmapData | EventRoadmapData): Promise<EntityRoadmapData | EventRoadmapData> {
-	// The implementation can be customized as needed
-	return roadmap;
+const sampleCreateEventRoadmapBody = {
+  "date_creation": "2024-05-21",
+  "date_tour_planned": "2024-05-21",
+  "begin_country": "string",
+  "begin_city": "string",
+  "begin_address": "string",
+  "event_name": "string",
+  "id_event": 0,
+  "id_user": 0,
+  "image_url": "string",
+  "image_path": "string"
+};
+export type CreateEventRoadmapBody = typeof sampleCreateEventRoadmapBody;
+
+// Overload declarations
+function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody>): Promise<EntityRoadmapData>;
+function createRoadmap(roadmap: Partial<CreateEventRoadmapBody>): Promise<EventRoadmapData>;
+async function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody | CreateEventRoadmapBody>): Promise<EntityRoadmapData | EventRoadmapData> {
+	let createdRoadmap : EntityRoadmapData | EventRoadmapData;
+
+	if(isEntityRoadmapData(roadmap)){
+		const response = await httpPost(`/entity_roadmap/create`, roadmap);
+		createdRoadmap = response.data;
+	}else {
+		const response = await httpPost(`/entity_event_roadmap/create`, roadmap);
+
+		createdRoadmap = response.data;
+	}
+	
+	return createdRoadmap;
 }
 
 export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
@@ -54,7 +88,7 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
     eventsRoadmaps: [] as EventRoadmapData[],
     roadmapsLoading: false,
 		/** the current roadmap that is displayed in the roadmap detail page */
-		detailRoadmap: null as EntityRoadmapData | EventRoadmapData | null, 
+		detailRoadmap: null as RoadmapData | null, 
   }),
 	actions: {
 		async fetchEntityRoadmaps(
@@ -148,13 +182,11 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 			}
     },
 
-		async deleteRoadmap(roadmap: RoadmapData) {
+		async deleteRoadmap(roadmap: RoadmapData): Promise<number> {
 			if(isEntityRoadmapData(roadmap)){
-				const resp = await httpDelete(`/entity_roadmap/delete/${roadmap.id_key}`);
-			}
-
-			if(isEventRoadmapData(roadmap)){
-				const resp = await httpDelete(`/entity_event_roadmap/delete/${roadmap.id_key}`);
+				return (await httpDelete(`/entity_roadmap/delete/${roadmap.id_key}`)).status;
+			} else {
+				return (await httpDelete(`/entity_event_roadmap/delete/${roadmap.id_key}`)).status;
 			}
 		},
 
@@ -162,10 +194,10 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 	},
 });
 
-export function isEntityRoadmapData(data: RoadmapData): data is EntityRoadmapData {
+export function isEntityRoadmapData(data: Partial<RoadmapData>): data is EntityRoadmapData {
 	return useLocateStore().$state.activeLocateSearchCategory.name === "Entity";
 }
 
-export function isEventRoadmapData(data: RoadmapData): data is EventRoadmapData {
+export function isEventRoadmapData(data: Partial<RoadmapData>): data is EventRoadmapData {
 	return useLocateStore().$state.activeLocateSearchCategory.name === "Events";
 }
