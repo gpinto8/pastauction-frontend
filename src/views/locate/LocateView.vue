@@ -148,7 +148,7 @@ const handleCreateRoadmap = () => {
 				<MySelect @change="newValue => activeFilters.aging = newValue" v-model:selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings"></MySelect>
 				<!-- <MySelect @change="newValue => activeFilters.aging = newValue" v-model:selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings" :filterFN="(i, q)=>i.name.toLowerCase().includes(q.toLowerCase())" :formatItemFN="(i)=> i.name ? `${i.name} (${i.startYear}-${i.endYear})` : ''"></MySelect> -->
 			
-				<LocateBtn @click="searchItems()" class="bg-blue-700 text-white !h-full lg:px-6 lg:h-[36px]" >
+				<LocateBtn @click="searchItems()" class="bg-blue-700 text-white h-full lg:px-6 lg:h-[36px]" >
 					Search
 				</LocateBtn>
 		</div>
