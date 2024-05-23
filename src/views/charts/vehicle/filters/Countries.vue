@@ -4,6 +4,7 @@ import { ref, watch } from 'vue';
 import { toggleValueInArray } from '@/utils/functions/toggleValueInArray';
 import { emptyArray } from '@/utils/functions/EmptyArray';
 import GenericFilter from '../../components/GenericFilter.vue'
+import countriesAcronyms from './countriesAcronyms.json'
 
 defineExpose({
     resetFilter
@@ -34,7 +35,8 @@ watch(selectedContinent, async () => {
 
 function getImageUrl(countryFlag: string) {
     const brandAbbreviation = countryFlag.substring(0, 3).toUpperCase();
-    return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${brandAbbreviation}.jpeg`;
+    const countryAcronym = (countriesAcronyms as any)[countryFlag] as string
+    return `https://past-auction-p.s3.amazonaws.com/LogoCountry/${(countryAcronym)}.jpeg`;
 }
 
 function resetFilter() {
