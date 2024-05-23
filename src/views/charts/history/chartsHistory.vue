@@ -17,7 +17,7 @@ requestChartsSelection()
 const selectedChartTypes = ref<string[]>([])
 const year = ref<number>(new Date().getFullYear())
 const chartCategory = ref<ChartCategory | null>(null)
-
+const filterActiveCharts = ref<boolean | null>(null)
 </script>
 
 <template>
@@ -36,13 +36,11 @@ const chartCategory = ref<ChartCategory | null>(null)
             <ChartCategoryFilter v-model="chartCategory"/>
             <YearSelector v-model="year"/>
             <select class="w-64 h-8 px-4 border border-black rounded-md"
+            v-model="filterActiveCharts"
             placeholder="Select value">
                 <option disabled selected value class="text-white"> Select value </option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
+                <option :value="false">Incative Charts</option>
+                <option :value="true">Avtice Charts</option>
             </select>
         </div>
 
