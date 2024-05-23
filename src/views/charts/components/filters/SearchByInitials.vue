@@ -34,33 +34,33 @@ function resetFilter() {
         <div class="flex flex-col">
             <v-row justify="start" class="align-center" no-gutters>
                 <v-col class="d-flex flex-wrap align-center" no-gutters>
-                    <v-btn
+                    <button
                         v-for="letter in alphabet"
                         :key="letter"
-                        class="letter-button w-10 h-10"
-                        :variant="initials === letter ? 'elevated' : 'outlined'"
+                        class="h-7 w-7 !border-black border"
+                        :class="initials === letter ? 'bg-black text-white' : ''"
                         @click="initials = letter"
                         color="black"
-                        style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                        style="margin: 2px; border-radius: 2px !important"
                         >
                         {{ letter }}
-                    </v-btn>
+                    </button>
                 </v-col>
             </v-row>
             <v-row justify="start" class="align-center mt-0">
                 <v-col class="d-flex flex-wrap align-center pt-0">
                     <div :class="{ 'd-block': initials, 'd-none': !initials }" class="mt-3" justify="start" >
-                        <v-btn
+                        <button
                             v-for="coupleLetters in twoLettersInitialsList" 
                             :key="coupleLetters"
-                            class="letter-button w-10 h-10"
-                            :variant="twoLettersInitials === coupleLetters ? 'elevated' : 'outlined'"
+                            class="h-7 w-7 !border-black border"
+                            :class="twoLettersInitials === coupleLetters ? 'bg-black text-white' : ''"
                             @click="twoLettersInitials = coupleLetters"
                             color="black"
-                            style="min-width: 20px; margin: 2px; border-radius: 0px; font-size: 10px;"
+                            style="min-width: 20px; margin: 2px; border-radius: 0px;"
                         >
                             {{ coupleLetters }}
-                        </v-btn>
+                        </button>
                     </div>
                 </v-col>
             </v-row>
@@ -85,7 +85,7 @@ function resetFilter() {
                             </div>
                         </div>
                         <div class="border !border-black grid grid-cols-3 lg:grid-cols-5 gap-y-2 p-2" text>
-                            <div
+                            <button
                             v-for="maison in listOfValues" 
                             :key="maison"
                             class="flex-center text-center"
@@ -93,7 +93,7 @@ function resetFilter() {
                             style="font-size: 16px;" 
                             @click="toggleValueInArray(selectedValues, maison)">
                                 {{ maison }}
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </v-col>
