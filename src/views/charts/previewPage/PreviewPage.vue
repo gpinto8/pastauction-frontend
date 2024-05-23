@@ -20,68 +20,12 @@
                 </v-col>
             </v-row>
             <div class="flex flex-col mt-10 space-y-5">
-                <!-- <Selection :value="0" title="Minidashboard" description="description">
-                    <template #preview>
-                        <v-row>
-                            <v-col cols="12" sm="4">
-                                <v-card title="North American sales in th world (map)"
-                                    text="Explore North American's car auction stats by city: total sales, vehicle counts, top sales, auction events. Interactive bubbles show revenue scale.">
-                                    <img src="@/assets/images/minidashboard2.svg" alt="minidashboard image card">
-                                </v-card>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <v-card title="Pie chart car type offered"
-                                    text="Analyzing the distribution of car shapes in the dataset.">
-                                    <img src="@/assets/images/minidashboard1.svg" alt="minidashboard image card">
-                                </v-card>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <v-card title="European sales in th world (map)"
-                                    text="Explore european's car auction stats by city: total sales, vehicle counts, top sales, and auction events. Interactive bubbles show revenue scale.">
-                                    <img src="@/assets/images/minidashboard.svg" alt="minidashboard image card">
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </template>
-                </Selection>
-                <Selection :value="1" title="Car Status" description="description">
-                    <template #preview>
-                        <v-row>
-                            <v-col cols="12" sm="4">
-                                <v-card title="Plot maison sales by year"
-                                    text="Analyzing Average Sales Prices for Maison Vehicles">
-                                    <img src="@/assets/images/carstatus.svg" alt="car status image card">
-                                </v-card>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <v-card title="Plot comparison maison sales by year"
-                                    text="Comparison of Average and Total Sales by Maison">
-                                    <img src="@/assets/images/carstatus1.svg" alt="car status  image card">
-                                </v-card>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <v-card title="Return sales info maison"
-                                    text="Analyze the Number of Auctions and Car Sales">
-                                    <img src="@/assets/images/carstatus2.svg" alt="car status  image card">
-                                </v-card>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <v-card title="Plot number sales rate vehicles by age"
-                                    text="An analysis of vehicle sales and sales rate based on age">
-                                    <img src="@/assets/images/carstatus3.svg" alt="car status  image card">
-                                </v-card>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <v-card title="Plot top cities sales europe"
-                                    text="Explore the sales and average prices of the most popular European cities.">
-                                    <img src="@/assets/images/carstatus4.svg" alt="car status  image card">
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </template>
-                </Selection> -->
-                <Selection v-for="(chart, index) of availableCharts" :chart="chart" :value="index" :title="chart.name" :description="chart.subtitle"/>
+                <Selection v-for="(chart, index) of availableCharts" :chart="chart" :value="index" :title="chart.name"
+                    :description="chart.subtitle" />
             </div>
+            <button @click="retrieveProductsData">
+                refresh
+            </button>
             <v-row v-if="selectedItems.length > 0">
                 <v-col cols="12" sm="12">
                     <v-card class="pt-5 mt-5">
@@ -91,7 +35,7 @@
                             </v-col>
                         </v-row>
                         <v-card-text>
-                            <v-simple-table>
+                            <!-- <v-simple-table>
                                 <template v-slot:default>
                                     <tbody>
                                         <tr v-for="(item, index) in selectedItems" :key="index">
@@ -100,11 +44,10 @@
                                                     @click.stop></v-checkbox>
                                             </td>
                                             <td>{{ item.title }}</td>
-                                            <!-- Aggiungi altre colonne se necessario -->
                                         </tr>
                                     </tbody>
                                 </template>
-                            </v-simple-table>
+</v-simple-table> -->
                         </v-card-text>
                     </v-card>
                 </v-col>
@@ -115,9 +58,9 @@
 
 <script lang="ts">
 
-import Selection from './Selection.vue';
+import { chartsOfProduct, querybidwatcherProductChart, querybidwatcherProductChartSelected, queryBidwatcherProductDash } from '@/api/filter/charts/charts';
 import { useChartsStore } from '../../../store/charts/charts';
-import axios from 'axios';
+import Selection from './Selection.vue';
 
 export default {
     components: { Selection, },
@@ -139,13 +82,8 @@ export default {
         this.alertTitle = this.$route.query.title as string || '';
     },
     async mounted() {
-        let response = await axios.get('/bidwatcher_product_chart/query', {
-            params: {
-                search: this.buildSearchSting()
-            }
-        })
-        console.log(response.data.items);
-        this.availableCharts = response.data.items
+        // this.availableCharts = response.data.items
+        this.retrieveProductsData()
     },
     methods: {
         buildSearchSting() {
@@ -155,6 +93,15 @@ export default {
                 `type:${this.chartStore.getSelectedChartType}`
             ].join(',')
         },
+        async retrieveProductsData() {
+            // if (this.chartStore.getSelectedChartCategory == null || this.chartStore.getSelectedChartType == null) return
+            console.log('Inizio richiesta prodotti');
+            // const charts = await chartsOfProduct(this.chartStore.getSelectedChartCategory, this.chartStore.getSelectedChartType)
+            const charts = await chartsOfProduct('Family', 'Single')
+
+            console.log(charts);
+
+        }
     },
     computed: {
         selectedItems() {
