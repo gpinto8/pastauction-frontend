@@ -54,7 +54,7 @@ function clearFilters() {
 </script>
 
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-col px-8">
         <v-alert color="info" variant="tonal">
             <v-row justify="center">
                 <v-col cols="12">
