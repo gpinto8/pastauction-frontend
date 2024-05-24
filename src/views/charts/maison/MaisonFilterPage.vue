@@ -40,9 +40,9 @@ async function fetchPeriods() {
 }
 
 Promise.all([fetchPeriods()])
-.finally(() => {
-    loading.value = false
-})
+    .finally(() => {
+        loading.value = false
+    })
 
 function clearFilters() {
     (auctioYearFilter.value as any).resetFilter();
@@ -74,51 +74,43 @@ function clearFilters() {
         </v-row>
         <v-container fluid v-if="loading">
             <div class="m-5 d-flex align-center justify-center">
-                <v-progress-circular
-                    v-if="loading"
-                    :size="70"
-                    :width="7"
-                    color="primary"
-                    indeterminate
-                ></v-progress-circular>
+                <v-progress-circular v-if="loading" :size="70" :width="7" color="primary"
+                    indeterminate></v-progress-circular>
             </div>
         </v-container>
         <div class="flex flex-col space-y-7" v-else>
-            <Maison v-model="selectedMaisonNames"/>
-            <AuctionCity v-model="selectedCityNames"/>
-            <AuctionYear v-model="selectedYears" ref="auctioYearFilter"/>
-            <Month v-model="selectedMonths" ref="monthFilter"/>
-            <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods" ref="periodsFilter"/>
-            <Miscellaneous 
-            v-model="miscOptions"
-            ref="miscFilter"
-            :miscellaneousOptions="{
+            <Maison v-model="selectedMaisonNames" />
+            <AuctionCity v-model="selectedCityNames" />
+            <AuctionYear v-model="selectedYears" ref="auctioYearFilter" />
+            <Month v-model="selectedMonths" ref="monthFilter" />
+            <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods" ref="periodsFilter" />
+            <Miscellaneous v-model="miscOptions" ref="miscFilter" :miscellaneousOptions="{
                 soldStatus: [{
-                        name: 'Sold',
-                        value: 'sold'
-                    },
-                    {
-                        name: 'Not sold',
-                        value: 'not sold'
-                    }
+                    name: 'Sold',
+                    value: 'sold'
+                },
+                {
+                    name: 'Not sold',
+                    value: 'not sold'
+                }
                 ],
                 quotedStats: [{
-                        name: 'Quoted',
-                        value: 'quoted'
-                    },
-                    {
-                        name: 'Not quoted',
-                        value: 'not quoted'
-                    }
+                    name: 'Quoted',
+                    value: 'quoted'
+                },
+                {
+                    name: 'Not quoted',
+                    value: 'not quoted'
+                }
                 ],
                 chassisStatus: [{
-                        name: 'With Chassis',
-                        value: 'with chassis'
-                    },
-                    {
-                        name: 'Without Chassis',
-                        value: 'without chassis'
-                    }
+                    name: 'With Chassis',
+                    value: 'with chassis'
+                },
+                {
+                    name: 'Without Chassis',
+                    value: 'without chassis'
+                }
                 ],
                 currency: [
                     { name: 'AUD', value: 'aud' },
@@ -134,63 +126,59 @@ function clearFilters() {
                     { name: 'SEK', value: 'sek' },
                     { name: 'USD', value: 'usd' },
                 ]
-            }"
-            />
+            }" />
         </div>
     </div>
 </template>
 
 <style>
-
-.letter-button{
+.letter-button {
     text-transform: capitalize;
     font-size: 15px !important;
 }
 
-.custom-chip {
-  @apply w-full bg-blue-500 rounded-md flex justify-center items-center text-white
+.option{
+    @apply rounded-[2.8px]
 }
 
-.custom-light-chip{
+.custom-chip {
+    @apply w-full bg-blue-500 rounded-[2.5px] flex justify-center items-center text-white
+}
+
+.custom-light-chip {
     @apply bg-white text-blue-500 border border-blue-500
 }
 
-.selection {
-    @apply rounded-md 
-}
-
 @media screen(sm) {
-    .custom-chip{
+    .custom-chip {
         @apply w-32
     }
-    
+
     .selection {
-        @apply rounded-sm 
+        @apply rounded-sm
     }
 }
 
-
-.filters-grid-selection{
-    @apply  grid gap-2 grid-cols-2 
-            sm:grid-cols-3 
-            md:grid-cols-4 
-            lg:flex lg:gap-0 lg:space-x-3 lg:[&>*]:flex-1
+.filters-grid-selection {
+    @apply grid gap-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:gap-0 lg:space-x-3 lg:[&>*]:flex-1
 }
 
-.selected{
+.selected {
     text-decoration: underline;
     color: #407BFF;
 }
 
-.border-brand{
-    min-width: 20px; 
-    margin: 2px; 
-    border: 1px solid black; 
+.border-brand {
+    min-width: 20px;
+    margin: 2px;
+    border: 1px solid black;
     font-size: 10px;
 }
+
 .category-link {
     display: block;
     position: relative;
-    padding-left: 10px; /* Spazio a sinistra della linea */
+    padding-left: 10px;
+    /* Spazio a sinistra della linea */
 }
 </style>

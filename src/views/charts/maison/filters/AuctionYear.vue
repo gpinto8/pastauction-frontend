@@ -61,17 +61,17 @@ function resetFilter() {
                         sm:grid-cols-3 
                         md:grid-cols-4 
                         lg:flex lg:gap-0 lg:space-x-7 lg:flex-wrap">
-                <v-btn
+                <button
                     v-for="timeFrame in timeFrames"
                     :key="timeFrame.startYear"
-                    class="letter-button selection !text-base lg:flex-1"
+                    class="letter-button border h-8 !border-black selection !text-base lg:flex-1"
                     :variant="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'elevated' : 'outlined'"
                     @click="selectedTimeFrame = timeFrame"
                     :color="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'black' : ''"
-                    style="min-width: 20px; margin: 2px; font-size: 10px;"
+                    style="margin: 2px; border-radius: 2px"
                 >
                     {{ timeFrame.startYear }} - {{ timeFrame.endYear }}
-                </v-btn>
+                </button>
             </div>
             <div class="flex flex-wrap mt-2">
                 <v-chip
@@ -90,16 +90,16 @@ function resetFilter() {
             </div>
             <div v-if="selectedTimeFrame != null" class="grid gap-2 grid-cols-4
                         lg:flex lg:gap-0 lg:space-x-7 lg:flex-wrap">
-                <v-btn
+                <button
                 v-for="index of selectedTimeFrame.endYear - selectedTimeFrame.startYear + 1"
                 :key="index"
-                class="letter-button selection !text-base lg:flex-1"
+                class="letter-button selection rounded-sm border !border-black !text-base lg:flex-1"
                 :variant="selectedYears.includes(selectedTimeFrame.startYear + index - 1) ? 'elevated' : 'outlined'"
                 @click="toggleValueInArray(selectedYears, selectedTimeFrame.startYear + index - 1)"
                 :color="selectedYears.includes(selectedTimeFrame.startYear + index - 1)?  'black' : ''"
-                style="min-width: 20px; margin: 2px; font-size: 10px;">
+                style="margin: 2px;">
                     {{ selectedTimeFrame.startYear + index - 1 }}
-                </v-btn>
+                </button>
             </div>
         </div>
     </GenericFilter>
