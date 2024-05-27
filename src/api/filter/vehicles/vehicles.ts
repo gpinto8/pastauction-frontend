@@ -15,3 +15,7 @@ export function bodyShapeOfCategoryType(categoryName: string, familyName: string
         }
     });
 }
+
+export function vehiclesCountryBrandArea() {
+    return axios.get('/filter/filter_charts_vehicles/country_brand_area/');
+}
