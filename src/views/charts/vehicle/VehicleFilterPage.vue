@@ -359,7 +359,7 @@ export default {
                 this.colorIsSelected,
                 this.miscellaneousIsSelected,
             ]
-            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) >= 3
+            return selectedConditions.filter(criteria => criteria).length
         }
     }
 };

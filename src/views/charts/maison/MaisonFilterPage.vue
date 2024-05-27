@@ -2,7 +2,7 @@
 import { sendFilterRequest } from '@/api/filter/filterApi';
 import { vehiclesCountryBrandArea } from '@/api/filter/vehicles/vehicles';
 import { useChartsStore } from '@/store/charts/charts';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Periods from '../components/filters/Periods.vue';
 import Countries from '../vehicle/filters/Countries.vue';
 import AuctionCity from './filters/AuctionCity.vue';
@@ -26,7 +26,7 @@ const maisonCountriesFilter = ref<HTMLInputElement | null>(null)
 const maisonCountries = ref<string[]>([])
 
 const auctionCountriesFilter = ref<HTMLInputElement | null>(null)
-const acutionCountries = ref<string[]>([])
+const auctionCountries = ref<string[]>([])
 
 const periodsFilter = ref<HTMLInputElement | null>(null)
 const selectedPeriods = ref<string[]>([])
@@ -72,6 +72,37 @@ function clearFilters() {
     (auctionCountriesFilter.value as any).resetFilter();
 }
 
+function previewDataset() {
+    console.log('preview data');
+}
+
+const isSelectedMaisonNames = computed(() => selectedMaisonNames.value.length > 0)
+const isSelectedCityNames = computed(() => selectedCityNames.value.length > 0)
+const isMaisonCountries = computed(() => maisonCountries.value.length > 0)
+const isAuctionCountries = computed(() => auctionCountries.value.length > 0)
+const isSelectedPeriods = computed(() => selectedPeriods.value.length > 0)
+const isSelectedYears = computed(() => selectedYears.value.length > 0)
+const isSelectedMonths = computed(() => selectedMonths.value.length > 0)
+const isMiscOptions = computed(() => {
+    for (const key in miscOptions) {
+        if (miscOptions[key as keyof typeof miscOptions] != null) return true
+    }
+    return false
+})
+
+const canPreviewData = computed(() => {
+    return [
+        isSelectedMaisonNames.value,
+        isSelectedCityNames.value,
+        isMaisonCountries.value,
+        isAuctionCountries.value,
+        isSelectedPeriods.value,
+        isSelectedYears.value,
+        isSelectedMonths.value,
+        isMiscOptions.value
+    ].filter(criteria => criteria == true).length >= 3
+})
+
 </script>
 
 <template>
@@ -102,7 +133,7 @@ function clearFilters() {
         <div class="flex flex-col space-y-7" v-else>
             <Maison v-model="selectedMaisonNames" ref="maisonNamesFilter"/>
             <Countries filterName="Maison Countries" :continents="continents" v-model:countries="maisonCountries" ref="maisonCountriesFilter"/>
-            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="acutionCountries" ref="auctionCountriesFilter"/>
+            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="auctionCountries" ref="auctionCountriesFilter"/>
             <AuctionCity v-model="selectedCityNames" ref="cityFilter"/>
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter" />
             <Month v-model="selectedMonths" ref="monthFilter" />
@@ -150,6 +181,10 @@ function clearFilters() {
                     { name: 'USD', value: 'usd' },
                 ]
             }" />
+        </div>
+        <div class="flex flex-col space-y-2 mt-5 
+                    sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
+            <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()" :disabled="!canPreviewData">Preview data set</v-btn>
         </div>
     </div>
 </template>
