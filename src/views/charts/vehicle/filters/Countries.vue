@@ -11,7 +11,8 @@ defineExpose({
 })
 const countries = defineModel<string[]>('countries', { required: true })
 const props = defineProps<{
-    continents: any[]
+    continents: any[],
+    filterName?: string
 }>()
 let selectedContinent = ref<null | string>(null)
 
@@ -48,7 +49,7 @@ function resetFilter() {
 
 <template>
     <div>
-        <GenericFilter filterName="Countries" class="flex">
+        <GenericFilter :filterName="filterName || 'Countries'" class="flex">
             <div class="flex flex-col">
                 <div class="filters-grid-selection lg:!space-x-4">
                     <v-btn
@@ -64,7 +65,7 @@ function resetFilter() {
                     </v-btn>
                 </div>
                 <div class="flex align-center mt-0">
-                    <div v-if="countriesOfContinent.length > 0" class="flex flex-col mt-3">
+                    <div v-if="countriesOfContinent.length > 0" class="flex flex-col mt-3 w-full">
                         <v-row justify="start" class="align-center">
                             <v-col>
                                 <v-chip
