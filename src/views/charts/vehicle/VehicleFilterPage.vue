@@ -212,7 +212,7 @@ export default {
         async fetchContinents() {
             try {
                 const response = await vehiclesCountryBrandArea()
-                this.continents = response.data.items; 
+                this.continents = response.data.items;
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }

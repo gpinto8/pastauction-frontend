@@ -2,6 +2,11 @@
 import { ref, watch } from 'vue';
 import SearchByInitials from '../../components/filters/SearchByInitials.vue';
 import { requestListOfAuctionCityNamesStartingWith, requestListOfFirstTwoLettresAuctionCity } from '@/api/filter/maison/maison';
+import { emptyArray } from '@/utils/functions/EmptyArray';
+
+defineExpose({
+    resetFilter
+})
 
 const selectedCities = defineModel<string[]>({required: true})
 const selectedCitiesInitial = ref<null | string>(null)
@@ -30,6 +35,12 @@ watch(selectedCitiesFirstTwoLetters, async () => {
 })
 
 let citiesList = ref<string[]>([])
+
+function resetFilter() {
+    selectedCitiesInitial.value = null
+    selectedCitiesFirstTwoLetters.value = null
+    emptyArray(selectedCities.value)
+}
 
 </script>
 

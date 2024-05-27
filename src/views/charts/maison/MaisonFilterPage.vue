@@ -1,39 +1,44 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import Maison from './filters/Maison.vue'
-import AuctionCity from './filters/AuctionCity.vue';
-import Periods from '../components/filters/Periods.vue';
 import { sendFilterRequest } from '@/api/filter/filterApi';
-import AuctionYear from './filters/AuctionYear.vue';
-import Month from './filters/Month.vue';
-import Miscellaneous from './filters/Miscellaneous.vue';
-import { useChartsStore } from '@/store/charts/charts';
 import { vehiclesCountryBrandArea } from '@/api/filter/vehicles/vehicles';
+import { useChartsStore } from '@/store/charts/charts';
+import { reactive, ref } from 'vue';
+import Periods from '../components/filters/Periods.vue';
 import Countries from '../vehicle/filters/Countries.vue';
+import AuctionCity from './filters/AuctionCity.vue';
+import AuctionYear from './filters/AuctionYear.vue';
+import Maison from './filters/Maison.vue';
+import Miscellaneous from './filters/Miscellaneous.vue';
+import Month from './filters/Month.vue';
 
 const chartStore = useChartsStore()
 
-const loading = ref<boolean>(false)
+const loading = ref<boolean>(true)
 
 const selectedMaisonNames = ref<string[]>([])
+const maisonNamesFilter = ref<HTMLInputElement | null>(null)
+
+const cityFilter = ref<HTMLInputElement | null>(null)
 const selectedCityNames = ref<string[]>([])
 
 const continents = ref<string[]>([])
+const maisonCountriesFilter = ref<HTMLInputElement | null>(null)
 const maisonCountries = ref<string[]>([])
 
+const auctionCountriesFilter = ref<HTMLInputElement | null>(null)
 const acutionCountries = ref<string[]>([])
 
-const periodsFilter = ref(null)
+const periodsFilter = ref<HTMLInputElement | null>(null)
 const selectedPeriods = ref<string[]>([])
 const periods = ref<string[]>([])
 
-const auctioYearFilter = ref(null)
+const auctioYearFilter = ref<HTMLInputElement | null>(null)
 const selectedYears = ref<number[]>([])
 
-const monthFilter = ref(null)
+const monthFilter = ref<HTMLInputElement | null>(null)
 const selectedMonths = ref<string[]>([])
 
-const miscFilter = ref(null)
+const miscFilter = ref<HTMLInputElement | null>(null)
 const miscOptions = reactive({
     soldStatus: null,
     quotedStats: null,
@@ -57,10 +62,14 @@ Promise.all([fetchPeriods(), fetchContinents()])
     })
 
 function clearFilters() {
+    (maisonNamesFilter.value as any).resetFilter();
     (auctioYearFilter.value as any).resetFilter();
     (monthFilter.value as any).resetFilter();
+    (cityFilter.value as any).resetFilter();
     (periodsFilter.value as any).resetFilter();
     (miscFilter.value as any).resetFilter();
+    (maisonCountriesFilter.value as any).resetFilter();
+    (auctionCountriesFilter.value as any).resetFilter();
 }
 
 </script>
@@ -76,7 +85,7 @@ function clearFilters() {
                 </v-col>
             </v-row>
         </v-alert>
-        <v-row justify="start" class="mt-2">
+        <v-row justify="start" class="mt-2 mb-4">
             <v-col>
                 <small>Please, select almost 3 parameters</small>
             </v-col>
@@ -91,10 +100,10 @@ function clearFilters() {
             </div>
         </v-container>
         <div class="flex flex-col space-y-7" v-else>
-            <Maison v-model="selectedMaisonNames" />
-            <Countries filterName="Maison Countries" :continents="continents" v-model:countries="maisonCountries" />
-            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="acutionCountries" />
-            <AuctionCity v-model="selectedCityNames" />
+            <Maison v-model="selectedMaisonNames" ref="maisonNamesFilter"/>
+            <Countries filterName="Maison Countries" :continents="continents" v-model:countries="maisonCountries" ref="maisonCountriesFilter"/>
+            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="acutionCountries" ref="auctionCountriesFilter"/>
+            <AuctionCity v-model="selectedCityNames" ref="cityFilter"/>
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter" />
             <Month v-model="selectedMonths" ref="monthFilter" />
             <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods" ref="periodsFilter" />
