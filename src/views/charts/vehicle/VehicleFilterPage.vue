@@ -134,6 +134,7 @@ import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
 import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/maison/maisonSearchParams';
 import { useChartsStore } from '@/store/charts/charts';
+import { vehiclesCountryBrandArea } from '@/api/filter/vehicles/vehicles';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -210,7 +211,7 @@ export default {
     methods: {
         async fetchContinents() {
             try {
-                const response = await axios.get('/filter/filter_charts_vehicles/country_brand_area/');
+                const response = await vehiclesCountryBrandArea()
                 this.continents = response.data.items; 
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);

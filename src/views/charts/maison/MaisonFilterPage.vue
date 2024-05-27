@@ -8,6 +8,8 @@ import AuctionYear from './filters/AuctionYear.vue';
 import Month from './filters/Month.vue';
 import Miscellaneous from './filters/Miscellaneous.vue';
 import { useChartsStore } from '@/store/charts/charts';
+import { vehiclesCountryBrandArea } from '@/api/filter/vehicles/vehicles';
+import Countries from '../vehicle/filters/Countries.vue';
 
 const chartStore = useChartsStore()
 
@@ -15,6 +17,11 @@ const loading = ref<boolean>(false)
 
 const selectedMaisonNames = ref<string[]>([])
 const selectedCityNames = ref<string[]>([])
+
+const continents = ref<string[]>([])
+const maisonCountries = ref<string[]>([])
+
+const acutionCountries = ref<string[]>([])
 
 const periodsFilter = ref(null)
 const selectedPeriods = ref<string[]>([])
@@ -39,7 +46,12 @@ async function fetchPeriods() {
     periods.value = response.data.items.map((el: any) => ({ age_name: el.name }))
 }
 
-Promise.all([fetchPeriods()])
+async function fetchContinents() {
+    const response = await vehiclesCountryBrandArea()
+    continents.value = response.data.items
+}
+
+Promise.all([fetchPeriods(), fetchContinents()])
     .finally(() => {
         loading.value = false
     })
@@ -80,6 +92,8 @@ function clearFilters() {
         </v-container>
         <div class="flex flex-col space-y-7" v-else>
             <Maison v-model="selectedMaisonNames" />
+            <Countries filterName="Maison Countries" :continents="continents" v-model:countries="maisonCountries" />
+            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="acutionCountries" />
             <AuctionCity v-model="selectedCityNames" />
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter" />
             <Month v-model="selectedMonths" ref="monthFilter" />
