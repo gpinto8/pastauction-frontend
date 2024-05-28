@@ -132,7 +132,7 @@ import CountriesFilter from './filters/Countries.vue';
 import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
-import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/maison/maisonSearchParams';
+import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/vehicles/vehicleSearchParams';
 import { useChartsStore } from '@/store/charts/charts';
 import { vehiclesCountryBrandArea } from '@/api/filter/vehicles/vehicles';
 
@@ -297,7 +297,7 @@ export default {
             console.log(searchParams.join(','));
             
             try {
-                const response = await axios.get(`/bidwatcher_auction/query_2v`, {
+                const response = await axios.get(`/bidwatcher_vehicle/query_0`, {
                     params: {
                         search: searchParams.join(','),
                     }
