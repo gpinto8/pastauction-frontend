@@ -84,11 +84,16 @@ export default {
         async fetchChartSelection() {
             try {
                 const response = await axios.get('/chart/selection');
-                this.firstRowCards = response.data.items.slice(0, 3).map((item: any) => ({
+                console.log(response.data);
+                this.firstRowCards = response.data.items.filter((el: any) => {
+                    return ["brand", "family", "model"].includes(el.title.toLocaleLowerCase())
+                }).map((item: any) => ({
                     ...item,
                     isActive: item.available === 1
                 }));
-                this.secondRowCards = response.data.items.slice(3).map((item: any) => ({
+                this.secondRowCards = response.data.items.filter((el: any) => {
+                    return ["maison", "auction", "index"].includes(el.title.toLocaleLowerCase())
+                }).map((item: any) => ({
                     ...item,
                     isActive: item.available === 1
                 }));
