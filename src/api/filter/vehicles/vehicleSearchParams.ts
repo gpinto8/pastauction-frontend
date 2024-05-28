@@ -1,4 +1,5 @@
 export function arrayToParamsArray(values: string[]) { return values.join("|") }
+export function numberArrayToParamsArray(values: number[]) { return arrayToParamsArray(values.map(number => '' + number)) }
 
 export function getBrandsSearchParams(brands: string[]) {
     return brands.length > 0 ? `brand_name:${arrayToParamsArray(brands)}` : ''
