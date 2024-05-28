@@ -1,38 +1,45 @@
-function arrayToParamsArray(values: string[]) { return values.join("|") }
+import { arrayToParamsArray } from "../vehicles/vehicleSearchParams";
 
-export function getBrandsSearchParams(brands: string[]) {
-    return brands.length > 0 ? `brand_name:${arrayToParamsArray(brands)}` : ''
+export function getAcutionYearParam(year: number) {
+    return `auction_year:${year}`
 }
 
-export function getFamilySearchParams(families: string[]) {
-    return families.length > 0 ? `family_name:${arrayToParamsArray(families)}` : ''
+export function getNameEventParam(nameEvent: string) {
+    return `name_event:${nameEvent}`
 }
 
-export function getModelSearchParams(models: string[]) {
-    return models.length > 0 ? `model_name:${arrayToParamsArray(models)}` : ''
+export function getAuctionAreaParam(auctionArea: string[]) {
+    return `auction_area:${arrayToParamsArray(auctionArea)}`
 }
 
-export function getCountriesSearchParams(countries: string[]) {
-    return countries.length > 0 ? `country_brand_name:${arrayToParamsArray(countries)}` : ''
+export function getCountryAuctionNamesParam(countryAuctionNames: string[]) {
+    return `country_auction_name:${arrayToParamsArray(countryAuctionNames)}`
 }
 
-export function getTypesSearchParams(types: string[]) {
-    return types.length > 0 ? `body_type:${arrayToParamsArray(types)}` : ''
+export function getCityAuctionNameParam(cityNames: string[]) {
+    return `city_auction_name:${arrayToParamsArray(cityNames)}`
 }
 
-export function getAttributesSearchParams(attributes: string[]) {
-    return attributes.length > 0 ? `body_category:${arrayToParamsArray(attributes)}` : ''
+export function getAuctionNameParam(auctionNames: string[]) {
+    return `auction_name:${arrayToParamsArray(auctionNames)}`
 }
 
-export function getPeriodsSearchParams(periods: string[]) {
-    return periods.length > 0 ? `age_name:${arrayToParamsArray(periods)}` : ''
+export function getcountryMaisonParam(countryMaison: string[]) {
+    return `country_maison:${arrayToParamsArray(countryMaison)}`
 }
 
-export function getColorsSearchParams(colors: string[]) {
-    return colors.length > 0 ? `color_name:${arrayToParamsArray(colors)}` : ''
+export function getMaisonNameParam(maisonName: string[]) {
+    return `maison_name:${arrayToParamsArray(maisonName)}`
 }
 
-// TODO: understand how to do this
-export function getMiscSearchParams() {
-    return ''
+export function getAuctionDataParam(auctionData: string[]) {
+    return `auction_data:${arrayToParamsArray(auctionData)}`
+}
+
+export function getAuctionTypeParam(auctionType: string[]) {
+    return `auction_type:${arrayToParamsArray(auctionType)}`
+}
+
+export function getAgeNameParam(ageNames: string[]) {
+    return `age_name:${arrayToParamsArray(ageNames)}`
 }

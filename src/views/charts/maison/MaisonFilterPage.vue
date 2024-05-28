@@ -10,6 +10,7 @@ import AuctionYear from './filters/AuctionYear.vue';
 import Maison from './filters/Maison.vue';
 import Miscellaneous from './filters/Miscellaneous.vue';
 import Month from './filters/Month.vue';
+import axios from 'axios';
 
 const chartStore = useChartsStore()
 
@@ -72,8 +73,49 @@ function clearFilters() {
     (auctionCountriesFilter.value as any).resetFilter();
 }
 
-function previewDataset() {
+async function previewDataset() {
+    // Use /bidwatcher_auction/query_1 to get the preview data
     console.log('preview data');
+
+    // this.isLoadingPreviewData = true
+    let searchParams = [
+        getBrandsSearchParams(this.selectedBrands),
+        getFamilySearchParams(this.selectedFamilies),
+        getModelSearchParams(this.selectedModelFull),
+        getCountriesSearchParams(this.selectedCountries),
+        getTypesSearchParams(this.types),
+        getAttributesSearchParams(this.selectedAttributes),
+        getPeriodsSearchParams(this.selectedPeriods),
+        getColorsSearchParams(this.selectedColors),
+        getMiscSearchParams(),
+    ]
+
+    this.$nextTick(() => {
+        (this.$refs.previewdata as any).scrollIntoView({ behavior: 'smooth' })
+    })
+
+    // Filter empty params
+    searchParams = searchParams.filter(param => param != '')
+    console.log(searchParams.join(','));
+
+    try {
+        const response = await axios.get(`/bidwatcher_vehicle/query_0`, {
+            params: {
+                search: searchParams.join(','),
+            }
+        });
+        // const response = await axios.get(`/bidwatcher_vehicle/query_v?search=brand_name%3AAbarth%2Cage_name%3AModern&page=1&size=50`);
+        this.isLoadingPreviewData = false
+        console.log(response);
+        this.previewData = response.data.items[0];
+        this.$nextTick(() => {
+            (this.$refs.previewdata as any).scrollIntoView({ behavior: 'smooth' })
+        })
+    } catch (error) {
+        this.isLoadingPreviewData = false
+        console.error('Preview dataset error:', error);
+    }
+
 }
 
 const isSelectedMaisonNames = computed(() => selectedMaisonNames.value.length > 0)
@@ -131,10 +173,12 @@ const canPreviewData = computed(() => {
             </div>
         </v-container>
         <div class="flex flex-col space-y-7" v-else>
-            <Maison v-model="selectedMaisonNames" ref="maisonNamesFilter"/>
-            <Countries filterName="Maison Countries" :continents="continents" v-model:countries="maisonCountries" ref="maisonCountriesFilter"/>
-            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="auctionCountries" ref="auctionCountriesFilter"/>
-            <AuctionCity v-model="selectedCityNames" ref="cityFilter"/>
+            <Maison v-model="selectedMaisonNames" ref="maisonNamesFilter" />
+            <Countries filterName="Maison Countries" :continents="continents" v-model:countries="maisonCountries"
+                ref="maisonCountriesFilter" />
+            <Countries filterName="Auction Countries" :continents="continents" v-model:countries="auctionCountries"
+                ref="auctionCountriesFilter" />
+            <AuctionCity v-model="selectedCityNames" ref="cityFilter" />
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter" />
             <Month v-model="selectedMonths" ref="monthFilter" />
             <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods" ref="periodsFilter" />
@@ -184,7 +228,8 @@ const canPreviewData = computed(() => {
         </div>
         <div class="flex flex-col space-y-2 mt-5 
                     sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
-            <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()" :disabled="!canPreviewData">Preview data set</v-btn>
+            <v-btn size="default" height="40" class="rounded-md" color="black" @click="previewDataset()"
+                :disabled="!canPreviewData">Preview data set</v-btn>
         </div>
     </div>
 </template>
@@ -195,7 +240,7 @@ const canPreviewData = computed(() => {
     font-size: 15px !important;
 }
 
-.option{
+.option {
     @apply rounded-[2.8px]
 }
 
