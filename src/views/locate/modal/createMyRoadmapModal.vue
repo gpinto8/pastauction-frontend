@@ -2,28 +2,56 @@
 import Modal from '@/components/modal/Modal.vue';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import { useLocateStore } from '@/store/locate/locate';
-import { isEntityRoadmapData, isEventRoadmapData, useLocateRoadmapStore, type CreateEntityRoadmapBody, type CreateEventRoadmapBody, type RoadmapData } from '@/store/locate/locateRoadmapStore';
+import { isEntityRoadmapData, isEventRoadmapData, useLocateRoadmapStore, type CreateEntityRoadmapBody, type CreateEventRoadmapBody, type EntityEventRoadmapPoint, type EntityRoadmapPoint, type RoadmapData } from '@/store/locate/locateRoadmapStore';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
+import type { LocateExtendedEntityData } from '@/store/locate/locateEntityStore';
+import { getCurrentDateFormatted } from '@/store/locate/utils/getCurrentDateFormatted';
+import type { LocateExtendedEventData } from '@/store/locate/locateEventStore';
 
 const locateStore = useLocateStore();
-const { modalStates, activeLocateSearchCategory} = storeToRefs(locateStore);
+const { modalStates, activeLocateSearchCategory, items} = storeToRefs(locateStore);
 
 const { entityRoadmaps, eventsRoadmaps } = storeToRefs(useLocateRoadmapStore());
 const { createRoadmap } = useLocateRoadmapStore();
 
 const newRoadmapData = ref<Partial<CreateEntityRoadmapBody | CreateEventRoadmapBody>>({});
 
-async function  handleSaveRoadmapClick(){
+async function handleSaveRoadmapClick(){
+	let points:  Partial<EntityRoadmapPoint>[] | Partial<EntityEventRoadmapPoint>[] = [];
+
 	if(isEntityRoadmapData(newRoadmapData.value)){
 		if(!newRoadmapData.value.name) return alert('Roadmap name required');
+
+		points = (items.value as LocateExtendedEntityData[]).filter(e => e.isSelected).map(e => ({
+			"id_entity_entity": e.id,
+			"preferred": true,
+		}));
 	}	else if(isEventRoadmapData(newRoadmapData.value)) {
 		if(!newRoadmapData.value.event_name) return alert('Roadmap name required');
+
+		const selectedEvents = (items.value as LocateExtendedEventData[]).filter(e => e.isSelected);
+		points = selectedEvents.map(e => ({
+			"id_entity_event": e.event_id_key,
+			"preferred": true
+		}));
 	}
 
-	const newRoadmap = await createRoadmap(newRoadmapData.value);
+	function isEntityRoadmapPoint(data: Partial<EntityRoadmapPoint> | Partial<EntityRoadmapPoint>[]): data is EntityRoadmapPoint | EntityRoadmapPoint[] {
+		return true;
+	}
 
-	modalStates.value.createMyRoadmap = false;
+	/** to do */
+	const userHasSubscription = true;
+	if(userHasSubscription){
+		if(isEntityRoadmapPoint(points)){
+			const newRoadmap = await createRoadmap(newRoadmapData.value as CreateEventRoadmapBody, points);
+		}
+		modalStates.value.createMyRoadmap = false;
+	} else {
+		modalStates.value.upgradeMyPlan = true;
+		modalStates.value.createMyRoadmap = false;
+	}
 }
 
 function onRoadmapNameChange(v: string){

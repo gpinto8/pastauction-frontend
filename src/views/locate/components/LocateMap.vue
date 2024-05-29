@@ -137,11 +137,15 @@ async function drawRoadMap(waypoints: Coordinates[], origin?: Coordinates, desti
 
 		if(!response.routes.length) return;
 
+		const route = response.routes[0];
+		
+		const distance = response.routes[0].legs.reduce<number>((p, c) => parseInt(c.distance?.value + ''), 0);
+
 		new (await routesLibrary).DirectionsRenderer({
 			suppressMarkers: true,
 			map: map,
 			directions: response,
-		});
+		}); 
 	} catch (error) {
 		window.alert("Directions request failed due to " + error);
 	}

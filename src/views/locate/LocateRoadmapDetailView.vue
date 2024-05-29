@@ -14,6 +14,8 @@ import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import { storeToRefs } from 'pinia';
 import { useLocateStore, type Coordinates } from '@/store/locate/locate';
 import {
+	isEntityRoadmapData,
+  isEventRoadmapData,
   useLocateRoadmapStore,
   type EntityRoadmapData,
 	type EventRoadmapData,
@@ -30,6 +32,7 @@ import {
 } from '@/store/locate/locateServiceStore';
 import {
   useLocateEntityStore,
+  type LocateEntityData,
   type LocateExtendedEntityData,
 } from '@/store/locate/locateEntityStore';
 import LocateMap from './components/LocateMap.vue';
@@ -37,6 +40,7 @@ import LocateLocationSearchInput from './components/LocateLocationSearchInput.vu
 import { RouterLink , useRouter } from 'vue-router';
 import { makePhoneCall } from '@/store/locate/utils/makePhoneCall';
 import LocateEntityCard from './components/LocateEntityCard.vue';
+import LocateEventCard from './components/LocateEventCard.vue';
 
 const locateStore = useLocateStore();
 const { filterValuesFunctions , getSelectedItems , emitEvent_searchLocation } = locateStore;
@@ -63,12 +67,26 @@ const { fetchEvents } = eventStore;
 const { events, eventsLoading } = storeToRefs(eventStore);
 
 const roadmapStore = useLocateRoadmapStore();
-const { fetchEntityRoadmaps, fetchEventRoadmaps, fetchEntityRoadmapEntities } = roadmapStore;
-const { entityRoadmaps, eventsRoadmaps, roadmapsLoading , detailRoadmap } = storeToRefs(roadmapStore);
+const { fetchEntityRoadmaps, fetchEventRoadmaps, fetchEntityRoadmapEntities , fetchEntitiesForRoadmap, fetchEventsForRoadmap} = roadmapStore;
+const { 
+	entityRoadmaps,
+	eventsRoadmaps,
+	roadmapsLoading, 
+	detailRoadmap,
+	detailRoadmapEntities,
+	detailRoadmapServices,
+	detailRoadmapEvents,
+} = storeToRefs(roadmapStore);
 
 onMounted(()=>{
-	if(activeLocateSearchCategory.value.name === "Entity") fetchEntityRoadmaps();
-	if(activeLocateSearchCategory.value.name === "Events") fetchEventRoadmaps();
+	if(!detailRoadmap.value) return;
+
+	if(isEntityRoadmapData(detailRoadmap.value)){
+		fetchEntitiesForRoadmap(detailRoadmap.value);
+	} else if(isEventRoadmapData(detailRoadmap.value)){
+		fetchEventsForRoadmap(detailRoadmap.value);
+	}
+
 });
 
 const isEntitySelected = computed(()=> activeLocateSearchCategory.value.name === "Entity");
@@ -254,8 +272,10 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
 		</div>
 	</tempalte>
 
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-		<LocateEntityCard :entity="entity" v-for="entity of entities" />
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
+		<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of detailRoadmapEntities" :allowSelect="false" :isSelectedDefault="true" />
+		<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of detailRoadmapServices" :allowSelect="false" :isSelectedDefault="true" />
+		<LocateEventCard v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of detailRoadmapEvents" :allowSelect="false" :isSelectedDefault="true" />
 	</div>
 
 </template>

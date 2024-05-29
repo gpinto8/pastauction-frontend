@@ -39,8 +39,6 @@ const eventStore = useLocateEventStore();
 const { fetchEvents } = eventStore;
 const { events, eventsLoading } = storeToRefs(eventStore);
 
-const entitiesContainerRef = ref<HTMLDivElement | null>(null);
-
 const defaultFilters = {
 	area: '',
 	country: '',
@@ -49,7 +47,12 @@ const defaultFilters = {
 	brand: '',
 	aging: '',
 };
+
+// refs - start
+const entitiesContainerRef = ref<HTMLDivElement | null>(null);
 const activeFilters = ref(defaultFilters);
+const isOpenMobileCascadeFilters = ref(false);
+// refs - end
 
 function resetFilters(){
 	activeFilters.value = defaultFilters;
@@ -68,10 +71,14 @@ watch(
 );
 
 /** when the cascade filters change or the entity/service/event category filter changes, re-fetch the datas */
-watch([
+watch(
+	[
 		() => activeFilters.value,
 		() => activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected),
-	], searchItems, {deep: true});
+	],
+	searchItems,
+	{deep: true}
+);
 
 async function searchItems() {
 	switch (activeLocateSearchCategory.value.name) {
@@ -89,6 +96,7 @@ async function searchItems() {
 async function searchEntities(){
 	await fetchEntities({
 		'brand_name': activeFilters.value.brand,
+		'area_geo': activeFilters.value.area,
 		'country': activeFilters.value.country,
 		'city': activeFilters.value.city,
 		'temp_tipo_j': `"${activeFilters.value.car}"`,
@@ -139,7 +147,10 @@ const handleCreateRoadmap = () => {
 	</div>
 
 	<div class="flex flex-col gap-4 rounded p-4 pb-2 bg-[#212529]">
-		<div class="flex gap-2 flex-col lg:flex-row lg:items-stretch lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_auto] md:flex-wrap md:grid md:grid-cols-3 lg:[&>*]:w-auto md:[&>*]:w-full md:gap-3">
+		<div
+			:class="{'hidden md:flex lg:flex-row': !isOpenMobileCascadeFilters}"
+			class="flex gap-4 flex-col lg:flex-row lg:items-stretch lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_auto] md:flex-wrap md:grid md:grid-cols-3 lg:[&>*]:w-auto md:[&>*]:w-full md:gap-3"
+		>
 				<MySelect @change="newValue => activeFilters.area = newValue" v-model:selected="activeFilters.area" placeholder="Area" :items="filterValues.areas"></MySelect>
 				<MySelect @change="newValue => activeFilters.country = newValue" v-model:selected="activeFilters.country" placeholder="Country" :items="filterValues.countries"></MySelect>
 				<!-- <MySelect @change="newValue => activeFilters.city = newValue" v-model:selected="activeFilters.city" placeholder="City" :items="filterValues.cities"></MySelect> -->
@@ -148,12 +159,13 @@ const handleCreateRoadmap = () => {
 				<MySelect @change="newValue => activeFilters.aging = newValue" v-model:selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings"></MySelect>
 				<!-- <MySelect @change="newValue => activeFilters.aging = newValue" v-model:selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings" :filterFN="(i, q)=>i.name.toLowerCase().includes(q.toLowerCase())" :formatItemFN="(i)=> i.name ? `${i.name} (${i.startYear}-${i.endYear})` : ''"></MySelect> -->
 			
-				<LocateBtn @click="searchItems()" class="bg-blue-700 text-white h-full lg:px-6 lg:h-[36px]" >
+				<LocateBtn @click="searchItems(); isOpenMobileCascadeFilters ? isOpenMobileCascadeFilters = false : void 0;" class="bg-blue-700 text-white h-full lg:px-6 lg:h-[36px] flex items-center justify-center gap-2" >
+					<app-icon class="text-white" type="search" size="md"></app-icon>
 					Search
 				</LocateBtn>
 		</div>
 
-		<LocateBtn @click="searchItems" block class="bg-white md:hidden flex items-center px-[4px] py-[8px] justify-center gap-2">
+		<LocateBtn v-if="!isOpenMobileCascadeFilters" @click="searchItems(); isOpenMobileCascadeFilters = true;" block class="bg-white md:hidden flex items-center px-[4px] py-[8px] justify-center gap-2">
 			<app-icon class="text-[#0D6EFD]" type="search" size="md"></app-icon>
 			<span class="text-[#0D6EFD]">Search</span>
 		</LocateBtn>

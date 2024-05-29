@@ -37,6 +37,6 @@ const closeModal = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999!important;
+  z-index: 100 !important;
 }
 </style>

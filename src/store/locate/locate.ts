@@ -44,6 +44,7 @@ export const useLocateStore = defineStore('locate',
 				upgradeMyPlan: false,
 				cannotCreateRoadmapWarning: false,
 				confirmRoadmapDeletionModal: false,
+				calculateCostOfTheTripModal: true,
 			});
 		
 			const currentUserLocationMarker =  ref<google.maps.marker.AdvancedMarkerElement | null>(null);
@@ -310,7 +311,24 @@ export const useLocateStore = defineStore('locate',
 
 				// localStorage.getItem('locate:currentUserLocation');
 			});
-		
+			const itemsLoading = computed(() => {
+				// const entityStore = useLocateEntityStore();
+				// const serviceStore = useLocateServiceStore();
+				// const eventStore = useLocateEventStore();
+	
+				console.log("entityStore.entitiesLoading", entityStore.entitiesLoading);
+				switch (activeLocateSearchCategory.value.name) {
+					case "Entity":
+						return entityStore.entitiesLoading;
+					case "Services":
+						return serviceStore.servicesLoading;
+					case "Events":
+						return eventStore.eventsLoading;
+					default:
+						return false;
+				}
+			});
+
 			return {
 				filterValues,
 				filterValuesFunctions: {
@@ -331,29 +349,31 @@ export const useLocateStore = defineStore('locate',
 				mapLocationSearchQuery,
 				/** this state is just used to mock an event, the idea was to subscribe to this event using watch() and nothing else, this is not a thing */
 				event_searchLocation: 0,
+				itemsLoading,
+				loadingScreen: ref(false),
 			};
 		},
 		/** getters are like comoputed states */
-		getters: {
-			/** this state indicates if the current displayed items are loading/fething (based on the search category: entity/services/events) */
-			itemsLoading : (state) => {
-				const entityStore = useLocateEntityStore();
-				const serviceStore = useLocateServiceStore();
-				const eventStore = useLocateEventStore();
+		// getters: {
+		// 	/** this state indicates if the current displayed items are loading/fething (based on the search category: entity/services/events) */
+		// 	itemsLoading : (state) => {
+		// 		const entityStore = useLocateEntityStore();
+		// 		const serviceStore = useLocateServiceStore();
+		// 		const eventStore = useLocateEventStore();
 	
-				switch (state.activeLocateSearchCategory.name) {
-					case "Entity":
-						return entityStore.entitiesLoading;
-					case "Services":
-						return serviceStore.servicesLoading;
-					case "Events":
-						return eventStore.eventsLoading;
-					default:
-						console.log("default");
-						return false;
-				}
-			},
-		},
+		// 		console.log("entityStore.entitiesLoading", entityStore.entitiesLoading);
+		// 		switch (state.activeLocateSearchCategory.name) {
+		// 			case "Entity":
+		// 				return entityStore.entitiesLoading;
+		// 			case "Services":
+		// 				return serviceStore.servicesLoading;
+		// 			case "Events":
+		// 				return eventStore.eventsLoading;
+		// 			default:
+		// 				return false;
+		// 		}
+		// 	},
+		// },
 		actions: {
 			emitEvent_searchLocation() {
 				this.event_searchLocation++;

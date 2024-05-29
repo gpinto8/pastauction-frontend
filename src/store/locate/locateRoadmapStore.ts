@@ -2,8 +2,11 @@ import { httpDelete, httpGet, httpPatch, httpPost, httpUpload } from '@/api/api'
 import { defineStore } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { fetchAllItems } from './utils/fetchAllItems';
-import type { LocateEntityData } from './locateEntityStore';
+import type { LocateEntityData, LocateExtendedEntityData } from './locateEntityStore';
 import { useLocateStore } from './locate';
+import { getCurrentDateFormatted } from './utils/getCurrentDateFormatted';
+import type { LocateEventData, LocateExtendedEventData } from './locateEventStore';
+import type { LocateExtendedServicesData } from './locateServiceStore';
 
 
 const sampleEntityRoadmapData = {
@@ -64,23 +67,21 @@ const sampleCreateEventRoadmapBody = {
 };
 export type CreateEventRoadmapBody = typeof sampleCreateEventRoadmapBody;
 
-// Overload declarations
-function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody>): Promise<EntityRoadmapData>;
-function createRoadmap(roadmap: Partial<CreateEventRoadmapBody>): Promise<EventRoadmapData>;
-async function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody | CreateEventRoadmapBody>): Promise<EntityRoadmapData | EventRoadmapData> {
-	let createdRoadmap : EntityRoadmapData | EventRoadmapData;
+const objEntityRoadmapPoint = {
+	"id_entity_entity": 3,
+	"id_key_entity_roadmap": 8,
+	"date": "2024-05-21",
+	"preferred": true
+};
+export type EntityRoadmapPoint = typeof objEntityRoadmapPoint;
 
-	if(isEntityRoadmapData(roadmap)){
-		const response = await httpPost(`/entity_roadmap/create`, roadmap);
-		createdRoadmap = response.data;
-	}else {
-		const response = await httpPost(`/entity_event_roadmap/create`, roadmap);
-
-		createdRoadmap = response.data;
-	}
-	
-	return createdRoadmap;
+const objEntityEventRoadmapPoint = {
+	"id_entity_event": 3,
+	"id_key_event_roadmap": 8,
+	"roadmap_date": "2024-05-25",
+	"preferred": true
 }
+export type EntityEventRoadmapPoint = typeof objEntityEventRoadmapPoint;
 
 export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
   state: () => ({
@@ -89,6 +90,9 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
     roadmapsLoading: false,
 		/** the current roadmap that is displayed in the roadmap detail page */
 		detailRoadmap: null as RoadmapData | null, 
+		detailRoadmapEntities: [] as LocateExtendedEntityData[],
+		detailRoadmapServices: [] as LocateExtendedServicesData[],
+		detailRoadmapEvents: [] as LocateExtendedEventData[],
   }),
 	actions: {
 		async fetchEntityRoadmaps(
@@ -191,8 +195,53 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 		},
 
 		createRoadmap,
+
+		async fetchEntitiesForRoadmap(roadmap: EntityRoadmapData){
+			const items = await fetchAllItems<LocateEntityData>(
+				`/entity_entity/query_user?sort_by=name:asc${encodeURI("")}`,
+			);
+
+			this.detailRoadmapEntities = items;
+		},
+		async fetchEventsForRoadmap(event: EventRoadmapData){
+			const items = await fetchAllItems<LocateEventData>(
+				`/entity_event?sort_by=name:asc${encodeURI("")}`,
+			);
+
+			this.detailRoadmapEvents = items;
+		},
 	},
 });
+
+// Overload declarations
+function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody>, points: Partial<EntityRoadmapPoint>[]): Promise<EntityRoadmapData>;
+function createRoadmap(roadmap: Partial<CreateEventRoadmapBody>, points: Partial<EntityEventRoadmapPoint>[]): Promise<EventRoadmapData>;
+async function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody> | Partial<CreateEventRoadmapBody>, points: Partial<EntityRoadmapPoint>[] | Partial<EntityEventRoadmapPoint>[]): Promise<EntityRoadmapData | EventRoadmapData> {
+	let createdRoadmap : EntityRoadmapData | EventRoadmapData;
+
+	roadmap.date_creation = getCurrentDateFormatted();
+
+	if(isEntityRoadmapData(roadmap)){
+		const response = await httpPost(`/entity_roadmap/create`, roadmap);
+		createdRoadmap = response.data;
+	}else {
+		const response = await httpPost(`/entity_event_roadmap/create`, roadmap);
+		createdRoadmap = response.data;
+	}
+
+	if(points) for (const point of points) {
+		if(isEntityRoadmapData(roadmap)){
+			(point as EntityRoadmapPoint).id_key_entity_roadmap = createdRoadmap.id_key;
+			(point as EntityRoadmapPoint).date = getCurrentDateFormatted();
+		}else {
+			(point as EntityEventRoadmapPoint).id_key_event_roadmap = createdRoadmap.id_key;
+			(point as EntityEventRoadmapPoint).roadmap_date = getCurrentDateFormatted();
+		}
+		const response = await httpPost(isEntityRoadmapData(roadmap) ? "/entity_roadmap_points/create" : "/entity_event_roadmap_points/create", point);
+	}
+
+	return createdRoadmap;
+}
 
 export function isEntityRoadmapData(data: Partial<RoadmapData>): data is EntityRoadmapData {
 	return useLocateStore().$state.activeLocateSearchCategory.name === "Entity";

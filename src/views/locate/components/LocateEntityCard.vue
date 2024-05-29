@@ -6,6 +6,8 @@ import { makePhoneCall } from '@/store/locate/utils/makePhoneCall';
 
 const props = defineProps<{
 	entity: LocateExtendedEntityData | LocateExtendedServicesData,
+	allowSelect?: boolean,
+	isSelectedDefault?: boolean,
 }>();
 
 </script>
@@ -26,7 +28,7 @@ const props = defineProps<{
 								</div>
 								<label
 										class="flex justify-center  items-center bg-gray-200 w-8 h-8 rounded cursor-pointer">
-										<input type="checkbox" v-model="entity.isSelected">
+										<input type="checkbox" v-model="entity.isSelected" :disabled="!allowSelect" :checked="allowSelect ? entity.isSelected : (typeof isSelectedDefault === 'boolean' ? isSelectedDefault : entity.isSelected)">
 								</label>
 						</div>
 				</div>
