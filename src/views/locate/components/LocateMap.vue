@@ -23,6 +23,10 @@ const mapRef = ref<HTMLElement>();
 
 const markers = ref<google.maps.marker.AdvancedMarkerElement[]>([]);
 
+const emits = defineEmits<{
+	(event: 'change.google.maps.DirectionsResult', result: google.maps.DirectionsResult): void;
+}>();
+
 // Esegui la funzione initMap dopo il montaggio del componente
 onMounted(async () => {
 	map = new (await mapsLibrary).Map(mapRef.value!, {
@@ -137,9 +141,7 @@ async function drawRoadMap(waypoints: Coordinates[], origin?: Coordinates, desti
 
 		if(!response.routes.length) return;
 
-		const route = response.routes[0];
-		
-		const distance = response.routes[0].legs.reduce<number>((p, c) => parseInt(c.distance?.value + ''), 0);
+		emits('change.google.maps.DirectionsResult', response);
 
 		new (await routesLibrary).DirectionsRenderer({
 			suppressMarkers: true,
@@ -165,5 +167,5 @@ function fitMapToMarkers(markers: google.maps.marker.AdvancedMarkerElement[]) {
 </script>
 
 <template>
-	<div ref="mapRef" class="rounded" style="height: 400px;"></div>
+	<div ref="mapRef" class="rounded h-[248px] md:h-[356px] lg:h-[504px]"></div>
 </template>

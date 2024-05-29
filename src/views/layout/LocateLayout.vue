@@ -70,7 +70,7 @@ watch([itemsLoading, roadmapsLoading], ()=>console.log("kkkkkkk", itemsLoading.v
 		<RoadmapSuccessfullySavedModal />
 		<UpgradeMyPlanModal />
 		<ConfirmRoadmapDeletionModal />
-		<CalculateCostOfTheTripModal />
+		<!-- <CalculateCostOfTheTripModal /> -->
 		<!-- modals - end -->
 		
 		<div class="flex flex-col gap-4 lg:gap-6 lg:mb-96 mx-auto lg:max-w-[1280px]" :class="{'h-full overflow-hidden': loadingStates.entitiesLoading}">

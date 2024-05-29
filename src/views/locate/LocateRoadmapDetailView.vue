@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import MySelect from './components/Select.vue';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
+import CalculateCostOfTheTripModal from '@/views/locate/modal/calculateCostOfTheTripModal.vue';
 import { storeToRefs } from 'pinia';
 import { useLocateStore, type Coordinates } from '@/store/locate/locate';
 import {
@@ -76,6 +77,7 @@ const {
 	detailRoadmapEntities,
 	detailRoadmapServices,
 	detailRoadmapEvents,
+	roadmapVehicleData,
 } = storeToRefs(roadmapStore);
 
 onMounted(()=>{
@@ -102,7 +104,24 @@ const roadmaps = computed(() => {
 const orderBy = ref<typeof orderByOptions[number]>('');
 const orderByOptions = ['More new', 'More old'];
 
-const isEditingMode = ref(false);
+const isApproximateCostSectionVisible = ref(false);
+
+const roadmapTripCostsData = ref({
+	approximatePrice : "430,00US$",
+	mileage: "2503 km",
+	time : "25hs 12min",
+	detailedCost : "430,00US$",
+	fuelCost: "300,00 US$",
+	totalTollCost: "130,00 US$",
+	tollsCosts: [
+		{ label: "Sagamore Bridge Toll Plaza", cost: "US$ 50"},
+		{ label: "Bourne Bridge Toll Plaza", cost: "US$ 20"},
+		{ label: "Sagamore Bridge Toll Plaza", cost: "US$ 50"},
+		{ label: "Tobin Bridge Toll Plaza", cost: "US$ 10"},
+	],
+});
+
+const activeGoogleMapsDirectionsResult = ref<google.maps.DirectionsResult | null>(null);
 
 function formatDate(dateString: string) {
 	const today = new Date().toDateString();
@@ -121,15 +140,54 @@ const orderedRoadmaps = computed(() => {
 
 const router = useRouter();
 
-function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
-	detailRoadmap.value = roadmap;
-	router.push('/locate/roadmap-detail');
+function gotToRoadmapsListPage() {
+	router.push('/locate/roadmaps');
 }
 
+function calculateAllCosts(){
+	if(!roadmapVehicleData.value) return;
+	if(!activeGoogleMapsDirectionsResult.value) return;
+	if(!activeGoogleMapsDirectionsResult.value.routes.length) return;
+
+	const mileToKm = (mile: number) => mile * 1.60934;
+	const meterToKm = (meter: number) => meter / 1000;
+	const secondsToHours = (seconds: number) => seconds / 3600;
+
+	// google maps can return mutliple routes, we will use and display only the first one
+	const mainRoute = activeGoogleMapsDirectionsResult.value.routes[0];
+
+	const routeDistanceKm = meterToKm(mainRoute.legs.reduce((p, c) => p + (c.distance?.value || 0), 0));
+	const routDurationHr = secondsToHours(mainRoute.legs.reduce((p, c) => p + (c.duration?.value || 0), 0));
+
+	const pricePerKm = mileToKm(parseFloat(roadmapVehicleData.value.fuelCost08) / 15_000);
+
+	const fulesCost = routeDistanceKm * pricePerKm;
+	const totalTollCost = mainRoute.fare?.value || 0;
+
+	roadmapTripCostsData.value = {
+		approximatePrice : `${fulesCost + totalTollCost}US$`, //"430,00US$",
+		mileage: `${routeDistanceKm} km`, //"2503 km",
+		time : `${routDurationHr}hs`, //"25hs 12min",
+		detailedCost : `${fulesCost + totalTollCost}US$`, //"430,00US$",
+		fuelCost: `${fulesCost} US$`, //"300,00 US$",
+		totalTollCost: `${totalTollCost} US$`, //"130,00 US$",
+		tollsCosts: [
+			{ label: "Google Maps estimated total Toll", cost: `US$ ${totalTollCost}`},
+		],
+		// tollsCosts: [
+		// 	{ label: "Sagamore Bridge Toll Plaza", cost: "US$ 50"},
+		// 	{ label: "Bourne Bridge Toll Plaza", cost: "US$ 20"},
+		// 	{ label: "Sagamore Bridge Toll Plaza", cost: "US$ 50"},
+		// 	{ label: "Tobin Bridge Toll Plaza", cost: "US$ 10"},
+		// ],
+	};
+}
 
 </script>
 
 <template>
+	<CalculateCostOfTheTripModal @calculate="isApproximateCostSectionVisible = true; calculateAllCosts()"/>
+
 	<!-- temporary block -->
 	<RouterLink to="/locate/roadmaps" class="flex items-center">
 		<app-icon type="arrow_left" size="45" class=" overflow-visible rounded-full p-3 bg-[#F2F2F2] cursor-pointer hover:opacity-80"/>
@@ -140,13 +198,13 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
   </div>
 
 	<div>
-		<LocateMap/>
+		<LocateMap @change.google.maps.directions-result="activeGoogleMapsDirectionsResult"/>
 	</div>
 
 
-	<tempalte v-if="isEditingMode">
+	<tempalte v-if="!isApproximateCostSectionVisible">
 		<div class="flex flex-col gap-5 ">
-			<LocateLocationSearchInput />
+			<!-- <LocateLocationSearchInput /> -->
 
 			<div class="flex justify-between w-full items-center flex-wrap gap-2">
 
@@ -175,7 +233,7 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
 				</div>
 
 				<LocateBtn  block class="mt-8 md:!mt-0 md:px-4 py-2 w-full md:w-fit md:ml-auto bg-white !text-[#212529] border-[1px] border-[#212529] border-solid">Delete Roadmap</LocateBtn>
-				<LocateBtn  block class="md:px-4 py-2 w-full md:w-fit  bg-[#212529] text-white border-[1px] border-white">Calculate cost</LocateBtn>
+				<LocateBtn @click="modalStates.calculateCostOfTheTripModal = true" block class="md:px-4 py-2 w-full md:w-fit  bg-[#212529] text-white border-[1px] border-white">Calculate cost</LocateBtn>
 			</div>
 		</div>
 	</tempalte>
@@ -189,15 +247,15 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
 					<span class="text-[#0D6EFD]">Current location</span><span class="text-[#6C757D] ">  >  {{ 'Massachusetts' }}</span>
 				</div>
 			</div>
-			<LocateBtn @click="isEditingMode = true" block class="bg-white !text-[#212529] border-[1px] border-[#212529] border-solid w-full block md:w-auto md:min-w-[158px]">Modify</LocateBtn>
-			<LocateBtn block class="bg-[#212529] text-white border-[1px] border-white block w-full md:w-auto md:min-w-[158px]">Save</LocateBtn>
+			<LocateBtn @click="isApproximateCostSectionVisible = false" block class="bg-white !text-[#212529] border-[1px] border-[#212529] border-solid w-full block md:w-auto md:min-w-[158px]">Modify</LocateBtn>
+			<LocateBtn @click="gotToRoadmapsListPage" block class="bg-[#212529] text-white border-[1px] border-white block w-full md:w-auto md:min-w-[158px]">Save</LocateBtn>
 		</div>
 
 		<div class="lg:grid lg:gap-4 lg:grid-cols-[1fr_1fr_1fr] lg:[&_>*]:w-full lg:mt-6 md:mt-4">
 			<div class="rounded bg-[#F8F9FA] p-3 grid gap-[8px] grid-cols-2 mt-2 h-fit lg:!max-w-[318px]">
-				<div class="justify-self-start">Approximate price</div> <div class="font-semibold text-[#0D6EFD] justify-self-end">430,00US$</div>
-				<div class="justify-self-start">Mileage</div> <div class="font-medium justify-self-end">2503 km</div>
-				<div class="justify-self-start">Time</div> <div class="font-semibold justify-self-end">5hs 12min</div>
+				<div class="justify-self-start">Approximate price</div> <div class="font-semibold text-[#0D6EFD] justify-self-end">{{ roadmapTripCostsData.approximatePrice }}</div>
+				<div class="justify-self-start">Mileage</div> <div class="font-medium justify-self-end">{{ roadmapTripCostsData.mileage }}</div>
+				<div class="justify-self-start">Time</div> <div class="font-semibold justify-self-end">{{ roadmapTripCostsData.time }}</div>
 			</div>
 
 			<div class="rounded bg-[#F8F9FA] mt-2">
@@ -221,7 +279,7 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
 					</defs>
 					</svg>
 
-					<div class="font-semibold text-[#0D6EFD] text-lg">430,00US$</div>
+					<div class="font-semibold text-[#0D6EFD] text-lg">{{ roadmapTripCostsData.detailedCost }}</div>
 
 					<svg class="md:justify-self-end" width="65" height="52" viewBox="0 0 65 52" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<g clip-path="url(#clip0_4381_90475)">
@@ -237,8 +295,8 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
 					</svg>
 
 					<div class="flex justify-between col-span-3 w-full">
-						<div class="font-semibold text-lg">300,00 US$</div>
-						<div class="font-semibold text-lg">130,00 US$</div>
+						<div class="font-semibold text-lg">{{ roadmapTripCostsData.fuelCost }}</div>
+						<div class="font-semibold text-lg">{{ roadmapTripCostsData.totalTollCost }}</div>
 					</div>
 
 				</div>
@@ -250,23 +308,11 @@ function gotToRoadmapDetailPage(roadmap: EntityRoadmapData) {
 				<div class="justify-self-start">Time</div> <div class="font-semibold justify-self-end">5hs 12min</div> -->
 
 				<div class="flex justify-between items-center border-b-[0.5px] border-solid border-[#DEE2E6] pb-2 text-[18px]">
-					<div>Total tolls</div> <div class="font-semibold text-[#0D6EFD] whitespace-nowrap">130,00 US$</div>
+					<div>Total tolls</div> <div class="font-semibold text-[#0D6EFD] whitespace-nowrap">{{ roadmapTripCostsData.totalTollCost }}</div>
 				</div>
 
-				<div class="flex flex-col md:flex-row lg:gap-2 md:justify-between md:items-center">
-					<div>Sagamore Bridge Toll Plaza</div> <div class="font-semibold whitespace-nowrap">US$ 50</div>
-				</div>
-
-				<div class="flex flex-col md:flex-row lg:gap-2 md:justify-between md:items-center">
-					<div>Bourne Bridge Toll Plaza</div> <div class="font-semibold whitespace-nowrap">US$ 20</div>
-				</div>
-
-				<div class="flex flex-col md:flex-row lg:gap-2 md:justify-between md:items-center">
-					<div>Sagamore Bridge Toll Plaza</div> <div class="font-semibold whitespace-nowrap">US$ 50</div>
-				</div>
-
-				<div class="flex flex-col md:flex-row lg:gap-2 md:justify-between md:items-center">
-					<div>Tobin Bridge Toll Plaza</div> <div class="font-semibold whitespace-nowrap">US$ 10</div>
+				<div v-for="toll in roadmapTripCostsData.tollsCosts" class="flex flex-col md:flex-row lg:gap-2 md:justify-between md:items-center">
+					<div>{{ toll.label }}</div> <div class="font-semibold whitespace-nowrap">{{ toll.cost }}</div>
 				</div>
 			</div>
 		</div>

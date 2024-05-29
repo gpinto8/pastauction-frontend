@@ -4,9 +4,9 @@ import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import AppIcon from '@/components/common/AppIcon.vue';
 import MySelect from '@/views/locate/components/Select.vue';
 import { useLocateStore } from '@/store/locate/locate';
-import { isEntityRoadmapData, isEventRoadmapData, useLocateRoadmapStore, type CreateEntityRoadmapBody, type CreateEventRoadmapBody, type EntityEventRoadmapPoint, type EntityRoadmapPoint, type RoadmapData } from '@/store/locate/locateRoadmapStore';
+import { isEntityRoadmapData, isEventRoadmapData, useLocateRoadmapStore, type CreateEntityRoadmapBody, type CreateEventRoadmapBody, type EntityEventRoadmapPoint, type EntityRoadmapPoint, type RoadmapData, type VehicleData } from '@/store/locate/locateRoadmapStore';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import type { LocateExtendedEntityData } from '@/store/locate/locateEntityStore';
 import { getCurrentDateFormatted } from '@/store/locate/utils/getCurrentDateFormatted';
 import type { LocateExtendedEventData } from '@/store/locate/locateEventStore';
@@ -18,6 +18,11 @@ const { modalStates, activeLocateSearchCategory, items, loadingScreen} = storeTo
 
 const { entityRoadmaps, eventsRoadmaps } = storeToRefs(useLocateRoadmapStore());
 const { createRoadmap } = useLocateRoadmapStore();
+const { roadmapVehicleData } = storeToRefs(useLocateRoadmapStore());
+
+const emits = defineEmits<{
+	(event: 'calculate', vehicleData: VehicleData): void
+}>();
 
 const formData =  ref({
 	// vehicleType: "",
@@ -31,27 +36,57 @@ const formData =  ref({
 	// mileage: "",
 });
 
+onMounted(() => {
+	roadmapVehicleData.value = null;
+});
+
 watch(() => formData.value.year, async () => {
 	loadingScreen.value = true;
+
+	roadmapVehicleData.value = null;
 	formData.value.make = "";
 	formData.value.model = "";
 	formData.value.option = null;
+
 	await fetchMakes(formData.value.year);
+
 	loadingScreen.value = false;
 });
 
 watch(() => formData.value.make, async () => {
 	loadingScreen.value = true;
+
+	roadmapVehicleData.value = null;
 	formData.value.model = "";
 	formData.value.option = null;
+
 	await fetchModels(formData.value.year, formData.value.make);
+
 	loadingScreen.value = false;
 });
 
 watch(() => formData.value.model, async () => {
 	loadingScreen.value = true;
+
+	roadmapVehicleData.value = null;
 	formData.value.option = null;
+
 	await fetchOptions(formData.value.year, formData.value.make, formData.value.model);
+
+	loadingScreen.value = false;
+});
+
+watch(() => formData.value.option, async () => {
+	if(!formData.value.option) return;
+
+	loadingScreen.value = true;
+	roadmapVehicleData.value = null;
+
+	const vehicle = await fetchVehicle(formData.value.option);
+
+	roadmapVehicleData.value = vehicle;
+	roadmapVehicleDataTthumbnailIsLoading.value = true;
+
 	loadingScreen.value = false;
 });
 
@@ -75,8 +110,7 @@ type Option = {
 };
 const options = ref<Option[]>([]);
 
-const sampleVehicle = {"atvType":"Hybrid","battery":"-1","c240Dscr":"","c240bDscr":"","charge120":"0.0","charge240":"0.0","charge240b":"0.0","city08":"27","city08U":"26.5354","cityA08":"0","cityA08U":"0.0","cityCD":"0.0","cityE":"0.0","cityMpk":"0","cityUF":"0.0","cityUmpk":"0.0","co2":"295","co2A":"-1","co2City":"329","co2CityA":"-1","co2Highway":"253","co2HighwayA":"-1","co2RatingForGas":"6","comb08":"30","combA08":"0","combE":"0.0","combMpk":"0","combUmpk":"0.0","combinedCD":"0.0","displCylindersTrany":"2.0 L, 4 cyl, Automatic (S8), Turbo","drive":"Rear-Wheel Drive","eng_dscr":"SIDI & PFI; Mild Hybrid","evMotor":"44V Li-Ion","fuelType":"Premium","fuelType1Abbrev":"","fuelType1Long":"Premium Gasoline","fuelType1Short":"Prem","fuelType2Long":"","fuelType2Short":"","fuelTypeAsOne":"Premium Gas","ghgScore":"6","ghgScoreA":"-1","guzzler":"","highway08":"35","highway08U":"34.6716","highwayA08":"0","highwayA08U":"0.0","highwayCD":"0.0","highwayE":"0.0","highwayMpk":"0","highwayUF":"0.0","highwayUmpk":"0.0","hlv":"0","hpv":"0","id":"47767","lv2":"9","lv4":"0","make":"BMW","maxTankSize":"0.0","minTankSize":"15.6","model":"430i Convertible","msrpLabel":"","msrpMax":"0","msrpMin":"0","pv2":"84","pv4":"0","range":"0","rangeA":"","rangeCity":"0.0","rangeCityA":"0.0","rangeCs":"0.0","rangeDesc":"","rangeHwy":"0.0","rangeHwyA":"0.0","startStop":"Y","thumbnail":"2024_BMW_430i_Conv.jpg","trans_dscr":"","UCity":"34.5325","UCityA":"0.0","UHighway":"50.4657","UHighwayA":"0.0","usesGasoline":"true","VClass":"Subcompact Cars","year":"2025","sCharger":"","tCharger":"T"};
-type Vehicle = typeof sampleVehicle;
+const roadmapVehicleDataTthumbnailIsLoading = ref(false);
 
 async function fetchMakes(year: string){
 	const response = await httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`);
@@ -98,19 +132,20 @@ async function fetchOptions(year: string, make: string, model: string){
 }
 
 async function fetchVehicle(option: Option){
-	const response = await httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/v2/${option.value}`);
-	return response.data as Vehicle;
+	const [ response1, response2 ] = await Promise.all([
+		httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/${option.value}`),
+		httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/v2/${option.value}`)
+	]);
+
+	return { ...response1.data, ...response2.data } as VehicleData;
 }
 
 async function calculate(){
-	if(!formData.value.option) return;
+	if(!roadmapVehicleData.value) return;
 
-	loadingScreen.value = true;
+	emits('calculate', roadmapVehicleData.value)
 
-	const vehicle = await fetchVehicle(formData.value.option);
-
-	loadingScreen.value = false;
-
+	modalStates.value.calculateCostOfTheTripModal = false;
 };
 
 </script>
@@ -123,7 +158,7 @@ async function calculate(){
 						<app-icon type="locate" color="#FFC107"></app-icon>
 					</div>
 
-					<app-icon @click="modalStates.calculateCostOfTheTripModal = false" type="close" color="#000" size="sm"></app-icon>
+					<app-icon @click="modalStates.calculateCostOfTheTripModal = false" class="cursor-pointer" type="close" color="#000" size="sm"></app-icon>
 				</div>
 
 				<p class="font-semibold">Approximate cost of the trip</p>
@@ -203,6 +238,14 @@ async function calculate(){
 					/>
 				</div>
 
+				<img v-if="roadmapVehicleData" :src="'https://www.fueleconomy.gov/feg/photos/' + roadmapVehicleData.thumbnail" alt="" @load="roadmapVehicleDataTthumbnailIsLoading = false" class="w-[180px] mx-auto mt-2">
+				<div v-if="roadmapVehicleDataTthumbnailIsLoading" role="status" class="mx-auto">
+						<svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+								<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+						</svg>
+						<span class="sr-only">Loading...</span>
+				</div>
 				<!-- <div>
 					<p>Fuel type</p>
 					<MySelect
