@@ -46,7 +46,6 @@ const miscOptions = reactive({
     soldStatus: null,
     quotedStats: null,
     chassisStatus: null,
-    currency: null,
 })
 
 async function fetchPeriods() {
@@ -210,20 +209,6 @@ const canPreviewData = computed(() => {
                     value: 'without chassis'
                 }
                 ],
-                currency: [
-                    { name: 'AUD', value: 'aud' },
-                    { name: 'CAD', value: 'cad' },
-                    { name: 'CHF', value: 'chf' },
-                    { name: 'DKK', value: 'dkk' },
-                    { name: 'EAD', value: 'ead' },
-                    { name: 'GBP', value: 'gbp' },
-                    { name: 'JPY', value: 'jpy' },
-                    { name: 'PLN', value: 'pln' },
-                    { name: 'RNB', value: 'rnb' },
-                    { name: 'RUB', value: 'rub' },
-                    { name: 'SEK', value: 'sek' },
-                    { name: 'USD', value: 'usd' },
-                ]
             }" />
         </div>
         <div class="flex flex-col space-y-2 mt-5 
