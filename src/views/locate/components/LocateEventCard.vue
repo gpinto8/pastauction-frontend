@@ -7,6 +7,7 @@ import { makePhoneCall } from '@/store/locate/utils/makePhoneCall';
 const props = defineProps<{
 	event: LocateExtendedEventData,
 	allowSelect?: boolean,
+	hideSelect?: boolean,
 	isSelectedDefault?: boolean,
 }>();
 
@@ -25,7 +26,7 @@ const props = defineProps<{
 			</div>
 
 			<!-- selector -->
-			<div class="hover:contrast-75 h-[34px] w-[34px] rounded bg-[#F0F0F080] flex justify-center items-center">
+			<div :class="{'invisible md:hidden': hideSelect}" class="hover:contrast-75 h-[34px] w-[34px] rounded bg-[#F0F0F080] flex justify-center items-center">
 				<input v-model="event.isSelected" class="h-1/2 w-1/2" type="checkbox" :disabled="!allowSelect" :checked="allowSelect ? event.isSelected : (typeof isSelectedDefault === 'boolean' ? isSelectedDefault : event.isSelected)">
 			</div>
 

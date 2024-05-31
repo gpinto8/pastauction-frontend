@@ -3,7 +3,7 @@ import AppIcon from '@/components/common/AppIcon.vue';
 import { ref, watch } from 'vue';
 import MySelect from './components/Select.vue';
 import { storeToRefs} from 'pinia'
-import { useLocateStore } from '@/store/locate/locate'
+import { useLocateStore, type ExtendedItem } from '@/store/locate/locate'
 
 import { scrollElementContent } from '@/utils/ui/scrollElementContent';
 import config from '@/config';

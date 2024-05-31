@@ -6,6 +6,7 @@ import type { LocateExtendedServicesData } from "@/store/locate/locateServiceSto
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { mapsLibrary, markerLibrary, routesLibrary } from "../googleMapsLoader";
+import ItemDetailDisplayerModal from '@/views/locate/modal/itemDetailDisplayerModal.vue';
 
 const locateStore = useLocateStore();
 const { getSelectedItems } = locateStore;
@@ -15,17 +16,19 @@ const {
 	currentUserLocationBounds,
 	items,
 	mapLocationSearchQuery,
+	modalStates,
 } = storeToRefs(locateStore);
+
+const emits = defineEmits<{
+	(event: 'change.google.maps.DirectionsResult', result: google.maps.DirectionsResult): void;
+	(event: 'onMarkerClick', marker: google.maps.marker.AdvancedMarkerElement, markerItemRef: ExtendedItem): void;
+}>();
 
 let map: google.maps.Map;
 const mapRef = ref<HTMLElement>();
 
 
 const markers = ref<google.maps.marker.AdvancedMarkerElement[]>([]);
-
-const emits = defineEmits<{
-	(event: 'change.google.maps.DirectionsResult', result: google.maps.DirectionsResult): void;
-}>();
 
 // Esegui la funzione initMap dopo il montaggio del componente
 onMounted(async () => {
@@ -62,11 +65,16 @@ watch(() => items.value, async () => {
 	const coorodnates = items.value.map(getCoordonatesForItem).filter(coordonatesValidator);
 
 	const { AdvancedMarkerElement } =  await markerLibrary;
-	markers.value = coorodnates.map(c => new AdvancedMarkerElement({
+	const newMarkers = coorodnates.map(c => new AdvancedMarkerElement({
 		position: c,
-		title: c.title || "",
+		title: `${c.title}` || "",
 		map: map,
 	}));
+
+	newMarkers.forEach((m, i) => m.addListener("click", () => showItemDataInPopup(m, items.value[i])));
+	// newMarkers.forEach((m, i) => m.onclick = () => showItemDataInPopup(m, items.value[i]));
+
+	markers.value = newMarkers;
 
 	fitMapToMarkers(markers.value);
 
@@ -88,17 +96,19 @@ function getCoordonatesForItem(item: ExtendedItem): Coordinates {
 		case "Entity":
 			coordinates.lat = (item as LocateExtendedEntityData).city_latit;
 			coordinates.lng = (item as LocateExtendedEntityData).city_longit;
-			coordinates.title = (item as LocateExtendedEntityData).name_short;
+			coordinates.title = `${(item as LocateExtendedEntityData).name_short} - ${(item as LocateExtendedEntityData).country}, ${(item as LocateExtendedEntityData).city} - ${(item as LocateExtendedEntityData).address}`;
 			break;
 		case "Services":
 			coordinates.lat = (item as LocateExtendedServicesData).entity_city_latit;
 			coordinates.lng = (item as LocateExtendedServicesData).entity_city_longit;
-			coordinates.title = (item as LocateExtendedServicesData).entity_name_short;
+			coordinates.title = (item as LocateExtendedServicesData).service_name;
+			coordinates.title = `${(item as LocateExtendedServicesData).service_name} - ${(item as LocateExtendedServicesData).entity_country}, ${(item as LocateExtendedServicesData).entity_city}`;
 			break;
 		case "Events":
 			coordinates.lat = (item as LocateExtendedEventData).entity_city_latit;
 			coordinates.lng = (item as LocateExtendedEventData).entity_city_longit;
 			coordinates.title = (item as LocateExtendedEventData).entity_name_short;
+			coordinates.title = `${(item as LocateExtendedEventData).event_name} - ${(item as LocateExtendedEventData).entity_country}, ${(item as LocateExtendedEventData).entity_city} - ${(item as LocateExtendedEventData).entity_address || (item as LocateExtendedEventData).event_begin_address}`;
 			break;
 	};
 
@@ -164,8 +174,17 @@ function fitMapToMarkers(markers: google.maps.marker.AdvancedMarkerElement[]) {
 	map.fitBounds(bounds);
 }
 
+const activeDisplayedMarkerItem = ref<ExtendedItem | null>(null);
+function showItemDataInPopup(marker: google.maps.marker.AdvancedMarkerElement, markerItemRef: ExtendedItem){
+	console.log("AAAAAAAAAAAAA");
+	activeDisplayedMarkerItem.value = markerItemRef;
+	modalStates.value.itemDetailDisplayerModal = true;
+
+}
+
 </script>
 
 <template>
+	<ItemDetailDisplayerModal v-if="activeDisplayedMarkerItem && modalStates.itemDetailDisplayerModal" :item="activeDisplayedMarkerItem" />
 	<div ref="mapRef" class="rounded h-[248px] md:h-[356px] lg:h-[504px]"></div>
 </template>

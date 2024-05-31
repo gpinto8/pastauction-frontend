@@ -45,6 +45,7 @@ export const useLocateStore = defineStore('locate',
 				cannotCreateRoadmapWarning: false,
 				confirmRoadmapDeletionModal: false,
 				calculateCostOfTheTripModal: false,
+				itemDetailDisplayerModal: false,
 			});
 		
 			const currentUserLocationMarker =  ref<google.maps.marker.AdvancedMarkerElement | null>(null);

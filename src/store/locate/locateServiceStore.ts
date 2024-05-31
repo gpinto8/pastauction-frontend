@@ -75,7 +75,7 @@ export const useLocateServiceStore = defineStore('locateServiceStore', () => {
         }
       } else {
         const items = await fetchAllItems<LocateServicesData>(
-          `/entity_service/?sort_by=name:asc${searchQueryString ? '&' + encodeURI(searchQueryString) : ''}`
+          `/entity_service/query/?sort_by=name:asc${searchQueryString ? '&' + encodeURI(searchQueryString) : ''}`
         );
 
 				services.value.push(...items);
