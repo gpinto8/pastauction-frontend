@@ -236,7 +236,7 @@ const canPreviewData = computed(() => {
                     </RouterLink>
                 </div>
             </div>
-        </div>>
+        </div>
     </div>
 </template>
 
