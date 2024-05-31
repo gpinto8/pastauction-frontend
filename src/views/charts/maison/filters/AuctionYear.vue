@@ -65,7 +65,7 @@ function resetFilter() {
                     v-for="timeFrame in timeFrames"
                     :key="timeFrame.startYear"
                     class="letter-button border h-8 !border-black selection !text-base lg:flex-1"
-                    :variant="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'elevated' : 'outlined'"
+                    :class="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'bg-black text-white' : 'outlined'"
                     @click="selectedTimeFrame = timeFrame"
                     :color="JSON.stringify(selectedTimeFrame) == JSON.stringify(timeFrame) ? 'black' : ''"
                     style="margin: 2px; border-radius: 2px"
@@ -94,7 +94,7 @@ function resetFilter() {
                 v-for="index of selectedTimeFrame.endYear - selectedTimeFrame.startYear + 1"
                 :key="index"
                 class="letter-button selection rounded-sm border !border-black !text-base lg:flex-1"
-                :variant="selectedYears.includes(selectedTimeFrame.startYear + index - 1) ? 'elevated' : 'outlined'"
+                :class="selectedYears.includes(selectedTimeFrame.startYear + index - 1) ? 'bg-black text-white' : ''"
                 @click="toggleValueInArray(selectedYears, selectedTimeFrame.startYear + index - 1)"
                 :color="selectedYears.includes(selectedTimeFrame.startYear + index - 1)?  'black' : ''"
                 style="margin: 2px;">
