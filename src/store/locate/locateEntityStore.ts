@@ -1,7 +1,7 @@
 import { httpGet, httpPatch, httpPost, httpUpload } from '@/api/api';
 import { defineStore } from 'pinia';
 import { onMounted, ref } from 'vue';
-import { fetchAllItems } from './utils/fetchAllItems';
+import { fetchAllItems, fetchAllItemsV2 } from './utils/fetchAllItems';
 
 
 const sampleLocateEntityData = {
@@ -84,7 +84,7 @@ export const useLocateEntityStore = defineStore('locateEntityStore', {
 	}),
 
 	actions: {
-  async fetchEntities(searchParams?: Partial<LocateEntityData>, kind_names?: string[], maxCount = 20) {
+  async fetchEntities(searchParams?: Partial<LocateEntityData>, kind_names?: string[], maxCount = 200) {
     this.entitiesLoading = true;
     try {
 			const allItemes: LocateEntityData[] = [];
@@ -101,17 +101,15 @@ export const useLocateEntityStore = defineStore('locateEntityStore', {
 					searchQueryString = searchQueryString.substring(0, searchQueryString.length - 1);
 				}
 
-				// let searchQueryString1 = searchParams
-        // ? Object.keys(searchParams).filter(k=>!!((searchParams as any)[k]).replace(/\"/g,"")).map(
-        //     k => k + ':' + (searchParams as any)[k]
-        //   ).join(',')
-        // : '';
-
 				const items = await fetchAllItems<LocateEntityData>(
 					`/entity_entity/query_user?sort_by=name:asc${encodeURI(searchQueryString)}`,
 					undefined,
 					maxCount,
 				);
+
+				// const items = await fetchAllItemsV2<LocateEntityData>(
+				// 	`/entity_entity/query_user?sort_by=name:asc${encodeURI(searchQueryString)}`,
+				// );
 
 				allItemes.push(...items);
 			}

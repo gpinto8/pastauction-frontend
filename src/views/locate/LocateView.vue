@@ -165,7 +165,7 @@ const handleCreateRoadmap = () => {
 				</LocateBtn>
 		</div>
 
-		<LocateBtn v-if="!isOpenMobileCascadeFilters" @click="searchItems(); isOpenMobileCascadeFilters = true;" block class="bg-white md:hidden flex items-center px-[4px] py-[8px] justify-center gap-2">
+		<LocateBtn v-if="!isOpenMobileCascadeFilters" @click="isOpenMobileCascadeFilters = true;" block class="bg-white md:hidden flex items-center px-[4px] py-[8px] justify-center gap-2">
 			<app-icon class="text-[#0D6EFD]" type="search" size="md"></app-icon>
 			<span class="text-[#0D6EFD]">Search</span>
 		</LocateBtn>
