@@ -1,4 +1,6 @@
+import { formattedListOfParams } from "@/api/api";
 import { paramNameForFirstNLetters, sendFilterRequest } from "../filterApi";
+import { getCountryAuctionNamesParam } from "./maisonSearchParams";
 
 export function requestListOfFirstTwoLettersMaisonName(initial: string) {
     return sendFilterRequest('bidwatcher_auction_query_1', paramNameForFirstNLetters('maison_name', 2), {
@@ -12,14 +14,22 @@ export function requestListOfMaisonNamesStartingWith(initials: string) {
     })
 }
 
-export function requestListOfFirstTwoLettresAuctionCity(initial: string) {
+export function requestListOfFirstTwoLettresAuctionCity(initial: string, search?: { countryNames: string[] } ) {
     return sendFilterRequest('bidwatcher_auction_query_1', paramNameForFirstNLetters('city_auction_name', 2), {
-        search: `${paramNameForFirstNLetters('city_auction_name', 1)}:${initial}`
+        search: formattedListOfParams([
+            `${paramNameForFirstNLetters('city_auction_name', 1)}:${initial}`,
+            `${getCountryAuctionNamesParam(search?.countryNames || null)}`
+        ])
+        // `${paramNameForFirstNLetters('city_auction_name', 1)}:${initial}` + 
+        //         `${getCountryAuctionNamesParam(search?.countryNames || null)}`
     })
 }
 
-export function requestListOfAuctionCityNamesStartingWith(initials: string) {
+export function requestListOfAuctionCityNamesStartingWith(initials: string, search?: { countryNames: string[] }) {
     return sendFilterRequest('bidwatcher_auction_query_1', 'city_auction_name', {
-        search: `${paramNameForFirstNLetters('city_auction_name', 2)}:${initials}`
+        search: formattedListOfParams([
+            `${paramNameForFirstNLetters('city_auction_name', 2)}:${initials}`,
+            `${getCountryAuctionNamesParam(search?.countryNames || null)}`
+        ])
     })
 }

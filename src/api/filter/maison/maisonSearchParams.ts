@@ -12,8 +12,8 @@ export function getAuctionAreaParam(auctionArea: string[]) {
     return auctionArea.length > 0 ? `auction_area:${arrayToParamsArray(auctionArea)}` : ''
 }
 
-export function getCountryAuctionNamesParam(countryAuctionNames: string[]): string {
-    return countryAuctionNames.length > 0 ? `country_auction_name:${arrayToParamsArray(countryAuctionNames)}` : '';
+export function getCountryAuctionNamesParam(countryAuctionNames: string[] | null): string {
+    return countryAuctionNames != null && countryAuctionNames.length > 0 ? `country_auction_name:${arrayToParamsArray(countryAuctionNames)}` : '';
   }
 
 export function getCityAuctionNameParam(cityNames: string[]): string {
