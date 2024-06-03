@@ -177,7 +177,7 @@ const canPreviewData = computed(() => {
                 ref="maisonCountriesFilter" />
             <Countries filterName="Auction Countries" :continents="continents" v-model:countries="auctionCountries"
                 ref="auctionCountriesFilter" />
-            <AuctionCity v-model="selectedAuctionCityNames" ref="cityFilter" />
+            <AuctionCity v-model="selectedAuctionCityNames" :countriesSelected="auctionCountries" ref="cityFilter" />
             <AuctionYear v-model="selectedYears" ref="auctioYearFilter" />
             <Month v-model="selectedMonths" ref="monthFilter" />
             <Periods :periods="periods" v-model="selectedPeriods" filterName="Vehicle periods" ref="periodsFilter" />
