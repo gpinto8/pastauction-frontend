@@ -56,3 +56,7 @@ export const load = (url: string) => {
   };
   return axios(config);
 };
+
+export function formattedListOfParams(paramsList: (string | null)[], delimiter = ',') {
+    return paramsList.filter(param => param != null && param.length > 0).join(delimiter)
+}
