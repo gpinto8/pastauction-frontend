@@ -20,8 +20,7 @@
                 </v-col>
             </v-row>
             <div class="flex flex-col mt-10 space-y-5">
-                <Selection v-for="(chart, index) of availableCharts" :chart="chart" :value="index" :title="chart.name"
-                    :description="chart.subtitle" />
+                <Selection v-for="(chart, index) of availableCharts" :chart="chart" :value="index" :title="chart.name" :description="chart.subtitle"/>
             </div>
             <button @click="retrieveProductsData">
                 refresh
