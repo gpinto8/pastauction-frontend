@@ -7,6 +7,7 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { mapsLibrary, markerLibrary, routesLibrary } from "../googleMapsLoader";
 import ItemDetailDisplayerModal from '@/views/locate/modal/itemDetailDisplayerModal.vue';
+import { getCoordonatesForItem } from "@/store/locate/locateRoadmapStore";
 
 const locateStore = useLocateStore();
 const { getSelectedItems } = locateStore;
@@ -24,6 +25,10 @@ const emits = defineEmits<{
 	(event: 'onMarkerClick', marker: google.maps.marker.AdvancedMarkerElement, markerItemRef: ExtendedItem): void;
 }>();
 
+const props = defineProps<{
+	items: ExtendedItem[],
+}>();
+
 let map: google.maps.Map;
 const mapRef = ref<HTMLElement>();
 
@@ -39,17 +44,27 @@ onMounted(async () => {
 	});
 });
 
+// this watch consumes the currentUserLocationMarker state to attach it on this map
 watch(
 	() => currentUserLocationMarker.value,
-	()=>{
-		if(currentUserLocationMarker.value) currentUserLocationMarker.value.map = map;
-		if(currentUserLocationBounds.value) map.fitBounds(currentUserLocationBounds.value);
+	async ()=>{
+		if(currentUserLocationMarker.value) {
+			currentUserLocationMarker.value.map = map
+
+			if(currentUserLocationBounds.value) {
+				map.fitBounds(currentUserLocationBounds.value);
+			} else {
+				const bounds = new google.maps.LatLngBounds(currentUserLocationMarker.value.position);
+				map.fitBounds(currentUserLocationBounds.value = bounds);
+				map.moveCamera({zoom: 5});
+			};
+		};
 	}
 );
 
 /** when the users selects/deselects an item, we draw an roadmap that passes throug all those selected/favorites items */
 watch([
-	() => items.value.map(i => i.isSelected),
+	() => props.items.map(i => i.isSelected),
 	() => currentUserLocationMarker.value,
 ], () => {
 	const waypoints: Coordinates[] = getSelectedItems().map(getCoordonatesForItem).filter(coordonatesValidator);
@@ -61,18 +76,38 @@ watch([
 });
 
 /** when the list of `items` changes we add for each item a marker on the map */
-watch(() => items.value, async () => {
-	const coorodnates = items.value.map(getCoordonatesForItem).filter(coordonatesValidator);
+watch(() => props.items, async () => {
+	const coorodnates = props.items.map(getCoordonatesForItem).filter(coordonatesValidator);
 
 	const { AdvancedMarkerElement } =  await markerLibrary;
-	const newMarkers = coorodnates.map(c => new AdvancedMarkerElement({
-		position: c,
-		title: `${c.title}` || "",
-		map: map,
-	}));
+	const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
+	
+	for (let i = 0; i < coorodnates.length; i++) {
+		const c = coorodnates[i];
+		newMarkers.push(new AdvancedMarkerElement({
+			position: c,
+			title: `${c.title}` || "",
+			map: map,
+			content: new (await markerLibrary).PinElement({
+				'background': props.items[i].isSelected ? '#5c6cfa' : "",
+				'borderColor': 'white',
+				'glyphColor': 'white' ,
+				'scale': props.items[i].isSelected ? 1.2: 1,
+			}).element,
+		}))
+	}
 
-	newMarkers.forEach((m, i) => m.addListener("click", () => showItemDataInPopup(m, items.value[i])));
-	// newMarkers.forEach((m, i) => m.onclick = () => showItemDataInPopup(m, items.value[i]));
+	newMarkers.forEach((m, i) => {
+		m.addListener("click", () => showItemDataInPopup(m, props.items[i]))
+
+		m.addListener('mouseover', function() {
+			m.style.opacity = "0.8";
+		});
+
+		m.addListener('mouseout', function() {
+			m.style.opacity = "1";
+		});
+	});
 
 	markers.value = newMarkers;
 
@@ -85,35 +120,6 @@ watch(
 	() => markers.value,
 	(_, oldMarkers) => oldMarkers.forEach(m => m.map = null),
 );
-
-function getCoordonatesForItem(item: ExtendedItem): Coordinates {
-	const coordinates: Coordinates = {
-		lat: 43.65056, 
-		lng: 11.835522,
-	};
-
-	switch (activeLocateSearchCategory.value.name) {
-		case "Entity":
-			coordinates.lat = (item as LocateExtendedEntityData).city_latit;
-			coordinates.lng = (item as LocateExtendedEntityData).city_longit;
-			coordinates.title = `${(item as LocateExtendedEntityData).name_short} - ${(item as LocateExtendedEntityData).country}, ${(item as LocateExtendedEntityData).city} - ${(item as LocateExtendedEntityData).address}`;
-			break;
-		case "Services":
-			coordinates.lat = (item as LocateExtendedServicesData).entity_city_latit;
-			coordinates.lng = (item as LocateExtendedServicesData).entity_city_longit;
-			coordinates.title = (item as LocateExtendedServicesData).service_name;
-			coordinates.title = `${(item as LocateExtendedServicesData).service_name} - ${(item as LocateExtendedServicesData).entity_country}, ${(item as LocateExtendedServicesData).entity_city}`;
-			break;
-		case "Events":
-			coordinates.lat = (item as LocateExtendedEventData).entity_city_latit;
-			coordinates.lng = (item as LocateExtendedEventData).entity_city_longit;
-			coordinates.title = (item as LocateExtendedEventData).entity_name_short;
-			coordinates.title = `${(item as LocateExtendedEventData).event_name} - ${(item as LocateExtendedEventData).entity_country}, ${(item as LocateExtendedEventData).entity_city} - ${(item as LocateExtendedEventData).entity_address || (item as LocateExtendedEventData).event_begin_address}`;
-			break;
-	};
-
-	return coordinates;
-}
 
 function coordonatesValidator(coordonates: Coordinates): boolean {
     // Check if latitude and longitude are numbers
@@ -176,7 +182,6 @@ function fitMapToMarkers(markers: google.maps.marker.AdvancedMarkerElement[]) {
 
 const activeDisplayedMarkerItem = ref<ExtendedItem | null>(null);
 function showItemDataInPopup(marker: google.maps.marker.AdvancedMarkerElement, markerItemRef: ExtendedItem){
-	console.log("AAAAAAAAAAAAA");
 	activeDisplayedMarkerItem.value = markerItemRef;
 	modalStates.value.itemDetailDisplayerModal = true;
 

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { fetchAllItems } from './utils/fetchAllItems';
 import type { LocateEntityData, LocateExtendedEntityData } from './locateEntityStore';
-import { useLocateStore } from './locate';
+import { useLocateStore, type Coordinates, type ExtendedItem } from './locate';
 import { getCurrentDateFormatted } from './utils/getCurrentDateFormatted';
 import type { LocateEventData, LocateExtendedEventData } from './locateEventStore';
 import type { LocateExtendedServicesData } from './locateServiceStore';
@@ -39,7 +39,24 @@ const sampleEventRoadmapData = {
 };
 export type EventRoadmapData = typeof sampleEventRoadmapData;
 
-export type RoadmapData = EntityRoadmapData | EventRoadmapData;
+const sampleServiceRoadmapData = {
+	"date_creation": "2024-05-16",
+	"date_tour_planned": "2024-05-16",
+	"begin_country": "string",
+	"begin_city": "string",
+	"begin_address": "string",
+	"event_name": "string",
+	"id_service": 0,
+	"id_user": 0,
+	"image_url": "string",
+	"image_path": "string",
+	"id_key": 8,
+	"roadmap_entity_kinds": "string"
+};
+
+export type ServiceRoadmapData = typeof sampleServiceRoadmapData;
+
+export type RoadmapData = EntityRoadmapData | EventRoadmapData | ServiceRoadmapData;
 
 const sampleCreateEntityRoadmapBody = {
   "date_creation": "2024-05-21",
@@ -82,6 +99,17 @@ const objEntityEventRoadmapPoint = {
 	"preferred": true
 }
 export type EntityEventRoadmapPoint = typeof objEntityEventRoadmapPoint;
+
+const sampleEntityServiceRoadmapPoint = {
+	"id_entity_service": 3,
+	"id_key_event_roadmap": 8,
+	"roadmap_date": "2024-05-25",
+	"preferred": true
+}
+export type EntityServiceRoadmapPoint = typeof sampleEntityServiceRoadmapPoint;
+
+
+export type RoadmapPoint = EntityRoadmapPoint | EntityEventRoadmapPoint | EntityServiceRoadmapPoint;
 
 const sampleVehicle = {"atvType":"Hybrid","battery":"-1","c240Dscr":"","c240bDscr":"","charge120":"0.0","charge240":"0.0","charge240b":"0.0","city08":"27","city08U":"26.5354","cityA08":"0","cityA08U":"0.0","cityCD":"0.0","cityE":"0.0","cityMpk":"0","cityUF":"0.0","cityUmpk":"0.0","co2":"295","co2A":"-1","co2City":"329","co2CityA":"-1","co2Highway":"253","co2HighwayA":"-1","co2RatingForGas":"6","comb08":"30","combA08":"0","combE":"0.0","combMpk":"0","combUmpk":"0.0","combinedCD":"0.0","displCylindersTrany":"2.0 L, 4 cyl, Automatic (S8), Turbo","drive":"Rear-Wheel Drive","eng_dscr":"SIDI & PFI; Mild Hybrid","evMotor":"44V Li-Ion","fuelType":"Premium","fuelType1Abbrev":"","fuelType1Long":"Premium Gasoline","fuelType1Short":"Prem","fuelType2Long":"","fuelType2Short":"","fuelTypeAsOne":"Premium Gas","ghgScore":"6","ghgScoreA":"-1","guzzler":"","highway08":"35","highway08U":"34.6716","highwayA08":"0","highwayA08U":"0.0","highwayCD":"0.0","highwayE":"0.0","highwayMpk":"0","highwayUF":"0.0","highwayUmpk":"0.0","hlv":"0","hpv":"0","id":"47767","lv2":"9","lv4":"0","make":"BMW","maxTankSize":"0.0","minTankSize":"15.6","model":"430i Convertible","msrpLabel":"","msrpMax":"0","msrpMin":"0","pv2":"84","pv4":"0","range":"0","rangeA":"","rangeCity":"0.0","rangeCityA":"0.0","rangeCs":"0.0","rangeDesc":"","rangeHwy":"0.0","rangeHwyA":"0.0","startStop":"Y","thumbnail":"2024_BMW_430i_Conv.jpg","trans_dscr":"","UCity":"34.5325","UCityA":"0.0","UHighway":"50.4657","UHighwayA":"0.0","usesGasoline":"true","VClass":"Subcompact Cars","year":"2025","sCharger":"","tCharger":"T"};
 
@@ -365,6 +393,7 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
   state: () => ({
     entityRoadmaps: [] as EntityRoadmapData[],
     eventsRoadmaps: [] as EventRoadmapData[],
+    servicesRoadmaps: [] as ServiceRoadmapData[],
     roadmapsLoading: false,
 		/** the current roadmap that is displayed in the roadmap detail page */
 		detailRoadmap: null as RoadmapData | null, 
@@ -412,52 +441,18 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 			}
     },
 
-		async saveEntityRoadmap(
-      params: Partial<EntityRoadmapData>
-    ): Promise<EntityRoadmapData> {
-      const response = await httpPost(`/entity_roadmap/create`, {
-        date_creation: params.date_creation,
-        date_tour_planned: params.date_tour_planned,
-        begin_country: params.begin_country,
-        begin_city: params.begin_city,
-        begin_address: params.begin_address,
-        name: params.name,
-        image_url: params.image_url,
-        image_path: params.image_path,
-      });
-
-      return response.data;
-    },
-
-		async saveEventRoadmap(
-      params: Partial<EntityRoadmapData>
-    ): Promise<EntityRoadmapData> {
-      const response = await httpPost(`/entity_roadmap/create`, {
-        date_creation: params.date_creation,
-        date_tour_planned: params.date_tour_planned,
-        begin_country: params.begin_country,
-        begin_city: params.begin_city,
-        begin_address: params.begin_address,
-        name: params.name,
-        image_url: params.image_url,
-        image_path: params.image_path,
-      });
-
-      return response.data;
-    },
-
-		async fetchEntityRoadmapEntities(
-      params?: Partial<LocateEntityData>
-    ): Promise<LocateEntityData[]> {
+		async fetchServiceRoadmaps(
+      params?: Partial<ServiceRoadmapData>
+    ): Promise<ServiceRoadmapData[]> {
       this.roadmapsLoading = true;
 			try {
-				const items = await fetchAllItems<LocateEntityData>(
-					`/entity_roadmap/query`,
-					undefined,
+				const items = await fetchAllItems<ServiceRoadmapData>(
+					`/entity_service_roadmap/query`,
+					items => this.servicesRoadmaps.push(...items),
 					50,
 				);
 	
-				return items;
+				return (this.servicesRoadmaps = items);
 			} catch (error) {
 				return [];
 			} finally{
@@ -468,26 +463,52 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 		async deleteRoadmap(roadmap: RoadmapData): Promise<number> {
 			if(isEntityRoadmapData(roadmap)){
 				return (await httpDelete(`/entity_roadmap/delete/${roadmap.id_key}`)).status;
-			} else {
+			} else if (isEventRoadmapData(roadmap)) {
 				return (await httpDelete(`/entity_event_roadmap/delete/${roadmap.id_key}`)).status;
+			} else if(isServiceRoadmapData(roadmap)) {
+				return (await httpDelete(`/entity_event_roadmap/delete/${roadmap.id_key}`)).status;
+			} else {
+				return -1;
 			}
 		},
 
 		createRoadmap,
 
-		async fetchEntitiesForRoadmap(roadmap: EntityRoadmapData){
-			const items = await fetchAllItems<LocateEntityData>(
-				`/entity_entity/query_user?sort_by=name:asc${encodeURI("")}`,
-			);
+		async fetchEntitiesForRoadmap(roadmap: EntityRoadmapData): Promise<LocateEntityData[]>{
+			const points = await fetchAllItems<EntityRoadmapPoint>(`/entity_roadmap_points/query?search=id_key_entity_roadmap:${roadmap.id_key}`);
 
-			this.detailRoadmapEntities = items;
+			const entities: LocateEntityData[] = [];
+
+			for (const point of points) {
+				entities.push(...(await httpGet(`/entity_entity/query_user?search=id:${point.id_entity_entity}`)).data.items as LocateEntityData[])
+			}
+
+			this.detailRoadmapEntities = entities;
+			return entities;
 		},
 		async fetchEventsForRoadmap(event: EventRoadmapData){
-			const items = await fetchAllItems<LocateEventData>(
-				`/entity_event?sort_by=name:asc${encodeURI("")}`,
-			);
+			const points = await fetchAllItems<EntityRoadmapPoint>(`/entity_event_roadmap_points/query?search=id_key_entity_roadmap:${event.id_key}`);
 
-			this.detailRoadmapEvents = items;
+			const events: LocateEventData[] = [];
+
+			for (const point of points) {
+				events.push(...(await httpGet(`/entity_entity?search=id:${point.id_entity_entity}`)).data.items as LocateEventData[])
+			}
+
+			this.detailRoadmapEvents = events;
+			return events;
+		},
+		async fetchServicesForRoadmap(roadmap: ServiceRoadmapData){
+			const points = await fetchAllItems<EntityServiceRoadmapPoint>(`/entity_service_roadmap_points/query?search=id_key_entity_roadmap:${roadmap.id_key}`);
+
+			const events: LocateEventData[] = [];
+
+			for (const point of points) {
+				events.push(...(await httpGet(`/entity_entity?search=id:${point.id_entity_service}`)).data.items as LocateEventData[])
+			}
+
+			this.detailRoadmapEvents = events;
+			return events;
 		},
 	},
 });
@@ -495,30 +516,52 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 // Overload declarations
 function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody>, points: Partial<EntityRoadmapPoint>[]): Promise<EntityRoadmapData>;
 function createRoadmap(roadmap: Partial<CreateEventRoadmapBody>, points: Partial<EntityEventRoadmapPoint>[]): Promise<EventRoadmapData>;
-async function createRoadmap(roadmap: Partial<CreateEntityRoadmapBody> | Partial<CreateEventRoadmapBody>, points: Partial<EntityRoadmapPoint>[] | Partial<EntityEventRoadmapPoint>[]): Promise<EntityRoadmapData | EventRoadmapData> {
-	let createdRoadmap : EntityRoadmapData | EventRoadmapData;
+async function createRoadmap(roadmap: Partial<RoadmapData>, points: Partial<RoadmapPoint>[]): Promise<RoadmapData> {
+	let createdRoadmap : RoadmapData;
 
 	roadmap.date_creation = getCurrentDateFormatted();
 
 	if(isEntityRoadmapData(roadmap)){
 		const response = await httpPost(`/entity_roadmap/create`, roadmap);
 		createdRoadmap = response.data;
-	}else {
+	} else if(isEventRoadmapData(roadmap)) {
 		const response = await httpPost(`/entity_event_roadmap/create`, roadmap);
+		createdRoadmap = response.data;
+	} else {
+		const response = await httpPost(`/entity_dservice_roadmap/create`, roadmap);
 		createdRoadmap = response.data;
 	}
 
-	if(points) for (const point of points) {
+	// if(points) for (const point of points) {
+	// 	if(isEntityRoadmapData(roadmap)){
+	// 		(point as EntityRoadmapPoint).id_key_entity_roadmap = createdRoadmap.id_key;
+	// 		(point as EntityRoadmapPoint).date = getCurrentDateFormatted();
+	// 		await httpPost("/entity_roadmap_points/create", point);
+	// 	} else if(isEventRoadmapData(roadmap)) {
+	// 		(point as EntityEventRoadmapPoint).id_key_event_roadmap = createdRoadmap.id_key;
+	// 		(point as EntityEventRoadmapPoint).roadmap_date = getCurrentDateFormatted();
+	// 		await httpPost("/entity_event_roadmap_points/create", point);
+	// 	} else if(isServiceRoadmapData(roadmap)) {
+	// 		(point as EntityEventRoadmapPoint).id_key_event_roadmap = createdRoadmap.id_key;
+	// 		(point as EntityEventRoadmapPoint).roadmap_date = getCurrentDateFormatted();
+	// 		await httpPost("/entity_service_roadmap_points/create", point);
+	// 	}
+	// }
+	if(points) points.forEach(async point => {
 		if(isEntityRoadmapData(roadmap)){
 			(point as EntityRoadmapPoint).id_key_entity_roadmap = createdRoadmap.id_key;
 			(point as EntityRoadmapPoint).date = getCurrentDateFormatted();
-		}else {
+			await httpPost("/entity_roadmap_points/create", point);
+		} else if(isEventRoadmapData(roadmap)) {
 			(point as EntityEventRoadmapPoint).id_key_event_roadmap = createdRoadmap.id_key;
 			(point as EntityEventRoadmapPoint).roadmap_date = getCurrentDateFormatted();
+			await httpPost("/entity_event_roadmap_points/create", point);
+		} else if(isServiceRoadmapData(roadmap)) {
+			(point as EntityEventRoadmapPoint).id_key_event_roadmap = createdRoadmap.id_key;
+			(point as EntityEventRoadmapPoint).roadmap_date = getCurrentDateFormatted();
+			await httpPost("/entity_service_roadmap_points/create", point);
 		}
-		const response = await httpPost(isEntityRoadmapData(roadmap) ? "/entity_roadmap_points/create" : "/entity_event_roadmap_points/create", point);
-	}
-
+	})
 	return createdRoadmap;
 }
 
@@ -528,4 +571,36 @@ export function isEntityRoadmapData(data: Partial<RoadmapData>): data is EntityR
 
 export function isEventRoadmapData(data: Partial<RoadmapData>): data is EventRoadmapData {
 	return useLocateStore().$state.activeLocateSearchCategory.name === "Events";
+}
+export function isServiceRoadmapData(data: Partial<RoadmapData>): data is ServiceRoadmapData {
+	return useLocateStore().$state.activeLocateSearchCategory.name === "Services";
+}
+export function getCoordonatesForItem(item: ExtendedItem): Coordinates {
+	const coordinates: Coordinates = {
+		lat: 43.65056, 
+		lng: 11.835522,
+	};
+	;
+
+	switch (useLocateStore().$state.activeLocateSearchCategory.name) {
+		case "Entity":
+			coordinates.lat = (item as LocateExtendedEntityData).city_latit;
+			coordinates.lng = (item as LocateExtendedEntityData).city_longit;
+			coordinates.title = `${(item as LocateExtendedEntityData).name_short} - ${(item as LocateExtendedEntityData).country}, ${(item as LocateExtendedEntityData).city} - ${(item as LocateExtendedEntityData).address}`;
+			break;
+		case "Services":
+			coordinates.lat = (item as LocateExtendedServicesData).entity_city_latit;
+			coordinates.lng = (item as LocateExtendedServicesData).entity_city_longit;
+			coordinates.title = (item as LocateExtendedServicesData).service_name;
+			coordinates.title = `${(item as LocateExtendedServicesData).service_name} - ${(item as LocateExtendedServicesData).entity_country}, ${(item as LocateExtendedServicesData).entity_city}`;
+			break;
+		case "Events":
+			coordinates.lat = (item as LocateExtendedEventData).entity_city_latit;
+			coordinates.lng = (item as LocateExtendedEventData).entity_city_longit;
+			coordinates.title = (item as LocateExtendedEventData).entity_name_short;
+			coordinates.title = `${(item as LocateExtendedEventData).event_name} - ${(item as LocateExtendedEventData).entity_country}, ${(item as LocateExtendedEventData).entity_city} - ${(item as LocateExtendedEventData).entity_address || (item as LocateExtendedEventData).event_begin_address}`;
+			break;
+	};
+
+	return coordinates;
 }

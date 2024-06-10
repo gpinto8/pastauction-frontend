@@ -62,7 +62,6 @@ async function searchLocation() {
 	const geocoder = new (await geocodingLibrary).Geocoder();
 	isLoading.value = true;
 	geocoder.geocode({ address: mapLocationSearchQuery.value }, (results, status) => {
-		console.log('results', results);
 		if (status === 'OK' && results) {
 			locationOptions.value = results;
 
@@ -81,6 +80,7 @@ async function searchLocation() {
 
 async function onOptionClick(option: google.maps.GeocoderResult){
 	currentUserLocationBounds.value = option.geometry.bounds;
+	if(currentUserLocationMarker.value) currentUserLocationMarker.value.map = null;
 	currentUserLocationMarker.value = new (await markerLibrary).AdvancedMarkerElement({
 		position: option.geometry.location,
 		content: new (await markerLibrary).PinElement({ 'background': '#4fb056', 'borderColor': 'white', 'glyphColor': 'white' }).element,
@@ -107,7 +107,7 @@ async function onOptionClick(option: google.maps.GeocoderResult){
 			<div v-if="isOpen" class="absolute mt-1 w-full top-full left-0 rounded-lg border-2 p-2 border-gray-300 flex flex-col gap-2 bg-white z-20">
 				<div v-if="locationOptions.length" class="max-h-64 overflow-y-auto flex flex-col gap-1">
 					<!-- <div @click.stop="selected = item as any; isOpen = false; emit('change', item)" class="hover:bg-gray-200 px-1 rounded-sm font-thin tracking-wide" v-for="item of filteredItems">{{formatItemFN ? formatItemFN(item) : (item + '')}}</div> -->
-					<div @click.stop="onOptionClick(item); isOpen = false;" class="hover:bg-gray-200 px-1 rounded-sm font-thin tracking-wide" v-for="item of locationOptions">{{item.formatted_address}}</div>
+					<div @click.stop="onOptionClick(item); isOpen = false; mapLocationSearchQuery = item.formatted_address;" class="hover:bg-gray-200 px-1 rounded-sm font-thin tracking-wide" v-for="item of locationOptions">{{item.formatted_address}}</div>
 				</div>
 				<!-- <div v-if="searchQuery && !filteredItems?.length" @click="isOpen = false; selected = searchQuery as any; searchQuery = '';" class="text-ceter pb-1 px-1 rounded-lg bg-sky-100"><span class="text-gray-400 font-thin">use</span> {{ searchQuery }}</div> -->
 				<div v-if="!locationOptions.length && !isLoading" class="text-gray-400 text-center">no results found</div>

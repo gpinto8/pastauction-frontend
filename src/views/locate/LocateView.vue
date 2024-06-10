@@ -16,6 +16,8 @@ import LocateLocationSearchInput from './components/LocateLocationSearchInput.vu
 import { makePhoneCall } from '@/store/locate/utils/makePhoneCall';
 import LocateEntityCard from './components/LocateEntityCard.vue';
 import LocateEventCard from './components/LocateEventCard.vue';
+import { getCoordonatesForItem } from '@/store/locate/locateRoadmapStore';
+import { routesLibrary } from './googleMapsLoader';
 
 const locateStore = useLocateStore();
 
@@ -25,6 +27,7 @@ const {
 	filterValues, 
 	modalStates,
 	items,
+	currentUserLocationMarker,
 } = storeToRefs(locateStore);
 
 const entityStore = useLocateEntityStore();
@@ -55,7 +58,12 @@ const isOpenMobileCascadeFilters = ref(false);
 // refs - end
 
 function resetFilters(){
-	activeFilters.value = defaultFilters;
+	activeFilters.value.area = '';
+	activeFilters.value.country = '';
+	activeFilters.value.city = '';
+	activeFilters.value.car = '';
+	activeFilters.value.brand = '';
+	activeFilters.value.aging = '';
 }
 
 /** when the Area filter changes, re-fetch the countries filter possible values */
@@ -74,7 +82,7 @@ watch(
 watch(
 	[
 		() => activeFilters.value,
-		() => activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected),
+		() => activeLocateSearchCategory.value.subcategories,
 	],
 	searchItems,
 	{deep: true}
@@ -99,28 +107,30 @@ async function searchEntities(){
 		'area_geo': activeFilters.value.area,
 		'country': activeFilters.value.country,
 		'city': activeFilters.value.city,
-		'temp_tipo_j': `"${activeFilters.value.car}"`,
-		'aging_period_j': `"${activeFilters.value.aging}"`,
+		'temp_tipo_j':activeFilters.value.car,
+		'aging_period_j': activeFilters.value.aging,
 	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>e.name))
 }
 
 async function searchServices(){
 	await fetchServices({
-		'brand_name': activeFilters.value.brand,
+		// "entity_area_geo": activeFilters.value.area,
+		// 'entity_brand_name': activeFilters.value.brand,
 		'entity_country': activeFilters.value.country,
 		'entity_city': activeFilters.value.city,
-		// 'entity_temp_tipo': `"${activeFilters.value.car}"`,
-		// 'entity_aging_period': `"${activeFilters.value.aging}"`,
-	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>parseInt(e.name)))
+		// 'entity_temp_tipo_j': activeFilters.value.car,
+		// 'entity_aging_period_j': activeFilters.value.aging,
+	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>e.key))
 }
 
 async function searchEvents(){
 	await fetchEvents({
+		"entity_area_geo": activeFilters.value.area,
 		'entity_brand_name': activeFilters.value.brand,
 		'entity_country': activeFilters.value.country,
 		'entity_city': activeFilters.value.city,
-		'entity_temp_tipo': `"${activeFilters.value.car}"`,
-		'entity_aging_period': `"${activeFilters.value.aging}"`,
+		'entity_temp_tipo_j': activeFilters.value.car,
+		'entity_aging_period_j': activeFilters.value.aging,
 	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>e.name))
 }
 
@@ -139,6 +149,7 @@ const handleCreateRoadmap = () => {
 	}
 }
 
+
 </script>
 
 <template>
@@ -151,12 +162,12 @@ const handleCreateRoadmap = () => {
 			:class="{'hidden md:flex lg:flex-row': !isOpenMobileCascadeFilters}"
 			class="flex gap-4 flex-col lg:flex-row lg:items-stretch lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_auto] md:flex-wrap md:grid md:grid-cols-3 lg:[&>*]:w-auto md:[&>*]:w-full md:gap-3"
 		>
-				<MySelect @change="newValue => activeFilters.area = newValue" v-model:selected="activeFilters.area" placeholder="Area" :items="filterValues.areas"></MySelect>
-				<MySelect @change="newValue => activeFilters.country = newValue" v-model:selected="activeFilters.country" placeholder="Country" :items="filterValues.countries"></MySelect>
-				<!-- <MySelect @change="newValue => activeFilters.city = newValue" v-model:selected="activeFilters.city" placeholder="City" :items="filterValues.cities"></MySelect> -->
-				<MySelect @change="newValue => activeFilters.car = newValue" v-model:selected="activeFilters.car" placeholder="Car" :items="filterValues.cars"></MySelect>
-				<MySelect @change="newValue => activeFilters.brand = newValue" v-model:selected="activeFilters.brand" placeholder="Brand" :items="filterValues.brands"></MySelect>
-				<MySelect @change="newValue => activeFilters.aging = newValue" v-model:selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings"></MySelect>
+				<MySelect @change="newValue => activeFilters.area = newValue" :selected="activeFilters.area" placeholder="Area" :items="filterValues.areas"></MySelect>
+				<MySelect @change="newValue => activeFilters.country = newValue" :selected="activeFilters.country" placeholder="Country" :items="filterValues.countries"></MySelect>
+				<!-- <MySelect @change="newValue => activeFilters.city = newValue" :selected="activeFilters.city" placeholder="City" :items="filterValues.cities"></MySelect> -->
+				<MySelect @change="newValue => activeFilters.car = newValue" :selected="activeFilters.car" placeholder="Car" :items="filterValues.cars"></MySelect>
+				<MySelect @change="newValue => activeFilters.brand = newValue" :selected="activeFilters.brand" placeholder="Brand" :items="filterValues.brands"></MySelect>
+				<MySelect @change="newValue => activeFilters.aging = newValue" :selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings"></MySelect>
 				<!-- <MySelect @change="newValue => activeFilters.aging = newValue" v-model:selected="activeFilters.aging" placeholder="Aging" :items="filterValues.agings" :filterFN="(i, q)=>i.name.toLowerCase().includes(q.toLowerCase())" :formatItemFN="(i)=> i.name ? `${i.name} (${i.startYear}-${i.endYear})` : ''"></MySelect> -->
 			
 				<LocateBtn @click="searchItems(); isOpenMobileCascadeFilters ? isOpenMobileCascadeFilters = false : void 0;" class="bg-blue-700 text-white h-full lg:px-6 lg:h-[36px] flex items-center justify-center gap-2" >
@@ -172,11 +183,11 @@ const handleCreateRoadmap = () => {
 
 		<!-- entity type/category selector -->
 		<div class="flex flex-row items-center">
-			<div class="lg:hidden h-full -ml-4" @click="() => scrollElementContent(entitiesContainerRef!, 'horizontal', -(1/activeLocateSearchCategory.subcategories.length) * 3, '%')">
+			<div :class="activeLocateSearchCategory.name === 'Services' ? 'min-[1350px]:hidden' : 'lg:hidden'" class="h-full -ml-4" @click="() => scrollElementContent(entitiesContainerRef!, 'horizontal', -(1/activeLocateSearchCategory.subcategories.length) * 3, '%')">
 				<app-icon class="w-1" type="chevron-compact-left" color="#fff" size="xxl"></app-icon>
 			</div>
 
-			<div ref="entitiesContainerRef" class="overflow-x-auto -ml-1 -mr-1 lg:m-0 scroll-smooth flex-1 flex flex-row gap-3 lg:gap-0 lg:justify-between whitespace-nowrap">
+			<div ref="entitiesContainerRef" class="overflow-x-auto -ml-1 -mr-1 lg:m-0 scroll-smooth flex-1 flex flex-row gap-3 lg:gap-2 lg:justify-between whitespace-nowrap">
 				<div
 					v-for="subcategory of activeLocateSearchCategory.subcategories"
 					class="flex flex-col gap-1 items-center justify-center"
@@ -189,7 +200,7 @@ const handleCreateRoadmap = () => {
 				</div>
 			</div>
 
-			<div class="lg:hidden h-full -mr-4" @click="() => scrollElementContent(entitiesContainerRef!, 'horizontal', +(1/activeLocateSearchCategory.subcategories.length) * 3, '%')">
+			<div :class="activeLocateSearchCategory.name === 'Services' ? 'min-[1350px]:hidden' : 'lg:hidden'" class="h-full -mr-4" @click="() => scrollElementContent(entitiesContainerRef!, 'horizontal', +(1/activeLocateSearchCategory.subcategories.length) * 3, '%')">
 				<app-icon class="w-1" type="chevron-compact-right" color="#fff" size="xxl"></app-icon>
 			</div>
 		</div>
@@ -206,7 +217,7 @@ const handleCreateRoadmap = () => {
 	</div>
 
 	<div>
-			<LocateMap/>
+		<LocateMap :items="items" />
 	</div>
 
 	<div class="p-5 shadow-lg rounded-lg">
@@ -255,10 +266,10 @@ const handleCreateRoadmap = () => {
 			<p class="font-semibold py-2">
 				Select your points of interest to create your roadmap
 			</p>
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
-				<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of entities" />
-				<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of services" />
-				<LocateEventCard v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of events" />
+			<div class="grid grid-cols-1 md:grid-cols-2 min-[1250px]:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
+				<LocateEntityCard allow-select v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of entities" />
+				<LocateEntityCard allow-select v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of services" />
+				<LocateEventCard allow-select v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of events" />
 			</div>
 		</div>
 	</div>

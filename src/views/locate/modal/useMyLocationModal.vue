@@ -3,13 +3,55 @@ import Modal from '@/components/modal/Modal.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
+import AppIcon from '@/components/common/AppIcon.vue';
+import { onBeforeMount } from 'vue';
+import { markerLibrary } from '../googleMapsLoader';
 
 const locateStore = useLocateStore();
-const { modalStates, currentUserLocationMarker } = storeToRefs(locateStore);
+const { modalStates, currentUserLocationMarker, loadingScreen } = storeToRefs(locateStore);
+
+
+
+onBeforeMount(async () => {
+	
+	const eventualCoorodnates = localStorage.getItem("locate:currentUserLocation");
+	if(eventualCoorodnates){
+		try {
+			if(currentUserLocationMarker.value) {
+				currentUserLocationMarker.value.position = JSON.parse(eventualCoorodnates) as {lat: number, lng: number};
+			} else {
+				currentUserLocationMarker.value = new (await markerLibrary).AdvancedMarkerElement({
+					position: JSON.parse(eventualCoorodnates) as {lat: number, lng: number},
+					content: new (await markerLibrary).PinElement({ 'background': '#4fb056', 'borderColor': 'white', 'glyphColor': 'white' }).element,
+				});
+			}
+			modalStates.value.useMyLocationModalIsOpen = false;
+		} catch (error) {
+			console.error(error);
+			modalStates.value.useMyLocationModalIsOpen = true;
+		}
+	} else {
+		modalStates.value.useMyLocationModalIsOpen = true;
+	}
+});
 
 async function useCurrentUserLocation(){
+	loadingScreen.value = true;
 	const c = await getUserLocation();
-	if(c && currentUserLocationMarker.value) currentUserLocationMarker.value.position = c;
+
+	if(c){
+		if(!currentUserLocationMarker.value) {
+			currentUserLocationMarker.value = new (await markerLibrary).AdvancedMarkerElement({
+				position: c,
+				content: new (await markerLibrary).PinElement({ 'background': '#4fb056', 'borderColor': 'white', 'glyphColor': 'white' }).element,
+			});
+		}
+
+		currentUserLocationMarker.value.position = c;
+		localStorage.setItem("locate:currentUserLocation", JSON.stringify(c));
+	};
+
+	loadingScreen.value = false;
 }
 
 /**  */

@@ -24,7 +24,7 @@ const {
 } = storeToRefs(locateStore);
 
 const roadmapStore = useLocateRoadmapStore();
-const { fetchEntityRoadmaps, fetchEventRoadmaps, fetchEntityRoadmapEntities , deleteRoadmap, createRoadmap } = roadmapStore;
+const { fetchEntityRoadmaps, fetchEventRoadmaps, deleteRoadmap, createRoadmap } = roadmapStore;
 const { entityRoadmaps, eventsRoadmaps, roadmapsLoading, detailRoadmap } = storeToRefs(roadmapStore);
 const router = useRouter();
 

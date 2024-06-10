@@ -5,12 +5,13 @@ import { storeToRefs } from 'pinia';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import { isEventRoadmapData, useLocateRoadmapStore, type EventRoadmapData, type RoadmapData } from '@/store/locate/locateRoadmapStore';
 import { useRouter } from 'vue-router';
+import AppIcon from '@/components/common/AppIcon.vue';
 
 const locateStore = useLocateStore();
 const { modalStates } = storeToRefs(locateStore);
 
 const roadmapStore = useLocateRoadmapStore();
-const { fetchEntityRoadmaps, fetchEventRoadmaps, fetchEntityRoadmapEntities , deleteRoadmap, createRoadmap } = roadmapStore;
+const { fetchEntityRoadmaps, fetchEventRoadmaps, deleteRoadmap, createRoadmap } = roadmapStore;
 const { entityRoadmaps, eventsRoadmaps, roadmapsLoading, detailRoadmap } = storeToRefs(roadmapStore);
 const router = useRouter();
 

@@ -8,8 +8,11 @@ import { computed, ref } from 'vue';
 import type { LocateExtendedEntityData } from '@/store/locate/locateEntityStore';
 import { getCurrentDateFormatted } from '@/store/locate/utils/getCurrentDateFormatted';
 import type { LocateExtendedEventData } from '@/store/locate/locateEventStore';
+import type { LocateExtendedServicesData } from '@/store/locate/locateServiceStore';
+import AppIcon from '@/components/common/AppIcon.vue';
 
 const locateStore = useLocateStore();
+const { getSelectedItems } = locateStore;
 const { modalStates, activeLocateSearchCategory, items} = storeToRefs(locateStore);
 
 const { entityRoadmaps, eventsRoadmaps } = storeToRefs(useLocateRoadmapStore());
@@ -76,8 +79,8 @@ function onRoadmapNameChange(v: string){
 				<ul class="flex flex-col items-center gap-2 list-inside list-disc text-[#6C757D] font-thin text-center">
 					<li class="">{{  newRoadmapData.begin_address || 'United State, Massachusetts' }}</li>
 					<li class="">Date: {{  newRoadmapData.date_creation || '20/03/23'}} to {{ newRoadmapData.date_tour_planned || '28/03/23' }}</li>
-					<span class="flex flex-wrap gap-2">
-						<li v-for="subcategory of activeLocateSearchCategory.subcategories.filter((e, i)=>i < 4 || e.isSelected)">{{ subcategory.name }}</li>
+					<span class="flex flex-wrap justify-center gap-2">
+						<li v-for="subcategory of getSelectedItems()">{{ (subcategory as LocateExtendedEntityData).kind_name || (subcategory as LocateExtendedEventData).kind_name }}</li>
 					</span>
 				</ul>
 
@@ -92,7 +95,7 @@ function onRoadmapNameChange(v: string){
 					>
 				</div>
 				<div class="flex flex-col md:flex-row gap-4">
-					<LocateBtn @click="modalStates.createMyRoadmap = false;" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</LocateBtn>
+					<LocateBtn @click="modalStates.createMyRoadmap = false;" class="bg-[#F8F9FA] !text-black md:flex-1 shadow-sm">Cancel</LocateBtn>
 					<LocateBtn @click="handleSaveRoadmapClick()" class="bg-black text-white md:flex-1">Save</LocateBtn>
 				</div>
 			</div>

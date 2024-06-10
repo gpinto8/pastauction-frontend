@@ -50,7 +50,6 @@ const roadmapStore = useLocateRoadmapStore();
 const { fetchEntityRoadmaps } = roadmapStore;
 const { entityRoadmaps, roadmapsLoading } = storeToRefs(roadmapStore);
 
-watch([itemsLoading, roadmapsLoading], ()=>console.log("kkkkkkk", itemsLoading.value, roadmapsLoading.value))
 </script>
 
 <template>

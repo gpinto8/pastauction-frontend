@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useLocateStore } from '@/store/locate/locate';
 import type { LocateExtendedEntityData } from '@/store/locate/locateEntityStore';
 import type { LocateExtendedEventData } from '@/store/locate/locateEventStore';
+import { getDistanceFromMapCenterToItemLocation } from '@/store/locate/utils/getDistanceFromMapCenterToItemLocation';
 import { makePhoneCall } from '@/store/locate/utils/makePhoneCall';
+import { storeToRefs } from 'pinia';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 
 
 const props = defineProps<{
@@ -10,6 +14,16 @@ const props = defineProps<{
 	hideSelect?: boolean,
 	isSelectedDefault?: boolean,
 }>();
+
+const locateStore = useLocateStore();
+const { currentUserLocationMarker } = storeToRefs(locateStore);
+
+const getDistanceFromMapCenterToItemLocation_value = ref("-");
+watch(currentUserLocationMarker , async () => {
+	const v = await getDistanceFromMapCenterToItemLocation(props.event);
+	console.log('getDistanceFromMapCenterToItemLocation', v);
+	if(v) getDistanceFromMapCenterToItemLocation_value.value = v.toString();
+})
 
 </script>
 
@@ -51,19 +65,19 @@ const props = defineProps<{
 		
 		<div class="md:col-start-2 md:row-span- md:row-start-1">
 			<!-- name -->
-			<div class="text-lg font-semibold">Museum Villa Ford of Orange</div>
+			<div class="text-lg font-semibold">{{ event.event_name }}</div>
 			<!-- short description -->
-			<div class="text-sm font-medium md:mt-2 md:text-base">Historical collection exhibition</div>
+			<div class="text-sm font-medium md:mt-2 md:text-base">{{ event.event_description }}</div>
 		</div>
 
 		<!-- details box -->
 		<div v-if="event.isOpenDetails" class="col-span-full w-full flex flex-col gap-2 mb-6 lg:grid lg:grid-cols-[auto_1fr]">
 			<div class="flex gap-3 items-center">
 				<span class="text-lg font-semibold">Event category</span>
-				<span class="text-lg font-medium">Museum</span>
+				<span class="text-lg font-medium">{{ event.kind_name }}</span>
 			</div>
 
-			<div class="col-span-2 row-start-6 text-[#0D6EFD] underline lg:col-span-1 lg:row-start-1 lg:col-start-2 lg:justify-self-end">www.villaford.com</div>
+			<div class="col-span-2 row-start-6 text-[#0D6EFD] underline lg:col-span-1 lg:row-start-1 lg:col-start-2 lg:justify-self-end">{{ event.event_website || event.entity_website }}</div>
 
 			<div class="w-full  !rounded-lg !overflow-hidden">
 				<img class="w-full h-[182px] lg:w-[316px] object-cover" src="@/assets/images/create_garage.png" alt="">
@@ -89,32 +103,32 @@ const props = defineProps<{
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Date</span>
-					<span class="pl-2 text-[#6C757D]">25/01/23</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_date }}</span>
 				</div>
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Country</span>
-					<span class="pl-2 text-[#6C757D]">Country</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_country }}</span>
 				</div>
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">City</span>
-					<span class="pl-2 text-[#6C757D]">City</span>
+					<span class="pl-2 text-[#6C757D]">{{	event.event_begin_city }}</span>
 				</div>
 
 				<div class="md:col-span-3 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Address</span>
-					<span class="pl-2 text-[#6C757D]">Address</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_address }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Latit</span>
-					<span class="pl-2 text-[#6C757D]">City latit</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_lat }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Longit</span>
-					<span class="pl-2 text-[#6C757D]">City longit</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_lon }}</span>
 				</div>
 
 			</div>
@@ -126,43 +140,43 @@ const props = defineProps<{
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Date</span>
-					<span class="pl-2 text-[#6C757D]">25/01/23</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_date_end }}</span>
 				</div>
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Country</span>
-					<span class="pl-2 text-[#6C757D]">Country</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_end_country }}</span>
 				</div>
 				
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">City</span>
-					<span class="pl-2 text-[#6C757D]">City</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_end_city }}</span>
 				</div>
 
 				<div class="md:col-span-3 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Address</span>
-					<span class="pl-2 text-[#6C757D]">Address</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_end_address }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Latit</span>
-					<span class="pl-2 text-[#6C757D]">City latit</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_end_lat }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Longit</span>
-					<span class="pl-2 text-[#6C757D]">City longit</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.event_end_lon }}</span>
 				</div>
 
 			</div>
 
 		</div>
 
-		<span class="col-span-2 text-center ml-8 text-[#6C757D]">• Museum • 450 m</span>
+		<span class="col-span-2 text-center ml-8 text-[#6C757D]">• {{ event.kind_name }} • {{ getDistanceFromMapCenterToItemLocation_value || "? m" }}</span>
 
-		<span class="col-span-2 row-start-6 ml-8 md:col-start-3 md:row-span-2 md:col-span-1 text-[#0D6EFD] underline">www.villaford.com</span>
+		<span class="col-span-2 row-start-6 ml-8 md:col-start-3 md:row-span-2 md:col-span-1 text-[#0D6EFD] underline">{{ event.event_website || event.entity_website }}</span>
 
-		<span class="col-span-2 text-center ml-8 text-[#6C757D]"><span class="text-green-700">Open</span> 15:00 Closes at 21:00</span>
+		<span class="col-span-2 text-center ml-8 text-[#6C757D]"><span class="text-green-700">Open</span> {{ event.event_open_to }} Closes at {{ event.event_open_to }} </span>
 
 		<!-- adress -->
 		<div class="col-span-2 text-center flex gap-1 ml-8">
@@ -172,7 +186,7 @@ const props = defineProps<{
 			</svg>
 
 			<!-- address -->
-			<span class="text-left text-[#6C757D]">2550 N Tustin St Orange, CA 92865</span>
+			<span class="text-left text-[#6C757D]">{{ event.entity_address }}</span>
 		</div>
 
 		<!-- rating -->

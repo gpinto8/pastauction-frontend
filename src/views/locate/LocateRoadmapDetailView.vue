@@ -17,6 +17,7 @@ import { useLocateStore, type Coordinates } from '@/store/locate/locate';
 import {
 	isEntityRoadmapData,
   isEventRoadmapData,
+  isServiceRoadmapData,
   useLocateRoadmapStore,
   type EntityRoadmapData,
 	type EventRoadmapData,
@@ -53,6 +54,7 @@ const {
 	modalStates,
 	mapLocationSearchQuery,
 	itemsLoading,
+	loadingScreen,
 } = storeToRefs(locateStore);
 
 const entityStore = useLocateEntityStore();
@@ -68,7 +70,7 @@ const { fetchEvents } = eventStore;
 const { events, eventsLoading } = storeToRefs(eventStore);
 
 const roadmapStore = useLocateRoadmapStore();
-const { fetchEntityRoadmaps, fetchEventRoadmaps, fetchEntityRoadmapEntities , fetchEntitiesForRoadmap, fetchEventsForRoadmap} = roadmapStore;
+const { fetchEntitiesForRoadmap, fetchEventsForRoadmap, fetchServiceRoadmaps } = roadmapStore;
 const { 
 	entityRoadmaps,
 	eventsRoadmaps,
@@ -80,15 +82,20 @@ const {
 	roadmapVehicleData,
 } = storeToRefs(roadmapStore);
 
-onMounted(()=>{
+onMounted(async ()=>{
 	if(!detailRoadmap.value) return;
 
+	loadingScreen.value = true;
+
 	if(isEntityRoadmapData(detailRoadmap.value)){
-		fetchEntitiesForRoadmap(detailRoadmap.value);
+		await fetchEntitiesForRoadmap(detailRoadmap.value);
 	} else if(isEventRoadmapData(detailRoadmap.value)){
-		fetchEventsForRoadmap(detailRoadmap.value);
+		await fetchEventsForRoadmap(detailRoadmap.value);
+	} else if(isServiceRoadmapData(detailRoadmap.value)){
+		await fetchServiceRoadmaps(detailRoadmap.value);
 	}
 
+	loadingScreen.value = false;
 });
 
 const isEntitySelected = computed(()=> activeLocateSearchCategory.value.name === "Entity");
@@ -198,7 +205,7 @@ function calculateAllCosts(){
   </div>
 
 	<div>
-		<LocateMap @change.google.maps.directions-result="activeGoogleMapsDirectionsResult"/>
+		<LocateMap :items="activeLocateSearchCategory.name === 'Entity' ? detailRoadmapEntities : detailRoadmapEvents" change.google.maps.directions-result="activeGoogleMapsDirectionsResult"/>
 	</div>
 
 
@@ -318,7 +325,7 @@ function calculateAllCosts(){
 		</div>
 	</tempalte>
 
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
+	<div class="grid grid-cols-1 md:grid-cols-2 min-[1250px]:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
 		<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of detailRoadmapEntities" :allowSelect="false" :isSelectedDefault="true" />
 		<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of detailRoadmapServices" :allowSelect="false" :isSelectedDefault="true" />
 		<LocateEventCard v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of detailRoadmapEvents" :allowSelect="false" :isSelectedDefault="true" />

@@ -50,7 +50,7 @@ export const useLocateStore = defineStore('locate',
 		
 			const currentUserLocationMarker =  ref<google.maps.marker.AdvancedMarkerElement | null>(null);
 			const currentUserLocationBounds =  ref<google.maps.LatLngBounds>();
-			
+
 			const locateSearchCategories  = ref<LocateSearchCategory[]>([
 				{name: 'Entity', iconName: "person", subcategories: [
 					{key: "Museums", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},
@@ -85,19 +85,19 @@ export const useLocateStore = defineStore('locate',
 					{key: "15", name: "Car box", imgUrl: "https://past-auction-p.s3.amazonaws.com/Foto_Spare_Service_png/15.png"},
 				]},
 				{name: 'Events', iconName: "service-levels", subcategories: [
-					{key: "", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},
-					{key: "", name: 'Circuit', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/1.png'},
-					{key: "", name: 'Race car', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/11.png'},
-					{key: "", name: 'Exhibition', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/4.png'},
-					{key: "", name: 'Market', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/9.png'},
-					{key: "", name: 'Rally', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/12.png'},
-					{key: "", name: 'Tours', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/13.png'},
-					{key: "", name: 'Library', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/6.png'},
-					{key: "", name: 'Factory', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/5.png'},
-					{key: "", name: 'Magazine', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/7.png'},
-					{key: "", name: 'Owner club', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/10.png'},
-					{key: "", name: 'Concurs', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/3.png'},
-					{key: "", name: 'Collection', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/2.png'},
+					{key: "Museums", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},
+					{key: "Circuits", name: 'Circuit', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/1.png'},
+					{key: "CarRaces", name: 'Race car', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/11.png'},
+					{key: "Exhibitions", name: 'Exhibition', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/4.png'},
+					{key: "Markets", name: 'Market', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/9.png'},
+					{key: "Rally", name: 'Rally', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/12.png'},
+					{key: "Tours", name: 'Tours', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/13.png'},
+					{key: "Libraries", name: 'Library', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/6.png'},
+					{key: "Factories", name: 'Factory', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/5.png'},
+					{key: "Magazines", name: 'Magazine', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/7.png'},
+					{key: "Owners_Club", name: 'Owner club', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/10.png'},
+					{key: "Concours", name: 'Concurs', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/3.png'},
+					{key: "PrivateCollections", name: 'Collection', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/2.png'},
 				]}, 
 			]);
 			const activeLocateSearchCategory = ref<LocateSearchCategory>(locateSearchCategories.value[0]);
@@ -235,12 +235,12 @@ export const useLocateStore = defineStore('locate',
 						}
 					];
 
-					return (
-						await fetchAllItems<(typeof carsSample)[number]>(
-							`filter/entity_entity_query/temp_tipo_j/?sort_by=name:asc`,
-							items => filterValues.value.cars.push(...items.map(e => e.temp_tipo_j.Vehicles || e.temp_tipo_j.temp_tipo || "").flat().filter(e => !!e))
-						)
-					).map(e => e.temp_tipo_j.Vehicles || e.temp_tipo_j.temp_tipo || "").flat().filter(e => !!e);
+					const cars = (await fetchAllItems<(typeof carsSample)[number]>(`filter/entity_entity_query/temp_tipo_j/?sort_by=name:asc`))
+            .map(e => e.temp_tipo_j.Vehicles || e.temp_tipo_j.temp_tipo || '')
+            .flat()
+            .filter(e => !!e);
+
+          return (filterValues.value.cars = Array.from(new Set(cars)));
 				} catch (e) {
 					return [];
 				} finally {
@@ -317,7 +317,6 @@ export const useLocateStore = defineStore('locate',
 				// const serviceStore = useLocateServiceStore();
 				// const eventStore = useLocateEventStore();
 	
-				console.log("entityStore.entitiesLoading", entityStore.entitiesLoading);
 				switch (activeLocateSearchCategory.value.name) {
 					case "Entity":
 						return entityStore.entitiesLoading;
@@ -362,7 +361,6 @@ export const useLocateStore = defineStore('locate',
 		// 		const serviceStore = useLocateServiceStore();
 		// 		const eventStore = useLocateEventStore();
 	
-		// 		console.log("entityStore.entitiesLoading", entityStore.entitiesLoading);
 		// 		switch (state.activeLocateSearchCategory.name) {
 		// 			case "Entity":
 		// 				return entityStore.entitiesLoading;

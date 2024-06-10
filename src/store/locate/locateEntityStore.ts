@@ -107,10 +107,6 @@ export const useLocateEntityStore = defineStore('locateEntityStore', {
 					maxCount,
 				);
 
-				// const items = await fetchAllItemsV2<LocateEntityData>(
-				// 	`/entity_entity/query_user?sort_by=name:asc${encodeURI(searchQueryString)}`,
-				// );
-
 				allItemes.push(...items);
 			}
 

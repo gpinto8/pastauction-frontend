@@ -3,6 +3,7 @@ import Modal from '@/components/modal/Modal.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
+import AppIcon from '@/components/common/AppIcon.vue';
 
 const locateStore = useLocateStore();
 const {modalStates} = storeToRefs(locateStore);

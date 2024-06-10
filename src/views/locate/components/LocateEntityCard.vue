@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import type { LocateExtendedEntityData } from '@/store/locate/locateEntityStore';
-import type { LocateExtendedServicesData } from '@/store/locate/locateServiceStore';
+import type { LocateExtendedServicesData, LocateServicesData } from '@/store/locate/locateServiceStore';
 import { makePhoneCall } from '@/store/locate/utils/makePhoneCall';
-
+import AppIcon from '@/components/common/AppIcon.vue';
+import { useLocateStore } from '@/store/locate/locate';
+import { getDistanceFromMapCenterToItemLocation } from '@/store/locate/utils/getDistanceFromMapCenterToItemLocation';
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
+import config from '@/config';
 
 const props = defineProps<{
 	entity: LocateExtendedEntityData | LocateExtendedServicesData,
@@ -11,11 +16,23 @@ const props = defineProps<{
 	isSelectedDefault?: boolean,
 }>();
 
+const locateStore = useLocateStore();
+const { currentUserLocationMarker } = storeToRefs(locateStore);
+
+const getDistanceFromMapCenterToItemLocation_value = ref("-");
+watch(currentUserLocationMarker , async () => {
+	const v = await getDistanceFromMapCenterToItemLocation(props.entity);
+	console.log('getDistanceFromMapCenterToItemLocation', v);
+	if(v) getDistanceFromMapCenterToItemLocation_value.value = v.toString();
+})
+
+const imageUrl = config.apiUrl + '/photo/' + (props.entity as LocateExtendedEntityData).logo_test_main || (props.entity as LocateExtendedServicesData).
+
 </script>
 
 <template>
 	<v-card class="w-full flex px-2 py-4 gap-2">
-		<img class="h-12 lg:h-14 aspect-square rounded-full object-cover" src="@/assets/images/create_garage.png" alt="">
+		<img class="h-12 lg:h-14 aspect-square rounded-full object-cover" :src="" alt="">
 		<div class="flex-1">
 			<!-- FIRST BLOCK -->
 			<div>
@@ -37,17 +54,17 @@ const props = defineProps<{
 				<!-- RATINGS -->
 				<div>
 						<p class="flex items-center gap-2">
-								{{ '0.0' }} <app-icon type="star" color="#FFC107" size="sm"></app-icon>
+								{{ '-1' }} <app-icon type="star" color="#FFC107" size="sm"></app-icon>
 						</p>
 				</div>
 			</div>
 			<!-- SECON BLOCK -->
-			<div class="flex flex-col gap-2">
+			<div class="flex flex-col gap-2 text-[#6C757D]">
 				<!-- DISTANCE -->
 				<div>
 						<ul class="flex items-center gap-2 list-inside list-disc">
 								<li>{{ (entity as LocateExtendedEntityData).kind_name }}</li>
-								<li>{{ 'null' }}</li>
+								<li>{{ getDistanceFromMapCenterToItemLocation_value || "" }}</li>
 						</ul>
 				</div>
 				<!-- CLOCK -->
@@ -56,13 +73,13 @@ const props = defineProps<{
 							Open
 						</span>
 						<span>
-							{{ '00:00' }}
+							{{ (entity as LocateExtendedEntityData).time_open }}
 						</span>
 						<span>
 							Closes at
 						</span>
 						<span>
-							{{ '00:00' }}
+							{{ (entity as LocateExtendedEntityData).time_open }}
 						</span>
 				</div>
 				<!-- LOCATION -->
@@ -80,3 +97,47 @@ const props = defineProps<{
 		</div>
 	</v-card>
 </template>
+<style scoped>
+	* {
+		position: relative;
+	}
+
+.card {
+    @apply p-10 rounded-lg bg-white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.075);
+}
+
+/*TAGS*/
+.my_tag_icon_box {
+    width: 70px;
+    height: 60px;
+}
+
+/* Stile per la select personalizzata */
+.custom-select {
+    padding-right: 35px !important;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.custom-select,
+option {
+    color: #000;
+}
+
+/* Stile per il componente icona */
+.custom-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    /* Regola la distanza dell'icona dalla select come preferisci */
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+</style>
