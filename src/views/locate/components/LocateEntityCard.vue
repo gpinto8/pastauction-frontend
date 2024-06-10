@@ -26,13 +26,13 @@ watch(currentUserLocationMarker , async () => {
 	if(v) getDistanceFromMapCenterToItemLocation_value.value = v.toString();
 })
 
-const imageUrl = config.apiUrl + '/photo/' + (props.entity as LocateExtendedEntityData).logo_test_main || (props.entity as LocateExtendedServicesData).
+const imageUrl = config.apiUrl + '/photo/' + (props.entity as LocateExtendedEntityData).logo_test_main || (props.entity as LocateExtendedServicesData).entity_main_photo;
 
 </script>
 
 <template>
 	<v-card class="w-full flex px-2 py-4 gap-2">
-		<img class="h-12 lg:h-14 aspect-square rounded-full object-cover" :src="" alt="">
+		<img class="h-12 lg:h-14 aspect-square rounded-full object-cover" :src="imageUrl" alt="">
 		<div class="flex-1">
 			<!-- FIRST BLOCK -->
 			<div>
