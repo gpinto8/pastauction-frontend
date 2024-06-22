@@ -175,6 +175,11 @@ function calculateAllCosts(){
 	};
 }
 
+function onDirectionResultChange(v: google.maps.DirectionsResult) {
+	console.log(v);
+	activeGoogleMapsDirectionsResult.value = v;
+	calculateAllCosts();
+}
 </script>
 
 <template>
@@ -191,7 +196,7 @@ function calculateAllCosts(){
 
 
 	<div>
-		<LocateMap :items="activeLocateSearchCategory.name === 'Entity' ? detailRoadmapEntities : detailRoadmapEvents" @change.google.maps.directions-result="(v: google.maps.DirectionsResult) => activeGoogleMapsDirectionsResult = v" />
+		<LocateMap :items="activeLocateSearchCategory.name === 'Entity' ? detailRoadmapEntities : detailRoadmapEvents" @change.google.maps.directions-result="onDirectionResultChange" />
 	</div>
 
 	<LocateLocationSearchInput />
@@ -231,7 +236,7 @@ function calculateAllCosts(){
 			</div>
 		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 min-[1250px]:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
+		<div class="grid grid-cols-1 md:grid-cols-2 min-[1250px]:grid-cols-3 gap-3 mt-4" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
 			<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of detailRoadmapEntities" :allowSelect="false" :isSelectedDefault="true" />
 			<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of detailRoadmapServices" :allowSelect="false" :isSelectedDefault="true" />
 			<LocateEventCard v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of detailRoadmapEvents" :allowSelect="false" :isSelectedDefault="true" />

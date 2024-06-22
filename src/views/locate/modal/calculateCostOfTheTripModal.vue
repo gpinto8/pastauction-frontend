@@ -41,6 +41,7 @@ onMounted(() => {
 });
 
 watch(() => formData.value.year, async () => {
+	if(!formData.value.year) return;
 	loadingScreen.value = true;
 
 	roadmapVehicleData.value = null;
@@ -54,6 +55,7 @@ watch(() => formData.value.year, async () => {
 });
 
 watch(() => formData.value.make, async () => {
+	if(!formData.value.make) return;
 	loadingScreen.value = true;
 
 	roadmapVehicleData.value = null;
@@ -66,6 +68,7 @@ watch(() => formData.value.make, async () => {
 });
 
 watch(() => formData.value.model, async () => {
+	if(!formData.value.model) return;
 	loadingScreen.value = true;
 
 	roadmapVehicleData.value = null;
@@ -77,6 +80,7 @@ watch(() => formData.value.model, async () => {
 });
 
 watch(() => formData.value.option, async () => {
+	if(!formData.value.option) return;
 	if(!formData.value.option) return;
 
 	loadingScreen.value = true;

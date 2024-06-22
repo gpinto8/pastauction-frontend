@@ -41,7 +41,6 @@ let currentCircle: google.maps.Circle;
 // Esegui la funzione initMap dopo il montaggio del componente
 onMounted(async () => {
 	map = new (await mapsLibrary).Map(mapRef.value!, {
-		center: { lat: 0, lng: 0 }, // Latitudine e longitudine iniziali
 		zoom: 1, // Livello di zoom iniziale
 		mapId: import.meta.env.VITE_GOOGLE_MAPS_LOCATE_MAP_ID,
 	});
