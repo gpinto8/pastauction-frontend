@@ -60,8 +60,8 @@ export const useLocateServiceStore = defineStore('locateServiceStore', () => {
   const services = ref<LocateExtendedServicesData[]>([]);
 	const servicesLoading = ref(false);
 
-  async function fetchServices(
-    searchParams?: Partial<LocateServicesData>,
+  async function fetchServices<T extends Partial<LocateServicesData>>(
+    searchParams?: T,
     service_cod_services?: string[],
   ) {
     servicesLoading.value = true;

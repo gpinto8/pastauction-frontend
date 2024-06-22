@@ -1,6 +1,6 @@
 import { httpGet, httpPatch, httpPost, httpUpload } from '@/api/api';
 import { defineStore, storeToRefs } from 'pinia';
-import { computed, onMounted, ref, type ComputedRef } from 'vue';
+import { computed, onMounted, ref, watch, type ComputedRef } from 'vue';
 import { useLocateEntityStore, type LocateExtendedEntityData } from './locateEntityStore';
 import { useLocateEventStore, type LocateExtendedEventData } from './locateEventStore';
 import { useLocateServiceStore, type LocateExtendedServicesData } from './locateServiceStore';
@@ -51,6 +51,11 @@ export const useLocateStore = defineStore('locate',
 			const currentUserLocationMarker =  ref<google.maps.marker.AdvancedMarkerElement | null>(null);
 			const currentUserLocationBounds =  ref<google.maps.LatLngBounds>();
 
+			watch(currentUserLocationMarker, () => {
+				if(currentUserLocationMarker.value?.position){
+					localStorage.setItem("locate:currentUserLocation", JSON.stringify({lat: currentUserLocationMarker.value?.position?.lat, lng: currentUserLocationMarker.value?.position?.lng}));
+				}
+			});
 			const locateSearchCategories  = ref<LocateSearchCategory[]>([
 				{name: 'Entity', iconName: "person", subcategories: [
 					{key: "Museums", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},

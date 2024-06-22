@@ -49,6 +49,7 @@ const defaultFilters = {
 	car: '',
 	brand: '',
 	aging: '',
+	distanza: '',
 };
 
 // refs - start
@@ -109,6 +110,9 @@ async function searchEntities(){
 		'city': activeFilters.value.city,
 		'temp_tipo_j':activeFilters.value.car,
 		'aging_period_j': activeFilters.value.aging,
+		"distanza": activeFilters.value.distanza,
+		"lat": activeFilters.value.distanza ? currentUserLocationMarker.value?.position?.lat || "" : "",
+		"lon": activeFilters.value.distanza ? currentUserLocationMarker.value?.position?.lng || "" : "",
 	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>e.name))
 }
 
@@ -120,6 +124,9 @@ async function searchServices(){
 		'entity_city': activeFilters.value.city,
 		// 'entity_temp_tipo_j': activeFilters.value.car,
 		// 'entity_aging_period_j': activeFilters.value.aging,
+		"distanza": activeFilters.value.distanza,
+		"lat": activeFilters.value.distanza ? currentUserLocationMarker.value?.position?.lat || "" : "",
+		"lon": activeFilters.value.distanza ? currentUserLocationMarker.value?.position?.lng || "" : "",
 	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>e.key))
 }
 
@@ -131,6 +138,9 @@ async function searchEvents(){
 		'entity_city': activeFilters.value.city,
 		'entity_temp_tipo_j': activeFilters.value.car,
 		'entity_aging_period_j': activeFilters.value.aging,
+		"distanza": activeFilters.value.distanza,
+		"lat": activeFilters.value.distanza ? currentUserLocationMarker.value?.position?.lat || "" : "",
+		"lon": activeFilters.value.distanza ? currentUserLocationMarker.value?.position?.lng || "" : "",
 	}, activeLocateSearchCategory.value.subcategories.filter(e=>e.isSelected).map(e=>e.name))
 }
 
@@ -217,7 +227,7 @@ const handleCreateRoadmap = () => {
 	</div>
 
 	<div>
-		<LocateMap :items="items" />
+		<LocateMap :items="items" :circleRadiusMeters="parseInt(activeFilters.distanza)"/>
 	</div>
 
 	<div class="p-5 shadow-lg rounded-lg">
@@ -228,7 +238,7 @@ const handleCreateRoadmap = () => {
 
 				<div class="flex gap-5 w-full lg:w-fit">
 					<!-- Schedule Selector -->
-					<div class="w-1/2 md:w-fit select-container">
+					<div v-if="activeLocateSearchCategory.name === 'Events'" class="w-1/2 md:w-fit select-container">
 						<select class="custom-select" name="schedule" id="">
 							<option value="">Schedule</option>
 							<option value="any_time">Any Time</option>
@@ -239,12 +249,15 @@ const handleCreateRoadmap = () => {
 					</div>
 					<!-- Range Selector -->
 					<div class="w-1/2 md:w-fit select-container">
-						<select class="custom-select" name="range" id="">
+						<select @change="(e) => activeFilters.distanza = (e.target as any).value" class="custom-select" name="range" id="">
 							<option value="">Range</option>
-							<option value="20">20km</option>
-							<option value="30">30km</option>
-							<option value="40">40km</option>
-							<option value="50">50km</option>
+							<option value="20000">20km</option>
+							<option value="30000">30km</option>
+							<option value="40000">40km</option>
+							<option value="50000">50km</option>
+							<option value="1000000">1,000km</option>
+							<option value="5000000">5,000km</option>
+							<option value="20000000">20,000km</option>
 						</select>
 						<app-icon class="custom-icon" type="small_arr_down" color="#000" size="sm"></app-icon>
 					</div>

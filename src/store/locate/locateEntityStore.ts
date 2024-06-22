@@ -84,7 +84,7 @@ export const useLocateEntityStore = defineStore('locateEntityStore', {
 	}),
 
 	actions: {
-  async fetchEntities(searchParams?: Partial<LocateEntityData>, kind_names?: string[], maxCount = 200) {
+  async fetchEntities<T extends  Partial<LocateEntityData>>(searchParams?: T, kind_names?: string[], maxCount = 200) {
     this.entitiesLoading = true;
     try {
 			const allItemes: LocateEntityData[] = [];

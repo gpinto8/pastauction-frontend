@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
 	formatItemFN?(item: any): string, 
 	isLoading?: boolean;
 	variant?: "dotted" | "primary",
-	placeholderColor?: "white" | "#ADB5BD",
+	placeholderColor?: "white" | "#ADB5BD" | "black",
 	useOptionSearchFeature?: boolean,
 	disabled?: boolean,
 }>(), {
@@ -77,6 +77,7 @@ const placeholderIsDisplayed = computed(() => {
 				:class="{
 					'text-gray-400': placeholderIsDisplayed && !placeholderColor,
 					'text-white': placeholderIsDisplayed && placeholderColor === 'white',
+					'text-black': placeholderIsDisplayed && placeholderColor === 'black',
 					'text-[#ADB5BD]': placeholderIsDisplayed && placeholderColor === '#ADB5BD',
 				}"
 			>

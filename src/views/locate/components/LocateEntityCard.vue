@@ -22,17 +22,19 @@ const { currentUserLocationMarker } = storeToRefs(locateStore);
 const getDistanceFromMapCenterToItemLocation_value = ref("-");
 watch(currentUserLocationMarker , async () => {
 	const v = await getDistanceFromMapCenterToItemLocation(props.entity);
-	console.log('getDistanceFromMapCenterToItemLocation', v);
 	if(v) getDistanceFromMapCenterToItemLocation_value.value = v.toString();
 })
 
-const imageUrl = config.apiUrl + '/photo/' + (props.entity as LocateExtendedEntityData).logo_test_main || (props.entity as LocateExtendedServicesData).entity_main_photo;
-
+const imageUrl = config.apiUrl + '/photo/' + ((props.entity as LocateExtendedEntityData).logo_test || (props.entity as LocateExtendedServicesData).entity_logo);
+const imgFailedLoading = ref(false);
 </script>
 
 <template>
 	<v-card class="w-full flex px-2 py-4 gap-2">
-		<img class="h-12 lg:h-14 aspect-square rounded-full object-cover" :src="imageUrl" alt="">
+		<img v-if="!imgFailedLoading" class="h-12 lg:h-14 aspect-square rounded-full object-cover" :src="imageUrl" alt="" @error="imgFailedLoading = true">
+		<div v-if="imgFailedLoading" class="h-12 lg:h-14 aspect-square rounded-full object-cover bg-zinc-300 flex justify-center items-center">
+			<img class="h-6 lg:h-8" src="@/assets/images/building-fill.svg" alt="">
+		</div>
 		<div class="flex-1">
 			<!-- FIRST BLOCK -->
 			<div>

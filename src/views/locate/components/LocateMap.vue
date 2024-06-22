@@ -27,6 +27,7 @@ const emits = defineEmits<{
 
 const props = defineProps<{
 	items: ExtendedItem[],
+	circleRadiusMeters?: number;
 }>();
 
 let map: google.maps.Map;
@@ -34,6 +35,8 @@ const mapRef = ref<HTMLElement>();
 
 
 const markers = ref<google.maps.marker.AdvancedMarkerElement[]>([]);
+let currentDirectionsRenderer: google.maps.DirectionsRenderer;
+let currentCircle: google.maps.Circle;
 
 // Esegui la funzione initMap dopo il montaggio del componente
 onMounted(async () => {
@@ -42,11 +45,15 @@ onMounted(async () => {
 		zoom: 1, // Livello di zoom iniziale
 		mapId: import.meta.env.VITE_GOOGLE_MAPS_LOCATE_MAP_ID,
 	});
+	if(currentUserLocationMarker.value) {
+			currentUserLocationMarker.value.map = map
+	};
 });
+
 
 // this watch consumes the currentUserLocationMarker state to attach it on this map
 watch(
-	() => currentUserLocationMarker.value,
+	[() => currentUserLocationMarker.value, () => props.circleRadiusMeters],
 	async ()=>{
 		if(currentUserLocationMarker.value) {
 			currentUserLocationMarker.value.map = map
@@ -58,22 +65,44 @@ watch(
 				map.fitBounds(currentUserLocationBounds.value = bounds);
 				map.moveCamera({zoom: 5});
 			};
+
+			if(currentCircle) currentCircle.setMap(null);
+			if(props.circleRadiusMeters){
+				currentCircle = new (await mapsLibrary).Circle({
+					strokeColor: "#04ff00",
+					strokeOpacity: 0.2,
+					strokeWeight: 2,
+					fillColor: "#04ff00",
+					fillOpacity: 0.1,
+					map: map,
+					center: currentUserLocationMarker.value.position,
+					radius: props.circleRadiusMeters,
+					zIndex: -1,
+				});
+			}
 		};
-	}
+	},
 );
 
 /** when the users selects/deselects an item, we draw an roadmap that passes throug all those selected/favorites items */
-watch([
-	() => props.items.map(i => i.isSelected),
-	() => currentUserLocationMarker.value,
-], () => {
-	const waypoints: Coordinates[] = getSelectedItems().map(getCoordonatesForItem).filter(coordonatesValidator);
-	const origin: Coordinates = currentUserLocationMarker.value?.position as Coordinates;
-	// const destination: Coordinates = waypoints[0];
+watch(
+	[
+		() => props.items.map(i => i.isSelected),
+		() => currentUserLocationMarker.value,
+	],
+	() => {
+		const waypoints: Coordinates[] = props.items.filter(i => i.isSelected).map(getCoordonatesForItem).filter(coordonatesValidator);
+		const origin: Coordinates = currentUserLocationMarker.value?.position as Coordinates;
+		// const destination: Coordinates = waypoints[0];
 
-	// if there exists an origin(current user location) -> we need only 1 waypoint to be able to draw a roadmap, otherwise we need at least 2 waypoints
-	if(origin ? waypoints.length : waypoints.length >= 2) drawRoadMap(waypoints, origin);
-});
+		// delete the previos route on the map if exists
+		if(currentDirectionsRenderer) currentDirectionsRenderer.setMap(null);
+
+		// if there exists an origin(current user location) -> we need only 1 waypoint to be able to draw a roadmap, otherwise we need at least 2 waypoints
+		if(origin ? waypoints.length : waypoints.length >= 2) drawRoadMap(waypoints, origin);
+	},
+	{ immediate: true , deep: true },
+);
 
 /** when the list of `items` changes we add for each item a marker on the map */
 watch(() => props.items, async () => {
@@ -93,7 +122,9 @@ watch(() => props.items, async () => {
 				'borderColor': 'white',
 				'glyphColor': 'white' ,
 				'scale': props.items[i].isSelected ? 1.2: 1,
+				
 			}).element,
+			zIndex: props.items[i].isSelected ? 2: 1,
 		}))
 	}
 
@@ -111,7 +142,7 @@ watch(() => props.items, async () => {
 
 	markers.value = newMarkers;
 
-	fitMapToMarkers(markers.value);
+	fitMapToMarkers(currentUserLocationMarker.value ? markers.value.concat(currentUserLocationMarker.value) : markers.value);
 
 }, { deep: true });
 
@@ -151,15 +182,16 @@ async function drawRoadMap(waypoints: Coordinates[], origin?: Coordinates, desti
 		const response = await directionsService.route({
 			origin: origin || waypoints[0],
 			destination: destination || waypoints[waypoints.length - 1],
-			waypoints: waypoints.map(w => ({ location: w })),
+			waypoints: waypoints.map(w => ({ location: w , stopover: true})),
 			travelMode: google.maps.TravelMode.DRIVING,
+			optimizeWaypoints: true,
 		});
 
 		if(!response.routes.length) return;
 
 		emits('change.google.maps.DirectionsResult', response);
 
-		new (await routesLibrary).DirectionsRenderer({
+		currentDirectionsRenderer = new (await routesLibrary).DirectionsRenderer({
 			suppressMarkers: true,
 			map: map,
 			directions: response,

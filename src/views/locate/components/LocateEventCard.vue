@@ -21,7 +21,6 @@ const { currentUserLocationMarker } = storeToRefs(locateStore);
 const getDistanceFromMapCenterToItemLocation_value = ref("-");
 watch(currentUserLocationMarker , async () => {
 	const v = await getDistanceFromMapCenterToItemLocation(props.event);
-	console.log('getDistanceFromMapCenterToItemLocation', v);
 	if(v) getDistanceFromMapCenterToItemLocation_value.value = v.toString();
 })
 
@@ -33,7 +32,7 @@ watch(currentUserLocationMarker , async () => {
 		<!-- card actions/buttons -->
 		<div class="col-span-2 md:col-span-1 md:col-start-3 md:justify-self-end w-full flex md:justify-center md:w-fit gap-2 justify-between [&>*]:cursor-pointer">
 			<!-- phone icon -->
-			<div @click="makePhoneCall(event.entity_phone || event.entity_phone_hand)" class="hover:contrast-75 hidden md:flex h-[34px] w-[34px] rounded bg-[#F0F0F080] justify-center items-center">
+			<div @click="makePhoneCall(event.entity_phone)" class="hover:contrast-75 hidden md:flex h-[34px] w-[34px] rounded bg-[#F0F0F080] justify-center items-center">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M4.56809 1.66037C4.4943 1.56544 4.40115 1.48731 4.29484 1.43115C4.18853 1.37499 4.07149 1.34209 3.95149 1.33465C3.83149 1.3272 3.71127 1.34537 3.59883 1.38795C3.48639 1.43053 3.3843 1.49655 3.29934 1.58162L2.00684 2.87537C1.40309 3.48037 1.18059 4.33662 1.44434 5.08787C2.53901 8.19735 4.31971 11.0205 6.65434 13.3479C8.98175 15.6825 11.8049 17.4632 14.9143 18.5579C15.6656 18.8216 16.5218 18.5991 17.1268 17.9954L18.4193 16.7029C18.5044 16.6179 18.5704 16.5158 18.613 16.4034C18.6556 16.2909 18.6738 16.1707 18.6663 16.0507C18.6589 15.9307 18.626 15.8137 18.5698 15.7074C18.5136 15.6011 18.4355 15.5079 18.3406 15.4341L15.4568 13.1916C15.3554 13.113 15.2375 13.0584 15.1119 13.032C14.9863 13.0055 14.8563 13.008 14.7318 13.0391L11.9943 13.7229C11.6289 13.8142 11.2461 13.8093 10.8831 13.7088C10.5202 13.6083 10.1894 13.4154 9.92309 13.1491L6.85309 10.0779C6.58655 9.81167 6.3935 9.48097 6.29273 9.11799C6.19196 8.75501 6.18692 8.37213 6.27809 8.00662L6.96309 5.26912C6.99422 5.14461 6.99667 5.01466 6.97026 4.88907C6.94384 4.76348 6.88924 4.64553 6.81059 4.54412L4.56809 1.66037ZM2.35559 0.639119C2.57433 0.420306 2.83712 0.250532 3.12651 0.14107C3.4159 0.0316089 3.72527 -0.0150353 4.03407 0.00423504C4.34286 0.0235054 4.64403 0.108249 4.91757 0.25284C5.1911 0.39743 5.43075 0.598558 5.62059 0.842869L7.86309 3.72537C8.27434 4.25412 8.41934 4.94287 8.25684 5.59287L7.57309 8.33037C7.53774 8.47216 7.53965 8.62068 7.57863 8.76151C7.61762 8.90234 7.69236 9.0307 7.79559 9.13412L10.8668 12.2054C10.9704 12.3088 11.099 12.3837 11.24 12.4227C11.3811 12.4617 11.5299 12.4634 11.6718 12.4279L14.4081 11.7441C14.7289 11.6639 15.0637 11.6577 15.3872 11.7259C15.7107 11.7941 16.0145 11.935 16.2756 12.1379L19.1581 14.3804C20.1943 15.1866 20.2893 16.7179 19.3618 17.6441L18.0693 18.9366C17.1443 19.8616 15.7618 20.2679 14.4731 19.8141C11.1746 18.6535 8.17968 16.7652 5.71059 14.2891C3.2347 11.8204 1.34635 8.82594 0.185589 5.52787C-0.266911 4.24037 0.139339 2.85662 1.06434 1.93162L2.35684 0.639119H2.35559Z" fill="#212529"/>
 				</svg>
@@ -65,19 +64,19 @@ watch(currentUserLocationMarker , async () => {
 		
 		<div class="md:col-start-2 md:row-span- md:row-start-1">
 			<!-- name -->
-			<div class="text-lg font-semibold">{{ event.event_name }}</div>
+			<div class="text-lg font-semibold">{{ event.name }}</div>
 			<!-- short description -->
-			<div class="text-sm font-medium md:mt-2 md:text-base">{{ event.event_description }}</div>
+			<div class="text-sm font-medium md:mt-2 md:text-base">{{ event.description }}</div>
 		</div>
 
 		<!-- details box -->
 		<div v-if="event.isOpenDetails" class="col-span-full w-full flex flex-col gap-2 mb-6 lg:grid lg:grid-cols-[auto_1fr]">
 			<div class="flex gap-3 items-center">
 				<span class="text-lg font-semibold">Event category</span>
-				<span class="text-lg font-medium">{{ event.kind_name }}</span>
+				<span class="text-lg font-medium">{{ event.event_type }}</span>
 			</div>
 
-			<div class="col-span-2 row-start-6 text-[#0D6EFD] underline lg:col-span-1 lg:row-start-1 lg:col-start-2 lg:justify-self-end">{{ event.event_website || event.entity_website }}</div>
+			<div class="col-span-2 row-start-6 text-[#0D6EFD] underline lg:col-span-1 lg:row-start-1 lg:col-start-2 lg:justify-self-end">{{ event.website }}</div>
 
 			<div class="w-full  !rounded-lg !overflow-hidden">
 				<img class="w-full h-[182px] lg:w-[316px] object-cover" src="@/assets/images/create_garage.png" alt="">
@@ -94,7 +93,7 @@ watch(currentUserLocationMarker , async () => {
 				</div>
 
 				<!-- long description content -->
-				<div :class="{'hidden': !event.isOpenDescription}" class="text-[#6C757D] md:!block">{{ event.event_description }}</div>
+				<div :class="{'hidden': !event.isOpenDescription}" class="text-[#6C757D] md:!block">{{ event.description }}</div>
 			</div>
 
 			<div class="text-lg font-semibold">Begin</div>
@@ -103,32 +102,32 @@ watch(currentUserLocationMarker , async () => {
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Date</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_date }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.begin_date }}</span>
 				</div>
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Country</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_country }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.begin_country }}</span>
 				</div>
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">City</span>
-					<span class="pl-2 text-[#6C757D]">{{	event.event_begin_city }}</span>
+					<span class="pl-2 text-[#6C757D]">{{	event.begin_city }}</span>
 				</div>
 
 				<div class="md:col-span-3 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Address</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_address }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.begin_address }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Latit</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_lat }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.begin_lat }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Longit</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_begin_lon }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.begin_lon }}</span>
 				</div>
 
 			</div>
@@ -140,43 +139,43 @@ watch(currentUserLocationMarker , async () => {
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Date</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_date_end }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.date_end }}</span>
 				</div>
 
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Country</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_end_country }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.end_country }}</span>
 				</div>
 				
 				<div class="md:!col-span-4 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">City</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_end_city }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.end_city }}</span>
 				</div>
 
 				<div class="md:col-span-3 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Address</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_end_address }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.end_address }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Latit</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_end_lat }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.end_lat }}</span>
 				</div>
 
 				<div class="!col-span-1 md:!col-span-6 flex flex-col gap-2 border-b-[1px] border-solid border-[#CED4DA] pb-1">
 					<span class="">Longit</span>
-					<span class="pl-2 text-[#6C757D]">{{ event.event_end_lon }}</span>
+					<span class="pl-2 text-[#6C757D]">{{ event.end_lon }}</span>
 				</div>
 
 			</div>
 
 		</div>
 
-		<span class="col-span-2 text-center ml-8 text-[#6C757D]">• {{ event.kind_name }} • {{ getDistanceFromMapCenterToItemLocation_value || "? m" }}</span>
+		<span class="col-span-2 text-center ml-8 text-[#6C757D]">• {{ event.event_type }} • {{ getDistanceFromMapCenterToItemLocation_value || "? m" }}</span>
 
-		<span class="col-span-2 row-start-6 ml-8 md:col-start-3 md:row-span-2 md:col-span-1 text-[#0D6EFD] underline">{{ event.event_website || event.entity_website }}</span>
+		<span class="col-span-2 row-start-6 ml-8 md:col-start-3 md:row-span-2 md:col-span-1 text-[#0D6EFD] underline">{{ event.website }}</span>
 
-		<span class="col-span-2 text-center ml-8 text-[#6C757D]"><span class="text-green-700">Open</span> {{ event.event_open_to }} Closes at {{ event.event_open_to }} </span>
+		<span class="col-span-2 text-center ml-8 text-[#6C757D]"><span class="text-green-700">Open</span> {{ event.open_to }} Closes at {{ event.open_to }} </span>
 
 		<!-- adress -->
 		<div class="col-span-2 text-center flex gap-1 ml-8">
@@ -186,7 +185,7 @@ watch(currentUserLocationMarker , async () => {
 			</svg>
 
 			<!-- address -->
-			<span class="text-left text-[#6C757D]">{{ event.entity_address }}</span>
+			<span class="text-left text-[#6C757D]">{{ event.begin_address }}</span>
 		</div>
 
 		<!-- rating -->

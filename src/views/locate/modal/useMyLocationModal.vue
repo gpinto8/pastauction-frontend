@@ -48,7 +48,6 @@ async function useCurrentUserLocation(){
 		}
 
 		currentUserLocationMarker.value.position = c;
-		localStorage.setItem("locate:currentUserLocation", JSON.stringify(c));
 	};
 
 	loadingScreen.value = false;

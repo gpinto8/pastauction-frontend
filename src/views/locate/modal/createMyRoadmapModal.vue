@@ -2,7 +2,7 @@
 import Modal from '@/components/modal/Modal.vue';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import { useLocateStore } from '@/store/locate/locate';
-import { isEntityRoadmapData, isEventRoadmapData, useLocateRoadmapStore, type CreateEntityRoadmapBody, type CreateEventRoadmapBody, type EntityEventRoadmapPoint, type EntityRoadmapPoint, type RoadmapData } from '@/store/locate/locateRoadmapStore';
+import { isEntityRoadmapData, isEventRoadmapData, isServiceRoadmapData, useLocateRoadmapStore, type CreateEntityRoadmapBody, type CreateEventRoadmapBody, type CreateServiceRoadmapBody, type EntityEventRoadmapPoint, type EntityRoadmapPoint, type RoadmapData } from '@/store/locate/locateRoadmapStore';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import type { LocateExtendedEntityData } from '@/store/locate/locateEntityStore';
@@ -18,39 +18,43 @@ const { modalStates, activeLocateSearchCategory, items} = storeToRefs(locateStor
 const { entityRoadmaps, eventsRoadmaps } = storeToRefs(useLocateRoadmapStore());
 const { createRoadmap } = useLocateRoadmapStore();
 
-const newRoadmapData = ref<Partial<CreateEntityRoadmapBody | CreateEventRoadmapBody>>({});
+const newRoadmapData = ref<Partial<CreateEntityRoadmapBody | CreateEventRoadmapBody | CreateServiceRoadmapBody>>({});
 
 async function handleSaveRoadmapClick(){
 	let points:  Partial<EntityRoadmapPoint>[] | Partial<EntityEventRoadmapPoint>[] = [];
 
 	if(isEntityRoadmapData(newRoadmapData.value)){
 		if(!newRoadmapData.value.name) return alert('Roadmap name required');
-
 		points = (items.value as LocateExtendedEntityData[]).filter(e => e.isSelected).map(e => ({
-			"id_entity_entity": e.id,
-			"preferred": true,
+			"points_id_entity_entity": e.id,
+			"points_preferred": true,
 		}));
+
 	}	else if(isEventRoadmapData(newRoadmapData.value)) {
 		if(!newRoadmapData.value.event_name) return alert('Roadmap name required');
-
 		const selectedEvents = (items.value as LocateExtendedEventData[]).filter(e => e.isSelected);
 		points = selectedEvents.map(e => ({
-			"id_entity_event": e.event_id_key,
-			"preferred": true
+			"points_id_entity_event": e.id_key,
+			"points_preferred": true
 		}));
-	}
 
-	function isEntityRoadmapPoint(data: Partial<EntityRoadmapPoint> | Partial<EntityRoadmapPoint>[]): data is EntityRoadmapPoint | EntityRoadmapPoint[] {
-		return true;
+	} else if (isServiceRoadmapData(newRoadmapData.value)){
+		if(!newRoadmapData.value.name) return alert('Roadmap name required');
+		const selectedEvents = (items.value as LocateExtendedEventData[]).filter(e => e.isSelected);
+		points = selectedEvents.map(e => ({
+			"points_id_entity_event": e.id_key,
+			"points_preferred": true
+		}));
+
 	}
 
 	/** to do */
 	const userHasSubscription = true;
 	if(userHasSubscription){
-		if(isEntityRoadmapPoint(points)){
-			const newRoadmap = await createRoadmap(newRoadmapData.value as CreateEventRoadmapBody, points);
-		}
+		const newRoadmap = await createRoadmap(newRoadmapData.value, points as any);
 		modalStates.value.createMyRoadmap = false;
+
+		modalStates.value.roadmapSuccessfullySaved = true;
 	} else {
 		modalStates.value.upgradeMyPlan = true;
 		modalStates.value.createMyRoadmap = false;
@@ -80,7 +84,7 @@ function onRoadmapNameChange(v: string){
 					<li class="">{{  newRoadmapData.begin_address || 'United State, Massachusetts' }}</li>
 					<li class="">Date: {{  newRoadmapData.date_creation || '20/03/23'}} to {{ newRoadmapData.date_tour_planned || '28/03/23' }}</li>
 					<span class="flex flex-wrap justify-center gap-2">
-						<li v-for="subcategory of getSelectedItems()">{{ (subcategory as LocateExtendedEntityData).kind_name || (subcategory as LocateExtendedEventData).kind_name }}</li>
+						<li v-for="subcategory of getSelectedItems()">{{ (subcategory as LocateExtendedEntityData).kind_name || (subcategory as LocateExtendedEventData).event_type }}</li>
 					</span>
 				</ul>
 

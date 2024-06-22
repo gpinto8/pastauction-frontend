@@ -39,8 +39,8 @@ async function deleteCurrentRoadmap(){
 			<p>This action cannot be undone</p>
 
 			<div class="flex flex-col md:flex-row gap-4">
-				<LocateBtn @click="modalStates.roadmapSuccessfullySaved = false" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</LocateBtn>
-				<LocateBtn @click="deleteCurrentRoadmap(); modalStates.roadmapSuccessfullySaved = false" class="bg-black text-white md:flex-1">Delete</LocateBtn>
+				<LocateBtn @click="modalStates.confirmRoadmapDeletionModal = false" class="bg-[#F8F9FA] text-black md:flex-1">Cancel</LocateBtn>
+				<LocateBtn @click="deleteCurrentRoadmap(); modalStates.confirmRoadmapDeletionModal = false" class="bg-black text-white md:flex-1">Delete</LocateBtn>
 			</div>
 		</div>
 	</Modal>

@@ -124,8 +124,8 @@ function formatRoadmapKinds(kinds: string){
     placeholder="Order By"
     :items="orderByOptions as any"
     variant="primary"
-    class="w-[112px] bg-[#21252926]"
-		placeholderColor="white"
+    class="w-[112px] bg-[#21252926] border-2"
+		placeholderColor="black"
 		:useOptionSearchFeature="false"
   />
 
@@ -149,7 +149,7 @@ function formatRoadmapKinds(kinds: string){
 				</div>
 
 				<div class="pl-1">
-					{{  `• ${roadmap.begin_address}    • Date: ${roadmap.date_tour_planned}` }}
+					{{  `• ${roadmap.begin_address}    • Date: ${roadmap.date_tour_planned || roadmap.date_creation}` }}
 				</div>
 
 				<div class="pl-1">

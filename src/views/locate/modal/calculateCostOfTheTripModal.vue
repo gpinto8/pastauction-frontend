@@ -113,31 +113,55 @@ const options = ref<Option[]>([]);
 const roadmapVehicleDataTthumbnailIsLoading = ref(false);
 
 async function fetchMakes(year: string){
-	const response = await httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`);
-	const data = response.data as { menuItem: Make | Make[] }
-	// const response = await axios.get(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`, { headers: {}}) as any as { menuItem: Make | Make[] };
+	const response = await (await fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year=${year}`, {
+		headers: {
+			"Accept": "application/json",
+		}
+	})).json();
+
+	const data = response as { menuItem: Make | Make[] }
 	makes.value = Array.isArray(data.menuItem) ? data.menuItem : [data.menuItem];
 }
 
 async function fetchModels(year: string, make: string){
-	const response = await httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/menu/modelNoPhev?year=${year}&make=${make}`);
-	const data = response.data as { menuItem: Model | Model[] }
+	const response = await (await fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/modelNoPhev?year=${year}&make=${make}`, {
+		headers: {
+			"Accept": "application/json",
+		}
+	})).json();
+
+	const data = response as { menuItem: Model | Model[] }
 	models.value = Array.isArray(data.menuItem) ? data.menuItem : [data.menuItem];
 }
 
 async function fetchOptions(year: string, make: string, model: string){
-	const response = await httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?year=${year}&make=${make}&model=${model}`);
-	const data = response.data as { menuItem: Option | Option[] }
+	const response = await (await fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?year=${year}&make=${make}&model=${model}`, {
+		headers: {
+			"Accept": "application/json",
+		}
+	})).json();
+
+	const data = response as { menuItem: Option | Option[] }
 	options.value = Array.isArray(data.menuItem) ? data.menuItem : [data.menuItem];
 }
 
 async function fetchVehicle(option: Option){
 	const [ response1, response2 ] = await Promise.all([
-		httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/${option.value}`),
-		httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/v2/${option.value}`)
+		await (await fetch(`https://www.fueleconomy.gov/ws/rest/vehicle/${option.value}`, {
+			headers: {
+				"Accept": "application/json",
+			}
+		})).json(),
+		// httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/vehicle/${option.value}`),
+		await (await fetch(`https://www.fueleconomy.gov/ws/rest/v2/${option.value}`, {
+			headers: {
+				"Accept": "application/json",
+			}
+		})).json(),
+		// httpGet(`https://corsproxy.io/?https://www.fueleconomy.gov/ws/rest/v2/${option.value}`)
 	]);
 
-	return { ...response1.data, ...response2.data } as VehicleData;
+	return { ...response1, ...response2 } as VehicleData;
 }
 
 async function calculate(){

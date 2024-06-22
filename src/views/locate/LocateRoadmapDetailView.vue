@@ -70,7 +70,7 @@ const { fetchEvents } = eventStore;
 const { events, eventsLoading } = storeToRefs(eventStore);
 
 const roadmapStore = useLocateRoadmapStore();
-const { fetchEntitiesForRoadmap, fetchEventsForRoadmap, fetchServiceRoadmaps } = roadmapStore;
+const { fetchEntitiesForRoadmap, fetchEventsForRoadmap, fetchServiceRoadmaps, deleteRoadmap } = roadmapStore;
 const { 
 	entityRoadmaps,
 	eventsRoadmaps,
@@ -83,6 +83,7 @@ const {
 } = storeToRefs(roadmapStore);
 
 onMounted(async ()=>{
+
 	if(!detailRoadmap.value) return;
 
 	loadingScreen.value = true;
@@ -99,17 +100,6 @@ onMounted(async ()=>{
 });
 
 const isEntitySelected = computed(()=> activeLocateSearchCategory.value.name === "Entity");
-
-const roadmaps = computed(() => {
-	if(isEntitySelected.value){
-		return entityRoadmaps.value;
-	} else {
-		return eventsRoadmaps.value;
-	};
-});
-
-const orderBy = ref<typeof orderByOptions[number]>('');
-const orderByOptions = ['More new', 'More old'];
 
 const isApproximateCostSectionVisible = ref(false);
 
@@ -129,21 +119,16 @@ const roadmapTripCostsData = ref({
 });
 
 const activeGoogleMapsDirectionsResult = ref<google.maps.DirectionsResult | null>(null);
+watch(activeGoogleMapsDirectionsResult, () => {
+	console.log('activeGoogleMapsDirectionsResult.value.routes', activeGoogleMapsDirectionsResult.value?.routes);
+
+}, { deep: true });
 
 function formatDate(dateString: string) {
 	const today = new Date().toDateString();
 	const yesterday = new Date(Date.now() - 86400000).toDateString();
 	return (new Date(dateString).toDateString() === today) ? 'today' : (new Date(dateString).toDateString() === yesterday) ? 'yesterday' : dateString;
 }
-
-const orderedRoadmaps = computed(() => {
-	return roadmaps.value.sort((a, b) => {
-		const dateA = new Date(a.date_creation).getTime();
-    const dateB = new Date(b.date_creation).getTime();
-
-		return orderBy.value === "More old" ? dateA - dateB : dateB - dateA;
-	});
-});
 
 const router = useRouter();
 
@@ -204,10 +189,12 @@ function calculateAllCosts(){
     <span class="font-bold md:text-lg lg:text-2xl">Roadmap detail (to do)</span>
   </div>
 
+
 	<div>
-		<LocateMap :items="activeLocateSearchCategory.name === 'Entity' ? detailRoadmapEntities : detailRoadmapEvents" change.google.maps.directions-result="activeGoogleMapsDirectionsResult"/>
+		<LocateMap :items="activeLocateSearchCategory.name === 'Entity' ? detailRoadmapEntities : detailRoadmapEvents" @change.google.maps.directions-result="(v: google.maps.DirectionsResult) => activeGoogleMapsDirectionsResult = v" />
 	</div>
 
+	<LocateLocationSearchInput />
 
 	<tempalte v-if="!isApproximateCostSectionVisible">
 		<div class="flex flex-col gap-5 ">
@@ -239,9 +226,15 @@ function calculateAllCosts(){
 					</div>
 				</div>
 
-				<LocateBtn  block class="mt-8 md:!mt-0 md:px-4 py-2 w-full md:w-fit md:ml-auto bg-white !text-[#212529] border-[1px] border-[#212529] border-solid">Delete Roadmap</LocateBtn>
+				<LocateBtn @click="modalStates.confirmRoadmapDeletionModal = true"  block class="mt-8 md:!mt-0 md:px-4 py-2 w-full md:w-fit md:ml-auto bg-white !text-[#212529] border-[1px] border-[#212529] border-solid">Delete Roadmap</LocateBtn>
 				<LocateBtn @click="modalStates.calculateCostOfTheTripModal = true" block class="md:px-4 py-2 w-full md:w-fit  bg-[#212529] text-white border-[1px] border-white">Calculate cost</LocateBtn>
 			</div>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 min-[1250px]:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
+			<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of detailRoadmapEntities" :allowSelect="false" :isSelectedDefault="true" />
+			<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of detailRoadmapServices" :allowSelect="false" :isSelectedDefault="true" />
+			<LocateEventCard v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of detailRoadmapEvents" :allowSelect="false" :isSelectedDefault="true" />
 		</div>
 	</tempalte>
 
@@ -325,11 +318,7 @@ function calculateAllCosts(){
 		</div>
 	</tempalte>
 
-	<div class="grid grid-cols-1 md:grid-cols-2 min-[1250px]:grid-cols-3 gap-3" :class="{' md:!grid-cols-1': activeLocateSearchCategory.name === 'Events'}" >
-		<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Entity'" :entity="entity" v-for="entity of detailRoadmapEntities" :allowSelect="false" :isSelectedDefault="true" />
-		<LocateEntityCard v-if="activeLocateSearchCategory.name === 'Services'" :entity="service" v-for="service of detailRoadmapServices" :allowSelect="false" :isSelectedDefault="true" />
-		<LocateEventCard v-if="activeLocateSearchCategory.name === 'Events'" :event="event" v-for="event of detailRoadmapEvents" :allowSelect="false" :isSelectedDefault="true" />
-	</div>
+
 
 </template>
 <style scoped>

@@ -6,7 +6,7 @@ import type { LocateEntityData, LocateExtendedEntityData } from './locateEntityS
 import { useLocateStore, type Coordinates, type ExtendedItem } from './locate';
 import { getCurrentDateFormatted } from './utils/getCurrentDateFormatted';
 import type { LocateEventData, LocateExtendedEventData } from './locateEventStore';
-import type { LocateExtendedServicesData } from './locateServiceStore';
+import type { LocateExtendedServicesData, LocateServicesData } from './locateServiceStore';
 
 
 const sampleEntityRoadmapData = {
@@ -40,14 +40,12 @@ const sampleEventRoadmapData = {
 export type EventRoadmapData = typeof sampleEventRoadmapData;
 
 const sampleServiceRoadmapData = {
-	"date_creation": "2024-05-16",
-	"date_tour_planned": "2024-05-16",
+	"date_creation": "2024-06-22",
+	"date_tour_planned": "2024-06-22",
 	"begin_country": "string",
 	"begin_city": "string",
 	"begin_address": "string",
-	"event_name": "string",
-	"id_service": 0,
-	"id_user": 0,
+	"name": "string",
 	"image_url": "string",
 	"image_path": "string",
 	"id_key": 8,
@@ -84,21 +82,101 @@ const sampleCreateEventRoadmapBody = {
 };
 export type CreateEventRoadmapBody = typeof sampleCreateEventRoadmapBody;
 
+const sampleCreateServiceRoadmapBody = {
+  "date_creation": "2024-06-22",
+  "date_tour_planned": "2024-06-22",
+  "begin_country": "string",
+  "begin_city": "string",
+  "begin_address": "string",
+  "name": "string",
+  "image_url": "string",
+  "image_path": "string"
+}
+export type CreateServiceRoadmapBody = typeof sampleCreateServiceRoadmapBody;
+
+
 const objEntityRoadmapPoint = {
-	"id_entity_entity": 3,
-	"id_key_entity_roadmap": 8,
-	"date": "2024-05-21",
-	"preferred": true
+	"points_id": 0,
+	"points_preferred": true,
+	"points_date": "2024-06-18",
+	"points_id_key_entity_roadmap": 0,
+	"points_id_entity_entity": 0,
+	"roadmap_id": 0,
+	"roadmap_image_url": "string",
+	"roadmap_date_creation": "2024-06-18",
+	"roadmap_date_tour_planned": "2024-06-18",
+	"roadmap_begin_country": "string",
+	"roadmap_begin_city": "string",
+	"roadmap_begin_address": "string",
+	"roadmap_name": "string",
+	"roadmap_id_user": "string",
+	"user_id": 0,
+	"user_entity_id": 0,
+	"user_first_name": "string",
+	"user_nickname": "string",
+	"user_country": "string",
+	"user_city": "string",
+	"entity_name_complete": "string",
+	"entity_name_short": "string",
+	"entity_address": "string",
+	"entity_brand_main": "string",
+	"entity_city": "string",
+	"entity_city_longit": 0,
+	"entity_country_code": "string",
+	"entity_logo": "string",
+	"entity_logo_url": "string",
+	"entity_main_photo": "string",
+	"entity_main_photo_path": "string",
+	"entity_main_photo_url": "string",
+	"entity_region_state": "string",
+	"entity_website": "string"
 };
 export type EntityRoadmapPoint = typeof objEntityRoadmapPoint;
 
 const objEntityEventRoadmapPoint = {
-	"id_entity_event": 3,
-	"id_key_event_roadmap": 8,
-	"roadmap_date": "2024-05-25",
-	"preferred": true
+	"entity_address": "string",
+	"entity_area_geo": "string",
+	"entity_brand_main": "string",
+	"entity_brand_secondary": "string",
+	"entity_category_image": "string",
+	"entity_city": "string",
+	"entity_city_latit": 0,
+	"entity_city_longit": 0,
+	"entity_country": "string",
+	"entity_country_code": "string",
+	"entity_entity_kind": "string",
+	"entity_logo": "string",
+	"entity_logo_path": "string",
+	"entity_logo_url": "string",
+	"entity_main_photo": "string",
+	"entity_main_photo_path": "string",
+	"entity_main_photo_url": "string",
+	"entity_name_complete": "string",
+	"entity_name_short": "string",
+	"entity_region_state": "string",
+	"entity_website": "string",
+	"event_name": "string",
+	"id_key_event_roadmap": 0,
+	"points_id": 0,
+	"points_id_entity_event": 0,
+	"points_preferred": true,
+	"roadmap_begin_address": "string",
+	"roadmap_begin_city": "string",
+	"roadmap_begin_country": "string",
+	"roadmap_date": "2024-06-18",
+	"roadmap_date_creation": "2024-06-18",
+	"roadmap_date_tour_planned": "2024-06-18",
+	"roadmap_id": 0,
+	"roadmap_id_user": 0,
+	"roadmap_image_url": "string",
+	"user_city": "string",
+	"user_country": "string",
+	"user_first_name": "string",
+	"user_id": 0,
+	"user_nickname": "string"
 }
 export type EntityEventRoadmapPoint = typeof objEntityEventRoadmapPoint;
+
 
 const sampleEntityServiceRoadmapPoint = {
 	"id_entity_service": 3,
@@ -411,7 +489,7 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 				const items = await fetchAllItems<EntityRoadmapData>(
 					`/entity_roadmap/query`,
 					items => this.entityRoadmaps.push(...items),
-					50,
+					200,
 				);
 	
 				return (this.entityRoadmaps = items);
@@ -430,7 +508,7 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 				const items = await fetchAllItems<EventRoadmapData>(
 					`/entity_event_roadmap/query`,
 					items => this.eventsRoadmaps.push(...items),
-					50,
+					200,
 				);
 	
 				return (this.eventsRoadmaps = items);
@@ -449,7 +527,7 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 				const items = await fetchAllItems<ServiceRoadmapData>(
 					`/entity_service_roadmap/query`,
 					items => this.servicesRoadmaps.push(...items),
-					50,
+					200,
 				);
 	
 				return (this.servicesRoadmaps = items);
@@ -462,11 +540,11 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 
 		async deleteRoadmap(roadmap: RoadmapData): Promise<number> {
 			if(isEntityRoadmapData(roadmap)){
-				return (await httpDelete(`/entity_roadmap/delete/${roadmap.id_key}`)).status;
+				return (await httpDelete(`/entity_roadmap/${roadmap.id_key}`)).status;
 			} else if (isEventRoadmapData(roadmap)) {
-				return (await httpDelete(`/entity_event_roadmap/delete/${roadmap.id_key}`)).status;
+				return (await httpDelete(`/entity_event_roadmap/${roadmap.id_key}`)).status;
 			} else if(isServiceRoadmapData(roadmap)) {
-				return (await httpDelete(`/entity_event_roadmap/delete/${roadmap.id_key}`)).status;
+				return (await httpDelete(`/entity_service_roadmap/${(roadmap as ServiceRoadmapData).id_key}`)).status;
 			} else {
 				return -1;
 			}
@@ -475,40 +553,40 @@ export const useLocateRoadmapStore = defineStore('locateRoadmapStore', {
 		createRoadmap,
 
 		async fetchEntitiesForRoadmap(roadmap: EntityRoadmapData): Promise<LocateEntityData[]>{
-			const points = await fetchAllItems<EntityRoadmapPoint>(`/entity_roadmap_points/query?search=id_key_entity_roadmap:${roadmap.id_key}`);
+			const points = await fetchAllItems<EntityRoadmapPoint>(`/entity_roadmap_points/query?search=points_id_key_entity_roadmap:${roadmap.id_key}`);
 
 			const entities: LocateEntityData[] = [];
 
 			for (const point of points) {
-				entities.push(...(await httpGet(`/entity_entity/query_user?search=id:${point.id_entity_entity}`)).data.items as LocateEntityData[])
+				entities.push(...(await httpGet(`/entity_entity/query_user?search=id:${point.points_id_entity_entity}`)).data.items as LocateEntityData[])
 			}
 
-			this.detailRoadmapEntities = entities;
+			this.detailRoadmapEntities = entities.map(e => ({ ...e, isSelected: true }));
 			return entities;
 		},
 		async fetchEventsForRoadmap(event: EventRoadmapData){
-			const points = await fetchAllItems<EntityRoadmapPoint>(`/entity_event_roadmap_points/query?search=id_key_entity_roadmap:${event.id_key}`);
+			const points = await fetchAllItems<EntityEventRoadmapPoint>(`/entity_event_roadmap_points/query?search=id_key_entity_roadmap:${event.id_key}`);
 
 			const events: LocateEventData[] = [];
 
 			for (const point of points) {
-				events.push(...(await httpGet(`/entity_entity?search=id:${point.id_entity_entity}`)).data.items as LocateEventData[])
+				events.push(...(await httpGet(`/entity_entity?search=id:${point.points_id_entity_event}`)).data.items as LocateEventData[])
 			}
 
-			this.detailRoadmapEvents = events;
+			this.detailRoadmapEvents = events.map(e => ({ ...e, isSelected: true }));
 			return events;
 		},
 		async fetchServicesForRoadmap(roadmap: ServiceRoadmapData){
 			const points = await fetchAllItems<EntityServiceRoadmapPoint>(`/entity_service_roadmap_points/query?search=id_key_entity_roadmap:${roadmap.id_key}`);
 
-			const events: LocateEventData[] = [];
+			const services: LocateServicesData[] = [];
 
 			for (const point of points) {
-				events.push(...(await httpGet(`/entity_entity?search=id:${point.id_entity_service}`)).data.items as LocateEventData[])
+				services.push(...(await httpGet(`/entity_service/query?search=service_id_key:${point.id_entity_service}`)).data.items as LocateServicesData[])
 			}
 
-			this.detailRoadmapEvents = events;
-			return events;
+			this.detailRoadmapServices = services.map(e => ({ ...e, isSelected: true }));
+			return services;
 		},
 	},
 });
@@ -549,9 +627,13 @@ async function createRoadmap(roadmap: Partial<RoadmapData>, points: Partial<Road
 	// }
 	if(points) points.forEach(async point => {
 		if(isEntityRoadmapData(roadmap)){
-			(point as EntityRoadmapPoint).id_key_entity_roadmap = createdRoadmap.id_key;
-			(point as EntityRoadmapPoint).date = getCurrentDateFormatted();
-			await httpPost("/entity_roadmap_points/create", point);
+			await httpPost("/entity_roadmap_points/create", {
+				"id_entity_entity": (point as EntityRoadmapPoint).points_id_entity_entity,
+				"id_key_entity_roadmap": createdRoadmap.id_key,
+				"date": getCurrentDateFormatted(),
+				"preferred": true,
+				"id_key": 72
+			});
 		} else if(isEventRoadmapData(roadmap)) {
 			(point as EntityEventRoadmapPoint).id_key_event_roadmap = createdRoadmap.id_key;
 			(point as EntityEventRoadmapPoint).roadmap_date = getCurrentDateFormatted();
@@ -591,14 +673,12 @@ export function getCoordonatesForItem(item: ExtendedItem): Coordinates {
 		case "Services":
 			coordinates.lat = (item as LocateExtendedServicesData).entity_city_latit;
 			coordinates.lng = (item as LocateExtendedServicesData).entity_city_longit;
-			coordinates.title = (item as LocateExtendedServicesData).service_name;
 			coordinates.title = `${(item as LocateExtendedServicesData).service_name} - ${(item as LocateExtendedServicesData).entity_country}, ${(item as LocateExtendedServicesData).entity_city}`;
 			break;
 		case "Events":
-			coordinates.lat = (item as LocateExtendedEventData).entity_city_latit;
-			coordinates.lng = (item as LocateExtendedEventData).entity_city_longit;
-			coordinates.title = (item as LocateExtendedEventData).entity_name_short;
-			coordinates.title = `${(item as LocateExtendedEventData).event_name} - ${(item as LocateExtendedEventData).entity_country}, ${(item as LocateExtendedEventData).entity_city} - ${(item as LocateExtendedEventData).entity_address || (item as LocateExtendedEventData).event_begin_address}`;
+			coordinates.lat = (item as LocateExtendedEventData).begin_lat;
+			coordinates.lng = (item as LocateExtendedEventData).begin_lon;
+			coordinates.title = `${(item as LocateExtendedEventData).name} - ${(item as LocateExtendedEventData).begin_country}, ${(item as LocateExtendedEventData).begin_city} - ${(item as LocateExtendedEventData).begin_address}`;
 			break;
 	};
 

@@ -4,80 +4,33 @@ import { onMounted, ref } from 'vue';
 import { fetchAllItems } from './utils/fetchAllItems';
 
 const sampleLocateEventData = {
-	"event_id_key": 0,
-	"event_cod_entity_id": 0,
-	"event_disabled": true,
-	"event_begin_address": "string",
-	"event_begin_city": "string",
-	"event_begin_country": "string",
-	"event_begin_date": "2024-06-01",
-	"event_begin_lat": 0,
-	"event_begin_lon": 0,
-	"event_collect_best_in_garage": "string",
-	"event_collect_rank": "string",
-	"event_collect_score": 0,
-	"event_collect_trophy": "string",
-	"event_collect_year_update": 0,
-	"event_date_end": "2024-06-01",
-	"event_description": "string",
-	"event_end_address": "string",
-	"event_end_city": "string",
-	"event_end_country": "string",
-	"event_end_lat": 0,
-	"event_end_lon": 0,
-	"event_logo": "string",
-	"event_logo_url": "string",
-	"event_main_photo": "string",
-	"event_name": "string",
-	"event_open_to": "string",
-	"event_event_type": "string",
-	"event_website": "string",
-	"entity_id": 0,
-	"user_entity_id": 0,
-	"user_id": 0,
-	"entity_address": "string",
-	"entity_aging_period": {},
-	"entity_temp_tipo": {},
-	"entity_area_geo": "string",
-	"entity_city": "string",
-	"entity_city_latit": 0,
-	"entity_city_longit": 0,
-	"entity_country": "string",
-	"entity_country_code": "string",
-	"entity_days_activity": "string",
-	"entity_descr_activity": "string",
-	"entity_descr_history": "string",
-	"entity_email": "string",
-	"entity_logo": "string",
-	"entity_logo_path": "string",
-	"entity_logo_url": "string",
-	"entity_main_photo": "string",
-	"entity_main_photo_path": "string",
-	"entity_main_photo_url": "string",
-	"entity_name_complete": "string",
-	"entity_name_short": "string",
-	"entity_opening_descr": "string",
-	"entity_phone": "string",
-	"entity_phone_hand": "string",
-	"entity_region_state": "string",
-	"entity_social_media": "string",
-	"entity_website": "string",
-	"entity_brand_name": "string",
-	"kind_name": "string",
-	"kind_image": "string",
-	"point_preferred": true,
-	"point_event_id": 0,
-	"point_road_id": 0,
-	"point_id": 0,
-	"road_id_user": 0,
-	"road_date_creation": "2024-06-01",
-	"road_date_tour_planned": "2024-06-01",
-	"road_begin_address": "string",
-	"road_begin_country": "string",
-	"road_begin_city": "string",
-	"road_name": "string",
-	"road_image_path": "string",
-	"road_id_key": 0
+	"id_key": 0,
+	"begin_address": "string",
+	"begin_city": "string",
+	"begin_country": "string",
+	"begin_date": "2024-06-22",
+	"begin_lat": 0,
+	"begin_lon": 0,
+	"collect_best_in_garage": "string",
+	"collect_rank": "string",
+	"collect_score": 0,
+	"collect_trophy": "string",
+	"collect_year_update": 0,
+	"cod_entity_id": 15796,
+	"date_end": "2024-06-22",
+	"description": "string",
+	"end_address": "string",
+	"end_city": "string",
+	"end_country": "string",
+	"end_lat": 0,
+	"end_lon": 0,
+	"logo_test": "string",
+	"name": "string",
+	"open_to": "string",
+	"event_type": "string",
+	"website": "string",
+	"disabled": false,
+	"entity_phone": "string"
 }
 
 export type LocateEventData = typeof sampleLocateEventData & {
@@ -96,8 +49,8 @@ export const useLocateEventStore = defineStore('locateEventStore', () => {
   const events = ref<LocateExtendedEventData[]>([]);
 	const eventsLoading = ref(false);
 
-  async function fetchEvents(
-    searchParams?: Partial<LocateEventData>,
+  async function fetchEvents<T extends Partial<LocateEventData>>(
+    searchParams?: T,
     kind_names?: string[],
 		maxCount = 200,
   ) {
@@ -106,7 +59,7 @@ export const useLocateEventStore = defineStore('locateEventStore', () => {
 
     try {
       for(const kind_name of (kind_names?.length ? kind_names : [""])){
-				if(searchParams && kind_name) searchParams.kind_name = kind_name;
+				if(searchParams && kind_name) searchParams.event_type = kind_name;
 				
 				let searchQueryString = "&search=";
 				if(searchParams) {

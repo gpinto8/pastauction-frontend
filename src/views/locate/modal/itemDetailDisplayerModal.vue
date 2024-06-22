@@ -41,9 +41,9 @@ const props = defineProps<{
 			<app-icon class="ml-auto cursor-pointer hover:opacity-70" @click="modalStates.itemDetailDisplayerModal = false" type="close" color="#000" size="sm"></app-icon>
 			
 			<div class="h-fit overflow-auto">
-				<LocateEntityCard hide-select v-if="activeLocateSearchCategory.name === 'Entity'" :entity="item as LocateExtendedEntityData" />
-				<LocateEntityCard hide-select v-if="activeLocateSearchCategory.name === 'Services'" :entity="item as LocateExtendedServicesData" />
-				<LocateEventCard hide-select v-if="activeLocateSearchCategory.name === 'Events'" :event="item as LocateExtendedEventData" />
+				<LocateEntityCard allow-select v-if="activeLocateSearchCategory.name === 'Entity'" :entity="item as LocateExtendedEntityData" />
+				<LocateEntityCard allow-select v-if="activeLocateSearchCategory.name === 'Services'" :entity="item as LocateExtendedServicesData" />
+				<LocateEventCard allow-select v-if="activeLocateSearchCategory.name === 'Events'" :event="item as LocateExtendedEventData" />
 			</div>
 
 		</div>

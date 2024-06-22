@@ -4,12 +4,15 @@ import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
 import LocateBtn from '@/views/locate/components/LocateBtn.vue';
 import AppIcon from '@/components/common/AppIcon.vue';
+import { useRouter } from 'vue-router';
 
 const locateStore = useLocateStore();
 const {modalStates} = storeToRefs(locateStore);
 
+const router = useRouter();
+
 function openRoadmapList(){
-	// to do
+	router.push('/locate/roadmaps');
 };
 
 </script>
