@@ -1,6 +1,6 @@
 import { httpGet, httpPatch, httpPost, httpUpload } from '@/api/api';
 import { defineStore, storeToRefs } from 'pinia';
-import { computed, onMounted, ref, type ComputedRef } from 'vue';
+import { computed, onMounted, ref, watch, type ComputedRef } from 'vue';
 import { useLocateEntityStore, type LocateExtendedEntityData } from './locateEntityStore';
 import { useLocateEventStore, type LocateExtendedEventData } from './locateEventStore';
 import { useLocateServiceStore, type LocateExtendedServicesData } from './locateServiceStore';
@@ -9,7 +9,7 @@ export type Coordinates = google.maps.LatLngLiteral & { title?: string, bounds?:
 
 /** this type represents the search category that the user can search for in the locate page, for example entity, serives or events */
 export type LocateSearchCategory =  {
-	name: string,
+	name: "Entity" | "Services" | "Events",
 	iconName: string,
 	subcategories: {
 		name: string;
@@ -43,11 +43,19 @@ export const useLocateStore = defineStore('locate',
 				roadmapSuccessfullySaved: false,
 				upgradeMyPlan: false,
 				cannotCreateRoadmapWarning: false,
+				confirmRoadmapDeletionModal: false,
+				calculateCostOfTheTripModal: false,
+				itemDetailDisplayerModal: false,
 			});
 		
 			const currentUserLocationMarker =  ref<google.maps.marker.AdvancedMarkerElement | null>(null);
 			const currentUserLocationBounds =  ref<google.maps.LatLngBounds>();
-			
+
+			watch(currentUserLocationMarker, () => {
+				if(currentUserLocationMarker.value?.position){
+					localStorage.setItem("locate:currentUserLocation", JSON.stringify({lat: currentUserLocationMarker.value?.position?.lat, lng: currentUserLocationMarker.value?.position?.lng}));
+				}
+			});
 			const locateSearchCategories  = ref<LocateSearchCategory[]>([
 				{name: 'Entity', iconName: "person", subcategories: [
 					{key: "Museums", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},
@@ -82,19 +90,19 @@ export const useLocateStore = defineStore('locate',
 					{key: "15", name: "Car box", imgUrl: "https://past-auction-p.s3.amazonaws.com/Foto_Spare_Service_png/15.png"},
 				]},
 				{name: 'Events', iconName: "service-levels", subcategories: [
-					{key: "", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},
-					{key: "", name: 'Circuit', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/1.png'},
-					{key: "", name: 'Race car', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/11.png'},
-					{key: "", name: 'Exhibition', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/4.png'},
-					{key: "", name: 'Market', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/9.png'},
-					{key: "", name: 'Rally', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/12.png'},
-					{key: "", name: 'Tours', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/13.png'},
-					{key: "", name: 'Library', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/6.png'},
-					{key: "", name: 'Factory', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/5.png'},
-					{key: "", name: 'Magazine', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/7.png'},
-					{key: "", name: 'Owner club', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/10.png'},
-					{key: "", name: 'Concurs', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/3.png'},
-					{key: "", name: 'Collection', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/2.png'},
+					{key: "Museums", name: 'Museum', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/8.png'},
+					{key: "Circuits", name: 'Circuit', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/1.png'},
+					{key: "CarRaces", name: 'Race car', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/11.png'},
+					{key: "Exhibitions", name: 'Exhibition', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/4.png'},
+					{key: "Markets", name: 'Market', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/9.png'},
+					{key: "Rally", name: 'Rally', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/12.png'},
+					{key: "Tours", name: 'Tours', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/13.png'},
+					{key: "Libraries", name: 'Library', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/6.png'},
+					{key: "Factories", name: 'Factory', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/5.png'},
+					{key: "Magazines", name: 'Magazine', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/7.png'},
+					{key: "Owners_Club", name: 'Owner club', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/10.png'},
+					{key: "Concours", name: 'Concurs', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/3.png'},
+					{key: "PrivateCollections", name: 'Collection', imgUrl: 'https://past-auction-p.s3.amazonaws.com/Foto_Entity_Category_png/2.png'},
 				]}, 
 			]);
 			const activeLocateSearchCategory = ref<LocateSearchCategory>(locateSearchCategories.value[0]);
@@ -209,12 +217,35 @@ export const useLocateStore = defineStore('locate',
 					loadingStates.value.carsLoading = true;
 					filterValues.value.cars = [];
 		
-					return (
-						await fetchAllItems<{ temp_tipo_j: string }>(
-							`filter/entity_entity_query/temp_tipo_j/?sort_by=name:asc`,
-							items => filterValues.value.cars.push(...items.map(e => e.temp_tipo_j))
-						)
-					).map(e => e.temp_tipo_j);
+					const carsSample = [
+						{
+							"temp_tipo_j": {
+								"temp_tipo": "Military"
+							}
+						},
+						{
+							"temp_tipo_j": {}
+						},
+						{
+							"temp_tipo_j": {
+								"Vehicles": [
+									"Cars",
+									"Motorcycles",
+									"Tractors",
+									"Boats",
+									"Planes",
+									"Military"
+								]
+							}
+						}
+					];
+
+					const cars = (await fetchAllItems<(typeof carsSample)[number]>(`filter/entity_entity_query/temp_tipo_j/?sort_by=name:asc`))
+            .map(e => e.temp_tipo_j.Vehicles || e.temp_tipo_j.temp_tipo || '')
+            .flat()
+            .filter(e => !!e);
+
+          return (filterValues.value.cars = Array.from(new Set(cars)));
 				} catch (e) {
 					return [];
 				} finally {
@@ -286,7 +317,23 @@ export const useLocateStore = defineStore('locate',
 
 				// localStorage.getItem('locate:currentUserLocation');
 			});
-		
+			const itemsLoading = computed(() => {
+				// const entityStore = useLocateEntityStore();
+				// const serviceStore = useLocateServiceStore();
+				// const eventStore = useLocateEventStore();
+	
+				switch (activeLocateSearchCategory.value.name) {
+					case "Entity":
+						return entityStore.entitiesLoading;
+					case "Services":
+						return serviceStore.servicesLoading;
+					case "Events":
+						return eventStore.eventsLoading;
+					default:
+						return false;
+				}
+			});
+
 			return {
 				filterValues,
 				filterValuesFunctions: {
@@ -307,36 +354,30 @@ export const useLocateStore = defineStore('locate',
 				mapLocationSearchQuery,
 				/** this state is just used to mock an event, the idea was to subscribe to this event using watch() and nothing else, this is not a thing */
 				event_searchLocation: 0,
+				itemsLoading,
+				loadingScreen: ref(false),
 			};
 		},
 		/** getters are like comoputed states */
-		getters: {
-			/** this state indicates if the current displayed items are loading/fething (based on the search category: entity/services/events) */
-			itemsLoading : (state) => {
-				const entityStore = useLocateEntityStore();
-				const { fetchEntities } = entityStore;
-				const { entities, entitiesLoading } = storeToRefs(entityStore);
+		// getters: {
+		// 	/** this state indicates if the current displayed items are loading/fething (based on the search category: entity/services/events) */
+		// 	itemsLoading : (state) => {
+		// 		const entityStore = useLocateEntityStore();
+		// 		const serviceStore = useLocateServiceStore();
+		// 		const eventStore = useLocateEventStore();
 	
-				const serviceStore = useLocateServiceStore();
-				const { fetchServices } = serviceStore;
-				const { services , servicesLoading} = storeToRefs(serviceStore);
-	
-				const eventStore = useLocateEventStore();
-				const { fetchEvents } = eventStore;
-				const { events, eventsLoading } = storeToRefs(eventStore);
-	
-				switch (state.activeLocateSearchCategory.name) {
-					case "Entity":
-						return entitiesLoading.value;
-					case "Services":
-						return servicesLoading.value;
-					case "Events":
-						return eventsLoading.value;
-					default:
-						return false;
-				}
-			},
-		},
+		// 		switch (state.activeLocateSearchCategory.name) {
+		// 			case "Entity":
+		// 				return entityStore.entitiesLoading;
+		// 			case "Services":
+		// 				return serviceStore.servicesLoading;
+		// 			case "Events":
+		// 				return eventStore.eventsLoading;
+		// 			default:
+		// 				return false;
+		// 		}
+		// 	},
+		// },
 		actions: {
 			emitEvent_searchLocation() {
 				this.event_searchLocation++;

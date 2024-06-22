@@ -19,9 +19,9 @@ const closeModal = () => {
 
 <template class="modal-overlay ">
     <div class="z-40">
-        <div v-if="isModalOpen" @click="handleOverlayClick" class="fixed inset-0 flex items-center justify-center modal-overlay">
-			<slot/>
-        </div>
+			<div v-if="isModalOpen" @click="handleOverlayClick" class="fixed inset-0 flex items-center justify-center modal-overlay">
+				<slot/>
+			</div>
     </div>
 </template>
 
@@ -37,6 +37,6 @@ const closeModal = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999!important;
+  z-index: 100 !important;
 }
 </style>
