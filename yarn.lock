@@ -7135,6 +7135,13 @@ eslint-config-standard-with-typescript@latest:
   languageName: node
   linkType: hard
 
+"swiper@npm:^11.0.5":
+  version: 11.1.4
+  resolution: "swiper@npm:11.1.4"
+  checksum: 386ea824ae8ab3b1992c54f02c8593068c96203feb9da4c23e165a7277a539de7bba6f9d40adc068268ff06314443ca714d75348f5b20039e43b022f62e65f67
+  languageName: node
+  linkType: hard
+
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -7792,6 +7799,7 @@ eslint-config-standard-with-typescript@latest:
     stylelint-config-recommended-scss: ^12.0.0
     stylelint-config-recommended-vue: ^1.5.0
     stylelint-order: ^6.0.3
+    swiper: ^11.0.5
     tailwindcss: ^3.3.3
     typescript: ^5.0.2
     vee-validate: ^4.11.2

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { ref, computed, type Ref } from 'vue';
-import { httpGet } from '@/api/api';
+import { ref, computed } from 'vue';
+import { httpGet} from '@/api/api';
 import { buildQS } from '@/utils/functions/buildQS';
 
 export const useAuctionEventsStore = defineStore('auctionEvents', () => {
@@ -56,24 +56,89 @@ export const useAuctionEventsStore = defineStore('auctionEvents', () => {
     });
   }
 
-  function auctionGetter(list: Ref<any>) {
-    
-      return async (tablename?: string, columnName?: string) => {
-        try {
-        const { data } = await httpGet(`filter/${tablename}/${columnName}/`);
-        list.value = data.items;
-        return data;
-        }
-        catch (err) {
-          console.log(tablename, columnName)
-          console.log(err);
-          throw err;
-        }
-        
-      };
-    }
-    
-      
+  async function auctionAreas(tablename?: string, columnName?: string) {
+    return await new Promise((resolve, reject) => {
+      httpGet(`filter/${tablename}/${columnName}`)
+        .then(({ data }) => {
+          console.log(data);
+          listAreas.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function auctionCountries(tablename?: string, columnName?: string) {
+    return await new Promise((resolve, reject) => {
+      httpGet(`filter/${tablename}/${columnName}`)
+        .then(({ data }) => {
+          console.log(data);
+          listCountries.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function auctionCities(tablename?: string, columnName?: string) {
+    return await new Promise((resolve, reject) => {
+      httpGet(`filter/${tablename}/${columnName}`)
+        .then(({ data }) => {
+          console.log(data);
+          listCities.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function auctionMaison(tablename?: string, columnName?: string) {
+    return await new Promise((resolve, reject) => {
+      httpGet(`filter/${tablename}/${columnName}`)
+        .then(({ data }) => {
+          console.log(data);
+          listMaison.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function auctionEvents(tablename?: string, columnName?: string) {
+    return await new Promise((resolve, reject) => {
+      httpGet(`filter/${tablename}/${columnName}`)
+        .then(({ data }) => {
+          console.log(data);
+          listEvents.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
+
+  async function auctionYear(tablename?: string, columnName?: string) {
+    return await new Promise((resolve, reject) => {
+      httpGet(`filter/${tablename}/${columnName}`)
+        .then(({ data }) => {
+          console.log(data);
+          listYears.value = data.items;
+          resolve(data);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    });
+  }
 
   return {
     // state
@@ -91,11 +156,11 @@ export const useAuctionEventsStore = defineStore('auctionEvents', () => {
 
     // actions
     listPaginated,
-    auctionAreas: auctionGetter(listAreas),
-    auctionCountries: auctionGetter(listCountries),
-    auctionCities: auctionGetter(listCities),
-    auctionMaison: auctionGetter(listMaison),
-    auctionYear: auctionGetter(listYears),
-    auctionEvents: auctionGetter(listEvents)
+    auctionAreas,
+    auctionCountries,
+    auctionCities,
+    auctionMaison,
+    auctionYear,
+    auctionEvents,
   };
 });

@@ -1,6 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig.json",
   "extends": "./tsconfig.app.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/**/*.vue",
+    "src/**/**/**/*.vue",
+  ],
   "exclude": [],
   "compilerOptions": {
     "composite": true,
