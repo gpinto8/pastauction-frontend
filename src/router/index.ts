@@ -122,6 +122,14 @@ const router = createRouter({
             meta: { authentication: true }
         },
         {
+          path: '/wallet',
+          name: 'Wallet',
+          component: async () =>
+            await import(
+              /* webpackChunkName: "Datas" */ '@/views/wallet/index.vue'
+              ),
+        },
+        {
           path: '/datas',
           name: 'Datas',
           component: async () =>
