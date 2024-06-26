@@ -30,7 +30,8 @@ const images = [
             Vintage Brands Unveiled
         </div>
 
-        <InfiniteSlider paused class="my-32 shrink-0">
+        <!-- @vue-ignore -->
+        <InfiniteSlider class="my-32 shrink-0">
             <div class="flex space-x-10">
                 <div class="h-24" v-for="image of images">
                     <img :src="image" class="h-full">
