@@ -26,11 +26,11 @@ const images = [
 
 <template>
     <div class="flex flex-col h-[500px]">
-        <div>
+        <div class="pl-24 text-slate-400 pt-32 text-5xl">
             Vintage Brands Unveiled
         </div>
 
-        <InfiniteSlider paused>
+        <InfiniteSlider paused class="my-32 shrink-0">
             <div class="flex space-x-10">
                 <div class="h-24" v-for="image of images">
                     <img :src="image" class="h-full">
@@ -38,13 +38,7 @@ const images = [
             </div>
         </InfiniteSlider>
 
-        <!-- <div class="flex h-20 space-x-10" style="animation: scroll 10s linear infinite">
-            <div class="shrink-0 h-full" v-for="image of images">
-                <img :src="image" class="h-full">
-            </div>
-        </div> -->
-
-        <div class="flex justify-end">
+        <div class="flex justify-end px-32">
             <button class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2">
                 MORE BRANDS
             </button>

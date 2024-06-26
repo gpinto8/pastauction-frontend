@@ -100,7 +100,7 @@ const explainSections = [
             </div>
         </div>
 
-        <BrandsSlider />
+        <BrandsSlider class="mb-64" />
 
     </div>
 </template>
