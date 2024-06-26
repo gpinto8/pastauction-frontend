@@ -8,6 +8,7 @@ import ImageSection1 from './assets/imageSection1.png'
 import ImageSection2 from './assets/imageSection2.png'
 import ImageSection3 from './assets/imageSection3.png'
 import ImageSection4 from './assets/imageSection4.png'
+import BrandsSlider from './BrandsSlider.vue';
 
 const explainSections = [
     {
@@ -98,5 +99,8 @@ const explainSections = [
 
             </div>
         </div>
+
+        <BrandsSlider />
+
     </div>
 </template>

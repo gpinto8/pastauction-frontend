@@ -10,8 +10,7 @@ import AppIcon from '@/components/common/AppIcon.vue';
 
             <button class="text-xl font-bold text-white">Log In</button>
 
-            <button
-                class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2 ">Subscribe</button>
+            <button class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2">Subscribe</button>
 
         </div>
 
