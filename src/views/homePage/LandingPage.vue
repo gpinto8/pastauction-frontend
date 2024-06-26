@@ -1,8 +1,38 @@
 <script setup lang="ts">
 
-import LandingVideo from './PastAuctionLandingVideo.mp4'
+import LandingVideo from './assets/PastAuctionLandingVideo.mp4'
 import Header from './Header.vue'
 import AppIcon from '@/components/common/AppIcon.vue';
+
+import ImageSection1 from './assets/imageSection1.png'
+import ImageSection2 from './assets/imageSection2.png'
+import ImageSection3 from './assets/imageSection3.png'
+import ImageSection4 from './assets/imageSection4.png'
+
+const explainSections = [
+    {
+        title: "Create your garage",
+        description: "Your virtual garageallows you to manage the data of your vehicles oneline, including tecnical details and historical documents, making it easier to manage and share your collection",
+        image: ImageSection1,
+    },
+    {
+        title: "Data accuracy",
+        description: "We carefully track and verify all data collected from both online and offline sources, ensuring that the information presented on our platform is up-to-date and reliable.",
+        image: ImageSection2,
+    },
+    {
+        title: "Data accuracy",
+        description: "We carefully track and verify all data collected from both online and offline sources, ensuring that the information presented on our platform is up-to-date and reliable.",
+        image: ImageSection3,
+
+    },
+    {
+        title: "Data accuracy",
+        description: "We carefully track and verify all data collected from both online and offline sources, ensuring that the information presented on our platform is up-to-date and reliable.",
+        image: ImageSection4,
+
+    },
+]
 
 </script>
 
@@ -11,7 +41,7 @@ import AppIcon from '@/components/common/AppIcon.vue';
 
         <div class="flex flex-col h-screen w-full relative">
             <!-- Background video -->
-            <video :src="LandingVideo" autoplay muted loop class="h-full w-full object-cover absolute -z-10"></video>
+            <video :src="LandingVideo" autoplay1 muted loop class="h-full w-full object-cover absolute -z-10"></video>
 
             <Header class="z-10" />
 
@@ -50,6 +80,23 @@ import AppIcon from '@/components/common/AppIcon.vue';
 
             </div>
 
+        </div>
+
+        <div class="flex flex-col w-full space-y-16 mt-32">
+            <div class="relative h-[500px] w-full" v-for="section of explainSections">
+
+                <img :src="section.image" class="absolute h-full w-full object-cover -z-10">
+
+                <div class="w-full h-full px-20 py-32">
+
+                    <div class=" flex flex-col text-white h-[250px] w-[500px] pt-16 px-10 bg-zinc-950/60">
+                        <div class="text-3xl"> {{ section.title }} </div>
+                        <div class="mt-5"> {{ section.description }} </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
