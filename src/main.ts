@@ -5,6 +5,7 @@ import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
 import router from '@/router/index';
 import './assets/main.css';
+import './assets/fonts.css';
 import axios from 'axios';
 import config from '@/config';
 
