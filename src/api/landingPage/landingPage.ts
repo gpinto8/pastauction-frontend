@@ -14,5 +14,5 @@ export type Section = {
   active: boolean;
 };
 export function homepageSections() {
-  return axios.get('/bidwatcher_homepage_media');
+  return axios.get('bidwatcher_homepage_media/');
 }
