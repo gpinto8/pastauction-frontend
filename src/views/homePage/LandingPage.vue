@@ -34,7 +34,7 @@ homepageSections()
     <div class="flex flex-col">
         <full-page ref="fullpage" id="fullpage">
             <div class="section">
-                <div class="flex flex-col h-screen w-full relative bg-black overflow-hidden">
+                <div class="flex flex-col h-screen w-full relative overflow-hidden">
                     <video :src="headVideo?.media_path || headVideo?.media_aws_path!" autoplay1 muted loop
                         class="h-full w-full object-cover absolute -z-10"></video>
 
@@ -68,9 +68,9 @@ homepageSections()
 
                 </div>
             </div>
-            <div class="section relative h-full" v-for="sections of sectionDividedByPairs">
-                <div class="flex flex-col w-full h-screen">
-                    <div class="relative flex-1 grow w-full" v-for="section of sections">
+            <div class="section relative h-full" v-for="pairedSections of sectionDividedByPairs">
+                <div class="flex flex-col justify-between w-full h-screen">
+                    <div class="relative flex-1 grow-0 w-full first:shadow-xl" v-for="section of pairedSections">
 
                         <img :src="section.media_path!" class="absolute h-full w-full object-cover -z-10">
 
