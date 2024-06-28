@@ -34,18 +34,20 @@ homepageSections()
     <div class="flex flex-col">
         <full-page ref="fullpage" id="fullpage">
             <div class="section">
-                <div class="flex flex-col h-screen w-full relative">
+                <div class="flex flex-col h-screen w-full relative bg-black overflow-hidden">
                     <video :src="headVideo?.media_path || headVideo?.media_aws_path!" autoplay1 muted loop
                         class="h-full w-full object-cover absolute -z-10"></video>
 
                     <Header class="z-10" />
 
                     <div class="flex-1 flex flex-col px-24 py-10 text-white">
-                        <div class="text-6xl mt-32 palatino-bold max-w-[500px]">
-                            {{ headVideo?.text_title }}
-                        </div>
-                        <div class="mt-10 max-w-[500px]">
-                            {{ headVideo?.text_description }}
+                        <div class="flex flex-col animate-[fadeslidefromleft_1s_ease-in-out_forwards]">
+                            <div class="text-6xl mt-32 palatino-bold max-w-[500px]">
+                                {{ headVideo?.text_title }}
+                            </div>
+                            <div class="mt-10 max-w-[500px]">
+                                {{ headVideo?.text_description }}
+                            </div>
                         </div>
 
                         <button class="bg-yellow-400 mt-10 w-fit px-5 py-2 flex text-white">
@@ -55,8 +57,9 @@ homepageSections()
 
                         <div class="flex-1"></div>
 
-                        <div class="flex w-full justify-between text-4xl font-medium">
-                            <div class="flex flex-col" v-for="subtitle of headSubtitles">
+                        <div
+                            class="flex w-full justify-between text-4xl font-medium animate-[fadeslidefromdown_1s_ease-in-out_forwards] h-56 ">
+                            <div class="flex flex-col translate-y-40" v-for="subtitle of headSubtitles">
                                 {{ subtitle.text_title }}
                             </div>
                         </div>
