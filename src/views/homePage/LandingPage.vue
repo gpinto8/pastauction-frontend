@@ -10,40 +10,30 @@ import ImageSection3 from './assets/imageSection3.png'
 import ImageSection4 from './assets/imageSection4.png'
 import BrandsSlider from './BrandsSlider.vue';
 import { groupIntoPairs } from '../../utils/functions/groupIntoPairs';
+import { homepageSections, type Section } from '../../api/landingPage/landingPage';
+import { computed, ref } from 'vue';
+import { getPhotoBoxes } from '@/utils/landingPage/landingPage';
 
-const explainSections = [
-    {
-        title: "Create your garage",
-        description: "Your virtual garageallows you to manage the data of your vehicles oneline, including tecnical details and historical documents, making it easier to manage and share your collection",
-        image: ImageSection1,
-    },
-    {
-        title: "Data accuracy",
-        description: "We carefully track and verify all data collected from both online and offline sources, ensuring that the information presented on our platform is up-to-date and reliable.",
-        image: ImageSection2,
-    },
-    {
-        title: "Data accuracy",
-        description: "We carefully track and verify all data collected from both online and offline sources, ensuring that the information presented on our platform is up-to-date and reliable.",
-        image: ImageSection3,
+const sections = ref<Section[]>([])
 
-    },
-    {
-        title: "Data accuracy",
-        description: "We carefully track and verify all data collected from both online and offline sources, ensuring that the information presented on our platform is up-to-date and reliable.",
-        image: ImageSection4,
+const photoBoxes = computed(() => {
+    return getPhotoBoxes(sections.value)
+})
+const sectionDividedByPairs = computed(() => {
+    return groupIntoPairs(photoBoxes.value)
+})
 
-    },
-]
+homepageSections()
+    .then(response => {
+        sections.value = response.data.items
 
-const sectionDividedByPairs = groupIntoPairs(explainSections)
-console.log(sectionDividedByPairs);
+    })
 
 </script>
 
 <template>
     <div class="flex flex-col">
-        <full-page ref="fullpage" :options="options" id="fullpage">
+        <full-page ref="fullpage" id="fullpage">
             <div class="section">
                 <div class="flex flex-col h-screen w-full relative">
                     <video :src="LandingVideo" autoplay1 muted loop
@@ -92,13 +82,13 @@ console.log(sectionDividedByPairs);
                 <div class="flex flex-col w-full h-screen">
                     <div class="relative flex-1 grow w-full" v-for="section of sections">
 
-                        <img :src="section.image" class="absolute h-full w-full object-cover -z-10">
+                        <img :src="section.media_path!" class="absolute h-full w-full object-cover -z-10">
 
                         <div class="w-full h-full px-20 py-24">
 
                             <div class="flex flex-col text-white h-[250px] w-[500px] pt-16 px-10 bg-zinc-950/60">
-                                <div class="text-3xl"> {{ section.title }} </div>
-                                <div class="mt-5"> {{ section.description }} </div>
+                                <div class="text-3xl"> {{ section.text_title }} </div>
+                                <div class="mt-5"> {{ section.text_description }} </div>
                             </div>
 
                         </div>
