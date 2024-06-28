@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html { overflow-y: auto }
+html {
+  overflow-y: auto;
+}
 
 body {
   @apply text-primary;
@@ -13,6 +15,11 @@ body {
   @apply bg-[#F8F9FA];
 }
 
-.flex-center{
-    @apply flex justify-center items-center
+.flex-center {
+  @apply flex justify-center items-center;
+}
+
+/* Removes landing page water mark */
+.fp-watermark {
+  @apply !-z-40 !-bottom-40;
 }
