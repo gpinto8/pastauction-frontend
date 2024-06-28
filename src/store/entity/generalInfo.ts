@@ -21,6 +21,8 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
     website: '',
     phone: '',
     email: '',
+    agePeriods: [],
+    typesOfVehicle: []
   };
   type GeneralInfo = typeof defaultGeneralInfo;
   const generalInfo = ref<GeneralInfo>({...defaultGeneralInfo});
@@ -45,6 +47,8 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
       website: entity.website ?? '',
       phone: entity.phone ?? '',
       email: entity.email ?? '',
+      agePeriods: entity.aging_period_j && entity.aging_period_j !== 'string' ? entity.aging_period_j.split(',') : [],
+      typesOfVehicle: entity.temp_tipo_j && entity.temp_tipo_j !== 'string' ? entity.temp_tipo_j.split(',') : []
     }
   }
 
@@ -65,6 +69,8 @@ export const useEntityGeneralInfoStore = defineStore('entity-general-info', () =
       website: info.website,
       phone: info.phone,
       email: info.email,
+      aging_period_j: info.agePeriods.join(','),
+      temp_tipo_j: info.typesOfVehicle.join(',')
     });
   }
 

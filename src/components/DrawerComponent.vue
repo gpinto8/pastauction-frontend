@@ -3,8 +3,8 @@ import AppIcon from '@/components/common/AppIcon.vue';
 import useGlobalStore from '@/store/GlobalStore';
 import { useAuthStore } from '@/store/auth';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { ref, watchEffect } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
 const emit = defineEmits(['click'])
 const store = useAuthStore();
 
@@ -19,8 +19,14 @@ const menuItems = [
 	{ label: "Wallet", value: "wallet", iconName: "wallet", to: "/wallet"},
 	{ label: "Entity", value: "entity", iconName: "person-bounding-box", to: "/entity"},
 ]
-
 const activeMenuItem = ref<(typeof menuItems)[number]>(menuItems[0]);
+
+const route = useRoute();
+watchEffect(() => {
+	const findedMenuItem = menuItems.find(e => route.name && e.label.trim() === route.name.toString().trim());
+	if(findedMenuItem) activeMenuItem.value = findedMenuItem;
+});
+
 </script>
 
 
