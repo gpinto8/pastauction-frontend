@@ -25,8 +25,8 @@ const images = [
 </script>
 
 <template>
-    <div class="flex flex-col h-[500px]">
-        <div class="pl-24 text-slate-400 pt-32 text-5xl">
+    <div class="flex flex-col">
+        <div class="pl-24 text-slate-400 pt-32 text-5xl w-full cormorant-custom-600">
             Vintage Brands Unveiled
         </div>
 
@@ -39,7 +39,7 @@ const images = [
             </div>
         </InfiniteSlider>
 
-        <div class="flex justify-end px-32">
+        <div class="flex justify-end px-32 w-full">
             <button class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2">
                 MORE BRANDS
             </button>
@@ -47,15 +47,3 @@ const images = [
 
     </div>
 </template>
-
-<style>
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-100%);
-    }
-}
-</style>

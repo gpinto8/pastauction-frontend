@@ -30,8 +30,6 @@ export const useEntityVehiclesOfInterestStore = defineStore('entity-vehicles-of-
     return items;
   }
   
-  const defaultVehiclesOfInterest: VehicleOfInterest[] = [];
-
   const brands = ref<string[]>([]);
   const brandsLoading = ref(false);
 
