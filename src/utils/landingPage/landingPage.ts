@@ -28,6 +28,19 @@ export function getHeadPageArea(sections: Section[]) {
 }
 
 const CHART_PAGE_AREA = 'chart';
+const CHART_AREA_POSITION_BACKGROUND_IMAGE = -1;
 export function getCarouselCharts(sections: Section[]) {
-  return sections.filter(section => section.page_area == CHART_PAGE_AREA);
+  return sections.filter(
+    section =>
+      section.page_area == CHART_PAGE_AREA &&
+      section.area_position != CHART_AREA_POSITION_BACKGROUND_IMAGE
+  );
+}
+
+export function getCarouselChartsBackgroundImage(sections: Section[]) {
+  return sections.find(
+    section =>
+      section.page_area == CHART_PAGE_AREA &&
+      section.area_position == CHART_AREA_POSITION_BACKGROUND_IMAGE
+  );
 }
