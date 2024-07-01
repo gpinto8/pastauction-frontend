@@ -92,7 +92,7 @@ homepageSections()
                 <BrandsSlider class="w-screen h-screen" />
             </div>
             <div class="section h-screen flex justify-center items-center">
-                <ChartsCarousel :images="carouselCharts" class="h-screen"
+                <ChartsCarousel :images="carouselCharts" class="h-screen w-screen"
                     :backgroundImage="carouselChartsBackgroundImage?.media_path || ''" />
             </div>
         </full-page>
