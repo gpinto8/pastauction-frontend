@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { getImageFromPath } from '@/api/photo/photo';
+import { computed } from 'vue';
+
 const emits = defineEmits(['checked'])
 
 const props = defineProps<{
@@ -9,9 +12,9 @@ const props = defineProps<{
     chart: any
 }>()
 
-function getChartImageUrl(path: string) {
-    return `https://pastauction.com/api/v1/photo/${path}`
-}
+const isSingleChart = computed(() => {
+    return props.chart.dash_graphs.length == 1
+})
 
 </script>
 
@@ -36,11 +39,26 @@ function getChartImageUrl(path: string) {
                     </div>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                    <div class="lg:px-32 grid gap-5 col-span-3 lg:pb-20">
-                        <div class="" v-for="graphs in chart.dash_graphs">
-                            {{ graphs.bidwatcher_product_chart_path }}
-                            <img :src="getChartImageUrl(graphs.bidwatcher_product_chart_path)" class="h-32 w-32" alt=""
-                                srcset="">
+                    <div class="grid gap-5 lg:pb-20" :class="isSingleChart ? 'grid-cols-1' : 'grid-cols-3'">
+                        <div class="border border-solid px-2 py-4 rounded-lg flex flex-col"
+                            v-for="graph in chart.dash_graphs">
+                            <div class="flex flex-col" v-if="!isSingleChart">
+                                <div class="text-sm font-semibold">
+                                    {{ graph.chart_name }}
+                                </div>
+                                <div class="text-[12px] text-gray-400 mb-5">
+                                    {{ graph.bidwatcher_product_chart_description }}
+                                </div>
+                            </div>
+
+                            <img :src="getImageFromPath(graph.bidwatcher_product_chart_path)" alt="" srcset="">
+
+                            <div v-if="isSingleChart">
+                                <div class="bg-zinc-100 rounded-md px-10 py-5">
+                                    {{ chart.dash_description }}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </v-expansion-panel-text>

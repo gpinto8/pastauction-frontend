@@ -51,6 +51,16 @@
                 </v-col>
             </v-row>
         </v-container>
+        <div class="flex justify-between">
+            <div class="text-sm text-gray-400">
+                Please, select at least 1 of the charts you prefer
+            </div>
+            <div class="flex justify-end mb-10">
+                <v-btn size="default" height="28" class="w-full sm:w-32 mr-5" color="black"
+                    variant="outlined">Back</v-btn>
+                <v-btn size="default" height="28" class="w-full sm:w-32" color="black">Cotinue</v-btn>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -94,8 +104,8 @@ export default {
         buildSearchSting() {
             return [
                 'versatility:1',
-                `category:${this.chartStore.getSelectedChartCategory}`,
-                `type:${this.chartStore.getSelectedChartType}`
+                `bidwatcher_product_dash_category:${this.chartStore.getSelectedChartCategory}`,
+                `bidwatcher_product_dash_type:${this.chartStore.getSelectedChartType}`
             ].join(',')
         },
     },
