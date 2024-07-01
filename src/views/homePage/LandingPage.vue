@@ -57,10 +57,8 @@ homepageSections()
 
                         <div class="flex-1"></div>
 
-                        <div
-                            class="flex w-full justify-between text-4xl font-medium animate-[fadeslidefromdown_1s_ease-in-out_forwards] h-56 ">
-                            <div class="flex flex-col translate-y-40" v-for="subtitle of headSubtitles">
-                                {{ subtitle.text_title }}
+                        <div class="flex w-full justify-between text-4xl font-medium">
+                            <div class="flex flex-col" v-for="subtitle of headSubtitles" v-html="subtitle.text_title">
                             </div>
                         </div>
 
@@ -68,9 +66,9 @@ homepageSections()
 
                 </div>
             </div>
-            <div class="section relative h-full" v-for="pairedSections of sectionDividedByPairs">
-                <div class="flex flex-col justify-between w-full h-screen">
-                    <div class="relative flex-1 grow-0 w-full first:shadow-xl" v-for="section of pairedSections">
+            <div class="section relative h-full" v-for="sections of sectionDividedByPairs">
+                <div class="flex flex-col w-full h-screen">
+                    <div class="relative flex-1 grow w-full first:mb-10" v-for="section of sections">
 
                         <img :src="section.media_path!" class="absolute h-full w-full object-cover -z-10">
 
