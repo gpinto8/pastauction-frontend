@@ -12,7 +12,7 @@ import BrandsSlider from './BrandsSlider.vue';
 import { groupIntoPairs } from '../../utils/functions/groupIntoPairs';
 import { homepageSections, type Section } from '../../api/landingPage/landingPage';
 import { computed, ref } from 'vue';
-import { getHeadPageArea, getPhotoBoxes, getVideoPageArea } from '@/utils/landingPage/landingPage';
+import { getCarouselCharts, getHeadPageArea, getPhotoBoxes, getVideoPageArea } from '@/utils/landingPage/landingPage';
 
 const sections = ref<Section[]>([])
 
@@ -21,6 +21,8 @@ const sectionDividedByPairs = computed(() => groupIntoPairs(photoBoxes.value))
 
 const headVideo = computed(() => getVideoPageArea(sections.value))
 const headSubtitles = computed(() => getHeadPageArea(sections.value))
+
+const carouselCharts = computed(() => getCarouselCharts(sections.value))
 
 homepageSections()
     .then(response => {
@@ -87,6 +89,7 @@ homepageSections()
             <div class="section h-screen flex justify-center items-center">
                 <BrandsSlider class="w-screen h-screen" />
             </div>
+            
         </full-page>
     </div>
 </template>
