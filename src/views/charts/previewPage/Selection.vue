@@ -9,8 +9,8 @@ const props = defineProps<{
     chart: any
 }>()
 
-function getChartImageUrl() {
-    return `https://pastauction.com/api/v1/photo/${props.chart.path}`
+function getChartImageUrl(path: string) {
+    return `https://pastauction.com/api/v1/photo/${path}`
 }
 
 </script>
@@ -38,12 +38,10 @@ function getChartImageUrl() {
                 <v-expansion-panel-text>
                     <div class="lg:px-32 grid gap-5 col-span-3 lg:pb-20">
                         <div class="" v-for="graphs in chart.dash_graphs">
-                            {{ graphs }}
+                            {{ graphs.bidwatcher_product_chart_path }}
+                            <img :src="getChartImageUrl(graphs.bidwatcher_product_chart_path)" class="h-32 w-32" alt=""
+                                srcset="">
                         </div>
-                        <!-- <img :src="getChartImageUrl()">
-                        <div class="w-full px-10 py-5 bg-gray-100 shadow-md rounded-md">
-                            {{ chart.description }}
-                        </div> -->
                     </div>
                 </v-expansion-panel-text>
             </v-expansion-panel>
