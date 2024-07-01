@@ -31,3 +31,27 @@ export async function fetchAllItems<T>(
 	}
 	return items;
 }
+
+// this functions uses Promise.all for better fetch speed
+export async function fetchAllItemsV2<T>(
+	url: string,
+): Promise<T[]> {
+	function addToUrl(url: string, params: string): string {
+		return url.includes('?') ? `${url}&${params}` : `${url}?${params}`;
+	}
+	const firstQueryUrl = addToUrl(url, 'size=1');
+	const firstQueryResponse = await httpGet(firstQueryUrl);
+	const totalItems = firstQueryResponse.data.total;
+	const pageSize = 100;
+	const numberOfPages = Math.ceil(totalItems / pageSize);
+
+	const itemsArrays: T[][] = await Promise.all(Array.from({ length: numberOfPages }, async (_, i) => {
+		const page = i + 1;
+		const queryUrl = addToUrl(url, `page=${page}&size=${pageSize}`);
+		const response = (await httpGet(queryUrl)) as { data: { items: T[] }};
+
+		return response.data.items = response.data.items;
+	}));
+	
+	return itemsArrays.flat();
+}

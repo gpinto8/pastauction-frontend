@@ -2,12 +2,17 @@
 import Modal from '@/components/modal/Modal.vue';
 import { useLocateStore } from '@/store/locate/locate';
 import { storeToRefs } from 'pinia';
+import LocateBtn from '@/views/locate/components/LocateBtn.vue';
+import AppIcon from '@/components/common/AppIcon.vue';
+import { useRouter } from 'vue-router';
 
 const locateStore = useLocateStore();
 const {modalStates} = storeToRefs(locateStore);
 
+const router = useRouter();
+
 function openRoadmapList(){
-	// to do
+	router.push('/locate/roadmaps');
 };
 
 </script>
@@ -27,8 +32,8 @@ function openRoadmapList(){
 			<p class="mx-auto mb-4 font-normal text-[#475467]" >Your roadmap was successfully saved</p>
 
 			<div class="flex flex-col md:flex-row gap-4">
-				<v-btn @click="openRoadmapList(); modalStates.roadmapSuccessfullySaved = false" class="bg-black text-white md:flex-1">Roadmaps list</v-btn>
-				<v-btn @click="modalStates.roadmapSuccessfullySaved = false" class="bg-[#F8F9FA] text-black md:flex-1 border-black"  border>Continue</v-btn>
+				<LocateBtn @click="openRoadmapList(); modalStates.roadmapSuccessfullySaved = false" class="bg-black text-white md:flex-1">Roadmaps list</LocateBtn>
+				<LocateBtn @click="modalStates.roadmapSuccessfullySaved = false" class="bg-[#F8F9FA] text-black md:flex-1 border-black"  border>Continue</LocateBtn>
 			</div>
 		</div>
 	</Modal>
