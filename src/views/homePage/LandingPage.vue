@@ -35,7 +35,7 @@ homepageSections()
         <full-page ref="fullpage" id="fullpage">
             <div class="section">
                 <div class="flex flex-col h-screen w-full relative overflow-hidden">
-                    <video :src="headVideo?.media_path || headVideo?.media_aws_path!" autoplay :muted="muted"
+                    <video :src="headVideo?.media_path || headVideo?.media_aws_path!" autoplay loop :muted="muted"
                         class="h-full w-full object-cover absolute -z-10" />
 
                     <Header class="z-10" />
