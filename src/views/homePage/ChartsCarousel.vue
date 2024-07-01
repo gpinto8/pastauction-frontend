@@ -32,8 +32,7 @@ const translateByActiveImage = computed(() => ({ transform: `translate(${-itemWi
                     width: `${itemWidth}px`,
                 }">
                 <img :src="image.media_path!" @click="activeImage = index"
-                    class="transition-[transform,opacity] duration-500 border-2 border-white border-solid w-full h-full"
-                    :class="activeImage == index ? 'scale-[2] opacity-100' :
+                    class="transition-[transform,opacity] duration-500 w-full h-full" :class="activeImage == index ? 'scale-[2] opacity-100' :
                         activeImage == index + 1 || activeImage == index - 1 ? 'scale-[1.5] opacity-75'
                             : 'scale-100 opacity-60'" />
             </div>
