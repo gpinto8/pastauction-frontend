@@ -6,7 +6,7 @@ IMAGE_NAME="pastauction/frontend"
 TAG_LATEST="${IMAGE_NAME}:latest"
 TAG_COMMIT="${IMAGE_NAME}:${COMMIT_HASH}"
 
-printf "hooks\nci\n.vscode\n.git\n.github\n.husky\n" > ../.dockerignore
+printf "hooks\nci\n.vscode\n.git\n.github\n.husky\n.env\n" > ../.dockerignore
 echo "cat .dockerignore"
 cat ../.dockerignore
 docker build -f ../ci/Dockerfile_node_yarn -t build-assets ../
