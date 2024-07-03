@@ -5,5 +5,6 @@ WORKDIR /app
 RUN pwd
 COPY . .
 RUN ls -la
+RUN mv .env.prod .env
 RUN yarn install
 RUN yarn build
