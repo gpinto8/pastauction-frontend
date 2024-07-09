@@ -3,11 +3,13 @@ import type { Section } from '@/api/landingPage/landingPage';
 import { onMounted, ref, watch } from 'vue';
 import PlayIcon from '@/assets/video/play.svg'
 import PauseIcon from '@/assets/video/pause.svg'
+import VideoPreview from './VideoPreview.vue'
 
 const props = defineProps<{
     videos: Section[]
 }>()
 
+const activeVideo = ref<Section | null>(null)
 const videoElement = ref<null | HTMLVideoElement>(null)
 const paused = ref(true)
 
@@ -23,6 +25,8 @@ const parsedVideoLength = ref('')
 const parsedVideoCurrentTime = ref('00:00')
 onMounted(() => {
     console.log(videoElement.value);
+
+    activeVideo.value = props.videos[0]
 
     if (videoElement.value == null) return
     videoElement.value.addEventListener('loadedmetadata', function () {
@@ -91,8 +95,9 @@ function mouseClickedOverlay() {
 </script>
 
 <template>
-    <div class="flex-center bg-red-200 relative">
-        <video :src="videos[0].media_aws_path!" class="object-cover w-full h-full" ref="videoElement" loop></video>
+    <div class="flex-center relative">
+        <video :src="activeVideo ? activeVideo.media_path : ''" class="object-cover w-full h-full" ref="videoElement"
+            loop></video>
         <!-- Overlay -->
         <div class="absolute z-10 w-full h-full flex flex-col transition-opacity duration-1000"
             @click="paused = !paused; mouseClickedOverlay()" @mousemove="mouseMoveOnOverlay()" :class="{
@@ -113,6 +118,12 @@ function mouseClickedOverlay() {
             <!-- <div class="text-white">
                 visible: {{ isOverlayVisible }} - paused: {{ paused }}
             </div> -->
+
+            <div class="h-40 shrink-0 py-3 flex overflow-scroll space-x-10" style="background-color: rgb(0 0 0 / .6)">
+                <VideoPreview v-for="video of videos" :video="video" class="w-56 h-full"
+                    @click.stop="activeVideo = video" />
+            </div>
+
             <!-- Can't use "bg-black bg-opacity-30" beacuse of stupid Vuetify bg-black that uses !important rules...  -->
             <div class="w-full h-16 px-12 flex items-center overflow-hidden" style="background-color: rgb(0 0 0 / .6)">
                 <img :src="paused == true ? PlayIcon : PauseIcon" class="h-5 w-5 mr-3" @click="paused = !paused">

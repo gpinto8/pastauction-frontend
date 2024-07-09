@@ -9,7 +9,7 @@ import { homepageSections, type Section } from '../../api/landingPage/landingPag
 import { groupIntoPairs } from '../../utils/functions/groupIntoPairs';
 import BrandsSlider from './BrandsSlider.vue';
 import ChartsCarousel from './ChartsCarousel.vue';
-import VideoCarousel from './VideoCarousel.vue'
+import VideoCarousel from './videoCarousel/VideoCarousel.vue'
 
 const sections = ref<Section[]>([])
 
@@ -23,22 +23,7 @@ const muted = ref(true)
 const carouselCharts = computed(() => getCarouselCharts(sections.value))
 const carouselChartsBackgroundImage = computed(() => getCarouselChartsBackgroundImage(sections.value))
 
-// const videos = computed(() => getVideos(sections.value))
-const videos: Section[] = [
-    {
-        active: true,
-        area_position: 1,
-        media_aws_path: 'https://videos.pexels.com/video-files/20597829/20597829-hd_1920_1080_60fps.mp4',
-        media_name: null,
-        media_path: null,
-        media_type: '',
-        media_url: null,
-        page_area: 'video carousel',
-        responsive_status: '',
-        text_description: 'some description',
-        text_title: 'some title'
-    }
-]
+const videos = computed(() => getVideos(sections.value))
 homepageSections()
     .then(response => {
         sections.value = response.data.items
@@ -49,9 +34,6 @@ homepageSections()
 <template>
     <div class="flex flex-col">
         <full-page ref="fullpage" id="fullpage">
-            <div class="section">
-                <VideoCarousel :videos="videos" class="h-screen" />
-            </div>
             <div class="section">
                 <div class="flex flex-col h-screen w-full relative overflow-hidden">
                     <video :src="headVideo?.media_path || headVideo?.media_aws_path!" autoplay loop :muted="muted"
@@ -114,6 +96,9 @@ homepageSections()
 
                     </div>
                 </div>
+            </div>
+            <div class="section h-screen">
+                <VideoCarousel :videos="videos" class="h-screen" v-if="videos.length > 0" />
             </div>
             <div class="section h-screen flex justify-center items-center">
                 <BrandsSlider class="w-screen h-screen" />
