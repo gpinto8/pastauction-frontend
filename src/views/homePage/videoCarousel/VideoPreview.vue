@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Section } from '../../../api/landingPage/landingPage';
+import { type Section } from '../../../api/landingPage/landingPage';
 import { defineProps } from 'vue';
 import PlayIcon from '@/assets/video/play.svg'
 
@@ -20,6 +20,6 @@ const props = defineProps<{
                 {{ video.text_title }}
             </div>
         </div>
-        <video :src="video.media_path" class="h-full w-full object-cover"></video>
+        <video :src="video.media_path!" class="h-full w-full object-cover"></video>
     </div>
 </template>

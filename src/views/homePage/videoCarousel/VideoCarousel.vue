@@ -73,11 +73,11 @@ function mouseMoveOnOverlay() {
 
         // If the video is paused the timer should reset, so that next time I play the video the overlay will hide correctly 
         if (paused.value) {
-            overlayVisibilityTimer.value = setTimeout(timeoutFunction, OVERLAY_VISIBILITY_DURATION);
+            overlayVisibilityTimer.value = setTimeout(timeoutFunction, OVERLAY_VISIBILITY_DURATION) as any as number;
         }
     }
     clearTimeout(overlayVisibilityTimer.value)
-    overlayVisibilityTimer.value = setTimeout(timeoutFunction, OVERLAY_VISIBILITY_DURATION);
+    overlayVisibilityTimer.value = setTimeout(timeoutFunction, OVERLAY_VISIBILITY_DURATION) as any as number;
 }
 
 function mouseClickedOverlay() {
@@ -89,15 +89,15 @@ function mouseClickedOverlay() {
     clearTimeout(overlayVisibilityTimer.value)
     overlayVisibilityTimer.value = setTimeout(() => {
         isOverlayVisible.value = false
-    }, OVERLAY_VISIBILITY_DURATION);
+    }, OVERLAY_VISIBILITY_DURATION) as any as number;
 }
 
 </script>
 
 <template>
     <div class="flex-center relative">
-        <video :src="activeVideo ? activeVideo.media_path : ''" class="object-cover w-full h-full" ref="videoElement"
-            loop></video>
+        <video :src="activeVideo?.media_path ? activeVideo.media_path : ''" class="object-cover w-full h-full"
+            ref="videoElement" loop></video>
         <!-- Overlay -->
         <div class="absolute z-10 w-full h-full flex flex-col transition-opacity duration-1000"
             @click="paused = !paused; mouseClickedOverlay()" @mousemove="mouseMoveOnOverlay()" :class="{
@@ -119,7 +119,7 @@ function mouseClickedOverlay() {
                 visible: {{ isOverlayVisible }} - paused: {{ paused }}
             </div> -->
 
-            <div class="h-40 shrink-0 py-3 flex overflow-scroll space-x-10" style="background-color: rgb(0 0 0 / .6)">
+            <div class="h-40 shrink-0 py-3 flex overflow-x-scroll space-x-10" style="background-color: rgb(0 0 0 / .6)">
                 <VideoPreview v-for="video of videos" :video="video" class="w-56 h-full"
                     @click.stop="activeVideo = video" />
             </div>
