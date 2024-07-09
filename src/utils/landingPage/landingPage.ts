@@ -44,3 +44,10 @@ export function getCarouselChartsBackgroundImage(sections: Section[]) {
       section.area_position == CHART_AREA_POSITION_BACKGROUND_IMAGE
   );
 }
+
+const VIDEO_PAGE_AREA = 'video carousel';
+export function getVideos(sections: Section[]) {
+  return sections
+    .filter(section => section.page_area == VIDEO_PAGE_AREA)
+    .sort(orderByAreaPosition);
+}
