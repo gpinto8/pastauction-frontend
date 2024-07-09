@@ -11,6 +11,7 @@ import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.j
 const emits = defineEmits(['handleInfoClicked', 'handleBuyClick']);
 
 // Variables
+const loading = ref(true);
 const productsData: Record<string, any> = ref({});
 const modules = ref([Pagination]);
 const swiperOptions = {
@@ -71,18 +72,29 @@ function handleBuyClick(family: any) {
 </script>
 
 <template>
-  <swiper
-    :breakpoints="swiperOptions.breakpoints"
-    :centered-slides="false"
-    :pagination="{ clickable: true }"
-    :modules="modules"
-    class="swiperPlans"
-    style="padding-bottom: 50px; width: 100%"
-  >
-    <swiper-slide v-for="(family, index) in productsData" :key="index">
-      <PlansCard :data="family" @handleInfoClicked="handleMoreInfoClicked($event)" @handleBuyClick="handleBuyClick($event)" />
-    </swiper-slide>
-  </swiper>
+  <div v-if="loading" class="flex justify-center items-center h-96">
+    <v-progress-circular indeterminate size="64"></v-progress-circular>
+  </div>
+
+  <v-slide-y-transition>
+    <swiper
+      v-show="!loading"
+      :breakpoints="swiperOptions.breakpoints"
+      :centered-slides="false"
+      :pagination="{ clickable: true }"
+      :modules="modules"
+      class="swiperPlans"
+      style="padding-bottom: 50px; width: 100%"
+    >
+      <swiper-slide v-for="(family, index) in productsData" :key="index">
+        <PlansCard
+          :data="family"
+          @handleInfoClicked="handleMoreInfoClicked($event)"
+          @handleBuyClick="handleBuyClick($event)"
+        />
+      </swiper-slide>
+    </swiper>
+  </v-slide-y-transition>
 </template>
 
 <style scoped>
