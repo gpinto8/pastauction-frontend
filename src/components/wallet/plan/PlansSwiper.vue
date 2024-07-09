@@ -15,20 +15,28 @@ const loading = ref(true);
 const productsData: Record<string, any> = ref({});
 const modules = ref([Pagination]);
 const swiperOptions = {
-  breakpoints: {       
-    360: {       
+  breakpoints: {
+    360: {
       slidesPerView: 1.2,
-      spaceBetween: 10     
+      spaceBetween: 10,
     },
-    670: {       
+    670: {
       slidesPerView: 2.2,
-      spaceBetween: 50     
+      spaceBetween: 30,
     },
-    1024: {       
-      slidesPerView: 3.1,       
-      spaceBetween: 30     
-    } 
-  }   
+    768: {
+      slidesPerView: 2.2,
+      spaceBetween: 30,
+    },
+    1024: {
+      slidesPerView: 3.1,
+      spaceBetween: 30,
+    },
+    1280: {
+      slidesPerView: 4.1,
+      spaceBetween: 30,
+    },
+  },
 };
 
 // onMounted
