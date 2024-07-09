@@ -13,6 +13,7 @@ export type Section = {
   media_aws_path: string | null;
   active: boolean;
 };
+
 export function homepageSections() {
-  return axios.get('/bidwatcher_homepage_media');
+  return axios.get('bidwatcher_homepage_media/');
 }
