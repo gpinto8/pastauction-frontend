@@ -42,10 +42,19 @@ onMounted(async () => {
       pro: 4,
     };
 
-    for (const family in familiesIds) {
-      const products = await fetchProductListById(familiesIds[family]);
-      productsData.value[family] = products;
-    }
+    Promise.all(
+      Object.entries(familiesIds).map(
+        async ([key, value]) => await fetchProductListById(value)
+      )
+    )
+      .then(products => {
+        for (const [index, family] of Object.entries(products)) {
+          productsData.value[index] = family;
+        }
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   } catch (error) {
     console.error('Errore durante il recupero dei dati dei prodotti:', error);
   }
