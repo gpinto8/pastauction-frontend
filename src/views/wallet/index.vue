@@ -73,7 +73,7 @@ function buyThisPlan(plan: any) {
       </div>
 
       <div class="plans" v-if="showCarousel && tab === 'plans'">
-        <div class="textOverTab">Choose best plan for you</div>
+        <div class="textOverTab">Choose the best plan for you</div>
         <PlansSwiper v-if="showPlans" @handleInfoClicked="handleMoreInfoClicked($event)" @handleBuyClick="handleBuyClick($event)" />
         <PlansDetails v-else :familyID="selectedFamilyId" @buyThisPlan="buyThisPlan" />
       </div>
