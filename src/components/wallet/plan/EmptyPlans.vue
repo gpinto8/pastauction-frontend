@@ -73,10 +73,12 @@ const planToCompare = useAsyncComputed(
 <template>
   <template v-if="!planToCompare.result.value">
     <div
-      class="flex !w-[526px] h-[1420px] pb-[1096px] flex-col items-center gap-[152px] rounded-[12px] bg-opacity-3 bg-gray-100 shadow-xs"
+      class="flex !w-[526px] h-[1420px] pb-[1096px] flex-col items-center gap-[152px] rounded-[12px] bg-opacity-3 bg-gray-100 shadow-xs card-wrapper"
       style="background: rgba(33, 37, 41, 0.03)"
     >
-      <div class="bg-grey w-100 h-[150px] w-full border-black border-b-2"></div>
+      <div
+        class="bg-[#21252912] w-100 h-[150px] w-full border-black border-b-2"
+      ></div>
       <div
         class="w-460 text-white text-opacity-85 font-inter text-[28px] font-semibold leading-[42px]"
       >
@@ -91,3 +93,12 @@ const planToCompare = useAsyncComputed(
     ></PlanDetail>
   </template>
 </template>
+
+<style lang="scss" scoped>
+.card-wrapper {
+  box-shadow: 0px 5px 5px 0px #1018280d;
+  @apply rounded-xl;
+  overflow: hidden;
+  padding-bottom: 36px;
+}
+</style>

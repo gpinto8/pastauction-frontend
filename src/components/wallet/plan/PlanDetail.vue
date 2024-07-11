@@ -19,6 +19,7 @@ interface Product {
 import { defineProps } from 'vue';
 import { useCardsPlansStore } from '@/store/plans/cards';
 import { computed } from 'vue';
+import Button from '@/components/common/button.vue';
 
 // Emits
 const emits = defineEmits(['buyThisPlan']);
@@ -117,7 +118,7 @@ const buyThisPlan = (familyId: number) => {
 
 <template>
   <div class="flex items-start gap-[25px]">
-    <div class="flex flex-col bg-white items-start gap-[25px]">
+    <div class="flex flex-col bg-white items-start gap-[25px] card-wrapper">
       <div
         class="flex flex-col h-[456px] items-center gap-[10px] flex-shrink-0"
       >
@@ -284,13 +285,13 @@ const buyThisPlan = (familyId: number) => {
             >
               <img
                 v-if="item.propertiesValue > '-1'"
-                src="@/assets/icons/x-circle-fill.svg"
+                src="@/assets/images/x-circle-fill.svg"
                 alt=""
                 class="w-[24px] h-[24px]"
               />
               <img
                 v-if="item.propertiesValue < '-1'"
-                src="@/assets/icons/x-circle-fill.svg"
+                src="@/assets/images/x-circle-fill.svg"
                 alt=""
                 class="w-[24px] h-[24px]"
               />
@@ -773,17 +774,13 @@ const buyThisPlan = (familyId: number) => {
         </div>
 
         <div class="flex pr-[6px] items-center">
-          <button
-            class="flex text-white font-inter text-base font-normal leading-[24px] w-[230px] justify-center items-center gap-[8px] bg-[#212529]"
-            style="
-              border-radius: 4px;
-              border: 1px solid #212529;
-              padding: 6px 12px;
-            "
+          <Button
+            variant="black"
+            classes="w-[230px]"
             @click="buyThisPlan(nameFamilies[0].family)"
           >
             Buy plan
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -791,6 +788,13 @@ const buyThisPlan = (familyId: number) => {
 </template>
 
 <style scoped>
+.card-wrapper {
+  box-shadow: 0px 5px 5px 0px #1018280d;
+  @apply rounded-xl;
+  overflow: hidden;
+  padding-bottom: 36px;
+}
+
 .column-container {
   display: flex;
   height: 48px;
