@@ -42,13 +42,14 @@ const props = defineProps<{
   <div class="flex items-start gap-[40px]" style="font-family: Inter">
     <div class="flex items-start gap-[10px] overflow-x-scroll">
       <!--  Passo i dati per renderizzare il primo componente sulla sx -->
-      <PlansPricingCard :infoCard="props.showPlan as any" @buyThisPlan="buyThisPlan" />
+      <PlansPricingCard
+        :infoCard="props.showPlan as any"
+        @buyThisPlan="buyThisPlan"
+      />
       <!-- componente che ospita la card prima vuota -->
       <EmptyPlans @buyThisPlan="buyThisPlan" />
     </div>
   </div>
 </template>
 
-<style scoped lang="postcss">
-
-</style>
+<style scoped lang="postcss"></style>
