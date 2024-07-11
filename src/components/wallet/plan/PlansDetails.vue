@@ -29,23 +29,10 @@ let props = defineProps<{
 const emits = defineEmits(['buyThisPlan']);
 
 // Variables
-let propsID = typeof props.familyID === 'number' ? props.familyID : 6; // Verifico l'esistenza dei dati e li salvo in una variabile.
-let currentValueFamily = ref<number>(1); // props per PlansInfoSelection.
-let productsData = ref<Product>({
-  category: '',
-  currency: '',
-  family: 0,
-  id: 0,
-  name: '',
-  prezzo: 0,
-  properties: {
-    id: 0,
-    product_id: 0,
-    tipo: '',
-    value: '',
-  },
-});
-let isLoading = ref(true);
+const propsID = typeof props.familyID === 'number' ? props.familyID : 6; // Verifico l'esistenza dei dati e li salvo in una variabile.
+const currentValueFamily = ref<number>(1); // props per PlansInfoSelection.
+const products = ref<Product[]>([]);
+const isLoading = ref(true);
 
 const buyThisPlan = (plan: Product) => {
   emits('buyThisPlan', plan);
@@ -56,7 +43,7 @@ onMounted(async () => {
   try {
     const products = await fetchProductListById(propsID);
     currentValueFamily.value = propsID;
-    productsData = products; // Salvo i dati in productsData.
+    products.value = products; // Salvo i dati in productsData.
     isLoading.value = false; // Elemento di caricamento.
   } catch (error) {
     console.error('Errore durante il recupero dei dati dei prodotti:', error);
@@ -71,7 +58,7 @@ onMounted(async () => {
   <!-- Componente centrale di due colonne sx(cards corrente) dx(vuoto, pronto per compare) -->
   <ComparePlans
     v-if="!isLoading"
-    :showPlan="productsData"
+    :products="products"
     @buyThisPlan="buyThisPlan"
   />
 </template>

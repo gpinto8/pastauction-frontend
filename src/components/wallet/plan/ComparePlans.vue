@@ -29,7 +29,7 @@ const buyThisPlan = (plan: Product) => {
 
 // Props
 const props = defineProps<{
-  showPlan: Product;
+  products: Product[];
 }>();
 </script>
 
@@ -42,10 +42,7 @@ const props = defineProps<{
   <div class="flex items-start gap-[40px]" style="font-family: Inter">
     <div class="flex items-start gap-[10px] overflow-x-scroll">
       <!--  Passo i dati per renderizzare il primo componente sulla sx -->
-      <PlansPricingCard
-        :infoCard="props.showPlan as any"
-        @buyThisPlan="buyThisPlan"
-      />
+      <PlansPricingCard :infoCard="props.products" @buyThisPlan="buyThisPlan" />
       <!-- componente che ospita la card prima vuota -->
       <EmptyPlans @buyThisPlan="buyThisPlan" />
     </div>
