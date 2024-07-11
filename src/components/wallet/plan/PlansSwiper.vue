@@ -29,11 +29,11 @@ const swiperOptions = {
       spaceBetween: 30,
     },
     1024: {
-      slidesPerView: 3.1,
+      slidesPerView: 3,
       spaceBetween: 30,
     },
     1280: {
-      slidesPerView: 4.1,
+      slidesPerView: 4,
       spaceBetween: 30,
     },
   },
@@ -91,7 +91,7 @@ function handleBuyClick(family: any) {
       :centered-slides="false"
       :pagination="{ clickable: true }"
       :modules="modules"
-      class="swiperPlans"
+      class="swiperPlans overflow-visible"
       style="padding-bottom: 50px; width: 100%"
     >
       <swiper-slide v-for="(family, index) in productsData" :key="index">

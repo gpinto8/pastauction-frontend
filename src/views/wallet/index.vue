@@ -44,7 +44,7 @@ function buyThisPlan(plan: any) {
 
 <template>
   <!-- <div class="lg:m-12"> -->
-  <div class="">
+  <div class="container mx-auto">
     <header class="md:classic-main !pb-0">
       <DashBoard />
     </header>
