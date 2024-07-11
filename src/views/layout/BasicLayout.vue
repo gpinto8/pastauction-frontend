@@ -66,7 +66,7 @@ watch(isMobileAvatarMenuOpen, ()=>{
 </script>
 
 <template>
-  <div ref="layoutContainerRef" class="grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[90px_1fr] w-screen h-screen overflow-hidden relative">
+  <div ref="layoutContainerRef" class="grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[90px_1fr] w-screen relative">
 
 		<!-- navbar menu / responsive -->
 
@@ -76,7 +76,7 @@ watch(isMobileAvatarMenuOpen, ()=>{
 			class="
 				!bg-primary duration-150 ease-out peer 
 				absolute z-10 row-start-2 row-span-1 col-span-1 rounded-b-xl h-fit shadow-gray-600 shadow-lg
-				md:absolute md:z-30 md:top-0 md:h-screen md:row-start-1 md:row-span-2 md:!rounded-e-xl md:block md:w-[90px] hover:md:w-[140px]  md:!rounded-bl-none md:shadow-3xl md:hover:shadow-black
+				md:fixed md:z-30 md:top-0 md:h-screen md:row-start-1 md:row-span-2 md:!rounded-e-xl md:block md:w-[90px] hover:md:w-[140px]  md:!rounded-bl-none md:shadow-3xl md:hover:shadow-black
 				hover:lg:w-[250px]
 			"
 		>
@@ -112,7 +112,7 @@ watch(isMobileAvatarMenuOpen, ()=>{
     </div>
 
 		<!-- main page / content box -->
-		<div class="p-4 duration-150 overflow-auto md:col-start-2">
+		<div class="p-4 duration-150 md:col-start-2">
 			<router-view v-slot="{ Component, route }">
 				<transition>
 					<component :is="Component" :key="route.name" />
