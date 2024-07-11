@@ -39,13 +39,9 @@ const props = defineProps<{
       By choosing the READY plan you can get these advantages
     </div>
   </div>
-  <div class="flex items-start gap-[40px] font-inter">
-    <div class="flex items-start gap-[10px] overflow-x-scroll">
-      <!--  Passo i dati per renderizzare il primo componente sulla sx -->
-      <PlansPricingCard :products="props.products" @buyThisPlan="buyThisPlan" />
-      <!-- componente che ospita la card prima vuota -->
-      <EmptyPlans @buyThisPlan="buyThisPlan" />
-    </div>
+  <div class="flex justify-between gap-[40px] font-inter">
+    <PlansPricingCard :products="props.products" @buyThisPlan="buyThisPlan" />
+    <EmptyPlans @buyThisPlan="buyThisPlan" />
   </div>
 </template>
 
