@@ -17,7 +17,7 @@ interface Product {
 
 // Import
 import { ref } from 'vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import { useCardsPlansStore } from '@/store/plans/cards';
@@ -27,7 +27,7 @@ const emits = defineEmits(['activeProduct']);
 
 // Props
 let props = defineProps<{
-  currentValueFamily: number;  // id attivo
+  currentValueFamily: number; // id attivo
 }>();
 
 // Variables
@@ -112,65 +112,112 @@ const handleBadgeClick = (familyId: number) => {
 </script>
 
 <template>
-  <div class="hidden lg:grid grid-cols-6 gap-2 h-[150px] border-b-[1px] border-black">
-  <div v-for="familyId in orderedFamilyIds" :key="familyId" class="badge cursor-pointer" 
-  :class="{ active: familyId === props.currentValueFamily || activeProduct === familyId}"
-  @click="handleBadgeClick(familyId)"
+  <div
+    class="hidden lg:grid grid-cols-6 gap-2 h-[150px] border-b-[1px] border-black"
   >
-    <div class="rounded-t-lg flex flex-col gap-4 px-4 pt-6 pb-[14px]" :style="getBadgeStyle(familyId)">
-      <div class="flex justify-between">
-        <h4 class="title-js font-semibold" v-for="(product, productIndex) in filterProducts[familyId]" :key="productIndex">
-          {{ product.name }}
-        </h4>
-        <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
-      </div>
-      <!-- /title -->
-      <div v-for="(product, productIndex) in filterProducts[familyId]" :key="productIndex" class="flex">
-        <img class="w-7 h-7" src="@/assets/images/bronze_token.png" alt="token"/>
-        <div class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]">
-          <div>{{ product.prezzo }}</div>
+    <div
+      v-for="familyId in orderedFamilyIds"
+      :key="familyId"
+      class="badge cursor-pointer"
+      :class="{
+        active:
+          familyId === props.currentValueFamily || activeProduct === familyId,
+      }"
+      @click="handleBadgeClick(familyId)"
+    >
+      <div
+        class="rounded-t-lg flex flex-col gap-4 px-4 pt-6 pb-[14px]"
+        :style="getBadgeStyle(familyId)"
+      >
+        <div class="flex justify-between">
+          <h4
+            class="title-js font-semibold"
+            v-for="(product, productIndex) in filterProducts[familyId]"
+            :key="productIndex"
+          >
+            {{ product.name }}
+          </h4>
+          <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
         </div>
+        <!-- /title -->
+        <div
+          v-for="(product, productIndex) in filterProducts[familyId]"
+          :key="productIndex"
+          class="flex"
+        >
+          <img
+            class="w-7 h-7"
+            src="@/assets/images/bronze_token.png"
+            alt="token"
+          />
+          <div
+            class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]"
+          >
+            <div>{{ product.prezzo }}</div>
+          </div>
+        </div>
+        <!-- /token -->
+        <p class="text-gray-600">Perpetual Plan</p>
       </div>
-      <!-- /token -->
-      <p class="text-gray-600">Perpetual Plan</p>
     </div>
   </div>
-</div>
 
-<swiper
-  :breakpoints="swiperOptions.breakpoints"
-  :centered-slides="false"
-  :pagination="{ clickable: true }"
-  class="swiperPlansInfoSelection lg:!hidden "
-  style="padding-bottom: 50px; width: 100%"
->
-  <swiper-slide class="cursor-pointer" v-for="familyId in orderedFamilyIds" :key="familyId" @click="handleBadgeClick(familyId)">
-    <div class="badge flex flex-col rounded-xl gap-4 shadow-xl" :style="getBadgeStyle(familyId)">
-      <div class="flex justify-between px-8 pt-8">
-        <h4 class="title-js font-semibold" v-for="(product, productIndex) in filterProducts[familyId]" :key="productIndex">
-          {{ product.name }}
-        </h4>
-        <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
-      </div>
-      <!-- /title -->
-      <div v-for="(product, productIndex) in filterProducts[familyId]" :key="productIndex" class="flex px-8">
-        <img class="w-7 h-7" src="@/assets/images/bronze_token.png" alt="token"/>
-        <div class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]">
-          <div>{{ product.prezzo }}</div>
+  <swiper
+    :breakpoints="swiperOptions.breakpoints"
+    :centered-slides="false"
+    :pagination="{ clickable: true }"
+    class="swiperPlansInfoSelection lg:!hidden"
+    style="padding-bottom: 50px; width: 100%"
+  >
+    <swiper-slide
+      class="cursor-pointer"
+      v-for="familyId in orderedFamilyIds"
+      :key="familyId"
+      @click="handleBadgeClick(familyId)"
+    >
+      <div
+        class="badge flex flex-col rounded-xl gap-4 shadow-xl"
+        :style="getBadgeStyle(familyId)"
+      >
+        <div class="flex justify-between px-8 pt-8">
+          <h4
+            class="title-js font-semibold"
+            v-for="(product, productIndex) in filterProducts[familyId]"
+            :key="productIndex"
+          >
+            {{ product.name }}
+          </h4>
+          <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
         </div>
+        <!-- /title -->
+        <div
+          v-for="(product, productIndex) in filterProducts[familyId]"
+          :key="productIndex"
+          class="flex px-8"
+        >
+          <img
+            class="w-7 h-7"
+            src="@/assets/images/bronze_token.png"
+            alt="token"
+          />
+          <div
+            class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]"
+          >
+            <div>{{ product.prezzo }}</div>
+          </div>
+        </div>
+        <!-- /token -->
+        <p class="text-gray-600 px-8 pb-8">Perpetual Plan</p>
       </div>
-      <!-- /token -->
-      <p class="text-gray-600 px-8 pb-8">Perpetual Plan</p>
-    </div>
-  </swiper-slide>
-</swiper>
+    </swiper-slide>
+  </swiper>
 </template>
 
 <style scoped>
-.badge{
+.badge {
   @apply h-full;
 }
-.badge.active{
+.badge.active {
   transform: translateY(-15px);
 }
 </style>

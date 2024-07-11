@@ -12,7 +12,7 @@ export interface Product {
     tipo: string;
     value: string;
   };
-};
+}
 export interface ProductDetails {
   id: number;
   family: number;
@@ -23,8 +23,8 @@ export interface ProductDetails {
   name: string;
   properties: {
     limit: string;
-    "expire(dd)": string;
-    "update(dd)": string;
+    'expire(dd)': string;
+    'update(dd)': string;
     graphs: string;
     limit_daily: string;
     available: string;
@@ -33,7 +33,7 @@ export interface ProductDetails {
 
 // Import
 import { ref } from 'vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 
@@ -115,70 +115,117 @@ const handleBadgeClick = (product: Product) => {
     await getItemsForCard(familyId);
   }
 })();
-
 </script>
 
 <template>
-  <div class="hidden lg:grid grid-cols-6 gap-2 h-[150px] border-b-[1px] border-black">
-  <div v-for="familyId in orderedFamilyIds" :key="familyId" class="badge cursor-pointer" 
-  :class="{ active: activeProduct?.properties.product_id === mappedProducts[familyId][0].properties.product_id }"
-  @click="handleBadgeClick(mappedProducts[familyId][0])"
+  <div
+    class="hidden lg:grid grid-cols-6 gap-2 h-[150px] border-b-[1px] border-black"
   >
-    <div class="rounded-t-lg flex flex-col gap-4 px-4 pt-6 pb-[14px]" :style="getBadgeStyle(familyId)">
-      <div class="flex justify-between">
-        <h4 class="title-js font-semibold" v-for="(product, productIndex) in mappedProducts[familyId]" :key="productIndex">
-          {{ product.name }}
-        </h4>
-        <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
-      </div>
-      <!-- /title -->
-      <div v-for="(product, productIndex) in mappedProducts[familyId]" :key="productIndex" class="flex">
-        <img class="w-7 h-7" src="@/assets/images/bronze_token.png" alt="token"/>
-        <div class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]">
-          <div>{{ product.prezzo }}</div>
+    <div
+      v-for="familyId in orderedFamilyIds"
+      :key="familyId"
+      class="badge cursor-pointer"
+      :class="{
+        active:
+          activeProduct?.properties.product_id ===
+          mappedProducts[familyId][0].properties.product_id,
+      }"
+      @click="handleBadgeClick(mappedProducts[familyId][0])"
+    >
+      <div
+        class="rounded-t-lg flex flex-col gap-4 px-4 pt-6 pb-[14px]"
+        :style="getBadgeStyle(familyId)"
+      >
+        <div class="flex justify-between">
+          <h4
+            class="title-js font-semibold"
+            v-for="(product, productIndex) in mappedProducts[familyId]"
+            :key="productIndex"
+          >
+            {{ product.name }}
+          </h4>
+          <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
         </div>
+        <!-- /title -->
+        <div
+          v-for="(product, productIndex) in mappedProducts[familyId]"
+          :key="productIndex"
+          class="flex"
+        >
+          <img
+            class="w-7 h-7"
+            src="@/assets/images/bronze_token.png"
+            alt="token"
+          />
+          <div
+            class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]"
+          >
+            <div>{{ product.prezzo }}</div>
+          </div>
+        </div>
+        <!-- /token -->
+        <p class="text-gray-600">Perpetual Plan</p>
+        <div class="alt hidden h-[20px]" :style="getBadgeStyle(familyId)"></div>
       </div>
-      <!-- /token -->
-      <p class="text-gray-600">Perpetual Plan</p>
-      <div class="alt hidden h-[20px]" :style="getBadgeStyle(familyId)"></div>
     </div>
   </div>
-</div>
 
-<swiper
-  :breakpoints="swiperOptions.breakpoints"
-  :centered-slides="false"
-  :pagination="{ clickable: true }"
-  class="swiperPlansInfoSelection lg:!hidden"
-  style="padding-bottom: 50px; width: 100%"
->
-  <swiper-slide class="cursor-pointer" v-for="familyId in orderedFamilyIds" :key="familyId" @click="handleBadgeClick(mappedProducts[familyId][0])">
-    <div class="badge flex flex-col rounded-xl gap-4 shadow-xl" :style="getBadgeStyle(familyId)">
-      <div class="flex justify-between px-8 pt-8">
-        <h4 class="title-js font-semibold" v-for="(product, productIndex) in mappedProducts[familyId]" :key="productIndex">
-          {{ product.name }}
-        </h4>
-        <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
-      </div>
-      <!-- /title -->
-      <div v-for="(product, productIndex) in mappedProducts[familyId]" :key="productIndex" class="flex px-8">
-        <img class="w-7 h-7" src="@/assets/images/bronze_token.png" alt="token"/>
-        <div class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]">
-          <div>{{ product.prezzo }}</div>
+  <swiper
+    :breakpoints="swiperOptions.breakpoints"
+    :centered-slides="false"
+    :pagination="{ clickable: true }"
+    class="swiperPlansInfoSelection lg:!hidden"
+    style="padding-bottom: 50px; width: 100%"
+  >
+    <swiper-slide
+      class="cursor-pointer"
+      v-for="familyId in orderedFamilyIds"
+      :key="familyId"
+      @click="handleBadgeClick(mappedProducts[familyId][0])"
+    >
+      <div
+        class="badge flex flex-col rounded-xl gap-4 shadow-xl"
+        :style="getBadgeStyle(familyId)"
+      >
+        <div class="flex justify-between px-8 pt-8">
+          <h4
+            class="title-js font-semibold"
+            v-for="(product, productIndex) in mappedProducts[familyId]"
+            :key="productIndex"
+          >
+            {{ product.name }}
+          </h4>
+          <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
         </div>
+        <!-- /title -->
+        <div
+          v-for="(product, productIndex) in mappedProducts[familyId]"
+          :key="productIndex"
+          class="flex px-8"
+        >
+          <img
+            class="w-7 h-7"
+            src="@/assets/images/bronze_token.png"
+            alt="token"
+          />
+          <div
+            class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]"
+          >
+            <div>{{ product.prezzo }}</div>
+          </div>
+        </div>
+        <!-- /token -->
+        <p class="text-gray-600 px-8 pb-8">Perpetual Plan</p>
       </div>
-      <!-- /token -->
-      <p class="text-gray-600 px-8 pb-8">Perpetual Plan</p>
-    </div>
-  </swiper-slide>
-</swiper>
+    </swiper-slide>
+  </swiper>
 </template>
 
 <style scoped>
-.badge{
+.badge {
   @apply h-full;
 }
-.badge.active{
+.badge.active {
   transform: translateY(-15px);
 }
 </style>

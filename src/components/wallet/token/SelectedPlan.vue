@@ -1,26 +1,29 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails.js';
-import { type Product, type ProductDetails } from '@/components/wallet/services/PlansInfoSelection.vue';
+import {
+  type Product,
+  type ProductDetails,
+} from '@/components/wallet/services/PlansInfoSelection.vue';
 import type { Ref } from 'vue';
 
 const currentBoltsItemCount = ref(0);
 const tokensPrice = 50;
 const boltsQuantity = 500;
 const tableData = ref<{
-  Item: ProductDetails[],
-  Services: ProductDetails[],
-  Charts: ProductDetails[],
+  Item: ProductDetails[];
+  Services: ProductDetails[];
+  Charts: ProductDetails[];
 }>({
   Item: [],
   Services: [],
   Charts: [],
 });
 const counters: {
-  Item: Record<string, Ref>,
-  Services: Record<string, Ref>,
-  Charts: Record<string, Ref>,
+  Item: Record<string, Ref>;
+  Services: Record<string, Ref>;
+  Charts: Record<string, Ref>;
 } = {
   Item: {},
   Services: {},
@@ -47,19 +50,19 @@ function reset(ref: Ref) {
 }
 
 function resetItem() {
-  tableData.value.Item.forEach((item) => {
+  tableData.value.Item.forEach(item => {
     counters.Item[`${item.id}`].value = 0;
   });
 }
 
 function resetServices() {
-  tableData.value.Services.forEach((item) => {
+  tableData.value.Services.forEach(item => {
     counters.Services[`${item.id}`].value = 0;
   });
 }
 
 function resetCharts() {
-  tableData.value.Charts.forEach((item) => {
+  tableData.value.Charts.forEach(item => {
     counters.Charts[`${item.id}`].value = 0;
   });
 }
@@ -69,17 +72,24 @@ async function changePlan(plan: Product) {
   const products: Product[] = await fetchProductListById(plan.family);
 
   // For each product.properties.product_id, fetch the product details and populate the table data
-  products.forEach(async (product) => {
-    const productDetails: ProductDetails = await fetchProductDetails(product.id);
+  products.forEach(async product => {
+    const productDetails: ProductDetails = await fetchProductDetails(
+      product.id
+    );
     if (productDetails) {
       if (productDetails.prezzo > 0) {
-        if (productDetails.category === "CategoryChart") {
+        if (productDetails.category === 'CategoryChart') {
           tableData.value.Charts.push(productDetails);
           counters.Charts[`${productDetails.id}`] = ref(0);
-        } else if (productDetails.category === "Chart" || productDetails.category === "Datas" || productDetails.category === "Locate" || productDetails.category === "Marketplace") {
+        } else if (
+          productDetails.category === 'Chart' ||
+          productDetails.category === 'Datas' ||
+          productDetails.category === 'Locate' ||
+          productDetails.category === 'Marketplace'
+        ) {
           tableData.value.Services.push(productDetails);
           counters.Services[`${productDetails.id}`] = ref(0);
-        } else if (productDetails.category === "Garage") {
+        } else if (productDetails.category === 'Garage') {
           tableData.value.Item.push(productDetails);
           counters.Item[`${productDetails.id}`] = ref(0);
         }
@@ -92,8 +102,8 @@ export default {
   props: {
     plan: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     plan(): Product {
@@ -128,23 +138,31 @@ export default {
 
 <template>
   <!-- Buy bolts -->
-  <div class="mb-[50px]" style="
+  <div
+    class="mb-[50px]"
+    style="
       border-radius: 12px;
       background: #fff;
       box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
       padding: 0;
-      overflow: hidden;">
+      overflow: hidden;
+    "
+  >
     <div class="px-6 py-3 bg-[#0D6EFD55]">
       <h1 class="font-bold text-lg">
         {{ plan.name }}
       </h1>
       <div class="flex items-center gap-2 mt-2 mb-1">
-        <img src="@/assets/images/bronze_token.png" alt="Bronze Token - Pastauction" class="w-7" />
-        <h3 class="font-bold text-lg">{{ (plan.prezzo > 0) ? plan.prezzo : "***" }}</h3>
+        <img
+          src="@/assets/images/bronze_token.png"
+          alt="Bronze Token - Pastauction"
+          class="w-7"
+        />
+        <h3 class="font-bold text-lg">
+          {{ plan.prezzo > 0 ? plan.prezzo : '***' }}
+        </h3>
       </div>
-      <p class="opacity-[0.75] text-sm">
-        Bolts required
-      </p>
+      <p class="opacity-[0.75] text-sm">Bolts required</p>
     </div>
 
     <v-table>
@@ -156,13 +174,21 @@ export default {
           <th>Quantity</th>
           <th>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
+              <img
+                src="@/assets/images/bolt.png"
+                alt="Bolt - Pastauction"
+                class="w-5 rotate-[-90deg]"
+              />
               <h3>Quantity</h3>
             </div>
           </th>
           <th>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bronze_token.png" alt="Bronze Token - Pastauction" class="w-7" />
+              <img
+                src="@/assets/images/bronze_token.png"
+                alt="Bronze Token - Pastauction"
+                class="w-7"
+              />
               <h3>Total cost</h3>
             </div>
           </th>
@@ -172,13 +198,21 @@ export default {
         <tr>
           <td>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
+              <img
+                src="@/assets/images/bolt.png"
+                alt="Bolt - Pastauction"
+                class="w-5 rotate-[-90deg]"
+              />
               <h3>500</h3>
             </div>
           </td>
           <td>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bronze_token.png" alt="Bronze Token - Pastauction" class="w-7" />
+              <img
+                src="@/assets/images/bronze_token.png"
+                alt="Bronze Token - Pastauction"
+                class="w-7"
+              />
               <h3>50</h3>
             </div>
           </td>
@@ -214,12 +248,20 @@ export default {
     <v-container class="bg-[#ECECEC]">
       <v-row align="center" justify="end">
         <v-col cols="auto">
-          <v-btn size="small" variant="flat" @click="reset(currentBoltsItemCount)"
-            class="w-[150px] mr-[50px] border-[1px] border-[#21252992] rounded bg-white text-capitalize">
+          <v-btn
+            size="small"
+            variant="flat"
+            @click="reset(currentBoltsItemCount)"
+            class="w-[150px] mr-[50px] border-[1px] border-[#21252992] rounded bg-white text-capitalize"
+          >
             Reset
           </v-btn>
-          <v-btn size="small" variant="flat" @click=""
-            class="w-[150px] bg-[#0D6EFD80] rounded text-white text-capitalize">
+          <v-btn
+            size="small"
+            variant="flat"
+            @click=""
+            class="w-[150px] bg-[#0D6EFD80] rounded text-white text-capitalize"
+          >
             Buy Bolts
           </v-btn>
         </v-col>
@@ -229,16 +271,18 @@ export default {
   <!-- / Buy bolts -->
 
   <!-- Spend bolts -->
-  <div class="mb-[50px]" style="
+  <div
+    class="mb-[50px]"
+    style="
       border-radius: 12px;
       background: #fff;
       box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
       padding: 0;
-      overflow: hidden;">
+      overflow: hidden;
+    "
+  >
     <v-container class="border-t-[1px] border-[#21252910] bg-[#ECECEC]">
-      <p class="opacity-[0.75] text-sm py-6 px-3">
-        Required Bolts to activate
-      </p>
+      <p class="opacity-[0.75] text-sm py-6 px-3">Required Bolts to activate</p>
     </v-container>
     <v-table>
       <thead>
@@ -249,7 +293,11 @@ export default {
           <th>Quantity</th>
           <th>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
+              <img
+                src="@/assets/images/bolt.png"
+                alt="Bolt - Pastauction"
+                class="w-5 rotate-[-90deg]"
+              />
               <h3>Total bolts</h3>
             </div>
           </th>
@@ -260,21 +308,31 @@ export default {
           <td>{{ product.name }}</td>
           <td>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
-              <h3>{{ product.prezzo <= 0 ? "-" : product.prezzo }}</h3>
+              <img
+                src="@/assets/images/bolt.png"
+                alt="Bolt - Pastauction"
+                class="w-5 rotate-[-90deg]"
+              />
+              <h3>{{ product.prezzo <= 0 ? '-' : product.prezzo }}</h3>
             </div>
           </td>
-          <td>{{ parseInt(product.properties["expire(dd)"]) }} usage</td>
+          <td>{{ parseInt(product.properties['expire(dd)']) }} usage</td>
           <td>
             <div class="flex flex-col items-start justify-center">
               <div class="flex gap-1">
-                <button class="px-2" @click="decrement(counters.Item[product.id])">
+                <button
+                  class="px-2"
+                  @click="decrement(counters.Item[product.id])"
+                >
                   -
                 </button>
                 <span class="border !border-[#21252992] rounded px-4">
                   {{ counters.Item[product.id].value }}
                 </span>
-                <button class="px-2" @click="increment(counters.Item[product.id])">
+                <button
+                  class="px-2"
+                  @click="increment(counters.Item[product.id])"
+                >
                   +
                 </button>
               </div>
@@ -290,21 +348,31 @@ export default {
           <td>{{ product.name }}</td>
           <td>
             <div class="flex items-center gap-2">
-              <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
-              <h3>{{ product.prezzo <= 0 ? "-" : product.prezzo }}</h3>
+              <img
+                src="@/assets/images/bolt.png"
+                alt="Bolt - Pastauction"
+                class="w-5 rotate-[-90deg]"
+              />
+              <h3>{{ product.prezzo <= 0 ? '-' : product.prezzo }}</h3>
             </div>
           </td>
-          <td>{{ parseInt(product.properties["expire(dd)"]) }} usage</td>
+          <td>{{ parseInt(product.properties['expire(dd)']) }} usage</td>
           <td>
             <div class="flex flex-col items-start justify-center">
               <div class="flex gap-1">
-                <button class="px-2" @click="decrement(counters.Services[product.id])">
+                <button
+                  class="px-2"
+                  @click="decrement(counters.Services[product.id])"
+                >
                   -
                 </button>
                 <span class="border !border-[#21252992] rounded px-4">
                   {{ counters.Services[product.id].value }}
                 </span>
-                <button class="px-2" @click="increment(counters.Services[product.id])">
+                <button
+                  class="px-2"
+                  @click="increment(counters.Services[product.id])"
+                >
                   +
                 </button>
               </div>
@@ -323,20 +391,41 @@ export default {
         <v-col cols="auto">
           <span class="border !border-[#21252992] rounded px-4 bg-white">
             {{
-          tableData.Item.reduce((acc, product) => acc + (counters.Item[product.id].value * product.prezzo), 0) +
-          tableData.Services.reduce((acc, product) => acc + (counters.Services[product.id].value * product.prezzo), 0)
-        }}
+              tableData.Item.reduce(
+                (acc, product) =>
+                  acc + counters.Item[product.id].value * product.prezzo,
+                0
+              ) +
+              tableData.Services.reduce(
+                (acc, product) =>
+                  acc + counters.Services[product.id].value * product.prezzo,
+                0
+              )
+            }}
           </span>
         </v-col>
       </v-row>
       <v-row align="center" justify="end">
         <v-col cols="auto">
-          <v-btn size="small" variant="flat" @click="() => { resetItem(); resetServices(); }"
-            class="w-[150px] mr-[50px] border-[1px] border-[#21252992] rounded bg-white text-capitalize">
+          <v-btn
+            size="small"
+            variant="flat"
+            @click="
+              () => {
+                resetItem();
+                resetServices();
+              }
+            "
+            class="w-[150px] mr-[50px] border-[1px] border-[#21252992] rounded bg-white text-capitalize"
+          >
             Reset
           </v-btn>
-          <v-btn size="small" variant="flat" @click=""
-            class="w-[150px] bg-[#0D6EFD80] rounded text-white text-capitalize">
+          <v-btn
+            size="small"
+            variant="flat"
+            @click=""
+            class="w-[150px] bg-[#0D6EFD80] rounded text-white text-capitalize"
+          >
             Apply
           </v-btn>
         </v-col>
@@ -348,12 +437,16 @@ export default {
   <!-- Spend bolts extra -->
   <div v-if="tableData">
     <div v-if="tableData.Charts.length > 0">
-      <div class="mb-[50px]" style="
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
-      padding: 0;
-      overflow: hidden;">
+      <div
+        class="mb-[50px]"
+        style="
+          border-radius: 12px;
+          background: #fff;
+          box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
+          padding: 0;
+          overflow: hidden;
+        "
+      >
         <v-container class="border-t-[1px] border-[#21252910] bg-[#ECECEC]">
           <p class="opacity-[0.75] text-sm py-6 px-3">
             Extra charges ** chart special required
@@ -368,7 +461,11 @@ export default {
               <th>Quantity</th>
               <th>
                 <div class="flex items-center gap-2">
-                  <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
+                  <img
+                    src="@/assets/images/bolt.png"
+                    alt="Bolt - Pastauction"
+                    class="w-5 rotate-[-90deg]"
+                  />
                   <h3>Total bolts</h3>
                 </div>
               </th>
@@ -379,21 +476,31 @@ export default {
               <td>{{ product.name }}</td>
               <td>
                 <div class="flex items-center gap-2">
-                  <img src="@/assets/images/bolt.png" alt="Bolt - Pastauction" class="w-5 rotate-[-90deg]" />
-                  <h3>{{ product.prezzo <= 0 ? "-" : product.prezzo }}</h3>
+                  <img
+                    src="@/assets/images/bolt.png"
+                    alt="Bolt - Pastauction"
+                    class="w-5 rotate-[-90deg]"
+                  />
+                  <h3>{{ product.prezzo <= 0 ? '-' : product.prezzo }}</h3>
                 </div>
               </td>
-              <td>{{ parseInt(product.properties["expire(dd)"]) }} usage</td>
+              <td>{{ parseInt(product.properties['expire(dd)']) }} usage</td>
               <td>
                 <div class="flex flex-col items-start justify-center">
                   <div class="flex gap-1">
-                    <button class="px-2" @click="decrement(counters.Charts[product.id])">
+                    <button
+                      class="px-2"
+                      @click="decrement(counters.Charts[product.id])"
+                    >
                       -
                     </button>
                     <span class="border !border-[#21252992] rounded px-4">
                       {{ counters.Charts[product.id].value }}
                     </span>
-                    <button class="px-2" @click="increment(counters.Charts[product.id])">
+                    <button
+                      class="px-2"
+                      @click="increment(counters.Charts[product.id])"
+                    >
                       +
                     </button>
                   </div>
@@ -411,19 +518,36 @@ export default {
           <v-row align="center" justify="end">
             <v-col cols="auto">
               <span class="border !border-[#21252992] rounded px-4 bg-white">
-                {{ tableData.Charts.reduce((acc, product) => acc + (counters.Charts[product.id].value * product.prezzo),
-          0) }}
+                {{
+                  tableData.Charts.reduce(
+                    (acc, product) =>
+                      acc + counters.Charts[product.id].value * product.prezzo,
+                    0
+                  )
+                }}
               </span>
             </v-col>
           </v-row>
           <v-row align="center" justify="end">
             <v-col cols="auto">
-              <v-btn size="small" variant="flat" @click="() => { resetCharts(); }"
-                class="w-[150px] mr-[50px] border-[1px] border-[#21252992] rounded bg-white text-capitalize">
+              <v-btn
+                size="small"
+                variant="flat"
+                @click="
+                  () => {
+                    resetCharts();
+                  }
+                "
+                class="w-[150px] mr-[50px] border-[1px] border-[#21252992] rounded bg-white text-capitalize"
+              >
                 Reset
               </v-btn>
-              <v-btn size="small" variant="flat" @click=""
-                class="w-[150px] bg-[#0D6EFD80] rounded text-white text-capitalize">
+              <v-btn
+                size="small"
+                variant="flat"
+                @click=""
+                class="w-[150px] bg-[#0D6EFD80] rounded text-white text-capitalize"
+              >
                 Apply
               </v-btn>
             </v-col>
@@ -440,7 +564,7 @@ th {
   color: black !important;
 }
 
-tr>td:first-child {
+tr > td:first-child {
   color: black !important;
 }
 </style>

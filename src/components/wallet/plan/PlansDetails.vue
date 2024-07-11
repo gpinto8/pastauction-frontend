@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Interface 
+// Interface
 interface Product {
   category: string;
   currency: string;
@@ -13,13 +13,13 @@ interface Product {
     tipo: string;
     value: string;
   };
-};
+}
 
 // Import
 import { defineProps, onMounted, ref } from 'vue';
 import PlansInfoSelection from '@/components/wallet/common/PlansInfoSelection.vue';
 import ComparePlans from '@/components/wallet/plan/ComparePlans.vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 
 // Props
 let props = defineProps<{
@@ -58,7 +58,6 @@ onMounted(async () => {
     currentValueFamily.value = propsID;
     productsData = products; // Salvo i dati in productsData.
     isLoading.value = false; // Elemento di caricamento.
-
   } catch (error) {
     console.error('Errore durante il recupero dei dati dei prodotti:', error);
     isLoading.value = false;
@@ -68,9 +67,13 @@ onMounted(async () => {
 
 <template>
   <!-- Barra superiore (cards badge) -->
-  <PlansInfoSelection :currentValueFamily="Number(propsID)"/>
+  <PlansInfoSelection :currentValueFamily="Number(propsID)" />
   <!-- Componente centrale di due colonne sx(cards corrente) dx(vuoto, pronto per compare) -->
-  <ComparePlans v-if="!isLoading" :showPlan="productsData" @buyThisPlan="buyThisPlan" />
+  <ComparePlans
+    v-if="!isLoading"
+    :showPlan="productsData"
+    @buyThisPlan="buyThisPlan"
+  />
 </template>
 
 <style scoped></style>

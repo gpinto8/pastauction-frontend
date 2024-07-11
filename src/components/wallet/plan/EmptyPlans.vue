@@ -32,7 +32,7 @@ interface Mapping {
 
 // Import
 import { ref, watch } from 'vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { useCardsPlansStore } from '@/store/plans/cards';
 
 // Variables
@@ -76,7 +76,7 @@ const buyThisPlan = (familyId: number) => {
     name: nameFamilies.value[0].name,
     prezzo: nameFamilies.value[0].prezzo,
     info: getFamilyInfo(nameFamilies.value[0].name),
-  }
+  };
   emits('buyThisPlan', family);
   cardsStore.setCurrentFamilyId(familyId);
 };
@@ -91,21 +91,24 @@ watch(
         const response = await fetchProductListById(cardsStore.getCurrentPlan);
         if (response) {
           planToCompare.value = response;
-          const mappedDatas = planToCompare.value.map((item: Mapping) => ({
-            category: item.category,
-            currency: item.currency,
-            family: item.family,
-            id: item.id,
-            name: item.name,
-            prezzo: item.prezzo !== 0 ? item.prezzo : '***',
-            prezzoAnno: item.prezzo / 5,
-            prezzoMese: item.prezzo / 5 / 12,
-            tipologia: item.tipologia,
-            propertiesId: item.propertiesId,
-            propertiesProduct_id: item.propertiesProduct_id,
-            propertiesTipo: item.propertiesTipo,
-            propertiesValue: item.propertiesValue,
-          }) as Mapping);
+          const mappedDatas = planToCompare.value.map(
+            (item: Mapping) =>
+              ({
+                category: item.category,
+                currency: item.currency,
+                family: item.family,
+                id: item.id,
+                name: item.name,
+                prezzo: item.prezzo !== 0 ? item.prezzo : '***',
+                prezzoAnno: item.prezzo / 5,
+                prezzoMese: item.prezzo / 5 / 12,
+                tipologia: item.tipologia,
+                propertiesId: item.propertiesId,
+                propertiesProduct_id: item.propertiesProduct_id,
+                propertiesTipo: item.propertiesTipo,
+                propertiesValue: item.propertiesValue,
+              }) as Mapping
+          );
 
           nameFamilies.value = mappedDatas.filter(
             item =>
@@ -168,9 +171,12 @@ watch(
   <template v-if="!cardsStore.getCurrentPlan">
     <div
       class="flex !w-[526px] h-[1420px] pb-[1096px] flex-col items-center gap-[152px] rounded-[12px] bg-opacity-3 bg-gray-100 shadow-xs"
-      style="background: rgba(33, 37, 41, 0.03)">
+      style="background: rgba(33, 37, 41, 0.03)"
+    >
       <div class="bg-grey w-100 h-[150px] w-full border-black border-b-2"></div>
-      <div class="w-460 text-white text-opacity-85 font-inter text-[28px] font-semibold leading-[42px]">
+      <div
+        class="w-460 text-white text-opacity-85 font-inter text-[28px] font-semibold leading-[42px]"
+      >
         Choose a second plan to compare
       </div>
     </div>
@@ -179,57 +185,99 @@ watch(
   <template v-else>
     <div class="flex items-start gap-[25px]">
       <div class="flex flex-col bg-white items-start gap-[25px]">
-        <div class="flex flex-col h-[456px] items-center gap-[10px] flex-shrink-0">
-          <div class="flex w-[526px] justify-center items-center" style="
+        <div
+          class="flex flex-col h-[456px] items-center gap-[10px] flex-shrink-0"
+        >
+          <div
+            class="flex w-[526px] justify-center items-center"
+            style="
               padding: 18px 26px 18px 25px;
               border-radius: 12px 12px 0px 0px;
               border-bottom: 1px solid rgba(33, 37, 41, 0.5);
               background: rgba(255, 218, 68, 0.25);
-            ">
+            "
+          >
             <div class="flex w-[475px] items-center gap-[210px] flex-shrink-0">
-              <div class="flex flex-col items-start gap-[8px]" v-for="(item, index) in nameFamilies" key="index">
-                <div class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]">
+              <div
+                class="flex flex-col items-start gap-[8px]"
+                v-for="(item, index) in nameFamilies"
+                key="index"
+              >
+                <div
+                  class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
+                >
                   {{ item.name }}
                 </div>
-                <div class="flex w-[161px] flex-column-reverse justify-center items-start gap-[2px]">
-                  <div class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                    v-if="item.name === 'Free-user'">
+                <div
+                  class="flex w-[161px] flex-column-reverse justify-center items-start gap-[2px]"
+                >
+                  <div
+                    class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
+                    v-if="item.name === 'Free-user'"
+                  >
                     Perpetual Plan
                   </div>
-                  <div class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                    v-if="item.name === 'Pay-per-use'">
+                  <div
+                    class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
+                    v-if="item.name === 'Pay-per-use'"
+                  >
                     Bolts required
                   </div>
-                  <div class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]" v-if="item.name === 'Ready Plan' || item.name === 'Start Plan'
-    ">
+                  <div
+                    class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
+                    v-if="
+                      item.name === 'Ready Plan' || item.name === 'Start Plan'
+                    "
+                  >
                     Monthly Plan
                   </div>
-                  <div class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                    v-if="item.name === 'Go Plan' || item.name === 'Pro Plan'">
+                  <div
+                    class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
+                    v-if="item.name === 'Go Plan' || item.name === 'Pro Plan'"
+                  >
                     Annual Plan
                   </div>
                   <div class="flex items-start">
-                    <img src="@/assets/images/bronze_token.png" alt="" style="width: 28px; height: 28px" />
-                    <div class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]">
+                    <img
+                      src="@/assets/images/bronze_token.png"
+                      alt=""
+                      style="width: 28px; height: 28px"
+                    />
+                    <div
+                      class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
+                    >
                       {{ item.prezzo }}
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="flex flex-col h-[94px] items-start gap-[2px]" v-for="(item, index) in boltsCredits"
-                key="index">
+              <div
+                class="flex flex-col h-[94px] items-start gap-[2px]"
+                v-for="(item, index) in boltsCredits"
+                key="index"
+              >
                 <div class="flex flex-col items-start gap-[8px]">
                   <div class="flex w-[90px] items-center gap-[4px]">
-                    <img src="@/assets/images/bolt.png" alt="" class="w-[26px] h-[26px]" />
-                    <div class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]">
+                    <img
+                      src="@/assets/images/bolt.png"
+                      alt=""
+                      class="w-[26px] h-[26px]"
+                    />
+                    <div
+                      class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
+                    >
                       Bolts
                     </div>
                   </div>
-                  <div class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]">
+                  <div
+                    class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
+                  >
                     +{{ item.prezzo }}
                   </div>
                 </div>
-                <div class="text-gray-600 font-inter text-[13px] font-normal leading-[20px]">
+                <div
+                  class="text-gray-600 font-inter text-[13px] font-normal leading-[20px]"
+                >
                   Included in plan
                 </div>
               </div>
@@ -238,11 +286,19 @@ watch(
           <!-- /BADGE -->
 
           <!--            Middle Top-->
-          <div class="flex w-[510px] h-[216px] items-start gap-[6px] flex-shrink-0">
-            <div class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0">
+          <div
+            class="flex w-[510px] h-[216px] items-start gap-[6px] flex-shrink-0"
+          >
+            <div
+              class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
-                  <img src="@/assets/icons/GreenCheck.svg" alt="" class="w-[24px] h-[24px]" />
+                  <img
+                    src="@/assets/icons/GreenCheck.svg"
+                    alt=""
+                    class="w-[24px] h-[24px]"
+                  />
                   <div class="text-column-header">Services</div>
                 </div>
               </div>
@@ -259,52 +315,94 @@ watch(
                 <div class="cell-text">Rumors</div>
               </div>
             </div>
-            <div class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
                   <div class="text-column-header">Standard</div>
                 </div>
               </div>
-              <div class="cell-container" v-for="(item, index) in vehicleDetail" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in vehicleDetail"
+                key="index"
+              >
                 <div class="cell-text">{{ item.propertiesValue }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in garageSetup" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in garageSetup"
+                key="index"
+              >
                 <div class="cell-text">{{ item.propertiesValue }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in auctionAlert" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in auctionAlert"
+                key="index"
+              >
                 <div class="cell-text">{{ item.propertiesValue }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in socialRumors" key="index">
-                <img v-if="item.propertiesValue > '-1'" src="@/assets/icons/x-circle-fill.svg" alt=""
-                  class="w-[24px] h-[24px]" />
-                <img v-if="item.propertiesValue < '-1'" src="@/assets/icons/x-circle-fill.svg" alt=""
-                  class="w-[24px] h-[24px]" />
+              <div
+                class="cell-container"
+                v-for="(item, index) in socialRumors"
+                key="index"
+              >
+                <img
+                  v-if="item.propertiesValue > '-1'"
+                  src="@/assets/icons/x-circle-fill.svg"
+                  alt=""
+                  class="w-[24px] h-[24px]"
+                />
+                <img
+                  v-if="item.propertiesValue < '-1'"
+                  src="@/assets/icons/x-circle-fill.svg"
+                  alt=""
+                  class="w-[24px] h-[24px]"
+                />
               </div>
             </div>
           </div>
 
           <div class="flex items-start gap-[6px]">
-            <div class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
-                  <img src="@/assets/icons/GreenCheck.svg" alt="" class="w-[24px] h-[24px]" />
+                  <img
+                    src="@/assets/icons/GreenCheck.svg"
+                    alt=""
+                    class="w-[24px] h-[24px]"
+                  />
                   <div class="text-column-header">Services</div>
                 </div>
               </div>
               <div class="cell-container">
                 <div class="flex items-center gap-[4px]">
-                  <img src="@/assets/images/bolt.png" alt="" class="w-[18px] h-[18px]" />
+                  <img
+                    src="@/assets/images/bolt.png"
+                    alt=""
+                    class="w-[18px] h-[18px]"
+                  />
                   <div class="cell-text">Bolts</div>
                 </div>
               </div>
             </div>
-            <div class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
                   <div class="text-column-header">Monthly</div>
                 </div>
               </div>
-              <div class="cell-container" v-for="(item, index) in boltsCredits" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in boltsCredits"
+                key="index"
+              >
                 <div class="cell-text">+{{ item.prezzo }}</div>
               </div>
             </div>
@@ -312,14 +410,26 @@ watch(
         </div>
 
         <!--          MIDDLE-->
-        <div class="flex flex-col items-start gap-[16px] flex-shrink-0" style="padding: 1px 0px">
-          <div class="flex w-[526px] justify-center items-center flex-shrink-0" style="padding: 3px 0px 0px 0px">
-            <div class="flex w-[526px] h-[46px] justify-center items-center flex-shrink-0" style="
+        <div
+          class="flex flex-col items-start gap-[16px] flex-shrink-0"
+          style="padding: 1px 0px"
+        >
+          <div
+            class="flex w-[526px] justify-center items-center flex-shrink-0"
+            style="padding: 3px 0px 0px 0px"
+          >
+            <div
+              class="flex w-[526px] h-[46px] justify-center items-center flex-shrink-0"
+              style="
                 padding: 10.5px 13px 11.5px 13px;
                 border-bottom: 1px solid rgba(33, 37, 41, 0.5);
                 background: rgba(255, 218, 68, 0.25);
-              ">
-              <div class="w-[500px] flex-shrink-0 text-[#3C3C3C] text-base font-normal" style="font-family: Montserrat">
+              "
+            >
+              <div
+                class="w-[500px] flex-shrink-0 text-[#3C3C3C] text-base font-normal"
+                style="font-family: Montserrat"
+              >
                 Below period usage limits
               </div>
             </div>
@@ -329,10 +439,16 @@ watch(
         <div class="w-full flex justify-center">
           <div class="flex w-[510px] h-[379px] items-start gap-[6px]">
             <!--              prima colonna-->
-            <div class="flex w-[168px] h-[384px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[168px] h-[384px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
-                  <img src="@/assets/icons/GreenCheck.svg" alt="" class="w-[24px] h-[24px]" />
+                  <img
+                    src="@/assets/icons/GreenCheck.svg"
+                    alt=""
+                    class="w-[24px] h-[24px]"
+                  />
                   <div class="text-column-header">Services</div>
                 </div>
               </div>
@@ -362,131 +478,271 @@ watch(
               </div>
             </div>
             <!--              seconda colonna-->
-            <div class="flex w-[56px] h-[384px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[56px] h-[384px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
                   <div class="text-column-header">Daily limit</div>
                 </div>
               </div>
-              <div class="cell-container" v-for="(item, index) in singleChart" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in singleChart"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in miniDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in miniDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in fullDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in fullDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in vehicleDetail" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in vehicleDetail"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in gtc" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in gtc"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in searchLocate" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in searchLocate"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in roadmap" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in roadmap"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in sparesParts" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in sparesParts"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzo }}</div>
               </div>
             </div>
             <!--              terza colonna-->
-            <div class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
                   <div class="text-column-header">Monthly forecast</div>
                 </div>
               </div>
-              <div class="cell-container" v-for="(item, index) in singleChart" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in singleChart"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in miniDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in miniDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in fullDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in fullDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in vehicleDetail" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in vehicleDetail"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in gtc" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in gtc"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in searchLocate" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in searchLocate"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in roadmap" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in roadmap"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in sparesParts" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in sparesParts"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoMese.toFixed(3) }}</div>
               </div>
             </div>
             <!--              quarta colonna-->
-            <div class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
                   <div class="text-column-header">Yearly forecast</div>
                 </div>
               </div>
-              <div class="cell-container" v-for="(item, index) in singleChart" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in singleChart"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in miniDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in miniDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in fullDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in fullDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in vehicleDetail" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in vehicleDetail"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in gtc" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in gtc"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in searchLocate" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in searchLocate"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in roadmap" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in roadmap"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in sparesParts" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in sparesParts"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
             </div>
             <!--              quinta colonna-->
-            <div class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0">
+            <div
+              class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0"
+            >
               <div class="column-container">
                 <div class="inner-column-container">
-                  <img src="@/assets/images/bolt.png" alt="" class="w-[24px] h-[24px]" />
+                  <img
+                    src="@/assets/images/bolt.png"
+                    alt=""
+                    class="w-[24px] h-[24px]"
+                  />
                   <div class="text-column-header">Bolts</div>
                 </div>
               </div>
-              <div class="cell-container" v-for="(item, index) in singleChart" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in singleChart"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in miniDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in miniDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in fullDashboard" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in fullDashboard"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in vehicleDetail" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in vehicleDetail"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in gtc" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in gtc"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in searchLocate" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in searchLocate"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in roadmap" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in roadmap"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
-              <div class="cell-container" v-for="(item, index) in sparesParts" key="index">
+              <div
+                class="cell-container"
+                v-for="(item, index) in sparesParts"
+                key="index"
+              >
                 <div class="cell-text">{{ item.prezzoAnno.toFixed(3) }}</div>
               </div>
             </div>
@@ -494,23 +750,36 @@ watch(
         </div>
         <div class="flex flex-col items-end gap-[25px]">
           <div class="flex flex-col h-[375px] items-center gap-[10px]">
-            <div class="flex h-[46px] justify-center items-center flex-shrink-0" style="
+            <div
+              class="flex h-[46px] justify-center items-center flex-shrink-0"
+              style="
                 border-bottom: 1px solid rgba(33, 37, 41, 0.5);
                 background: rgba(255, 218, 68, 0.25);
                 padding: 11px 14px 11px 12px;
-              ">
-              <div class="w-[500px] text-[#3C3C3C] font-montserrat text-base font-normal leading-[24px]">
+              "
+            >
+              <div
+                class="w-[500px] text-[#3C3C3C] font-montserrat text-base font-normal leading-[24px]"
+              >
                 Use your bolts to activate further services
               </div>
             </div>
             <div class="w-full flex justify-center">
-              <div class="flex w-[510px] h-[310px] items-start gap-[6px] flex-shrink-0">
+              <div
+                class="flex w-[510px] h-[310px] items-start gap-[6px] flex-shrink-0"
+              >
                 <!--              prima colonna-->
-                <div class="flex w-[252px] h-[303px] flex-col items-start flex-shrink-0">
+                <div
+                  class="flex w-[252px] h-[303px] flex-col items-start flex-shrink-0"
+                >
                   <div class="column-container">
                     <div class="inner-column-container">
-                      <img src="@/assets/icons/currency-dollar.svg" alt="" class="w-[24px] h-[24px]"
-                        style="border-radius: 100px; border: 1px solid #000" />
+                      <img
+                        src="@/assets/icons/currency-dollar.svg"
+                        alt=""
+                        class="w-[24px] h-[24px]"
+                        style="border-radius: 100px; border: 1px solid #000"
+                      />
                       <div class="text-column-header">Active charts area</div>
                     </div>
                   </div>
@@ -534,10 +803,16 @@ watch(
                   </div>
                 </div>
                 <!--              seconda colonna-->
-                <div class="flex w-[252px] h-[303px] flex-col items-start flex-shrink-0">
+                <div
+                  class="flex w-[252px] h-[303px] flex-col items-start flex-shrink-0"
+                >
                   <div class="column-container">
                     <div class="inner-column-container">
-                      <img src="@/assets/images/bolt.png" alt="" class="w-[24px] h-[24px]" />
+                      <img
+                        src="@/assets/images/bolt.png"
+                        alt=""
+                        class="w-[24px] h-[24px]"
+                      />
                       <div class="text-column-header">Bolts</div>
                     </div>
                   </div>
@@ -565,19 +840,24 @@ watch(
           </div>
 
           <div class="flex pr-[6px] items-center">
-            <div class="flex flex-col items-start gap-[8px]" v-for="(item, index) in nameFamilies" key="index">
+            <div
+              class="flex flex-col items-start gap-[8px]"
+              v-for="(item, index) in nameFamilies"
+              key="index"
+            >
               <button
                 class="flex text-white font-inter text-base font-normal leading-[24px] w-[230px] justify-center items-center gap-[8px] bg-[#212529]"
                 style="
                   border-radius: 4px;
                   border: 1px solid #212529;
                   padding: 6px 12px;
-                " @click="buyThisPlan(parseInt(item.family))">
+                "
+                @click="buyThisPlan(parseInt(item.family))"
+              >
                 Buy plan
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>

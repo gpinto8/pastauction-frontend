@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import PlansCard from '@/components/wallet/plan/PlansCard.vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 
 // Emits
 const emits = defineEmits(['handleInfoClicked', 'handleBuyClick']);
