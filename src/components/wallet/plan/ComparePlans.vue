@@ -34,15 +34,15 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="mt-[35px] mb-[35px] overflow-x-hidden" style="font-family: Inter">
+  <div class="mt-[35px] mb-[35px] overflow-x-hidden font-inter">
     <div class="text-[#3C3C3C] font-inter text-16 font-normal leading-5">
       By choosing the READY plan you can get these advantages
     </div>
   </div>
-  <div class="flex items-start gap-[40px]" style="font-family: Inter">
+  <div class="flex items-start gap-[40px] font-inter">
     <div class="flex items-start gap-[10px] overflow-x-scroll">
       <!--  Passo i dati per renderizzare il primo componente sulla sx -->
-      <PlansPricingCard :infoCard="props.products" @buyThisPlan="buyThisPlan" />
+      <PlansPricingCard :products="props.products" @buyThisPlan="buyThisPlan" />
       <!-- componente che ospita la card prima vuota -->
       <EmptyPlans @buyThisPlan="buyThisPlan" />
     </div>

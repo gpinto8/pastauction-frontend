@@ -24,11 +24,11 @@ const emits = defineEmits(['buyThisPlan']);
 
 // Props
 const props = defineProps<{
-  infoCard: Product[];
+  products: Product[];
 }>();
 
 // Variables
-const mappedDatas = props.infoCard.map((item: any) => ({
+const mappedDatas = props.products.map((item: any) => ({
   category: item.category,
   currency: item.currency,
   family: item.family,
