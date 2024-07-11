@@ -36,7 +36,7 @@ const props = defineProps<{
 <template>
   <div class="mt-[35px] mb-[35px] overflow-x-hidden" style="font-family: Inter">
     <div class="text-[#3C3C3C] font-inter text-16 font-normal leading-5">
-      By choosing the READY plan you can get these advantage
+      By choosing the READY plan you can get these advantages
     </div>
   </div>
   <div class="flex items-start gap-[40px]" style="font-family: Inter">
