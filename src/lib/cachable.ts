@@ -1,4 +1,5 @@
 const MAX_CACHE_IN_MINUTES = 60
+type key = string | number
 
 function isCacheExpired (cacheTime: number, ttlInMinutes: number): boolean {
   return Date.now() - cacheTime > ttlInMinutes * 60 * 1000
@@ -25,13 +26,13 @@ export function cachable<T> (fn: () => Promise<T>, ttlInMinutes = MAX_CACHE_IN_M
   }
 }
 
-export function cachableWithKey<T> (fn: (key: string) => Promise<T>, ttlInMinutes = MAX_CACHE_IN_MINUTES): (key: string) => Promise<T> {
+export function cachableWithKey<T> (fn: (key: key) => Promise<T>, ttlInMinutes = MAX_CACHE_IN_MINUTES): (key: key) => Promise<T> {
   const cache: Record<string, Promise<T> | null> = {}
   const lastCacheTime: Record<string, number> = {}
 
-  const isExpired = (key: string) => isCacheExpired(lastCacheTime[key], ttlInMinutes)
+  const isExpired = (key: key) => isCacheExpired(lastCacheTime[key], ttlInMinutes)
 
-  return (key: string) => {
+  return (key: key) => {
     if (isExpired(key)) {
       cache[key] = null
       lastCacheTime[key] = Date.now()
