@@ -71,8 +71,11 @@ function getFamilyName(family: number): string {
 }
 // Colori delle cards
 const getBadgeStyle = (familyId: number) => {
-  const backgroundColor = families[familyId].color;
-  return { backgroundColor };
+  const { color } = families[familyId];
+  return {
+    backgroundColor: color.background,
+    '--active-color': color.active,
+  };
 };
 // Chimaata Ajax
 const getItemsForCard = async (familyId: number): Promise<void> => {
@@ -113,7 +116,7 @@ const handleBadgeClick = (familyId: number) => {
     <div
       v-for="familyId in orderedFamilyIds"
       :key="familyId"
-      class="badge cursor-pointer w-full rounded-t-lg"
+      class="badge desktop-badge cursor-pointer w-full rounded-t-lg"
       :style="getBadgeStyle(familyId)"
       :class="{
         active:
@@ -169,8 +172,12 @@ const handleBadgeClick = (familyId: number) => {
       @click="handleBadgeClick(familyId)"
     >
       <div
-        class="badge flex flex-col rounded-xl gap-4 shadow-xl"
+        class="badge mobile-badge flex flex-col rounded-xl gap-4 shadow-xl"
         :style="getBadgeStyle(familyId)"
+        :class="{
+          active:
+            familyId === props.currentValueFamily || activeProduct === familyId,
+        }"
       >
         <div class="flex justify-between px-8 pt-8">
           <h4
@@ -206,12 +213,17 @@ const handleBadgeClick = (familyId: number) => {
   </swiper>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .badge {
   /* @apply h-full; */
 }
-.badge.active {
-  /* transform: translateY(-15px); */
+.badge.desktop-badge.active {
   padding-top: 24px;
+}
+.badge.mobile-badge {
+  border: 2px solid transparent;
+  &.active {
+    border-color: var(--active-color);
+  }
 }
 </style>

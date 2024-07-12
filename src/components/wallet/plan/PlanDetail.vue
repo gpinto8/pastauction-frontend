@@ -117,12 +117,14 @@ const buyThisPlan = (familyId: number) => {
 </script>
 
 <template>
-  <div class="items-start gap-[25px]">
+  <div class="items-start gap-[25px]" v-if="selectedItem">
     <div class="flex-col bg-white items-start gap-[25px] card-wrapper">
       <div class="flex-col items-center gap-[10px] flex-shrink-0">
         <div
           class="justify-center items-center"
-          :style="{ background: families[selectedItem.family].color }"
+          :style="{
+            background: families[selectedItem.family].color.background,
+          }"
           style="padding: 18px 26px 18px 25px"
         >
           <div class="flex items-center justify-between flex-shrink-0">

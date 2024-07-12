@@ -23,15 +23,27 @@ export const plans: Record<Plan['type'], Plan> = {
 } as const
 
 const [blue, yellow, green] = [
-  'rgba(13, 110, 253, 0.25)',
-  'rgba(255, 218, 68, 0.25)',
-  'rgba(109, 165, 68, 0.25)',
+  {
+    background: 'rgba(13, 110, 253, 0.25)',
+    active: '#0D6EFD',
+  },
+  {
+    background: 'rgba(255, 218, 68, 0.25)',
+    active: '#E8C142',
+  },
+  {
+    background: 'rgba(109, 165, 68, 0.25)',
+    active: '#6DA544',
+  },
 ] as const
 
 export const families: {
   [key: number]: {
     plan: Plan
-    color: string
+    color: {
+      background: string
+      active: string
+    }
   }
 } = {
   1: {
