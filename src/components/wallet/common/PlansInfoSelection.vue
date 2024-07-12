@@ -29,7 +29,7 @@ const emits = defineEmits(['activeProduct']);
 
 // Props
 let props = defineProps<{
-  currentValueFamily: number; // id attivo
+  currentValueFamily?: number; // id attivo
 }>();
 
 // Variables
