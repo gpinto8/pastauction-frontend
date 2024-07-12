@@ -68,15 +68,17 @@ async (getCurrentData: number): Promise<void> => {
         <div class="text-[#475467] font-inter text-lg font-medium leading-5">
           Your selected plan
         </div>
-        <div class="flex w-[1013px] items-start gap-[62px]">
+        <div class="flex flex-col xl:flex-row items-start gap-[62px]">
           <!-- parte sx gialla -->
           <div
             style="
               border-radius: 12px;
-              background: rgba(255, 218, 68, 0.25);
               box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
               padding: 19px 20px 19px 19px;
             "
+            :style="{
+              background: families[props.data.family].color.background,
+            }"
             class="flex justify-center items-center"
           >
             <div class="flex flex-col items-start gap-[24px]">
