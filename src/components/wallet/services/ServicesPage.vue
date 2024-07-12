@@ -6,6 +6,7 @@ import type { Product, ProductDetails } from '../plan/definitions';
 import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails';
 import ServiceTable from '@/components/wallet/services/ServiceTable.vue';
+import { load } from 'webfontloader';
 
 const familyId = ref<number>();
 const products = ref<Product[]>([]);
@@ -26,6 +27,7 @@ const tableData = ref<{
 });
 
 const emits = defineEmits(['handleBuyClick']);
+const loading = ref(true);
 
 function handleBuyClick(family: any) {
   emits('handleBuyClick', family);
@@ -48,38 +50,55 @@ function getFamilyInfo(name: string) {
 
 onMounted(async () => {
   familyId.value = 6; // Preset to free family
+  withLoading(loadFamily());
+});
+
+function withLoading(promise: Promise<any>) {
+  loading.value = true;
+  return promise.finally(() => {
+    loading.value = false;
+  });
+}
+
+async function loadFamily() {
+  if (!familyId.value) {
+    throw new Error('Family ID not set');
+  }
+
   products.value = await fetchProductListById(familyId.value);
   // For each product.properties.product_id, fetch the product details and populate the table data
-  products.value.forEach(async product => {
-    const productDetails: ProductDetails = await fetchProductDetails(
-      product.id
-    );
-    if (productDetails) {
-      if (productDetails.category === 'CategoryChart') {
-        tableData.value.Charts.push(productDetails);
-      } else if (
-        productDetails.category === 'Chart' ||
-        productDetails.category === 'Datas' ||
-        productDetails.category === 'Locate' ||
-        productDetails.category === 'Marketplace'
-      ) {
-        tableData.value.Services.push(productDetails);
-      } else if (productDetails.category === 'Garage') {
-        tableData.value.Item.push(productDetails);
-      } else if (
-        productDetails.category === 'Subscription' ||
-        productDetails.category === 'Subscription_ppu'
-      ) {
-        family.value = {
-          family: productDetails.family,
-          info: getFamilyInfo(productDetails.name),
-          name: productDetails.name,
-          prezzo: productDetails.prezzo,
-        };
+  return Promise.all(
+    products.value.map(async product => {
+      const productDetails: ProductDetails = await fetchProductDetails(
+        product.id
+      );
+      if (productDetails) {
+        if (productDetails.category === 'CategoryChart') {
+          tableData.value.Charts.push(productDetails);
+        } else if (
+          productDetails.category === 'Chart' ||
+          productDetails.category === 'Datas' ||
+          productDetails.category === 'Locate' ||
+          productDetails.category === 'Marketplace'
+        ) {
+          tableData.value.Services.push(productDetails);
+        } else if (productDetails.category === 'Garage') {
+          tableData.value.Item.push(productDetails);
+        } else if (
+          productDetails.category === 'Subscription' ||
+          productDetails.category === 'Subscription_ppu'
+        ) {
+          family.value = {
+            family: productDetails.family,
+            info: getFamilyInfo(productDetails.name),
+            name: productDetails.name,
+            prezzo: productDetails.prezzo,
+          };
+        }
       }
-    }
-  });
-});
+    })
+  );
+}
 
 const activeFamilyHandler = async (family: number) => {
   // Reset the table data
@@ -90,34 +109,14 @@ const activeFamilyHandler = async (family: number) => {
   };
 
   familyId.value = family;
-  products.value = await fetchProductListById(familyId.value);
-  // For each product.properties.product_id, fetch the product details and populate the table data
-  products.value.forEach(async product => {
-    const productDetails: ProductDetails = await fetchProductDetails(
-      product.properties.product_id
-    );
-    if (productDetails) {
-      if (productDetails.category === 'CategoryChart') {
-        tableData.value.Charts.push(productDetails);
-      } else if (
-        productDetails.category === 'Chart' ||
-        productDetails.category === 'Datas' ||
-        productDetails.category === 'Locate' ||
-        productDetails.category === 'Marketplace'
-      ) {
-        tableData.value.Services.push(productDetails);
-      } else if (productDetails.category === 'Garage') {
-        tableData.value.Item.push(productDetails);
-      }
-    }
-  });
+  withLoading(loadFamily());
 };
 </script>
 
 <template>
   <header class="classic-main">
     <PlansInfoSelection @activeProduct="activeFamilyHandler($event)" />
-    <ServiceTable :products="tableData" />
+    <ServiceTable :loading="loading" :products="tableData" />
     <v-container
       class="bg-[#ECECEC]"
       style="

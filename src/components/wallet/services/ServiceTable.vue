@@ -2,6 +2,7 @@
 import type { ProductDetails } from './PlansInfoSelection.vue';
 
 const props = defineProps<{
+  loading: boolean,
 	products: {
 		Item: any[];
 		Services: any[];
@@ -13,7 +14,10 @@ const props = defineProps<{
 <template>
   <div class="container-card md:p-[20px]">
     <div class="p-2">
-      <h2 class="plan-title">Start</h2>
+      <div class="flex items-center gap-2">
+        <h2 class="plan-title">Start</h2>
+        <v-progress-circular v-if="loading" indeterminate size="16"></v-progress-circular>
+      </div>
       <p style="margin: 20px 0;">Summary and detail of the availability of your current plan</p>
     </div>
     <div class="md:p-[20px]">
