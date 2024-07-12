@@ -10,6 +10,7 @@ import { groupIntoPairs } from '../../utils/functions/groupIntoPairs';
 import BrandsSlider from './BrandsSlider.vue';
 import ChartsCarousel from './ChartsCarousel.vue';
 import VideoCarousel from './videoCarousel/VideoCarousel.vue'
+import Footer from './Footer.vue'
 
 const sections = ref<Section[]>([])
 
@@ -107,6 +108,20 @@ homepageSections()
                 <ChartsCarousel :images="carouselCharts" class="h-screen w-screen"
                     :backgroundImage="carouselChartsBackgroundImage?.media_path || ''" />
             </div>
+            <div class="section h-screen">
+                <div class="h-screen flex flex-col">
+                    <div class="flex-1 bg-red-100">
+
+                    </div>
+                    <Footer />
+                </div>
+            </div>
         </full-page>
     </div>
 </template>
+
+<style>
+.yellowButton {
+    @apply border-solid text-yellow-300 border-yellow-300 border-2
+}
+</style>
