@@ -185,7 +185,7 @@ const buyThisPlan = (familyId: number) => {
         <!-- /BADGE -->
 
         <!--            Middle Top-->
-        <div class="flex gap-[6px]">
+        <div class="flex gap-[6px] p-2">
           <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
@@ -258,7 +258,7 @@ const buyThisPlan = (familyId: number) => {
           </div>
         </div>
 
-        <div class="flex gap-[6px]">
+        <div class="flex gap-[6px] p-2">
           <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
@@ -309,7 +309,7 @@ const buyThisPlan = (familyId: number) => {
       </div>
       <!--          MIDDLE Table-->
       <div class="w-full justify-center">
-        <div class="flex gap-[6px]">
+        <div class="flex gap-[6px] p-2">
           <!--              prima colonna-->
           <div class="w-full _grow">
             <div class="column-container">
@@ -616,7 +616,7 @@ const buyThisPlan = (familyId: number) => {
             </div>
           </div>
 
-          <div class="flex items-start gap-[6px] flex-shrink-0">
+          <div class="flex gap-[6px] p-2">
             <!--              prima colonna-->
             <div class="w-full _grow">
               <div class="column-container">
@@ -750,5 +750,6 @@ const buyThisPlan = (familyId: number) => {
   border-bottom: 1px solid rgba(33, 37, 41, 0.5);
   background: rgba(255, 218, 68, 0.25);
   padding: 11px 14px 11px 12px;
+  margin-bottom: 8px;
 }
 </style>
