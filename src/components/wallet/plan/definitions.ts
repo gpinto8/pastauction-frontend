@@ -1,3 +1,35 @@
+export interface Product {
+  category: string
+  currency: string
+  family: number
+  id: number
+  name: string
+  prezzo: number
+  properties: {
+    id: number
+    product_id: number
+    tipo: string
+    value: string
+  }
+}
+export interface ProductDetails {
+  id: number
+  family: number
+  category: string
+  tipologia: string
+  prezzo: number
+  currency: string
+  name: string
+  properties: {
+    limit: string
+    'expire(dd)': string
+    'update(dd)': string
+    graphs: string
+    limit_daily: string
+    available: string
+  }
+}
+
 export type Plan = {
   name: string
   type: 'monthly' | 'annual' | 'perpetual' | 'bolts'

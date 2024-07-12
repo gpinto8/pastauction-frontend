@@ -1,12 +1,10 @@
 <script setup lang="ts">
 // Import
 import { onMounted, ref } from 'vue';
-import PlansInfoSelection, {
-  type Product,
-  type ProductDetails,
-} from '@/components/wallet/services/PlansInfoSelection.vue';
+import PlansInfoSelection from '@/components/wallet/common/PlansInfoSelection.vue';
+import type { Product, ProductDetails } from '../plan/definitions';
 import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
-import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails.js';
+import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails';
 import ServiceTable from '@/components/wallet/services/ServiceTable.vue';
 
 const familyId = ref<number>();
@@ -83,7 +81,7 @@ onMounted(async () => {
   });
 });
 
-const activeFamilyHandler = async (event: Product) => {
+const activeFamilyHandler = async (family: number) => {
   // Reset the table data
   tableData.value = {
     Item: [],
@@ -91,7 +89,7 @@ const activeFamilyHandler = async (event: Product) => {
     Charts: [],
   };
 
-  familyId.value = event.family;
+  familyId.value = family;
   products.value = await fetchProductListById(familyId.value);
   // For each product.properties.product_id, fetch the product details and populate the table data
   products.value.forEach(async product => {

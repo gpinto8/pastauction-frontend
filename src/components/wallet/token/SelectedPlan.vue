@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
-import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails.js';
+import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails';
 import {
   type Product,
   type ProductDetails,
