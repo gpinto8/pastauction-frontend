@@ -22,6 +22,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import { useCardsPlansStore } from '@/store/plans/cards';
 import { families } from '../plan/definitions';
+import { onBeforeMount } from 'vue';
 
 // Emits
 const emits = defineEmits(['activeProduct']);
@@ -74,12 +75,10 @@ const getItemsForCard = async (familyId: number): Promise<void> => {
   }
 };
 // Chiamate AJAX per ogni ID di famiglia
-(async () => {
+onBeforeMount(async () => {
   const order = [6, 5, 1, 2, 3, 4];
-  for (const familyId of order) {
-    await getItemsForCard(familyId);
-  }
-})();
+  await Promise.all(order.map(familyId => getItemsForCard(familyId)));
+});
 
 const handleBadgeClick = (familyId: number) => {
   emits('activeProduct', familyId);
