@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dash !hidden md:!flex shadow">
+  <div class="dash !hidden md:!flex shadow rounded-[7px]">
     <div class="token">
       <h3>
         <span class="uppercase">Tokens</span>
@@ -33,7 +33,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="plan">
-      <div class="current flex gap-10">
+      <div class="current flex justify-center gap-3">
         <h3>Free</h3>
         <img
           src="@/assets/icons/info.svg"
@@ -41,10 +41,10 @@ onMounted(() => {
           class="w-[18px]"
         />
       </div>
-      <p class="text-sm text-grey"><i>Current plan</i></p>
+      <p class="text-sm text-grey text-center"><i>Current plan</i></p>
     </div>
-    <div class="bolts">
-      <div class="flex items-center gap-1">
+    <div class="bolts text-right">
+      <div class="flex items-center justify-end text-right gap-1">
         <img
           src="@/assets/images/bolt.png"
           alt="Bolt - Pastauction"
@@ -62,8 +62,7 @@ onMounted(() => {
     :space-between="50"
     :centered-slides="true"
     :pagination="{ clickable: false }"
-    class="md:!hidden"
-    style="padding-bottom: 50px; width: 100%"
+    class="md:!hidden overflow-visible w-full"
   >
     <swiper-slide>
       <div class="card flex justify-between">
@@ -119,6 +118,7 @@ onMounted(() => {
   .plan,
   .bolts {
     @apply flex flex-col justify-around text-[24px] font-semibold;
+    width: 100%;
   }
 }
 .card {
