@@ -159,7 +159,7 @@ const handleBadgeClick = (familyId: number) => {
     :breakpoints="swiperOptions.breakpoints"
     :centered-slides="false"
     :pagination="{ clickable: true }"
-    class="swiperPlansInfoSelection lg:!hidden"
+    class="swiperPlansInfoSelection lg:!hidden overflow-visible"
     style="padding-bottom: 50px; width: 100%"
   >
     <swiper-slide

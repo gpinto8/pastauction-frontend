@@ -66,4 +66,9 @@ const props = defineProps<{
   </div>
 </template>
 
-<style scoped lang="postcss"></style>
+<style scoped lang="scss">
+.swiper {
+  overflow: visible;
+  width: 100%;
+}
+</style>
