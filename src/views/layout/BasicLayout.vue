@@ -66,7 +66,7 @@ watch(isMobileAvatarMenuOpen, ()=>{
 </script>
 
 <template>
-  <div ref="layoutContainerRef" class="grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[90px_1fr] w-screen relative">
+  <div ref="layoutContainerRef" class="layout-container w-screen relative" :class="{'showing-sidebar': displayMediaQuery.md}">
 
 		<!-- navbar menu / responsive -->
 
@@ -75,51 +75,54 @@ watch(isMobileAvatarMenuOpen, ()=>{
 			:class="{'-translate-y-full !shadow-none': !displayMediaQuery.md && !isMobileNavMenuOpen}"
 			class="
 				!bg-primary duration-150 ease-out peer 
-				absolute z-10 row-start-2 row-span-1 col-span-1 rounded-b-xl h-fit shadow-gray-600 shadow-lg
-				md:fixed md:z-30 md:top-0 md:h-screen md:row-start-1 md:row-span-2 md:!rounded-e-xl md:block md:w-[90px] hover:md:w-[140px]  md:!rounded-bl-none md:shadow-3xl md:hover:shadow-black
+				absolute z-10 row-span-1 col-span-1 rounded-b-xl h-fit shadow-gray-600 shadow-lg
+				md:fixed md:z-30 md:top-0 md:h-screen md:row-span-2 md:!rounded-e-xl md:block md:w-[90px] hover:md:w-[140px]  md:!rounded-bl-none md:shadow-3xl md:hover:shadow-black
 				hover:lg:w-[250px]
 			"
 		>
 			<drawer-component @click="drawer = false"/>
 		</div>
 
-		<!-- header bar / responsive -->
-    <div class="overflow-visible  z-20 bg-white sticky top-0 md:col-start-2">
-			<div class="w-full h-full md:py-4 border-b-2 border-[#21252940]">
-				<div v-if="isMobileNavMenuOpen || isMobileAvatarMenuOpen"  class="h-[62px] flex justify-between items-center py-6 bg-[#212529] w-full md:hidden">
-					<v-img class="h-6" src="@/assets/images/logo.svg" alt="Logo" />
-				</div>
-				<div class="flex justify-between items-center w-full px-2">
-					<!-- the icon that togles the nav menu on mobile -->
-					<app-icon v-if="!displayMediaQuery.md" class="" size="40" type="burger-menu" @click.stop="isMobileNavMenuOpen = !isMobileNavMenuOpen; isMobileAvatarMenuOpen = false;"/>
-
-					<!-- current name of the page -->
-					<h1 class="font-bold text-[40px] md:pl-6">
-						{{ route.name }}
-					</h1>
-
-					<!-- the content of the avatar/profile menu -->
-					<app-bar-menu-component  :isMobileAvatarMenuOpen="isMobileAvatarMenuOpen"/>
-
-					<!-- the avatar icon that opens the avatar menu on mobile -->
-					<div v-if="!displayMediaQuery.md" class="mr-6 h-12 aspect-square rounded-full overflow-hidden shadow" @click.stop="isMobileAvatarMenuOpen = !isMobileAvatarMenuOpen; isMobileNavMenuOpen = false;">
-						<!-- <v-icon v-if="!isMobileAvatarMenuOpen" icon="mdi-account-circle" /> -->
-						<v-img v-if="!isMobileAvatarMenuOpen" class="h-full aspect-square" src="@/assets/images/user-photo-sample.png" alt="Logo" />
-						<app-icon v-if="isMobileAvatarMenuOpen" type="x-circle-fill" size="" />
+		<div class="wrapper">
+			<!-- header bar / responsive -->
+			<div class="overflow-visible  z-20 bg-white sticky top-0">
+				<div class="w-full h-full md:py-4 border-b-2 border-[#21252940]">
+					<div v-if="isMobileNavMenuOpen || isMobileAvatarMenuOpen"  class="h-[62px] flex justify-between items-center py-6 bg-[#212529] w-full md:hidden">
+						<v-img class="h-6" src="@/assets/images/logo.svg" alt="Logo" />
+					</div>
+					<div class="flex justify-between items-center w-full px-2">
+						<!-- the icon that togles the nav menu on mobile -->
+						<app-icon v-if="!displayMediaQuery.md" class="" size="40" type="burger-menu" @click.stop="isMobileNavMenuOpen = !isMobileNavMenuOpen; isMobileAvatarMenuOpen = false;"/>
+	
+						<!-- current name of the page -->
+						<h1 class="font-bold text-[40px] md:pl-6">
+							{{ route.name }}
+						</h1>
+	
+						<!-- the content of the avatar/profile menu -->
+						<app-bar-menu-component  :isMobileAvatarMenuOpen="isMobileAvatarMenuOpen"/>
+	
+						<!-- the avatar icon that opens the avatar menu on mobile -->
+						<div v-if="!displayMediaQuery.md" class="mr-6 h-12 aspect-square rounded-full overflow-hidden shadow" @click.stop="isMobileAvatarMenuOpen = !isMobileAvatarMenuOpen; isMobileNavMenuOpen = false;">
+							<!-- <v-icon v-if="!isMobileAvatarMenuOpen" icon="mdi-account-circle" /> -->
+							<v-img v-if="!isMobileAvatarMenuOpen" class="h-full aspect-square" src="@/assets/images/user-photo-sample.png" alt="Logo" />
+							<app-icon v-if="isMobileAvatarMenuOpen" type="x-circle-fill" size="" />
+						</div>
 					</div>
 				</div>
 			</div>
-    </div>
-
-		<!-- main page / content box -->
-		<div class="p-4 duration-150 md:col-start-2">
-			<router-view v-slot="{ Component, route }">
-				<transition>
-					<component :is="Component" :key="route.name" />
-				</transition>
-			</router-view>
+	
+			<!-- main page / content box -->
+			<div class="p-4 duration-150">
+				<router-view v-slot="{ Component, route }">
+					<transition>
+						<component :is="Component" :key="route.name" />
+					</transition>
+				</router-view>
+			</div>
 		</div>
   </div>
+
   <teleport to="head">
     <link rel="icon" :href="logo" type="image/svg+xml" />
   </teleport>
@@ -127,6 +130,13 @@ watch(isMobileAvatarMenuOpen, ()=>{
 
 <style lang="scss">
 html {
-  overflow-y: auto;
+	overflow-y: auto;
+}
+.layout-container.showing-sidebar {
+	--sidebar-width: 90px;
+}
+.wrapper {
+	width: calc(100% - var(--sidebar-width));
+	margin-left: var(--sidebar-width);
 }
 </style>
