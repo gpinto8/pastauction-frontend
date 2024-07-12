@@ -21,6 +21,7 @@ import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import { useCardsPlansStore } from '@/store/plans/cards';
+import { families } from '../plan/definitions';
 
 // Emits
 const emits = defineEmits(['activeProduct']);
@@ -70,13 +71,7 @@ function getFamilyName(family: number): string {
 }
 // Colori delle cards
 const getBadgeStyle = (familyId: number) => {
-  let backgroundColor = 'rgba(109, 165, 68, 0.25)';
-  const familyName = getFamilyName(familyId);
-  if (['Free', 'PayPerUse'].includes(familyName)) {
-    backgroundColor = 'rgba(13, 110, 253, 0.25)';
-  } else if (['Ready', 'Start'].includes(familyName)) {
-    backgroundColor = 'rgba(255, 218, 68, 0.25)';
-  }
+  const backgroundColor = families[familyId].color;
   return { backgroundColor };
 };
 // Chimaata Ajax
@@ -113,25 +108,23 @@ const handleBadgeClick = (familyId: number) => {
 
 <template>
   <div
-    class="hidden lg:grid grid-cols-6 gap-2 h-[150px] border-b-[1px] border-black"
+    class="hidden lg:flex gap-2 align-end h-[150px] border-b-[1px] border-black"
   >
     <div
       v-for="familyId in orderedFamilyIds"
       :key="familyId"
-      class="badge cursor-pointer"
+      class="badge cursor-pointer w-full rounded-t-lg"
+      :style="getBadgeStyle(familyId)"
       :class="{
         active:
           familyId === props.currentValueFamily || activeProduct === familyId,
       }"
       @click="handleBadgeClick(familyId)"
     >
-      <div
-        class="rounded-t-lg flex flex-col gap-4 px-4 pt-6 pb-[14px]"
-        :style="getBadgeStyle(familyId)"
-      >
+      <div class="flex flex-col gap-2 px-4 pt-6 pb-[14px]">
         <div class="flex justify-between">
           <h4
-            class="title-js font-semibold"
+            class="text-xl title-js font-semibold"
             v-for="(product, productIndex) in filterProducts[familyId]"
             :key="productIndex"
           >
@@ -143,7 +136,7 @@ const handleBadgeClick = (familyId: number) => {
         <div
           v-for="(product, productIndex) in filterProducts[familyId]"
           :key="productIndex"
-          class="flex"
+          class="flex text-2xl"
         >
           <img
             class="w-7 h-7"
@@ -215,9 +208,10 @@ const handleBadgeClick = (familyId: number) => {
 
 <style scoped>
 .badge {
-  @apply h-full;
+  /* @apply h-full; */
 }
 .badge.active {
-  transform: translateY(-15px);
+  /* transform: translateY(-15px); */
+  padding-top: 24px;
 }
 </style>

@@ -16,6 +16,7 @@ interface Product {
 }
 
 // Import
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { defineProps } from 'vue';
 import PlansPricingCard from '@/components/wallet/plan/PlansPricingCard.vue';
 import EmptyPlans from '@/components/wallet/plan/EmptyPlans.vue';
@@ -40,8 +41,28 @@ const props = defineProps<{
     </div>
   </div>
   <div class="flex justify-between gap-[40px] font-inter">
-    <PlansPricingCard :products="props.products" @buyThisPlan="buyThisPlan" />
-    <EmptyPlans @buyThisPlan="buyThisPlan" />
+    <swiper
+      :breakpoints="{
+        0: {
+          slidesPerView: 1.1,
+          spaceBetween: 10,
+        },
+        1024: {
+          slidesPerView: 2,
+          spaceBetween: 40,
+        },
+      }"
+    >
+      <swiper-slide>
+        <PlansPricingCard
+          :products="props.products"
+          @buyThisPlan="buyThisPlan"
+        />
+      </swiper-slide>
+      <swiper-slide>
+        <EmptyPlans @buyThisPlan="buyThisPlan" />
+      </swiper-slide>
+    </swiper>
   </div>
 </template>
 

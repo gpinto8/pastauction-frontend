@@ -20,6 +20,7 @@ import { defineProps } from 'vue';
 import { useCardsPlansStore } from '@/store/plans/cards';
 import { computed } from 'vue';
 import Button from '@/components/common/button.vue';
+import { families, plans } from './definitions';
 
 // Emits
 const emits = defineEmits(['buyThisPlan']);
@@ -48,8 +49,8 @@ const mappedDatas = computed(() =>
   }))
 );
 
-const nameFamilies = computed(() =>
-  mappedDatas.value.filter(
+const selectedItem = computed(() =>
+  mappedDatas.value.find(
     item =>
       item.category === 'Subscription' || item.category === 'Subscription_ppu'
   )
@@ -110,68 +111,36 @@ const modelCharts = computed(() =>
 );
 const cardsStore = useCardsPlansStore(); // init
 
-// Function
 const buyThisPlan = (familyId: number) => {
   emits('buyThisPlan', familyId);
 };
 </script>
 
 <template>
-  <div class="flex items-start gap-[25px]">
-    <div class="flex flex-col bg-white items-start gap-[25px] card-wrapper">
-      <div
-        class="flex flex-col h-[456px] items-center gap-[10px] flex-shrink-0"
-      >
+  <div class="items-start gap-[25px]">
+    <div class="flex-col bg-white items-start gap-[25px] card-wrapper">
+      <div class="flex-col items-center gap-[10px] flex-shrink-0">
         <div
-          class="flex w-[526px] justify-center items-center"
-          style="
-            padding: 18px 26px 18px 25px;
-            border-radius: 12px 12px 0px 0px;
-            border-bottom: 1px solid rgba(33, 37, 41, 0.5);
-            background: rgba(255, 218, 68, 0.25);
-          "
+          class="justify-center items-center"
+          :style="{ background: families[selectedItem.family].color }"
+          style="padding: 18px 26px 18px 25px"
         >
-          <div class="flex w-[475px] items-center gap-[210px] flex-shrink-0">
-            <div
-              class="flex flex-col items-start gap-[8px]"
-              v-for="(item, index) in nameFamilies"
-              key="index"
-            >
+          <div class="flex items-center justify-between flex-shrink-0">
+            <div class="items-start gap-[8px]" key="index">
               <div
                 class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
               >
-                {{ item.name }}
+                {{ selectedItem.name }}
               </div>
               <div
-                class="flex w-[161px] flex-column-reverse justify-center items-start gap-[2px]"
+                class="flex-column-reverse justify-center items-start gap-[2px]"
               >
                 <div
                   class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                  v-if="item.name === 'Free-user'"
                 >
-                  Perpetual Plan
+                  {{ families[selectedItem.family].plan.name }}
                 </div>
-                <div
-                  class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                  v-if="item.name === 'Pay-per-use'"
-                >
-                  Bolts required
-                </div>
-                <div
-                  class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                  v-if="
-                    item.name === 'Ready Plan' || item.name === 'Start Plan'
-                  "
-                >
-                  Monthly Plan
-                </div>
-                <div
-                  class="text-gray-600 self-stretch font-inter text-sm font-normal leading-[20px]"
-                  v-if="item.name === 'Go Plan' || item.name === 'Pro Plan'"
-                >
-                  Annual Plan
-                </div>
-                <div class="flex items-start">
+                <div class="items-start">
                   <img
                     src="@/assets/images/bronze_token.png"
                     alt=""
@@ -180,23 +149,19 @@ const buyThisPlan = (familyId: number) => {
                   <div
                     class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
                   >
-                    {{ item.prezzo }}
+                    {{ selectedItem.prezzo }}
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="flex flex-col h-[94px] items-start gap-[2px]"
+              class="flex-col items-start gap-[2px]"
               v-for="(item, index) in boltsCredits"
               key="index"
             >
-              <div class="flex flex-col items-start gap-[8px]">
-                <div class="flex w-[90px] items-center gap-[4px]">
-                  <img
-                    src="@/assets/images/bolt.png"
-                    alt=""
-                    class="w-[26px] h-[26px]"
-                  />
+              <div class="flex-col items-start gap-[8px]">
+                <div class="flex items-center gap-[4px]">
+                  <img src="@/assets/images/bolt.png" alt="" class="h-[26px]" />
                   <div
                     class="text-gray-900 font-inter text-[24px] font-semibold leading-[32px]"
                   >
@@ -220,18 +185,14 @@ const buyThisPlan = (familyId: number) => {
         <!-- /BADGE -->
 
         <!--            Middle Top-->
-        <div
-          class="flex w-[510px] h-[216px] items-start gap-[6px] flex-shrink-0"
-        >
-          <div
-            class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
-          >
+        <div class="flex gap-[6px]">
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <img
                   src="@/assets/icons/GreenCheck.svg"
                   alt=""
-                  class="w-[24px] h-[24px]"
+                  class="h-[24px]"
                 />
                 <div class="text-column-header">Services</div>
               </div>
@@ -249,9 +210,7 @@ const buyThisPlan = (familyId: number) => {
               <div class="cell-text">Rumors</div>
             </div>
           </div>
-          <div
-            class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <div class="text-column-header">Standard</div>
@@ -287,46 +246,38 @@ const buyThisPlan = (familyId: number) => {
                 v-if="item.propertiesValue > '-1'"
                 src="@/assets/images/x-circle-fill.svg"
                 alt=""
-                class="w-[24px] h-[24px]"
+                class="h-[24px]"
               />
               <img
                 v-if="item.propertiesValue < '-1'"
                 src="@/assets/images/x-circle-fill.svg"
                 alt=""
-                class="w-[24px] h-[24px]"
+                class="h-[24px]"
               />
             </div>
           </div>
         </div>
 
-        <div class="flex items-start gap-[6px]">
-          <div
-            class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
-          >
+        <div class="flex gap-[6px]">
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <img
                   src="@/assets/icons/GreenCheck.svg"
                   alt=""
-                  class="w-[24px] h-[24px]"
+                  class="h-[24px]"
                 />
                 <div class="text-column-header">Services</div>
               </div>
             </div>
             <div class="cell-container">
               <div class="flex items-center gap-[4px]">
-                <img
-                  src="@/assets/images/bolt.png"
-                  alt=""
-                  class="w-[18px] h-[18px]"
-                />
+                <img src="@/assets/images/bolt.png" alt="" class="h-[18px]" />
                 <div class="cell-text">Bolts</div>
               </div>
             </div>
           </div>
-          <div
-            class="flex w-[252px] h-[216px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <div class="text-column-header">Monthly</div>
@@ -344,24 +295,11 @@ const buyThisPlan = (familyId: number) => {
       </div>
 
       <!--          MIDDLE-->
-      <div
-        class="flex flex-col items-start gap-[16px] flex-shrink-0"
-        style="padding: 1px 0px"
-      >
-        <div
-          class="flex w-[526px] justify-center items-center flex-shrink-0"
-          style="padding: 3px 0px 0px 0px"
-        >
-          <div
-            class="flex w-[526px] h-[46px] justify-center items-center flex-shrink-0"
-            style="
-              padding: 10.5px 13px 11.5px 13px;
-              border-bottom: 1px solid rgba(33, 37, 41, 0.5);
-              background: rgba(255, 218, 68, 0.25);
-            "
-          >
+      <div style="padding: 1px 0px">
+        <div style="padding: 3px 0px 0px 0px">
+          <div class="row-divider">
             <div
-              class="w-[500px] flex-shrink-0 text-[#3C3C3C] text-base font-normal"
+              class="flex-shrink-0 text-[#3C3C3C] text-base font-normal"
               style="font-family: Montserrat"
             >
               Below period usage limits
@@ -370,18 +308,16 @@ const buyThisPlan = (familyId: number) => {
         </div>
       </div>
       <!--          MIDDLE Table-->
-      <div class="w-full flex justify-center">
-        <div class="flex w-[510px] h-[379px] items-start gap-[6px]">
+      <div class="w-full justify-center">
+        <div class="flex gap-[6px]">
           <!--              prima colonna-->
-          <div
-            class="flex w-[168px] h-[384px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <img
                   src="@/assets/icons/GreenCheck.svg"
                   alt=""
-                  class="w-[24px] h-[24px]"
+                  class="h-[24px]"
                 />
                 <div class="text-column-header">Services</div>
               </div>
@@ -412,9 +348,7 @@ const buyThisPlan = (familyId: number) => {
             </div>
           </div>
           <!--              seconda colonna-->
-          <div
-            class="flex w-[56px] h-[384px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <div class="text-column-header">Daily limit</div>
@@ -478,9 +412,7 @@ const buyThisPlan = (familyId: number) => {
             </div>
           </div>
           <!--              terza colonna-->
-          <div
-            class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <div class="text-column-header">Monthly forecast</div>
@@ -544,9 +476,7 @@ const buyThisPlan = (familyId: number) => {
             </div>
           </div>
           <!--              quarta colonna-->
-          <div
-            class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
                 <div class="text-column-header">Yearly forecast</div>
@@ -610,16 +540,10 @@ const buyThisPlan = (familyId: number) => {
             </div>
           </div>
           <!--              quinta colonna-->
-          <div
-            class="flex w-[82px] h-[384px] flex-col items-start flex-shrink-0"
-          >
+          <div class="w-full _grow">
             <div class="column-container">
               <div class="inner-column-container">
-                <img
-                  src="@/assets/images/bolt.png"
-                  alt=""
-                  class="w-[24px] h-[24px]"
-                />
+                <img src="@/assets/images/bolt.png" alt="" class="h-[24px]" />
                 <div class="text-column-header">Bolts</div>
               </div>
             </div>
@@ -682,102 +606,84 @@ const buyThisPlan = (familyId: number) => {
           </div>
         </div>
       </div>
-      <div class="flex flex-col items-end gap-[25px]">
-        <div class="flex flex-col h-[375px] items-center gap-[10px]">
-          <div
-            class="flex h-[46px] justify-center items-center flex-shrink-0"
-            style="
-              border-bottom: 1px solid rgba(33, 37, 41, 0.5);
-              background: rgba(255, 218, 68, 0.25);
-              padding: 11px 14px 11px 12px;
-            "
-          >
+      <div class="">
+        <div class="flex-col items-center gap-[10px]">
+          <div class="justify-center items-center flex-shrink-0 row-divider">
             <div
-              class="w-[500px] text-[#3C3C3C] font-montserrat text-base font-normal leading-[24px]"
+              class="text-[#3C3C3C] font-montserrat text-base font-normal leading-[24px]"
             >
               Use your bolts to activate further services
             </div>
           </div>
-          <div class="w-full flex justify-center">
-            <div
-              class="flex w-[510px] h-[310px] items-start gap-[6px] flex-shrink-0"
-            >
-              <!--              prima colonna-->
-              <div
-                class="flex w-[252px] h-[303px] flex-col items-start flex-shrink-0"
-              >
-                <div class="column-container">
-                  <div class="inner-column-container">
-                    <img
-                      src="@/assets/icons/currency-dollar.svg"
-                      alt=""
-                      class="w-[24px] h-[24px]"
-                      style="border-radius: 100px; border: 1px solid #000"
-                    />
-                    <div class="text-column-header">Active charts area</div>
-                  </div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Brands Chart</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Maison Charts</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Auction Charts</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Index Charts</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Family Charts</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Model Charts</div>
+
+          <div class="flex items-start gap-[6px] flex-shrink-0">
+            <!--              prima colonna-->
+            <div class="w-full _grow">
+              <div class="column-container">
+                <div class="inner-column-container">
+                  <img
+                    src="@/assets/icons/currency-dollar.svg"
+                    alt=""
+                    class="h-[24px]"
+                    style="border-radius: 100px; border: 1px solid #000"
+                  />
+                  <div class="text-column-header">Active charts area</div>
                 </div>
               </div>
-              <!--              seconda colonna-->
-              <div
-                class="flex w-[252px] h-[303px] flex-col items-start flex-shrink-0"
-              >
-                <div class="column-container">
-                  <div class="inner-column-container">
-                    <img
-                      src="@/assets/images/bolt.png"
-                      alt=""
-                      class="w-[24px] h-[24px]"
-                    />
-                    <div class="text-column-header">Bolts</div>
-                  </div>
+              <div class="cell-container">
+                <div class="cell-text">Brands Chart</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Maison Charts</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Auction Charts</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Index Charts</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Family Charts</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Model Charts</div>
+              </div>
+            </div>
+            <!--              seconda colonna-->
+            <div class="w-full _grow">
+              <div class="column-container">
+                <div class="inner-column-container">
+                  <img src="@/assets/images/bolt.png" alt="" class="h-[24px]" />
+                  <div class="text-column-header">Bolts</div>
                 </div>
-                <div class="cell-container">
-                  <div class="cell-text">-250</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">-750</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">-250</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">-500</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Unlimited</div>
-                </div>
-                <div class="cell-container">
-                  <div class="cell-text">Unlimited</div>
-                </div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">-250</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">-750</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">-250</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">-500</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Unlimited</div>
+              </div>
+              <div class="cell-container">
+                <div class="cell-text">Unlimited</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex pr-[6px] items-center">
+        <div class="pr-[6px] w-full flex justify-end mt-6" v-if="selectedItem">
           <Button
             variant="black"
-            classes="w-[230px]"
-            @click="buyThisPlan(nameFamilies[0].family)"
+            classes="min-w-[200px]"
+            @click="buyThisPlan(selectedItem.family)"
           >
             Buy plan
           </Button>
@@ -823,6 +729,8 @@ const buyThisPlan = (familyId: number) => {
 .cell-container {
   flex: 1;
   height: 42px;
+  min-width: fit-content;
+  white-space: nowrap;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -837,5 +745,10 @@ const buyThisPlan = (familyId: number) => {
   font-size: 16px;
   font-weight: normal;
   line-height: 24px;
+}
+.row-divider {
+  border-bottom: 1px solid rgba(33, 37, 41, 0.5);
+  background: rgba(255, 218, 68, 0.25);
+  padding: 11px 14px 11px 12px;
 }
 </style>
