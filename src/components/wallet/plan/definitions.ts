@@ -39,6 +39,7 @@ const [blue, yellow, green] = [
 
 export const families: {
   [key: number]: {
+    name: string
     plan: Plan
     color: {
       background: string
@@ -47,26 +48,32 @@ export const families: {
   }
 } = {
   1: {
+    name: 'Ready',
     plan: plans.monthly,
     color: yellow,
   },
   2: {
+    name: 'Start',
     plan: plans.monthly,
     color: yellow,
   },
   3: {
+    name: 'Go',
     plan: plans.annual,
     color: green,
   },
   4: {
+    name: 'Pro',
     plan: plans.annual,
     color: green,
   },
   5: {
+    name: 'PayPerUse',
     plan: plans.bolts,
     color: blue,
   },
   6: {
+    name: 'Free',
     plan: plans.perpetual,
     color: blue,
   },

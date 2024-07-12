@@ -43,32 +43,11 @@ let swiperOptions = {
     },
     768: {
       slidesPerView: 2.8,
-      spaceBetween: 50,
+      spaceBetween: 16,
     },
   },
 };
 const cardsStore = useCardsPlansStore(); // init
-
-// Function
-// Recupera tutti i family-id e passali alla getItemsForCard per ottenere i risultati.
-function getFamilyName(family: number): string {
-  switch (family) {
-    case 1:
-      return 'Free';
-    case 2:
-      return 'PayPerUse';
-    case 3:
-      return 'Ready';
-    case 4:
-      return 'Start';
-    case 5:
-      return 'Go';
-    case 6:
-      return 'Pro';
-    default:
-      return 'Unknown';
-  }
-}
 // Colori delle cards
 const getBadgeStyle = (familyId: number) => {
   const { color } = families[familyId];
@@ -107,6 +86,10 @@ const handleBadgeClick = (familyId: number) => {
   activeProduct.value = familyId;
   cardsStore.setCurrentPlan(familyId);
 };
+
+function normalizedPrize(price: number) {
+  return price === 0 ? '***' : price;
+}
 </script>
 
 <template>
@@ -131,7 +114,7 @@ const handleBadgeClick = (familyId: number) => {
             v-for="(product, productIndex) in filterProducts[familyId]"
             :key="productIndex"
           >
-            {{ product.name }}
+            {{ families[familyId].name }}
           </h4>
           <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
         </div>
@@ -172,20 +155,20 @@ const handleBadgeClick = (familyId: number) => {
       @click="handleBadgeClick(familyId)"
     >
       <div
-        class="badge mobile-badge flex flex-col rounded-xl gap-4 shadow-xl"
+        class="badge mobile-badge flex flex-col rounded-[12px] gap-4 shadow-xl py-3 px-8"
         :style="getBadgeStyle(familyId)"
         :class="{
           active:
             familyId === props.currentValueFamily || activeProduct === familyId,
         }"
       >
-        <div class="flex justify-between px-8 pt-8">
+        <div class="flex justify-between">
           <h4
-            class="title-js font-semibold"
+            class="text-xl font-semibold"
             v-for="(product, productIndex) in filterProducts[familyId]"
             :key="productIndex"
           >
-            {{ product.name }}
+            {{ families[familyId].name }}
           </h4>
           <img class="w-4.5 h-4.5" src="@/assets/icons/info.svg" alt="info" />
         </div>
@@ -193,7 +176,7 @@ const handleBadgeClick = (familyId: number) => {
         <div
           v-for="(product, productIndex) in filterProducts[familyId]"
           :key="productIndex"
-          class="flex px-8"
+          class="flex"
         >
           <img
             class="w-7 h-7"
@@ -201,13 +184,13 @@ const handleBadgeClick = (familyId: number) => {
             alt="token"
           />
           <div
-            class="w-[49px] text-[#101828] font-inter text-24 font-semibold leading-[32px]"
+            class="w-[49px] text-[#101828] font-inter text-3xl font-semibold leading-[32px]"
           >
-            <div>{{ product.prezzo }}</div>
+            <div>{{ normalizedPrize(product.prezzo) }}</div>
           </div>
         </div>
         <!-- /token -->
-        <p class="text-gray-600 px-8 pb-8">Perpetual Plan</p>
+        <p class="text-gray-600">Perpetual Plan</p>
       </div>
     </swiper-slide>
   </swiper>
