@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { ProductDetails } from './PlansInfoSelection.vue';
-
 const props = defineProps<{
   loading: boolean,
 	products: {

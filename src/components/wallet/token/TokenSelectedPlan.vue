@@ -5,7 +5,7 @@ import { useCardsPlansStore } from '@/store/plans/cards';
 import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { useGeneralStore } from '@/store/datas/general';
 import type { ProductDetails } from '@/components/wallet/token/PlanSelectionBanner.vue';
-import type { Product } from '../services/PlansInfoSelection.vue';
+import { type Product, families } from '../plan/definitions';
 
 // Props
 const props = defineProps<{

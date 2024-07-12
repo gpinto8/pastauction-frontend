@@ -5,7 +5,7 @@ import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails
 import {
   type Product,
   type ProductDetails,
-} from '@/components/wallet/services/PlansInfoSelection.vue';
+} from '@/components/wallet/plan/definitions';
 import type { Ref } from 'vue';
 
 const currentBoltsItemCount = ref(0);
