@@ -59,7 +59,8 @@ const closeModal = () => {
       :key="i"
       v-model="activeCollapse"
     >
-      <v-expansion-panel :value="i">
+      <!-- off by one -->
+      <v-expansion-panel :value="i + 1">
         <v-expansion-panel-title>
           <div class="w-full flex justify-between items-center">
             <div class="date">
@@ -76,7 +77,7 @@ const closeModal = () => {
               <img
                 class="w-[20px] h-[20px]"
                 :src="
-                  activeCollapse === i
+                  activeCollapse === i + 1
                     ? '/src/assets/svg/vector-.svg'
                     : '/src/assets/svg/vector+.svg'
                 "
