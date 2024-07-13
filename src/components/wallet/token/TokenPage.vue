@@ -947,14 +947,8 @@ const resetCounters = () => {
     <PlanSelectionBanner @selectedPlan="handleSelectedPlan($event)" />
 
     <!-- SelectedPlan -->
-    <div v-if="selectedPlan">
-      <div
-        class="flex w-[1092px] flex-col items-start gap-1.5 flex-shrink-0 mb-[50px]"
-      >
-        <div v-if="selectedPlan">
-          <SelectedPlan :plan="selectedPlan" />
-        </div>
-      </div>
+    <div class="w-full" v-if="selectedPlan">
+      <SelectedPlan :plan="selectedPlan" />
     </div>
     <!-- /SelectedPlan -->
   </div>
