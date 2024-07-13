@@ -7,6 +7,7 @@ import PlanSelectionBanner, {
   type ProductDetails,
 } from '@/components/wallet/token/PlanSelectionBanner.vue';
 import SelectedPlan from '@/components/wallet/token/SelectedPlan.vue';
+import Button from '@/components/common/button.vue';
 
 // Props
 const props = defineProps<{
@@ -879,58 +880,61 @@ const resetCounters = () => {
 
     <div class="shadow rounded-b-xl bg-[#ECECEC] py-8 px-6 w-full">
       <div class="bg-[#ECECEC]">
-        <div class="flex justify-between flex-col lg:flex-row">
-          <h2 class="font-bold text-[18px]">Total purchase</h2>
+        <div class="flex justify-between flex-col md:flex-row">
+          <h2 class="font-bold text-[20px] mb-[26px] md:mb-0">
+            Total purchase
+          </h2>
           <!-- sx -->
 
-          <div class="flex flex-col lg:flex-row lg:gap-[115px]">
-            <div class="flex flex-col gap-8 justify-center content-between">
-              <div class="totQuantity flex flex-col justify-start">
-                <div class="font-normal text-[10px] text-[#21252950]">
-                  BRONZE TKN
-                </div>
-                <div
-                  class="border !border-[#21252992] rounded px-6 text-center"
-                >
-                  {{
-                    counterQuantityBronze +
-                    counterQuantitySilver +
-                    counterQuantityGold
-                  }}
-                </div>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-[16px] md:gap-y-[25px] md:gap-x-[80px]"
+          >
+            <div class="totQuantity flex flex-col justify-start">
+              <div class="font-normal text-[10px] text-[#21252950]">
+                BRONZE TKN
               </div>
-
-              <div class="totQuantity flex flex-col justify-start">
-                <button
-                  class="border !border-[#21252992] rounded px-6 py-1 text-center"
-                  @click="resetCounters"
-                >
-                  Reset
-                </button>
+              <div
+                class="border !border-[#21252992] rounded px-6 text-center bg-white"
+              >
+                {{
+                  counterQuantityBronze +
+                  counterQuantitySilver +
+                  counterQuantityGold
+                }}
               </div>
             </div>
-            <!-- Bronze token -->
-            <div class="flex flex-col gap-8 justify-center content-between">
-              <div class="totQuantity flex flex-col justify-start">
-                <div class="font-normal text-[10px] text-[#21252950]">
-                  Full cost in your currency
-                </div>
-                <div
-                  class="border !border-[#21252992] rounded px-6 text-center"
-                >
-                  €
-                  {{ counterCostBronze + counterCostSilver + counterCostGold }}
-                </div>
-              </div>
 
-              <div class="totQuantity flex flex-col justify-start">
-                <button
-                  class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center"
-                  @click="openTokenModal"
-                >
-                  Buy Token
-                </button>
+            <!-- Bronze token -->
+            <div class="totQuantity flex flex-col justify-start">
+              <div class="font-normal text-[10px] text-[#21252950]">
+                Full cost in your currency
               </div>
+              <div
+                class="border !border-[#21252992] rounded px-6 text-center bg-white"
+              >
+                €
+                {{ counterCostBronze + counterCostSilver + counterCostGold }}
+              </div>
+            </div>
+
+            <div class="totQuantity flex flex-col justify-start">
+              <Button
+                variant="white"
+                class="border !border-[#21252992] rounded px-6 py-1 text-center"
+                @click="resetCounters"
+              >
+                Reset All
+              </Button>
+            </div>
+
+            <div class="totQuantity flex flex-col justify-start">
+              <Button
+                variant="black"
+                class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center"
+                @click="openTokenModal"
+              >
+                Buy Token
+              </Button>
             </div>
             <!-- Full cost in your currency -->
           </div>
