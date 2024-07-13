@@ -1,10 +1,10 @@
 <script lang="ts" setup>
+import Button from '@/components/common/button.vue';
 import { fetchProductListBySearch } from '@/components/wallet/ajax/AjaxProductListSearch.js';
 import { useGeneralStore } from '@/store/datas/general';
 import { onBeforeMount } from 'vue';
 import { computed } from 'vue';
 import { ref } from 'vue';
-
 export interface ProductDetails {
   id: number;
   family: number;
@@ -197,12 +197,7 @@ const progressPercentage = computed(
         This promotion expires on 05/12/2023
       </p>
       <div class="flex flex-row justify-center mt-[25px]">
-        <div
-          class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-          @click="closeDiscountModal"
-        >
-          Close
-        </div>
+        <Button variant="black" @click="closeDiscountModal">Close</Button>
       </div>
     </div>
   </div>
