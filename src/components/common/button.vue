@@ -3,6 +3,7 @@
     :color="variant.bgColor"
     class="text-none font-normal"
     :size="size"
+    :disabled="disabled"
     :class="[variant.color, props.classes]"
     @click="onClick"
   >
@@ -17,6 +18,7 @@ type variant = 'black' | 'white';
 const props = defineProps<{
   variant: variant;
   classes?: string;
+  disabled?: boolean;
   size?: string;
   onClick: (event: MouseEvent) => any;
 }>();
