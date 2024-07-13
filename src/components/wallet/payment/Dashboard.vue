@@ -46,6 +46,7 @@ const closeModal = () => {
     <p class="border-b pb-2">Here you will find your payment invoice</p>
 
     <v-checkbox-btn
+      color="#0d6dfd"
       type="checkbox"
       v-model="selectAll"
       id="SelectAll"
@@ -66,6 +67,7 @@ const closeModal = () => {
           <div class="w-full flex justify-between items-center">
             <div class="date">
               <v-checkbox-btn
+                color="#0d6dfd"
                 type="checkbox"
                 :name="'payment' + i"
                 :id="'payment' + i"
@@ -194,11 +196,11 @@ const closeModal = () => {
     </v-expansion-panels>
 
     <div
-      class="flex flex-col md:flex-row md:justify-end w-full md:w-full pb-16"
+      class="flex flex-col md:flex-row md:justify-end w-full md:w-full pb-16 gap-3"
     >
       <Button
         variant="white"
-        class="button_container md:!w-fit bg-white text-black px-12 me-6 cursor-pointer"
+        class="button_container md:!w-fit bg-white text-black px-12 cursor-pointer"
         @click="reset"
       >
         Reset
