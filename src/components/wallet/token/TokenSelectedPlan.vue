@@ -385,32 +385,25 @@ async (getCurrentData: number): Promise<void> => {
             </div_>
 
             <div class="flex justify-between md:justify-end gap-3">
-              <button
+              <Button
                 @click="handleCloseClick"
+                variant="white"
                 class="flex w-[147px] h-[32px] px-3 py-1.5 justify-center items-center gap-2"
-                style="
-                  border-radius: 4px;
-                  border: 1px solid #212529;
-                  background: #fff;
-                "
+                style="border: 1px solid #212529"
               >
                 <div
                   class="text-[#212529] font-inter text-base font-normal leading-6"
                 >
                   Close
                 </div>
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="black"
+                @click="openTokenModal"
                 class="flex w-[147px] h-[32px] px-3 py-1.5 justify-center items-center gap-2"
-                style="border-radius: 4px; background: #212529"
               >
-                <div
-                  class="text-white font-inter text-base font-normal leading-6"
-                  @click="openTokenModal"
-                >
-                  Buy Plan
-                </div>
-              </button>
+                Buy Plan
+              </Button>
             </div>
           </div>
         </div>

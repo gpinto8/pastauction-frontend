@@ -7,6 +7,7 @@ import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails';
 import ServiceTable from '@/components/wallet/services/ServiceTable.vue';
 import { load } from 'webfontloader';
+import Button from '@/components/common/button.vue';
 
 const familyId = ref<number>();
 const products = ref<Product[]>([]);
@@ -145,12 +146,9 @@ const activeFamilyHandler = async (family: number) => {
       <div v-else>
         <div class="flex flex-row justify-between align-center p-4 w-full">
           <p>Active till date {{ new Date().toLocaleDateString() }}</p>
-          <button
-            class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-            @click="handleBuyClick(family)"
-          >
+          <Button variant="black" @click="handleBuyClick(family)">
             Renew plan
-          </button>
+          </Button>
         </div>
       </div>
     </v-container>
