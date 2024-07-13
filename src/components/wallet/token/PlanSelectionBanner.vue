@@ -1,6 +1,8 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { fetchProductListBySearch } from '@/components/wallet/ajax/AjaxProductListSearch.js';
 import { useGeneralStore } from '@/store/datas/general';
+import { onBeforeMount } from 'vue';
+import { computed } from 'vue';
 import { ref } from 'vue';
 
 export interface ProductDetails {
@@ -33,40 +35,49 @@ const closeDiscountModal = () => {
   discountModalOpen.value = false;
 };
 
-const familiesSubscription: ProductDetails[] = await fetchProductListBySearch(
-  'category',
-  'Subscription'
-);
-const familiesSubscriptionPpu: ProductDetails[] =
-  await fetchProductListBySearch('category', 'Subscription_ppu');
-let allFamilies = familiesSubscriptionPpu.concat(familiesSubscription);
-allFamilies = allFamilies.filter(family => family.name !== 'Free-user');
+onBeforeMount(async () => {
+  const familiesSubscription: ProductDetails[] = await fetchProductListBySearch(
+    'category',
+    'Subscription'
+  );
+  const familiesSubscriptionPpu: ProductDetails[] =
+    await fetchProductListBySearch('category', 'Subscription_ppu');
+  let allFamilies = familiesSubscriptionPpu.concat(familiesSubscription);
+  allFamilies = allFamilies.filter(family => family.name !== 'Free-user');
 
-// Sanitize family names
-allFamilies = allFamilies.map(family => {
-  family.name = family.name.replace(/-/g, '');
-  family.name = family.name.replace(/_/g, '');
-  family.name = family.name.replace(/ /g, '');
-  family.name = family.name.replace('Plans', '');
-  if (family.category === 'Subscription_ppu') {
-    family.name = 'PayPerUse';
-  }
-  return family;
+  // Sanitize family names
+  allFamilies = allFamilies.map(family => {
+    family.name = family.name.replace(/-/g, '');
+    family.name = family.name.replace(/_/g, '');
+    family.name = family.name.replace(/ /g, '');
+    family.name = family.name.replace('Plans', '');
+    if (family.category === 'Subscription_ppu') {
+      family.name = 'PayPerUse';
+    }
+    return family;
+  });
+
+  families.value = allFamilies;
 });
 
-families.value = allFamilies;
-
-export default {
-  computed: {
-    console: () => console,
-    families: () => families,
-    tokens: () => store.getTokens,
-    bolts: () => store.getBolts,
-    discountModalOpen: () => discountModalOpen.value,
-    openDiscountModal: () => openDiscountModal,
-    closeDiscountModal: () => closeDiscountModal,
-  },
-};
+const tokens = computed(() => store.getTokens);
+const maxValue = 10000;
+const progress = computed(() =>
+  tokens.value < 250
+    ? 1000
+    : tokens.value >= 250 && tokens.value < 500
+      ? 3000
+      : tokens.value >= 500 && tokens.value < 2500
+        ? 5000
+        : tokens.value >= 2500 && tokens.value < 8500
+          ? 7000
+          : tokens.value >= 8500
+            ? 9000
+            : tokens.value
+);
+const progressPercentage = computed(
+  () => (progress.value / maxValue) * 100 + '%'
+);
 </script>
 
 <template>
@@ -107,60 +118,59 @@ export default {
             CATEGORY DISCOUNT
           </v-btn>
         </div>
-        <v-progress-linear
-          class="v-progress"
-          rounded
-          color="#212529"
-          height="12"
-          v-bind:max="10000"
-          v-bind:model-value="
-            tokens < 250
-              ? 1000
-              : tokens >= 250 && tokens < 500
-              ? 3000
-              : tokens >= 500 && tokens < 2500
-              ? 5000
-              : tokens >= 2500 && tokens < 8500
-              ? 7000
-              : tokens >= 8500
-              ? 9000
-              : tokens
-          "
-        />
-        <div class="cards flex flex-col lg:flex-row justify-around w-100">
-          <div v-for="family in families.value" :key="family.id">
-            <div class="flex flex-col items-center">
-              <div class="line">&nbsp;</div>
-              <div
-                class="card flex lg:w-[100px] w-[200px] md:w-[500px] md:ms-8 lg:ms-0 md:!justify-between h-[90px] flex-col md:flex-row lg:flex-col flex-shrink-0 items-center justify-center p-[0px]"
-                v-bind:class="{ active: tokens >= family.prezzo }"
-              >
-                <div class="text-center font-inter text-[18px] font-bold">
-                  {{ family.name }}
+        <div
+          class="flex lg:flex-col w-full progress-vertical"
+          :style="{ '--progress': progressPercentage }"
+        >
+          <v-progress-linear
+            class="v-progress"
+            rounded
+            color="#212529"
+            height="12"
+            v-bind:max="maxValue"
+            v-bind:model-value="progress"
+          />
+          <div
+            class="cards flex flex-col lg:flex-row justify-around w-100 max-lg:gap-[26px]"
+          >
+            <div v-for="family in families" :key="family.id">
+              <div class="flex lg:flex-col items-center">
+                <div class="max-lg:hidden line w-[2px] min-h-[20px]">
+                  &nbsp;
                 </div>
+                <div class="lg:hidden line h-[2px] w-full">&nbsp;</div>
                 <div
-                  class="flex lg:w-[100px] h-[20px] flex-row items-center justify-center p-[0px] mt-[5px] mb-[5px]"
+                  class="card flex max-lg:items-center lg:m-w-[100px] m-w-[200px] md:m-w-[500px] lg:ms-0 md:!justify-between flex-shrink-0 justify-center p-[0px] gap-[4px] max-lg:w-[var(--width)] lg:flex-col"
+                  style="--width: calc(100% - 20px)"
+                  v-bind:class="{ active: tokens >= family.prezzo }"
                 >
-                  <img
-                    class="w-6 h-6"
-                    src="@/assets/images/bronze_token.png"
-                    alt="token"
-                  />
-                  <div class="text-center font-inter text-[18px] font-bold">
-                    {{ family.prezzo ? family.prezzo : '***' }}
+                  <div class="font-inter text-[18px] font-bold w-full">
+                    {{ family.name }}
+                  </div>
+                  <div class="flex items-center gap-1 lg:w-[100px] w-[30%]">
+                    <img
+                      class="w-6 h-6"
+                      src="@/assets/images/bronze_token.png"
+                      alt="token"
+                    />
+                    <div class="text-center font-inter text-[18px] font-bold">
+                      {{ family.prezzo ? family.prezzo : '***' }}
+                    </div>
+                  </div>
+                  <div class="w-full flex justify-end">
+                    <v-btn
+                      size="small"
+                      rounded="4px"
+                      color="black"
+                      density="comfortable"
+                      v-bind:disabled="tokens < family.prezzo"
+                      @click="$emit('selectedPlan', family)"
+                      class="lg:w-full text-[10px] capitalize"
+                    >
+                      Select
+                    </v-btn>
                   </div>
                 </div>
-                <v-btn
-                  size="small"
-                  rounded="lg"
-                  color="black"
-                  density="comfortable"
-                  v-bind:disabled="tokens < family.prezzo"
-                  @click="$emit('selectedPlan', family)"
-                  class="lg:w-100 text-[10px] mt-[5px] mb-[5px] capitalize"
-                >
-                  Select
-                </v-btn>
               </div>
             </div>
           </div>
@@ -199,27 +209,25 @@ export default {
   </div>
 </template>
 
-<style scoped>
-.v-progress-linear {
+<style lang="scss" scoped>
+/* .v-progress-linear {
   width: 550px;
   top: 300px !important;
   height: 12px !important;
   left: -80% !important;
   transform: rotate(90deg) !important;
-}
+} */
 
 .line {
-  width: 2px;
-  height: 20px;
   background: #e4e4e5;
-  display: block;
+  // display: block;
 }
 
 .card {
   border-radius: 15px;
   background: #e4e4e5;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
-  padding: 10px 5px;
+  padding: 7px;
 }
 
 .card.active {
@@ -260,28 +268,40 @@ export default {
   text-decoration: none;
   cursor: pointer;
 }
-
-@media screen and (min-width: 768px) {
-  .v-progress {
+</style>
+<style lang="scss">
+@media screen and (max-width: 1024px) {
+  .progress-vertical .v-progress-linear {
+    height: unset !important;
+    left: unset !important;
+    transform: unset !important;
+    width: 12px;
+    .v-progress-linear__determinate {
+      width: 100% !important;
+      height: var(--progress) !important;
+    }
+  }
+  /* @media screen and (min-width: 768px) { */
+  /* .v-progress {
     width: 520px;
     top: 290px !important;
     height: 12px !important;
     left: -25% !important;
     transform: rotate(90deg) !important;
-  }
+  } */
 }
 
 @media screen and (min-width: 1024px) {
-  .v-progress-linear{
+  /* .v-progress-linear {
     width: 100% !important;
-  }
-  .v-progress {
+  } */
+  /* .v-progress {
     width: 100% !important;
     top: 0px !important;
     height: 12px !important;
     --v-progress-linear-height: 12px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-  }
+  } */
 }
 </style>
