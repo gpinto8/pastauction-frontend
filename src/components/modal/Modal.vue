@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue';
-import { defineProps, defineEmits } from 'vue';
+import { defineEmits } from 'vue';
 
 const props = defineProps<{
   isModalOpen: boolean;

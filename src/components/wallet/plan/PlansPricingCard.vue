@@ -16,7 +16,6 @@ interface Product {
 }
 
 // Import
-import { defineProps } from 'vue';
 import { useCardsPlansStore } from '@/store/plans/cards';
 import PlanDetail from './PlanDetail.vue';
 

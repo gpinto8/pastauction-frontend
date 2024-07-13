@@ -17,7 +17,6 @@ interface Product {
 
 // Import
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { defineProps } from 'vue';
 import PlansPricingCard from '@/components/wallet/plan/PlansPricingCard.vue';
 import EmptyPlans from '@/components/wallet/plan/EmptyPlans.vue';
 

@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 type variant = 'black' | 'white';
 
 const props = defineProps<{
