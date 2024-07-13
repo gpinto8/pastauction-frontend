@@ -56,15 +56,15 @@ export const plans: Record<Plan['type'], Plan> = {
 
 const [blue, yellow, green] = [
   {
-    background: 'rgba(13, 110, 253, 0.25)',
+    background: '#C1D7FC',
     active: '#0D6EFD',
   },
   {
-    background: 'rgba(255, 218, 68, 0.25)',
+    background: '#F9F2D1',
     active: '#E8C142',
   },
   {
-    background: 'rgba(109, 165, 68, 0.25)',
+    background: '#D5E3CE',
     active: '#6DA544',
   },
 ] as const
