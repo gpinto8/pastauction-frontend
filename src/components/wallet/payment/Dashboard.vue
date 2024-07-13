@@ -103,8 +103,10 @@ const closeModal = () => {
 
         <v-expansion-panel-text>
           <template v-slot:default>
-            <div class="px-4 border text-[8px] md:text-[10px] lg:text-[16px]">
-              <h2 class="mb-8 lg:mb-16 font-bold text-[18px] lg:text-[40px]">
+            <div
+              class="px-[24px] py-[50px] border rounded-[6px] text-[8px] md:text-[16px]"
+            >
+              <h2 class="mb-8 lg:mb-16 font-bold text-[18px] md:text-[40px]">
                 Payment receipt
               </h2>
               <!-- Payment receipt -->
@@ -170,7 +172,7 @@ const closeModal = () => {
                     <td>Fees/discounts</td>
                     <td>$ 0.00</td>
                   </tr>
-                  <tr class="total-row text-2xl">
+                  <tr class="total-row md:text-2xl">
                     <td empty></td>
                     <td empty></td>
                     <td class="bg-[#0d6dfd2f]">TOTAL</td>
@@ -309,7 +311,10 @@ const closeModal = () => {
 }
 th,
 td {
-  padding: 17px 20px;
+  @apply sm:px-[3px] sm:py-[2px];
+  @apply sm:px-[10px] sm:py-[8px];
+  @apply md:px-[20px] md:py-[17px];
+
   &:not([empty]) {
     border-bottom: 1px solid black;
     border-top: 1px solid black;
