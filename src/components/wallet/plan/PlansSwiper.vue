@@ -20,10 +20,10 @@ const swiperOptions = {
       slidesPerView: 1.2,
       spaceBetween: 10,
     },
-    670: {
-      slidesPerView: 2.2,
-      spaceBetween: 30,
-    },
+    // 670: {
+    //   slidesPerView: 2.2,
+    //   spaceBetween: 30,
+    // },
     768: {
       slidesPerView: 2.2,
       spaceBetween: 30,
@@ -32,10 +32,10 @@ const swiperOptions = {
       slidesPerView: 3,
       spaceBetween: 30,
     },
-    1280: {
-      slidesPerView: 4,
-      spaceBetween: 30,
-    },
+    // 1280: {
+    //   slidesPerView: 4,
+    //   spaceBetween: 30,
+    // },
   },
 };
 
