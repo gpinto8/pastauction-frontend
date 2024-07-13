@@ -164,7 +164,7 @@ const resetCounters = () => {
       We have prepared the best TOKEN offer for you
     </h3>
 
-    <div class="shadow rounded-t-xl px-6 pt-6 w-full">
+    <div class="shadow rounded-t-xl px-6 pt-6 w-full bg-white">
       <div class="hidden lg:flex planCard items-center justify-between">
         <div
           class="cardImg w-[315px] flex justify-between gap-2 border !border-[#21252992] rounded-sm p-2"
