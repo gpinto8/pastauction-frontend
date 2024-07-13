@@ -135,53 +135,49 @@ const closeModal = () => {
               <!-- Information Bill -->
 
               <table class="w-full mt-16 mb-10">
-                <thead
-                  class="py-2 lg:py-8 border-t-2 border-b-2 bg-[#0d6dfd2f]"
-                >
-                  <tr class="text-left">
+                <thead class="bg-[#0d6dfd2f]">
+                  <tr class="text-left" style="border-spacing: 11em">
                     <th class="ps-5">Item</th>
-                    <th class="text-center">Quantity</th>
-                    <th class="text-center">Price per unit</th>
-                    <th class="text-right pe-5">Amount</th>
+                    <th>Quantity</th>
+                    <th>Price per unit</th>
+                    <th class="pe-5">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="border-b" v-for="index in 5" :key="index">
                     <td class="ps-5">Item 1</td>
-                    <td class="text-center">###</td>
-                    <td class="text-center">$ 0.00</td>
-                    <td class="text-right pe-5">$ 0.00</td>
+                    <td>###</td>
+                    <td>$ 0.00</td>
+                    <td class="pe-5">$ 0.00</td>
+                  </tr>
+
+                  <tr class="subtotal-row">
+                    <td></td>
+                    <td></td>
+                    <td>Subtotal</td>
+                    <td>$ 0.00</td>
+                  </tr>
+                  <tr class="subtotal-row">
+                    <td></td>
+                    <td></td>
+                    <td>Tax 0.00%</td>
+                    <td>$ 0.00</td>
+                  </tr>
+                  <tr class="subtotal-row">
+                    <td></td>
+                    <td></td>
+                    <td>Fees/discounts</td>
+                    <td>$ 0.00</td>
+                  </tr>
+                  <tr class="total-row text-2xl">
+                    <td empty></td>
+                    <td empty></td>
+                    <td class="bg-[#0d6dfd2f]">TOTAL</td>
+                    <td class="bg-[#0d6dfd2f]">$ 0.00</td>
                   </tr>
                 </tbody>
               </table>
               <!-- /Amount -->
-
-              <div
-                class="total w-2/4 lg:w-1/4 flex flex-col relative right-[-50%] lg:right-[-75%] mt-10 pe-5 overflow-hidden"
-              >
-                <div class="flex justify-between w-full">
-                  <p>Subtotal</p>
-                  <div>$ 0.00</div>
-                </div>
-
-                <div class="flex justify-between w-full">
-                  <p>Tax 0.00%</p>
-                  <div>$ 0.00</div>
-                </div>
-
-                <div class="flex justify-between w-full">
-                  <p>Fees/discounts</p>
-                  <div>$ 0.00</div>
-                </div>
-
-                <div
-                  class="flex justify-between w-full border-t border-b py-4 bg-[#0d6dfd2f] my-10 px-4"
-                >
-                  <p class="uppercase">total</p>
-                  <div>$ 0.00</div>
-                </div>
-              </div>
-              <!-- /.total -->
 
               <div class="term pb-10">
                 <p>Terms and conditions</p>
@@ -309,5 +305,25 @@ const closeModal = () => {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+th,
+td {
+  padding: 17px 20px;
+  &:not([empty]) {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+  }
+  &:last-child {
+    text-align: right;
+  }
+}
+.subtotal-row td {
+  border: none;
+  &:not(:last-child) {
+    font-weight: bold;
+  }
+}
+.total-row td {
+  font-weight: bold;
 }
 </style>
