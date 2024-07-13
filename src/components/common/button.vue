@@ -2,6 +2,7 @@
   <v-btn
     :color="variant.bgColor"
     class="text-none font-normal"
+    :size="size"
     :class="[variant.color, props.classes]"
     @click="onClick"
   >
@@ -16,6 +17,7 @@ type variant = 'black' | 'white';
 const props = defineProps<{
   variant: variant;
   classes?: string;
+  size?: string;
   onClick: (event: MouseEvent) => any;
 }>();
 
