@@ -90,22 +90,22 @@ const resetTablet = () => {
   counter.value = 0;
   counterQuantity.value = 0;
   counterCost.value = 0;
-}
+};
 const resetTabletB = () => {
   counter.value = 0;
   counterQuantity.value = 0;
   counterCost.value = 0;
-}
+};
 const resetTabletS = () => {
   counter.value = 0;
   counterQuantity.value = 0;
   counterCost.value = 0;
-}
+};
 const resetTabletG = () => {
   counter.value = 0;
   counterQuantity.value = 0;
   counterCost.value = 0;
-}
+};
 
 // Silver
 const decrementSilver = () => {
@@ -154,9 +154,7 @@ const resetCounters = () => {
 </script>
 
 <template>
-  <div
-    class="flex flex-col items-start flex-shrink-0 font-inter my-8"
-  >
+  <div class="flex flex-col items-start flex-shrink-0 font-inter my-8">
     <TokenDiscountBanner />
     <TokenSelectedPlan :data="props.data" />
 
@@ -165,7 +163,6 @@ const resetCounters = () => {
     </h3>
 
     <div class="shadow rounded-t-xl px-6 pt-6 w-full">
-
       <div class="hidden lg:flex planCard items-center justify-between">
         <div
           class="cardImg w-[315px] flex justify-between gap-2 border !border-[#21252992] rounded-sm p-2"
@@ -223,7 +220,9 @@ const resetCounters = () => {
       </div>
       <!-- /Token default price -->
 
-      <div class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6">
+      <div
+        class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6"
+      >
         <div class="flex justify-between items-center w-full">
           <div
             class="cardImg w-[315px] flex justify-between gap-2 border !border-[#21252992] rounded-sm p-2"
@@ -268,15 +267,24 @@ const resetCounters = () => {
           </div>
         </div>
         <div class="flex justify-between w-full">
-          <button class="border !border-[#21252992] rounded px-6 py-1 text-center" @click="resetTablet" >Reset</button>
+          <button
+            class="border !border-[#21252992] rounded px-6 py-1 text-center"
+            @click="resetTablet"
+          >
+            Reset
+          </button>
           <div class="totQuantity flex flex-col justify-start">
-            <div class="font-normal text-[10px] text-[#21252950]">BRONZE TKN</div>
+            <div class="font-normal text-[10px] text-[#21252950]">
+              BRONZE TKN
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               {{ counterQuantity }}
             </div>
           </div>
           <div class="totPrice">
-            <div class="text-[10px] text-[#21252950]">Cost in your currency</div>
+            <div class="text-[10px] text-[#21252950]">
+              Cost in your currency
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               € {{ counterCost }}
             </div>
@@ -286,14 +294,24 @@ const resetCounters = () => {
       <!-- /Token default tablet -->
 
       <div class="flex md:hidden planCard items-center justify-between mb-6">
-        <div class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2">
+        <div
+          class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2"
+        >
           <div class="flex border-b">
-            <img width="150" src="@/assets/images/token_bronze.png" alt="token bronze - pastAuction"/>
+            <img
+              width="150"
+              src="@/assets/images/token_bronze.png"
+              alt="token bronze - pastAuction"
+            />
             <div class="contentCard flex flex-col items-end justify-around">
-              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">€ {{ priceBronze }}</div>
+              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">
+                € {{ priceBronze }}
+              </div>
               <div>
                 <h3 class="namePlanCard uppercase text-bold">bronze token</h3>
-                <p class="textPlanCard text-[12px] text-[#21252950]">Includes {{ includeOffertBronze }} BRONZE TKN</p>
+                <p class="textPlanCard text-[12px] text-[#21252950]">
+                  Includes {{ includeOffertBronze }} BRONZE TKN
+                </p>
               </div>
             </div>
           </div>
@@ -310,7 +328,9 @@ const resetCounters = () => {
             <div class="font-normal text-[10px] text-[#21252950]">
               BRONZE TKN
             </div>
-            <div class="border !border-[#21252992] rounded px-6 text-center w-full">
+            <div
+              class="border !border-[#21252992] rounded px-6 text-center w-full"
+            >
               {{ counterQuantity }}
             </div>
           </div>
@@ -322,7 +342,6 @@ const resetCounters = () => {
               € {{ counterCost }}
             </div>
           </div>
-
         </div>
       </div>
       <!-- /Token default mobile -->
@@ -379,7 +398,9 @@ const resetCounters = () => {
       </div>
       <!-- /Token bronze -->
 
-      <div class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6 mb-6">
+      <div
+        class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6 mb-6"
+      >
         <div class="flex justify-between items-center w-full">
           <div
             class="cardImg w-[315px] flex justify-between gap-2 border !border-[#21252992] rounded-sm p-2"
@@ -424,15 +445,24 @@ const resetCounters = () => {
           </div>
         </div>
         <div class="flex justify-between w-full">
-          <button class="border !border-[#21252992] rounded px-6 py-1 text-center" @click="resetTabletB" >Reset</button>
+          <button
+            class="border !border-[#21252992] rounded px-6 py-1 text-center"
+            @click="resetTabletB"
+          >
+            Reset
+          </button>
           <div class="totQuantity flex flex-col justify-start">
-            <div class="font-normal text-[10px] text-[#21252950]">BRONZE TKN</div>
+            <div class="font-normal text-[10px] text-[#21252950]">
+              BRONZE TKN
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               {{ counterQuantityBronze }}
             </div>
           </div>
           <div class="totPrice">
-            <div class="text-[10px] text-[#21252950]">Cost in your currency</div>
+            <div class="text-[10px] text-[#21252950]">
+              Cost in your currency
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               € {{ counterCostBronze }}
             </div>
@@ -442,14 +472,24 @@ const resetCounters = () => {
       <!-- /Token bronze tablet -->
 
       <div class="flex md:hidden planCard items-center justify-between mb-6">
-        <div class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2">
+        <div
+          class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2"
+        >
           <div class="flex border-b">
-            <img width="150" src="@/assets/images/token_bronze.png" alt="token bronze - pastAuction"/>
+            <img
+              width="150"
+              src="@/assets/images/token_bronze.png"
+              alt="token bronze - pastAuction"
+            />
             <div class="contentCard flex flex-col items-end justify-around">
-              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">€ {{ priceBronze }}</div>
+              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">
+                € {{ priceBronze }}
+              </div>
               <div>
                 <h3 class="namePlanCard uppercase text-bold">bronze token</h3>
-                <p class="textPlanCard text-[12px] text-[#21252950]">Includes {{ includeOffertBronze }} BRONZE TKN</p>
+                <p class="textPlanCard text-[12px] text-[#21252950]">
+                  Includes {{ includeOffertBronze }} BRONZE TKN
+                </p>
               </div>
             </div>
           </div>
@@ -466,7 +506,9 @@ const resetCounters = () => {
             <div class="font-normal text-[10px] text-[#21252950]">
               BRONZE TKN
             </div>
-            <div class="border !border-[#21252992] rounded px-6 text-center w-full">
+            <div
+              class="border !border-[#21252992] rounded px-6 text-center w-full"
+            >
               {{ counterQuantityBronze }}
             </div>
           </div>
@@ -478,7 +520,6 @@ const resetCounters = () => {
               € {{ counterCostBronze }}
             </div>
           </div>
-
         </div>
       </div>
       <!-- /Token bronze mobile -->
@@ -533,7 +574,9 @@ const resetCounters = () => {
       </div>
       <!-- /Token silver -->
 
-      <div class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6 mb-6">
+      <div
+        class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6 mb-6"
+      >
         <div class="flex justify-between items-center w-full">
           <div
             class="cardImg w-[315px] flex justify-between gap-2 border !border-[#21252992] rounded-sm p-2"
@@ -578,15 +621,24 @@ const resetCounters = () => {
           </div>
         </div>
         <div class="flex justify-between w-full">
-          <button class="border !border-[#21252992] rounded px-6 py-1 text-center" @click="resetTabletS" >Reset</button>
+          <button
+            class="border !border-[#21252992] rounded px-6 py-1 text-center"
+            @click="resetTabletS"
+          >
+            Reset
+          </button>
           <div class="totQuantity flex flex-col justify-start">
-            <div class="font-normal text-[10px] text-[#21252950]">BRONZE TKN</div>
+            <div class="font-normal text-[10px] text-[#21252950]">
+              BRONZE TKN
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               {{ counterQuantitySilver }}
             </div>
           </div>
           <div class="totPrice">
-            <div class="text-[10px] text-[#21252950]">Cost in your currency</div>
+            <div class="text-[10px] text-[#21252950]">
+              Cost in your currency
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               € {{ counterCostSilver }}
             </div>
@@ -594,16 +646,26 @@ const resetCounters = () => {
         </div>
       </div>
       <!-- /Token silver tablet -->
-      
+
       <div class="flex md:hidden planCard items-center justify-between mb-6">
-        <div class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2">
+        <div
+          class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2"
+        >
           <div class="flex border-b">
-            <img width="150" src="@/assets/images/token_arr.png" alt="token bronze - pastAuction"/>
+            <img
+              width="150"
+              src="@/assets/images/token_arr.png"
+              alt="token bronze - pastAuction"
+            />
             <div class="contentCard flex flex-col items-end justify-around">
-              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">€ {{ priceSilver }}</div>
+              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">
+                € {{ priceSilver }}
+              </div>
               <div>
                 <h3 class="namePlanCard uppercase text-bold">silver token</h3>
-                <p class="textPlanCard text-[12px] text-[#21252950]">Includes {{ includeOffertSilver }} BRONZE TKN</p>
+                <p class="textPlanCard text-[12px] text-[#21252950]">
+                  Includes {{ includeOffertSilver }} BRONZE TKN
+                </p>
               </div>
             </div>
           </div>
@@ -620,7 +682,9 @@ const resetCounters = () => {
             <div class="font-normal text-[10px] text-[#21252950]">
               BRONZE TKN
             </div>
-            <div class="border !border-[#21252992] rounded px-6 text-center w-full">
+            <div
+              class="border !border-[#21252992] rounded px-6 text-center w-full"
+            >
               {{ counterQuantitySilver }}
             </div>
           </div>
@@ -632,7 +696,6 @@ const resetCounters = () => {
               € {{ counterCostSilver }}
             </div>
           </div>
-
         </div>
       </div>
       <!-- /Token silver mobile -->
@@ -687,7 +750,9 @@ const resetCounters = () => {
       </div>
       <!-- /Token gold -->
 
-      <div class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6 mb-6">
+      <div
+        class="hidden md:flex flex-col lg:hidden planCard items-center justify-between gap-6 mb-6"
+      >
         <div class="flex justify-between items-center w-full">
           <div
             class="cardImg w-[315px] flex justify-between gap-2 border !border-[#21252992] rounded-sm p-2"
@@ -732,15 +797,24 @@ const resetCounters = () => {
           </div>
         </div>
         <div class="flex justify-between w-full">
-          <button class="border !border-[#21252992] rounded px-6 py-1 text-center" @click="resetTabletS" >Reset</button>
+          <button
+            class="border !border-[#21252992] rounded px-6 py-1 text-center"
+            @click="resetTabletS"
+          >
+            Reset
+          </button>
           <div class="totQuantity flex flex-col justify-start">
-            <div class="font-normal text-[10px] text-[#21252950]">BRONZE TKN</div>
+            <div class="font-normal text-[10px] text-[#21252950]">
+              BRONZE TKN
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               {{ counterQuantityGold }}
             </div>
           </div>
           <div class="totPrice">
-            <div class="text-[10px] text-[#21252950]">Cost in your currency</div>
+            <div class="text-[10px] text-[#21252950]">
+              Cost in your currency
+            </div>
             <div class="border !border-[#21252992] rounded px-6 text-center">
               € {{ counterCostGold }}
             </div>
@@ -750,14 +824,24 @@ const resetCounters = () => {
       <!-- /Token Gold tablet -->
 
       <div class="flex md:hidden planCard items-center justify-between mb-6">
-        <div class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2">
+        <div
+          class="cardImg w-[315px] justify-between flex flex-col gap-2 border !border-[#21252992] rounded-sm p-2"
+        >
           <div class="flex border-b">
-            <img width="150" src="@/assets/images/token_gold.png" alt="token bronze - pastAuction"/>
+            <img
+              width="150"
+              src="@/assets/images/token_gold.png"
+              alt="token bronze - pastAuction"
+            />
             <div class="contentCard flex flex-col items-end justify-around">
-              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">€ {{ priceGold }}</div>
+              <div class="price rounded-sm bg-[#6DA544] text-white px-4 w-fit">
+                € {{ priceGold }}
+              </div>
               <div>
                 <h3 class="namePlanCard uppercase text-bold">gold token</h3>
-                <p class="textPlanCard text-[12px] text-[#21252950]">Includes {{ includeOffertGold }} BRONZE TKN</p>
+                <p class="textPlanCard text-[12px] text-[#21252950]">
+                  Includes {{ includeOffertGold }} BRONZE TKN
+                </p>
               </div>
             </div>
           </div>
@@ -774,7 +858,9 @@ const resetCounters = () => {
             <div class="font-normal text-[10px] text-[#21252950]">
               BRONZE TKN
             </div>
-            <div class="border !border-[#21252992] rounded px-6 text-center w-full">
+            <div
+              class="border !border-[#21252992] rounded px-6 text-center w-full"
+            >
               {{ counterQuantityGold }}
             </div>
           </div>
@@ -786,7 +872,6 @@ const resetCounters = () => {
               € {{ counterCostGold }}
             </div>
           </div>
-
         </div>
       </div>
       <!-- /Token gold mobile -->
