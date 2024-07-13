@@ -13,7 +13,7 @@ const handleCloseClick = () => {
 <template>
   <div
     v-if="isVisible"
-    class="flex-shrink-0 flex flex-col justify-between pl-[35px] pr-[41px] my-8 w-100 gap-4 py-4"
+    class="flex w-full items-center justify-between px-[35px] py-[17px] mb-[32px] gap-4 max-md:flex-col"
     style="
       border-radius: 12px;
       background: rgba(109, 165, 68, 0.07);
@@ -40,17 +40,24 @@ const handleCloseClick = () => {
         </div>
       </div>
       <div class="flex items-start gap-4">
-        <div
-          class="text-[#475467] font-inter text-base font-normal w-[547px] leading-5"
-        >
+        <div class="text-[#475467] font-inter text-base font-normal leading-5">
           As part of the "Journalist" category, you benefit 10% discount on your
-          purchase. This promotion expires on 05/12/2023
+          purchase.
+          <br />
+          <br />
+          This promotion expires on 05/12/2023
         </div>
       </div>
     </div>
-    <div>
-      <Button @click="handleCloseClick" variant="black">Close</Button>
-    </div>
+    <!-- <div> -->
+    <Button
+      classes="max-md:w-full max-md:mt-5 min-w-[150px]"
+      @click="handleCloseClick"
+      variant="black"
+    >
+      Close
+    </Button>
+    <!-- </div> -->
   </div>
 </template>
 
