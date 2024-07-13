@@ -53,44 +53,46 @@ async (getCurrentData: number): Promise<void> => {
       props.data.family !== 5 &&
       props.data.family !== 6
     "
-    class="flex flex-col items-start gap-1.5 flex-shrink-0 mb-8 md:block"
+    class="flex flex-col items-start gap-1.5 flex-shrink-0 mb-8 md:block w-full"
   >
     <div
       style="
         border-radius: 12px;
         background: #fff;
         box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
-        padding: 10px 40px 50px 39px;
       "
-      class="flex justify-center items-center"
+      class="flex justify-center items-center p-[30px] w-full"
     >
-      <div class="flex flex-col items-start gap-[10px]">
+      <div class="flex flex-col items-start gap-[10px] w-full">
         <div class="text-[#475467] font-inter text-lg font-medium leading-5">
           Your selected plan
         </div>
-        <div class="flex flex-col xl:flex-row items-start gap-[62px]">
+        <div
+          class="flex flex-col lg:flex-row justify-between w-full gap-[32px]"
+        >
           <!-- parte sx gialla -->
           <div
             style="
               border-radius: 12px;
               box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
-              padding: 19px 20px 19px 19px;
             "
             :style="{
               background: families[props.data.family].color.background,
             }"
-            class="flex justify-center items-center"
+            class="flex justify-center items-center p-[20px] w-full"
           >
-            <div class="flex flex-col items-start gap-[24px]">
-              <div class="flex w-[286px] items-center gap-[126px]">
+            <div
+              class="flex lg:flex-col items-start justify-between w-100 flex-wrap gap-3"
+            >
+              <div class="flex items-center">
                 <div
-                  class="text-[#101828] font-inter text-2xl font-semibold leading-8 w-[136px] flex-shrink-0"
+                  class="text-[#101828] font-inter text-2xl font-semibold leading-8 flex-shrink-0"
                 >
                   {{ props.data.name }}
                 </div>
                 <!-- <app-icon color="#6C757D" type="info" size="22" /> -->
               </div>
-              <div class="flex w-[286px] items-end gap-[63px]">
+              <div class="flex items-end lg:order-0 order-1">
                 <div
                   class="flex w-[111px] flex-col items-start gap-0.5 flex-shrink-0"
                 >
@@ -106,19 +108,19 @@ async (getCurrentData: number): Promise<void> => {
                       {{ props.data.prezzo }}
                     </div>
                   </div>
-                  <div
-                    class="self-stretch text-[#475467] font-inter text-base font-normal leading-[20px]"
-                  >
-                    Monthly Billing
-                  </div>
                 </div>
+              </div>
+              <div
+                class="self-stretch text-[#475467] font-inter text-base font-normal leading-[20px] order-1 sm:!order-[0]"
+              >
+                Monthly Billing
               </div>
             </div>
           </div>
           <!-- parte destra -->
-          <div class="flex h-[148px] flex-col items-end gap-[42px]">
+          <div class="flex flex-col gap-[42px]">
             <!-- top -->
-            <div class="flex flex-col justify-center gap-0.5">
+            <div__ class="hidden md:flex flex-col justify-center gap-0.5">
               <div class="flex">
                 <div class="w-[626px] h-[40px] flex items-start">
                   <!-- uno -->
@@ -278,9 +280,109 @@ async (getCurrentData: number): Promise<void> => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div__>
             <!-- bottom -->
-            <div class="flex items-start gap-[80px]">
+            <div_
+              v-if="isVisible && props.data"
+              class="flex flex-col gap-2 block md:hidden"
+            >
+              <div
+                class="w-[165px] bg-[#647186] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
+                style="border-radius: 3.2px 100px 100px 3.2px"
+              >
+                <div
+                  class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
+                >
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
+                    >
+                      {{ store.getTokens }}
+                    </div>
+                    <div>AVAILABLE</div>
+                  </div>
+                </div>
+              </div>
+              <!-- uno -->
+
+              <div
+                class="w-[170px] bg-[#5f79a0] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
+                style="border-radius: 3.2px 100px 100px 3.2px"
+              >
+                <div
+                  class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
+                >
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
+                    >
+                      {{ props.data.prezzo }}
+                    </div>
+                    <div>PLAN</div>
+                  </div>
+                </div>
+              </div>
+              <!-- due -->
+
+              <div
+                class="w-[180px] bg-[#4174c0] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
+                style="border-radius: 3.2px 100px 100px 3.2px"
+              >
+                <div
+                  class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
+                >
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
+                    >
+                      {{ discount }}
+                    </div>
+                    <div>DISCOUNT</div>
+                  </div>
+                </div>
+              </div>
+              <!-- tre -->
+
+              <div
+                class="w-[190px] bg-[#3075da] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
+                style="border-radius: 3.2px 100px 100px 3.2px"
+              >
+                <div
+                  class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
+                >
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
+                    >
+                      {{ props.data.prezzo - discount }}
+                    </div>
+                    <div>TO BUY</div>
+                  </div>
+                </div>
+              </div>
+              <!-- quattro -->
+
+              <div
+                class="w-[200px] bg-[#0d6efd] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
+                style="border-radius: 3.2px 100px 100px 3.2px"
+              >
+                <div
+                  class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
+                >
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
+                    >
+                      {{ store.getTokens - props.data.prezzo - discount }}
+                    </div>
+                    <div>NEW BALANCE</div>
+                  </div>
+                </div>
+              </div>
+              <!-- cinque -->
+            </div_>
+
+            <div class="flex justify-between md:justify-end gap-3">
               <button
                 @click="handleCloseClick"
                 class="flex w-[147px] h-[32px] px-3 py-1.5 justify-center items-center gap-2"
@@ -312,106 +414,6 @@ async (getCurrentData: number): Promise<void> => {
         </div>
       </div>
     </div>
-  </div>
-
-  <div
-    v-if="isVisible && props.data"
-    class="flex flex-col gap-2 block md:hidden"
-  >
-    <div
-      class="w-[165px] bg-[#647186] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
-      style="border-radius: 3.2px 100px 100px 3.2px"
-    >
-      <div
-        class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
-      >
-        <div class="flex items-center gap-2">
-          <div
-            class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
-          >
-            {{ store.getTokens }}
-          </div>
-          <div>AVAILABLE</div>
-        </div>
-      </div>
-    </div>
-    <!-- uno -->
-
-    <div
-      class="w-[170px] bg-[#5f79a0] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
-      style="border-radius: 3.2px 100px 100px 3.2px"
-    >
-      <div
-        class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
-      >
-        <div class="flex items-center gap-2">
-          <div
-            class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
-          >
-            {{ props.data.prezzo }}
-          </div>
-          <div>PLAN</div>
-        </div>
-      </div>
-    </div>
-    <!-- due -->
-
-    <div
-      class="w-[180px] bg-[#4174c0] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
-      style="border-radius: 3.2px 100px 100px 3.2px"
-    >
-      <div
-        class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
-      >
-        <div class="flex items-center gap-2">
-          <div
-            class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
-          >
-            {{ discount }}
-          </div>
-          <div>DISCOUNT</div>
-        </div>
-      </div>
-    </div>
-    <!-- tre -->
-
-    <div
-      class="w-[190px] bg-[#3075da] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
-      style="border-radius: 3.2px 100px 100px 3.2px"
-    >
-      <div
-        class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
-      >
-        <div class="flex items-center gap-2">
-          <div
-            class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
-          >
-            {{ props.data.prezzo - discount }}
-          </div>
-          <div>TO BUY</div>
-        </div>
-      </div>
-    </div>
-    <!-- quattro -->
-
-    <div
-      class="w-[200px] bg-[#0d6efd] rounded-e-2 py-2 px-5 flex items-center flex-shrink-0"
-      style="border-radius: 3.2px 100px 100px 3.2px"
-    >
-      <div
-        class="text-white font-inter text-[10px] font-medium leading-[10px] flex-shrink-0"
-      >
-        <div class="flex items-center gap-2">
-          <div
-            class="border bg-white p-2 px-4 text-black text-center font-montserrat text-[14px]"
-          >
-            {{ store.getTokens - props.data.prezzo - discount }}
-          </div>
-          <div>NEW BALANCE</div>
-        </div>
-      </div>
-    </div>
-    <!-- cinque -->
   </div>
 
   <div
