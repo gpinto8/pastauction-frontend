@@ -31,7 +31,7 @@ const variants: {
   },
   white: {
     color: 'text-black',
-    bgColor: 'bg-white',
+    bgColor: 'white',
   },
 };
 
