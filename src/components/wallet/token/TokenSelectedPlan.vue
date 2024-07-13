@@ -6,6 +6,8 @@ import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { useGeneralStore } from '@/store/datas/general';
 import type { ProductDetails } from '@/components/wallet/token/PlanSelectionBanner.vue';
 import { type Product, families } from '../plan/definitions';
+import Modal from '@/components/modal/Modal.vue';
+import Button from '@/components/common/button.vue';
 
 // Props
 const props = defineProps<{
@@ -416,39 +418,34 @@ async (getCurrentData: number): Promise<void> => {
     </div>
   </div>
 
-  <div
+  <Modal
     v-if="tokenModalOpen && isVisible && props.data"
+    :isModalOpen="tokenModalOpen"
+    :background="true"
     class="modal"
     :class="{ block: true, hidden: !tokenModalOpen }"
   >
     <div class="modal-content">
-      <span class="close" @click="closeTokenModal">&times;</span>
       <img
         class="mx-auto ps-[15px]"
         src="@/assets/images/Content.png"
         alt="car - PastAuction"
       />
-      <h3 class="text-center">
+      <h3 class="text-center mb-[32px]">
         <b>Do you want to buy {{ props.data.name }}?</b>
       </h3>
-      <div class="flex gap-6">
-        <div class="flex flex-row align-center justify-around">
-          <div
-            class="button_container w-fit bg-bac k text-white px-12 cursor-pointer"
-            @click="closeTokenModal"
-          >
-            Cancel
-          </div>
-          <div
-            class="button_container w-fit bg-back text-white px-12 cursor-pointer"
-            @click="closeTokenModal"
-          >
-            Continue
-          </div>
-        </div>
+      <div
+        class="flex flex-column md:!flex-row align-center justify-between gap-3"
+      >
+        <Button variant="white" classes="grow" @click="closeTokenModal">
+          Cancel
+        </Button>
+        <Button variant="black" classes="grow" @click="closeTokenModal">
+          Continue
+        </Button>
       </div>
     </div>
-  </div>
+  </Modal>
 </template>
 
 <style scoped></style>
