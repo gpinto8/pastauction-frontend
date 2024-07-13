@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dash !hidden md:!flex shadow rounded-[7px]">
+  <div class="dash !hidden md:!flex shadow rounded-[7px] bg-white">
     <div class="token">
       <h3>
         <span class="uppercase">Tokens</span>

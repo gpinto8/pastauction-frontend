@@ -137,7 +137,7 @@ function buyThisPlan(plan: any) {
   @apply my-16 rounded-xl bg-white;
 
   .tab {
-    @apply flex items-center justify-center border rounded-t-xl py-3 px-6 lg:px-16 cursor-pointer font-semibold;
+    @apply flex items-center justify-center border rounded-t-xl py-3 px-6 lg:px-16 cursor-pointer font-semibold bg-white;
     border: 1px solid #0d6efd;
   }
 
