@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Import
 import Button from '@/components/common/button.vue';
+import Modal from '@/components/modal/Modal.vue';
 import { ref, computed } from 'vue';
 
 // Variables
@@ -213,29 +214,17 @@ const closeModal = () => {
     </div>
     <!-- CTA -->
 
-    <div
-      v-if="modalOpen"
-      class="modal"
-      :class="{ block: true, hidden: !modalOpen }"
-    >
-      <div class="modal-content">
+    <Modal :is-modal-open="modalOpen" :background="true">
+      <div>
         <span class="close" @click="closeModal">&times;</span>
         <div v-if="!showSecondModalContent">
           <img src="@/assets/images/Content.png" alt="Car - PastAuction" />
           <p class="text-center">Do you want to download all selected files?</p>
-          <div class="flex flex-col lg:flex-row lg:gap-6">
-            <div
-              class="button_container w-fit bg-white text-black px-2 lg:px-12 cursor-pointer"
-              @click="closeModal"
-            >
-              Cancel
-            </div>
-            <div
-              class="button_container w-fit px-8 cursor-pointer"
-              @click="showSecondModalContent = true"
-            >
+          <div class="grid md:grid-cols-2 gap-3 mt-6">
+            <Button variant="white" @click="closeModal">Cancel</Button>
+            <Button variant="black" @click="showSecondModalContent = true">
               Continue
-            </div>
+            </Button>
           </div>
         </div>
         <div v-else>
@@ -246,17 +235,14 @@ const closeModal = () => {
           />
           <h3 class="text-center"><b>DONE</b></h3>
           <p class="text-center">Your files has been successfully dowloaded</p>
-          <div class="flex gap-6">
-            <div
-              class="button_container w-fit bg-back text-white px-12 cursor-pointer"
-              @click="closeModal"
-            >
+          <div class="flex mt-6">
+            <Button classes="grow" variant="black" @click="closeModal">
               OK
-            </div>
+            </Button>
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
     <!-- /.modal -->
   </div>
 </template>
