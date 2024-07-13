@@ -42,7 +42,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <div class="tabBlock mt-8">
+  <div class="flex flex-col gap-[16px] mt-8">
     <p class="border-b pb-2">Here you will find your payment invoice</p>
 
     <v-checkbox-btn
@@ -55,7 +55,7 @@ const closeModal = () => {
     <!-- SelectAll -->
 
     <v-expansion-panels
-      class="mb-6 no-chevron"
+      class="no-chevron"
       v-for="(active, i) in selectedItems"
       :key="i"
       v-model="activeCollapse"
