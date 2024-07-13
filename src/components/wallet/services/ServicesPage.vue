@@ -115,8 +115,8 @@ const activeFamilyHandler = async (family: number) => {
 </script>
 
 <template>
+  <PlansInfoSelection @activeProduct="activeFamilyHandler($event)" />
   <header class="classic-main">
-    <PlansInfoSelection @activeProduct="activeFamilyHandler($event)" />
     <ServiceTable :loading="loading" :products="tableData" />
     <v-container
       class="bg-[#ECECEC]"
@@ -128,19 +128,13 @@ const activeFamilyHandler = async (family: number) => {
       "
     >
       <div v-if="familyId === 5">
-        <div class="flex flex-row justify-end align-center p-4 w-full">
-          <button
-            class="border !border-[#21252992] bg-white text-black rounded px-6 py-1 text-center cursor-pointer mr-[20px]"
-            @click="handleBuyClick(family)"
-          >
+        <div class="flex justify-end align-center p-4 gap-3">
+          <Button variant="white" @click="handleBuyClick(family)">
             Buy Bolts
-          </button>
-          <button
-            class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-            @click="handleBuyClick(family)"
-          >
+          </Button>
+          <Button variant="black" @click="handleBuyClick(family)">
             Buy Tokens
-          </button>
+          </Button>
         </div>
       </div>
       <div v-else>
