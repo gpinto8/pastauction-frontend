@@ -36,12 +36,11 @@ const closeDiscountModal = () => {
 };
 
 onBeforeMount(async () => {
-  const familiesSubscription: ProductDetails[] = await fetchProductListBySearch(
-    'category',
-    'Subscription'
-  );
-  const familiesSubscriptionPpu: ProductDetails[] =
-    await fetchProductListBySearch('category', 'Subscription_ppu');
+  const [familiesSubscription, familiesSubscriptionPpu] = (await Promise.all([
+    fetchProductListBySearch('category', 'Subscription'),
+    fetchProductListBySearch('category', 'Subscription_ppu'),
+  ])) as ProductDetails[][];
+
   let allFamilies = familiesSubscriptionPpu.concat(familiesSubscription);
   allFamilies = allFamilies.filter(family => family.name !== 'Free-user');
 
