@@ -8,6 +8,7 @@ import PlanSelectionBanner, {
 } from '@/components/wallet/token/PlanSelectionBanner.vue';
 import SelectedPlan from '@/components/wallet/token/SelectedPlan.vue';
 import Button from '@/components/common/button.vue';
+import Modal from '@/components/modal/Modal.vue';
 
 // Props
 const props = defineProps<{
@@ -953,40 +954,28 @@ const resetCounters = () => {
     <!-- /SelectedPlan -->
   </div>
 
-  <div
-    v-if="tokenModalOpen"
-    class="modal"
-    :class="{ block: true, hidden: !tokenModalOpen }"
-  >
-    <div class="modal-content">
-      <span class="close" @click="closeTokenModal">&times;</span>
-      <img
-        class="mx-auto ps-[15px]"
-        src="@/assets/svg/visto.svg"
-        alt="stroke - PastAuction"
-      />
-      <h3 class="text-center"><b>Your TOKEN credit is insufficient</b></h3>
-      <p class="text-center">
-        Please top up TKN to your account and proceed to purchase.
-      </p>
-      <div class="flex gap-6">
-        <div class="w-full flex flex-row align-center justify-around mt-[25px]">
-          <div
-            class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-            @click="closeTokenModal"
-          >
-            Close
-          </div>
-          <div
-            class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-            @click="closeTokenModal"
-          >
-            Buy TOKEN
-          </div>
-        </div>
-      </div>
+  <Modal :is-modal-open="tokenModalOpen" :background="true">
+    <!-- <div class="modal-content"> -->
+    <span class="close" @click="closeTokenModal">&times;</span>
+    <img
+      class="mx-auto ps-[15px]"
+      src="@/assets/svg/visto.svg"
+      alt="stroke - PastAuction"
+    />
+    <h3 class="text-center"><b>Your TOKEN credit is insufficient</b></h3>
+    <p class="text-center">
+      Please top up TKN to your account and proceed to purchase.
+    </p>
+    <div class="grid lg:grid-cols-2 gap-3 mt-[25px]">
+      <Button variant="black" classes="w-full" @click="closeTokenModal">
+        Close
+      </Button>
+      <Button variant="black" classes="w-full" @click="closeTokenModal">
+        Buy TOKEN
+      </Button>
     </div>
-  </div>
+    <!-- </div> -->
+  </Modal>
 </template>
 
 <style scoped>
