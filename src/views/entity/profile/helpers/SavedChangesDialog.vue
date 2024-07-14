@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { defineModel} from 'vue';
-
 import AppIcon from '@/components/common/AppIcon.vue';
-const showDialog = defineModel<boolean>({ required: true })
+const showDialog = defineModel<boolean>({ required: true });
 </script>
 
 <template>
@@ -17,12 +15,18 @@ const showDialog = defineModel<boolean>({ required: true })
             <span class="text-h6 font-weight-bold">Saved changes</span>
           </v-col>
           <v-col class="d-flex justify-center" :cols="12">
-            <span class="text-subtitle-1 text-center">Your password has been successfully changed</span>
+            <span class="text-subtitle-1 text-center">
+              Your password has been successfully changed
+            </span>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <v-btn class="!bg-primary text-white w-full !rounded-lg" @click="$emit('update:modelValue', false)" size="large">
+            <v-btn
+              class="!bg-primary text-white w-full !rounded-lg"
+              @click="$emit('update:modelValue', false)"
+              size="large"
+            >
               Accept
             </v-btn>
           </v-col>
@@ -31,4 +35,3 @@ const showDialog = defineModel<boolean>({ required: true })
     </v-sheet>
   </v-dialog>
 </template>
-

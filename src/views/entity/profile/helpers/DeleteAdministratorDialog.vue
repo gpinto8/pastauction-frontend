@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { defineModel} from 'vue';
-
 import AppIcon from '@/components/common/AppIcon.vue';
-const showDialog = defineModel<boolean>({ required: true })
+const showDialog = defineModel<boolean>({ required: true });
 </script>
 
 <template>
@@ -17,17 +15,28 @@ const showDialog = defineModel<boolean>({ required: true })
             <span class="text-h6 font-weight-bold">Delete administrator</span>
           </v-col>
           <v-col class="d-flex justify-center" :cols="12">
-            <span class="text-subtitle-1 text-center">Are you sure you want to delete this administrator? This action cannot be undone</span>
+            <span class="text-subtitle-1 text-center">
+              Are you sure you want to delete this administrator? This action
+              cannot be undone
+            </span>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-btn class="!bg-gray-400 text-white w-full !rounded-lg" @click="$emit('update:modelValue', false)" size="large">
+            <v-btn
+              class="!bg-gray-400 text-white w-full !rounded-lg"
+              @click="$emit('update:modelValue', false)"
+              size="large"
+            >
               Cancel
             </v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn class="!bg-primary text-white w-full !rounded-lg" @click="$emit('update:modelValue', false)" size="large">
+            <v-btn
+              class="!bg-primary text-white w-full !rounded-lg"
+              @click="$emit('update:modelValue', false)"
+              size="large"
+            >
               Delete
             </v-btn>
           </v-col>
@@ -36,4 +45,3 @@ const showDialog = defineModel<boolean>({ required: true })
     </v-sheet>
   </v-dialog>
 </template>
-

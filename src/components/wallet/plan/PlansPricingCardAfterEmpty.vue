@@ -16,7 +16,7 @@ interface Product {
 }
 
 // Import
-import { defineProps, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 import { useCardsPlansStore } from '@/store/plans/cards';
 
@@ -32,8 +32,8 @@ const mappedDatas = props.compare.map((item: any) => ({
   id: item.id,
   name: item.name,
   prezzo: item.prezzo !== 0 ? item.prezzo : '***',
-  prezzoAnno: item.prezzo/5,
-  prezzoMese: item.prezzo/5/12,
+  prezzoAnno: item.prezzo / 5,
+  prezzoMese: item.prezzo / 5 / 12,
   tipologia: item.tipologia,
   propertiesId: item.properties.id,
   propertiesProduct_id: item.properties.product_id,
@@ -41,16 +41,25 @@ const mappedDatas = props.compare.map((item: any) => ({
   propertiesValue: item.properties.value,
 }));
 
-const nameFamilies = mappedDatas.filter(item => item.category === 'Subscription' || item.category === 'Subscription_ppu');
+const nameFamilies = mappedDatas.filter(
+  item =>
+    item.category === 'Subscription' || item.category === 'Subscription_ppu'
+);
 const boltsCredits = mappedDatas.filter(item => item.name === 'Bolts Credits');
-const vehicleDetail = mappedDatas.filter(item => item.name === 'Vehicle Detail');
+const vehicleDetail = mappedDatas.filter(
+  item => item.name === 'Vehicle Detail'
+);
 const garageSetup = mappedDatas.filter(item => item.name === 'Garage setup');
 const auctionAlert = mappedDatas.filter(item => item.name === 'Auction Alert');
 const socialRumors = mappedDatas.filter(item => item.name === 'Social Rumors');
 
 const singleChart = mappedDatas.filter(item => item.name === 'Single Chart');
-const miniDashboard = mappedDatas.filter(item => item.name === 'Mini Dashboard');
-const fullDashboard = mappedDatas.filter(item => item.name === 'Full Dashboard');
+const miniDashboard = mappedDatas.filter(
+  item => item.name === 'Mini Dashboard'
+);
+const fullDashboard = mappedDatas.filter(
+  item => item.name === 'Full Dashboard'
+);
 const gtc = mappedDatas.filter(item => item.name === 'Gallery, text, chassis');
 const searchLocate = mappedDatas.filter(item => item.name === 'Search Locate');
 const roadmap = mappedDatas.filter(item => item.name === 'Roadmap');
@@ -77,8 +86,7 @@ onMounted(async () => {
     console.error('Errore durante il recupero dei dati dei prodotti:', error);
     isLoading.value = false;
   }
-})
-
+});
 </script>
 
 <style scoped>
