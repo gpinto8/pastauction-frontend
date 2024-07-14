@@ -80,7 +80,7 @@
     <div class="p-2 bg-white">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
-        :headers="(headers as any)"
+        :headers="headers as any"
         :items-length="store.getListItems?.total || 0"
         :items="store.getListItems?.items || []"
         :loading="store.getLoadingListItems"
@@ -256,6 +256,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useBrandStore } from '@/store/datas/brand';
+import { VDataTable } from 'vuetify/labs/components';
 
 const store = useBrandStore();
 

@@ -283,7 +283,7 @@
     <div class="p-2 bg-white">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
-        :headers="(headers as any)"
+        :headers="headers as any"
         :items-length="store?.getListItems?.total || 0"
         :items="store.getListItems?.items || []"
         :loading="store?.getLoadingListItems"
@@ -460,6 +460,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useAuctionEventsStore } from '@/store/datas/auctionEvents';
+import { VDataTable } from 'vuetify/labs/components';
 
 const store = useAuctionEventsStore();
 
