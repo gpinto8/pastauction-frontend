@@ -1,10 +1,13 @@
 <script setup lang="ts">
 // Import
 import { onMounted, ref } from 'vue';
-import PlansInfoSelection, { type Product, type ProductDetails } from '@/components/wallet/services/PlansInfoSelection.vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
-import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails.js';
+import PlansInfoSelection from '@/components/wallet/common/PlansInfoSelection.vue';
+import type { Product, ProductDetails } from '../plan/definitions';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
+import { fetchProductDetails } from '@/components/wallet/ajax/AjaxProductDetails';
 import ServiceTable from '@/components/wallet/services/ServiceTable.vue';
+import { load } from 'webfontloader';
+import Button from '@/components/common/button.vue';
 
 const familyId = ref<number>();
 const products = ref<Product[]>([]);
@@ -25,6 +28,7 @@ const tableData = ref<{
 });
 
 const emits = defineEmits(['handleBuyClick']);
+const loading = ref(true);
 
 function handleBuyClick(family: any) {
   emits('handleBuyClick', family);
@@ -47,30 +51,57 @@ function getFamilyInfo(name: string) {
 
 onMounted(async () => {
   familyId.value = 6; // Preset to free family
-  products.value = await fetchProductListById(familyId.value);
-  // For each product.properties.product_id, fetch the product details and populate the table data
-  products.value.forEach(async (product) => {
-    const productDetails: ProductDetails = await fetchProductDetails(product.id);
-    if (productDetails) {
-      if (productDetails.category === "CategoryChart") {
-        tableData.value.Charts.push(productDetails);
-      } else if (productDetails.category === "Chart" || productDetails.category === "Datas" || productDetails.category === "Locate" || productDetails.category === "Marketplace") {
-        tableData.value.Services.push(productDetails);
-      } else if (productDetails.category === "Garage") {
-        tableData.value.Item.push(productDetails);
-      } else if (productDetails.category === "Subscription" || productDetails.category === "Subscription_ppu") {
-        family.value = {
-          family: productDetails.family,
-          info: getFamilyInfo(productDetails.name),
-          name: productDetails.name,
-          prezzo: productDetails.prezzo,
-        };
-      }
-    }
-  });
+  withLoading(loadFamily());
 });
 
-const activeFamilyHandler = async (event: Product) => {
+function withLoading(promise: Promise<any>) {
+  loading.value = true;
+  return promise.finally(() => {
+    loading.value = false;
+  });
+}
+
+async function loadFamily() {
+  if (!familyId.value) {
+    throw new Error('Family ID not set');
+  }
+
+  products.value = await fetchProductListById(familyId.value);
+  // For each product.properties.product_id, fetch the product details and populate the table data
+  return Promise.all(
+    products.value.map(async product => {
+      const productDetails: ProductDetails = await fetchProductDetails(
+        product.id
+      );
+      if (productDetails) {
+        if (productDetails.category === 'CategoryChart') {
+          tableData.value.Charts.push(productDetails);
+        } else if (
+          productDetails.category === 'Chart' ||
+          productDetails.category === 'Datas' ||
+          productDetails.category === 'Locate' ||
+          productDetails.category === 'Marketplace'
+        ) {
+          tableData.value.Services.push(productDetails);
+        } else if (productDetails.category === 'Garage') {
+          tableData.value.Item.push(productDetails);
+        } else if (
+          productDetails.category === 'Subscription' ||
+          productDetails.category === 'Subscription_ppu'
+        ) {
+          family.value = {
+            family: productDetails.family,
+            info: getFamilyInfo(productDetails.name),
+            name: productDetails.name,
+            prezzo: productDetails.prezzo,
+          };
+        }
+      }
+    })
+  );
+}
+
+const activeFamilyHandler = async (family: number) => {
   // Reset the table data
   tableData.value = {
     Item: [],
@@ -78,47 +109,40 @@ const activeFamilyHandler = async (event: Product) => {
     Charts: [],
   };
 
-  familyId.value = event.family;
-  products.value = await fetchProductListById(familyId.value);
-  // For each product.properties.product_id, fetch the product details and populate the table data
-  products.value.forEach(async (product) => {
-    const productDetails: ProductDetails = await fetchProductDetails(product.properties.product_id);
-    if (productDetails) {
-      if (productDetails.category === "CategoryChart") {
-        tableData.value.Charts.push(productDetails);
-      } else if (productDetails.category === "Chart" || productDetails.category === "Datas" || productDetails.category === "Locate" || productDetails.category === "Marketplace") {
-        tableData.value.Services.push(productDetails);
-      } else if (productDetails.category === "Garage") {
-        tableData.value.Item.push(productDetails);
-      }
-    }
-  });
+  familyId.value = family;
+  withLoading(loadFamily());
 };
-
 </script>
 
 <template>
+  <PlansInfoSelection @activeProduct="activeFamilyHandler($event)" />
   <header class="classic-main">
-    <PlansInfoSelection @activeProduct="activeFamilyHandler($event)" />
-    <ServiceTable :products="tableData" />
-    <v-container class="bg-[#ECECEC]"
-      style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; overflow: hidden; box-shadow: 0 4px 4px 0 rgba(0,0,0,0.15);">
+    <ServiceTable :loading="loading" :products="tableData" />
+    <v-container
+      class="bg-[#ECECEC]"
+      style="
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+      "
+    >
       <div v-if="familyId === 5">
-        <div class="flex flex-row justify-end align-center p-4 w-full">
-          <button
-            class="border !border-[#21252992] bg-white text-black rounded px-6 py-1 text-center cursor-pointer mr-[20px]"
-            @click="handleBuyClick(family)">Buy Bolts</button>
-          <button class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-            @click="handleBuyClick(family)">Buy Tokens</button>
+        <div class="flex justify-end align-center p-4 gap-3">
+          <Button variant="white" @click="handleBuyClick(family)">
+            Buy Bolts
+          </Button>
+          <Button variant="black" @click="handleBuyClick(family)">
+            Buy Tokens
+          </Button>
         </div>
       </div>
       <div v-else>
         <div class="flex flex-row justify-between align-center p-4 w-full">
-          <p>
-            Active till date {{ new Date().toLocaleDateString() }}
-          </p>
-          <button class="border !border-[#21252992] bg-black text-white rounded px-6 py-1 text-center cursor-pointer"
-            @click="handleBuyClick(family)">Renew plan</button>
+          <p>Active till date {{ new Date().toLocaleDateString() }}</p>
+          <Button variant="black" @click="handleBuyClick(family)">
+            Renew plan
+          </Button>
         </div>
       </div>
     </v-container>

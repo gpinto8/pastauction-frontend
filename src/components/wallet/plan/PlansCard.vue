@@ -15,6 +15,7 @@ interface Product {
   };
 };
 
+import Button from '@/components/common/button.vue';
 // Import
 import { computed, defineProps, defineEmits } from 'vue';
 
@@ -89,9 +90,15 @@ const containerTopStyle = computed(() => {
 
   const familyNames = mappedDataFamily.map((family: any) => family.name);
 
-  if (familyNames.includes('Free-user') || familyNames.includes('Pay-per-use')) {
+  if (
+    familyNames.includes('Free-user') ||
+    familyNames.includes('Pay-per-use')
+  ) {
     backgroundColor = 'rgba(13, 110, 253, 0.25)';
-  } else if (familyNames.includes('Ready Plans') || familyNames.includes('Start Plans')) {
+  } else if (
+    familyNames.includes('Ready Plans') ||
+    familyNames.includes('Start Plans')
+  ) {
     backgroundColor = 'rgba(255, 218, 68, 0.25)';
   }
 
@@ -100,56 +107,137 @@ const containerTopStyle = computed(() => {
 </script>
 
 <template>
-  <div class="container_top !w-full" v-for="(family, index) in mappedDataFamily" key="index" :style="containerTopStyle">
-    <div class="flex justify-between mb-3">
-      <div class="topLabel">{{ family.name }}</div>
-      <div class="flex items-center">
-        <img class="w-5" src="@/assets/icons/info.svg" alt="Icon Token - PastAuction"/>
+  <div class="card-wrapper">
+    <div
+      class="container_top !w-full"
+      v-for="(family, index) in mappedDataFamily"
+      key="index"
+      :style="containerTopStyle"
+    >
+      <div class="flex justify-between mb-3">
+        <div class="topLabel">{{ family.name }}</div>
+        <div class="flex items-center">
+          <img
+            class="w-5"
+            src="@/assets/icons/info.svg"
+            alt="Icon Token - PastAuction"
+          />
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="flex items-center">
+          <img
+            class="w-9 h-9 inline-block"
+            src="@/assets/images/bronze_token.png"
+            alt="Icon Token - PastAuction"
+          />
+          <span class="topLabel">{{ family.prezzo }}</span>
+        </div>
+        <div class="text-[#475467] text-left">{{ family.info }}</div>
       </div>
     </div>
-    <div class="mb-4">
-      <img class="w-7 h-7 inline-block" src="@/assets/images/bronze_token.png" alt="Icon Token - PastAuction"/>
-      <span class="text-[#101828]">{{ family.prezzo }}</span>
-      <div class="text-[#475467] text-left">{{ family.info }}</div>
-    </div>
-  </div>
 
-  <div class="container_bottom">
-    <div class="check_items">
-      <div class="flex w-full" v-for="(item, index) in mappedDatasWithoutLastItem" key="index">
-        <div class="me-2">
-          <div class="border rounded-full" v-if="getIconType(item) === '$'">
-            <img class="w-[20px] p-[1px]" src="@/assets/icons/dollar.svg" alt="Dollar Icon - PastAuction"/>
+    <div class="container_bottom">
+      <div class="check_items">
+        <div
+          class="flex w-full"
+          v-for="(item, index) in mappedDatasWithoutLastItem"
+          key="index"
+        >
+          <div class="me-2">
+            <div class="border rounded-full" v-if="getIconType(item) === '$'">
+              <img
+                class="w-[20px] p-[1px]"
+                src="@/assets/icons/dollar.svg"
+                alt="Dollar Icon - PastAuction"
+              />
+            </div>
+            <img
+              v-else-if="getIconType(item) === 'y'"
+              class="w-[20px]"
+              src="@/assets/icons/GreenCheck.svg"
+              alt="Check Icon - PastAuction"
+            />
+            <img
+              v-else
+              class="w-[20px]"
+              src="@/assets/images/x-circle-fill.svg"
+              alt="X Icon"
+            />
           </div>
-          <img v-else-if="getIconType(item) === 'y'" class="w-[20px]" src="@/assets/icons/GreenCheck.svg" alt="Check Icon - PastAuction" />
-          <img v-else class="w-[20px]" src="@/assets/icons/x-circle-fill.svg" alt="X Icon" />
-        </div>
-        <div class="text"> {{ item.name }} </div>
-        <div class="w-2/4 flex justify-end" v-if="item.name === 'Bolts Credits - PastAuction'">
-          <div class="flex items-center justify-end gap-2 border px-2">
-            <div class="w-[45px] text-[#212529] font-inter font-sm"> {{ item.prezzo }} </div>
-            <img class="w-[18px] h-[18px]" src="@/assets/images/bolt.png" alt="Bolts Credits - PastAuction"/>
+          <div class="text">{{ item.name }}</div>
+          <div
+            class="w-2/4 flex justify-end"
+            v-if="item.name === 'Bolts Credits - PastAuction'"
+          >
+            <div class="flex items-center justify-end gap-2 border px-2">
+              <div class="w-[45px] text-[#212529] font-inter font-sm">
+                {{ item.prezzo }}
+              </div>
+              <img
+                class="w-[18px] h-[18px]"
+                src="@/assets/images/bolt.png"
+                alt="Bolts Credits - PastAuction"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="cta flex gap-6" v-for="(family, index) in mappedDataFamily" key="index">
-      <button class="button_container bg-black" v-if="family.name === 'Free-user'" @click="onMoreInfoClicked(family.family)">More Info</button>
-      <button class="button_container bg-black" v-if="family.name === 'Pay-per-use'" @click="onBuyClick(family)">Buy Now</button>
-      <button class="button_container bg-white" v-if="family.name !== 'Pay-per-use' && family.name !== 'Free-user'" @click="onBuyClick(family)">Buy Now</button>
-      <button class="button_container" v-if="family.name !== 'Pay-per-use' && family.name !== 'Free-user'" @click="onMoreInfoClicked(family.family)">More Info</button>
+      <div
+        class="cta flex gap-1 mt-6"
+        v-for="(family, index) in mappedDataFamily"
+        key="index"
+      >
+        <Button
+          v-if="family.name === 'Free-user'"
+          classes="button_container"
+          variant="black"
+          @click="onMoreInfoClicked(family.family)"
+        >
+          More Info
+        </Button>
+        <Button
+          variant="black"
+          classes="button_container"
+          v-if="family.name === 'Pay-per-use'"
+          @click="onBuyClick(family)"
+        >
+          Buy Now
+        </Button>
+        <Button
+          variant="white"
+          classes="button_container"
+          v-if="family.name !== 'Pay-per-use' && family.name !== 'Free-user'"
+          @click="onBuyClick(family)"
+        >
+          Buy Now
+        </Button>
+        <Button
+          variant="black"
+          classes="button_container"
+          v-if="family.name !== 'Pay-per-use' && family.name !== 'Free-user'"
+          @click="onMoreInfoClicked(family.family)"
+        >
+          More Info
+        </Button>
+      </div>
     </div>
   </div>
 </template>
 
 <style>
+.card-wrapper {
+  box-shadow: 0px 5px 5px 0px #1018280d;
+  @apply rounded-xl;
+  overflow: hidden;
+}
 .container_top {
-  @apply pt-[20px] px-[20px] flex flex-col content-between rounded-t-xl;
+  @apply pt-[20px] px-[20px] flex flex-col content-between;
 }
 
 .topLabel {
   @apply text-[#101828];
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -176,15 +264,9 @@ const containerTopStyle = computed(() => {
 }
 
 .button_container {
-  @apply flex justify-center items-center gap-[8px] w-full text-white bg-[#212529] mt-6;
-  padding: 6px 12px;
-  align-self: stretch;
-  border-radius: 4px;
+  @apply w-full;
+  flex-shrink: 1;
   border: 1px solid #212529;
-  font-family: Inter;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%;
+  font-family: Inter, sans-serif;
 }
 </style>

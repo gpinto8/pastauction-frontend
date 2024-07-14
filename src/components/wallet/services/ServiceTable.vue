@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { ProductDetails } from './PlansInfoSelection.vue';
-
 const props = defineProps<{
+  loading: boolean,
 	products: {
 		Item: any[];
 		Services: any[];
@@ -11,10 +10,15 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="container-card">
-    <h2 class="plan-title">Start</h2>
-    <p style="margin: 20px 0;">Summary and detail of the availability of your current plan</p>
-    <div style="padding: 20px 20px">
+  <div class="container-card md:p-[20px]">
+    <div class="p-2">
+      <div class="flex items-center gap-2">
+        <h2 class="plan-title">Start</h2>
+        <v-progress-circular v-if="loading" indeterminate size="16"></v-progress-circular>
+      </div>
+      <p style="margin: 20px 0;">Summary and detail of the availability of your current plan</p>
+    </div>
+    <div class="md:p-[20px]">
       <v-table>
         <thead class="table-header">
           <tr>
@@ -94,7 +98,6 @@ const props = defineProps<{
 .container-card {
   margin-top: 20px;
   box-shadow: 0 4px 4px 0 rgba(0,0,0,0.15);
-  padding: 20px;
 }
 
 .plan-title {
@@ -104,6 +107,12 @@ const props = defineProps<{
 
 th, td {
   color: #212529 !important;
+}
+
+tr:not(.group-header) > td:first-child {
+  position: sticky;
+  left: 0;
+  background: white;
 }
 
 .group-header {

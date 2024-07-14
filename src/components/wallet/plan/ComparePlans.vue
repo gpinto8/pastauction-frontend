@@ -16,6 +16,7 @@ interface Product {
 }
 
 // Import
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { defineProps } from 'vue';
 import PlansPricingCard from '@/components/wallet/plan/PlansPricingCard.vue';
 import EmptyPlans from '@/components/wallet/plan/EmptyPlans.vue';
@@ -29,26 +30,45 @@ const buyThisPlan = (plan: Product) => {
 
 // Props
 const props = defineProps<{
-  showPlan: Product;
+  products: Product[];
 }>();
 </script>
 
 <template>
-  <div class="mt-[35px] mb-[35px] overflow-x-hidden" style="font-family: Inter">
+  <div class="mt-[35px] mb-[35px] overflow-x-hidden font-inter">
     <div class="text-[#3C3C3C] font-inter text-16 font-normal leading-5">
-      By choosing the READY plan you can get these advantage
+      By choosing the READY plan you can get these advantages
     </div>
   </div>
-  <div class="flex items-start gap-[40px]" style="font-family: Inter">
-    <div class="flex items-start gap-[10px] overflow-x-scroll">
-      <!--  Passo i dati per renderizzare il primo componente sulla sx -->
-      <PlansPricingCard :infoCard="props.showPlan as any" @buyThisPlan="buyThisPlan" />
-      <!-- componente che ospita la card prima vuota -->
-      <EmptyPlans @buyThisPlan="buyThisPlan" />
-    </div>
+  <div class="flex justify-between gap-[40px] font-inter">
+    <swiper
+      :breakpoints="{
+        0: {
+          slidesPerView: 1.1,
+          spaceBetween: 10,
+        },
+        1024: {
+          slidesPerView: 2,
+          spaceBetween: 40,
+        },
+      }"
+    >
+      <swiper-slide>
+        <PlansPricingCard
+          :products="props.products"
+          @buyThisPlan="buyThisPlan"
+        />
+      </swiper-slide>
+      <swiper-slide>
+        <EmptyPlans @buyThisPlan="buyThisPlan" />
+      </swiper-slide>
+    </swiper>
   </div>
 </template>
 
-<style scoped lang="postcss">
-
+<style scoped lang="scss">
+.swiper {
+  overflow: visible;
+  width: 100%;
+}
 </style>
