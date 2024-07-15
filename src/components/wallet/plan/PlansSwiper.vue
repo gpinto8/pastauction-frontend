@@ -91,7 +91,7 @@ function handleBuyClick(family: any) {
       :centered-slides="false"
       :pagination="{ clickable: true }"
       :modules="modules"
-      class="swiperPlans overflow-visible"
+      class="swiperPlans max-xl:!overflow-visible"
       style="padding-bottom: 50px; width: 100%"
     >
       <swiper-slide v-for="(family, index) in productsData" :key="index">
