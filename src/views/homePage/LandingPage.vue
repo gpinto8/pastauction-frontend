@@ -110,10 +110,7 @@ homepageSections()
             </div>
             <div class="section h-screen">
                 <div class="h-screen flex flex-col">
-                    <div class="flex-1 bg-red-100">
-
-                    </div>
-                    <Footer />
+                    <Footer class="h-full" />
                 </div>
             </div>
         </full-page>
@@ -121,7 +118,7 @@ homepageSections()
 </template>
 
 <style>
-.yellowButton {
+.yellow-button {
     @apply border-solid text-yellow-300 border-yellow-300 border-2
 }
 </style>
