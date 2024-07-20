@@ -30,7 +30,7 @@ const submit = () => {
     <div class="text-grey">Welcome back! Login to your account</div>
   </div>
 
-  <v-form @submit.prevent="submit" class="space-y-4">
+  <v-form @submit.prevent="submit" class="flex flex-col gap-3">
     <v-text-field v-model="user.email" :error-messages="(v$.email.$errors.map(e => e.$message) as any)"
       placeholder="Enter your email" label="Email" required variant="outlined" density="comfortable"
       @input="v$.email.$touch" @blur="v$.email.$touch"></v-text-field>
