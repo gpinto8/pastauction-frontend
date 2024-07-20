@@ -45,6 +45,14 @@ export const useAuthStore = defineStore('auth', () => {
     });
   }
 
+  async function forgotPassword (email: string) {
+    loading.value = true
+    return httpPost('reset_password?email=' + email, {})
+      .finally(() => {
+        loading.value = false
+      })
+  }
+
   async function register(user: any) {
     loading.value = true;
     return await new Promise((resolve, reject) => {
@@ -226,6 +234,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     // actions
     login,
+    forgotPassword,
     getLoggedUserInfo,
     changePassword,
     saveToken,
