@@ -256,7 +256,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useBrandStore } from '@/store/datas/brand';
-import { VDataTable } from 'vuetify/labs/components';
+import { VDataTable } from 'vuetify/components';
 
 const store = useBrandStore();
 

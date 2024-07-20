@@ -7,7 +7,7 @@ import * as directives from 'vuetify/directives';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 // Translations provided by Vuetify
 import { en } from 'vuetify/locale';
-import { VDataTable } from 'vuetify/labs/VDataTable';
+import { VDataTable } from 'vuetify/components';
 // Misc
 
 // Styles
