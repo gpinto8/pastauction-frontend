@@ -8,6 +8,7 @@ import LoginView from '@/views/auth/LoginView.vue';
 import LocateView from '@/views/locate/LocateView.vue';
 import LocateRoadmapsView from '@/views/locate/LocateRoadmapsView.vue';
 import SignupView from '@/views/auth/SignupView.vue';
+import ForgotPassword from '@/views/auth/ForgotPassword.vue';
 
 import { authGuard } from './utils/guards';
 import { scrollBehaviour } from './utils/scrollBehaviours';
@@ -305,6 +306,11 @@ const router = createRouter({
           path: '/sign-up',
           name: 'SignupView',
           component: SignupView,
+        },
+        {
+          path: '/forgot-password',
+          name: 'ForgotPassword',
+          component: ForgotPassword,
         },
         {
           path: '/profile',
