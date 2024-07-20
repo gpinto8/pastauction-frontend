@@ -12,7 +12,7 @@ import backgroundUrl from '@/assets/images/login.png';
       :style="{ backgroundImage: `url(${backgroundUrl})` }"
     >
       <div
-        class="bg-white p-16 max-lg:py-8 max-lg:px-8 max-w-[500px] my-auto space-y-6 !text-primary flex flex-col justify-stretch login-container max-lg:m-auto rounded-[2rem] lg:rounded-[4rem] lg:rounded-l-[0]"
+        class="bg-white p-16 max-lg:py-8 max-lg:px-8 max-w-[500px] lg:min-h-[min(700px,90%)] my-auto space-y-6 !text-primary flex flex-col justify-center login-container max-lg:m-auto rounded-[2rem] lg:rounded-[4rem] lg:rounded-l-[0] relative"
       >
         <router-view v-slot="{ Component, route }">
           <transition>
