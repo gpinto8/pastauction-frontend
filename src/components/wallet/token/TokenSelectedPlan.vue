@@ -415,6 +415,7 @@ async (getCurrentData: number): Promise<void> => {
     v-if="tokenModalOpen && isVisible && props.data"
     :isModalOpen="tokenModalOpen"
     :background="true"
+    :auto-width="true"
     class="modal"
     :class="{ block: true, hidden: !tokenModalOpen }"
   >
