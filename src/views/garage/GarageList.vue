@@ -1,0 +1,91 @@
+<script setup lang="ts">
+import { ref, mergeProps } from 'vue';
+import { useRouter } from 'vue-router';
+import { useGarageStore } from '@/store/garage';
+
+import { useGeneralStore } from '@/store/datas/general';
+
+/** Store */
+const store = useGarageStore();
+const generalStore = useGeneralStore();
+
+/** Router */
+const router = useRouter();
+
+const loadedMedia = ref([]);
+
+/** Methods */
+store.listPaginated(1, 10, {}, {});
+
+const loadMedia = async (id: number, media: string) => {
+  if (media !== 'string') {
+    await generalStore.loadMedia(media).then(res => {
+      if (
+        loadedMedia.value?.length === 0 ||
+        loadedMedia.value?.findIndex((el: any) => el.id === id) === -1
+      )
+        // @ts-ignore
+        loadedMedia.value.push({ id: id, photo: res });
+    });
+  }
+};
+</script>
+
+<template>
+  <div
+    v-if="store.getListItems?.items?.length"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[24px]"
+  >
+    <router-link
+      v-for="item in store.getListItems?.items"
+      :key="item.id"
+      :to="`/garage/detail/${item.id}`"
+    >
+      <v-card class="mx-auto h-full">
+        <v-img
+          v-if="
+            (loadedMedia.find((el: any) => el.id === item.id) as any)?.photo
+          "
+          class="align-end text-white"
+          height="200"
+          :src="
+            (loadedMedia.find((el: any) => el.id === item.id) as any)?.photo
+          "
+          cover
+        />
+        <v-img
+          v-else
+          class="align-end text-white"
+          height="200"
+          src="@/assets/images/img-1.png"
+          cover
+        />
+        <span class="hidden">{{ loadMedia(item.id, item.photo) }}</span>
+        <v-card-title class="pt-4">{{ item.name }}</v-card-title>
+
+        <v-card-text class="text-[#5E5E5E]">
+          <div>{{ item.description }}</div>
+
+          <ul class="list-disc mt-4 pl-4">
+            <li>
+              Number of vehicles:
+              <b>{{ item.vehicle_capacity }}</b>
+            </li>
+          </ul>
+        </v-card-text>
+      </v-card>
+    </router-link>
+  </div>
+  <div v-else class="card space-y-4 text-center mt-10">
+    <div class="text-grey">You don't have any Garage yet.</div>
+    <div>
+      <v-btn
+        color="#212529"
+        class="text-white text-none font-normal w-[200px]"
+        @click="router.push('garage/create_garage')"
+      >
+        Add Garage
+      </v-btn>
+    </div>
+  </div>
+</template>
