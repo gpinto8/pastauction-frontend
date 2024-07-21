@@ -14,7 +14,7 @@ const tab = ref(0);
 
 <template>
   <v-container class="space-y-10 max-w-[1010px]">
-    <div class="p-10 pb-0 shadow-lg rounded-lg mt-10">
+    <div class="p-10 lg:pb-0 shadow-lg rounded-lg mt-10">
       <div class="grid grid-cols-3 gap-10">
         <div class="col-span-2 space-y-3">
           <span class="text-4xl font-medium">Hi Gianfraco!</span>
@@ -24,12 +24,12 @@ const tab = ref(0);
           </div>
         </div>
         <div>
-          <img src="@/assets/images/home.svg" alt="home" class="-mb-6" />
+          <img src="@/assets/images/home.svg" alt="home" class="lg:-mb-6" />
         </div>
       </div>
     </div>
     <div class="grid grid-cols-3 gap-10">
-      <div class="col-span-2">
+      <div class="col-span-3 lg:col-span-2">
         <div class="card">
           <div class="flex justify-between">
             <div>
@@ -80,7 +80,7 @@ const tab = ref(0);
         </div>
       </div>
 
-      <div class="card space-y-6 text-center">
+      <div class="col-span-3 lg:col-span-1 card space-y-6 text-center">
         <div class="font-semibold text-2xl">My wallet</div>
         <small class="font-medium">Available credit in my wallet</small>
 
