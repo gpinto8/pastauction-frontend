@@ -12,20 +12,19 @@ const generalStore = useGeneralStore();
 /** Router */
 const router = useRouter();
 
-const loadedMedia = ref([]);
+const loadedMedia = ref<Record<string, string>>({});
 
 /** Methods */
-store.listPaginated(1, 10, {}, {});
+store.listPaginated(1, 10, {}, { id: 'desc' }).then(() => {
+  store.getListItems?.items?.forEach((item: any) =>
+    loadMedia(item.id, item.photo)
+  );
+});
 
-const loadMedia = async (id: number, media: string) => {
-  if (media !== 'string') {
-    await generalStore.loadMedia(media).then(res => {
-      if (
-        loadedMedia.value?.length === 0 ||
-        loadedMedia.value?.findIndex((el: any) => el.id === id) === -1
-      )
-        // @ts-ignore
-        loadedMedia.value.push({ id: id, photo: res });
+const loadMedia = async (id: number, resource: string) => {
+  if (resource && resource !== 'string') {
+    await generalStore.loadMedia(resource).then(res => {
+      loadedMedia.value[id] = res as string;
     });
   }
 };
@@ -43,24 +42,11 @@ const loadMedia = async (id: number, media: string) => {
     >
       <v-card class="mx-auto h-full">
         <v-img
-          v-if="
-            (loadedMedia.find((el: any) => el.id === item.id) as any)?.photo
-          "
           class="align-end text-white"
           height="200"
-          :src="
-            (loadedMedia.find((el: any) => el.id === item.id) as any)?.photo
-          "
+          :src="loadedMedia[item.id] || 'src/assets/images/img-1.png'"
           cover
         />
-        <v-img
-          v-else
-          class="align-end text-white"
-          height="200"
-          src="@/assets/images/img-1.png"
-          cover
-        />
-        <span class="hidden">{{ loadMedia(item.id, item.photo) }}</span>
         <v-card-title class="pt-4">{{ item.name }}</v-card-title>
 
         <v-card-text class="text-[#5E5E5E]">
