@@ -103,7 +103,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useGlobalStore } from '@/store/datas/global';
-import { VDataTable } from 'vuetify/components';
 
 const store = useGlobalStore();
 

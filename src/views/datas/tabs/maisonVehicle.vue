@@ -462,7 +462,6 @@
 </template>
 
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/components';
 import { ref, computed } from 'vue';
 import { useMaisonVehicleStore } from '@/store/datas/masionVehicle';
 import router from '@/router';

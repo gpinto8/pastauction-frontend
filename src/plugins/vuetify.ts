@@ -7,7 +7,6 @@ import * as directives from 'vuetify/directives';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 // Translations provided by Vuetify
 import { en } from 'vuetify/locale';
-import { VDataTable } from 'vuetify/components';
 // Misc
 
 // Styles
@@ -60,7 +59,6 @@ if (import.meta.env.DEV) {
   vuetifyConfig = {
     components: {
       components,
-      VDataTable,
     },
     directives,
     ...vuetifyConfig,

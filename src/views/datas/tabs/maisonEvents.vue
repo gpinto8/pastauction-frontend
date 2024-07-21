@@ -461,7 +461,6 @@
 </template>
 
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/components';
 import { ref, computed } from 'vue';
 import { useMaisonEventsStore } from '@/store/datas/masionEvents';
 

@@ -55,7 +55,7 @@ const loadMedia = async (id: number, resource: string) => {
           <ul class="list-disc mt-4 pl-4">
             <li>
               Number of vehicles:
-              <b>{{ item.vehicle_capacity }}</b>
+              <b>{{ item.vehicle_capacity || 0 }}</b>
             </li>
           </ul>
         </v-card-text>

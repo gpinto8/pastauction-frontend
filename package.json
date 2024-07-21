@@ -59,7 +59,7 @@
     "vue-fullpage.js": "^0.2.17",
     "vue-gallery-slideshow": "^1.5.2",
     "vue-router": "^4.2.4",
-    "vuetify": "^3.3.12",
+    "vuetify": "^3.6.13",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {

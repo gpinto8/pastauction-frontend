@@ -460,7 +460,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useAuctionEventsStore } from '@/store/datas/auctionEvents';
-import { VDataTable } from 'vuetify/components';
 
 const store = useAuctionEventsStore();
 

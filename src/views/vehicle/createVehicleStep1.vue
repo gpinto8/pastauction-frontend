@@ -143,7 +143,8 @@
             ]"
             class="h-8 w-8 border rounded bg-grey-100 p-1 cursor-pointer"
             :class="{
-              'border-2 !border-blue-500': (vehicle as any).exterior_color_id === color,
+              'border-2 !border-blue-500':
+                (vehicle as any).exterior_color_id === color,
             }"
             @click="(vehicle as any).exterior_color_id = color"
           >
@@ -165,7 +166,8 @@
             ]"
             class="h-8 w-8 border rounded bg-grey-100 p-1 cursor-pointer"
             :class="{
-              'border-2 !border-blue-500': (vehicle as any).interior_color_id === color,
+              'border-2 !border-blue-500':
+                (vehicle as any).interior_color_id === color,
             }"
             @click="(vehicle as any).interior_color_id = color"
           >
@@ -175,7 +177,7 @@
       </div>
       <div class="col-span-2">
         <v-radio-group
-          v-model="vehicle.transmission"
+          v-model="vehicle.interior_type"
           label="Interior type"
           inline
         >
@@ -219,7 +221,7 @@
       />
 
       <v-select
-        v-model="(vehicle.original_miles as any)"
+        v-model="vehicle.original_miles as any"
         label="Miles"
         variant="outlined"
         density="compact"
@@ -236,7 +238,7 @@
         </v-radio-group>
       </div>
       <v-select
-        v-model="(vehicle.location_id as any)"
+        v-model="vehicle.location_id as any"
         label="County"
         variant="outlined"
         density="compact"
@@ -267,6 +269,7 @@
             () => {
               // if ((setp as any) === 2) save();
               // else step++;
+              step++;
             }
           "
         >
@@ -318,6 +321,7 @@ const vehicle = ref({
   transmission: '',
   power: '',
   engine_capacity: '',
+  interior_type: '',
   driver_side: '',
   originality: '',
   status: '',
@@ -332,6 +336,11 @@ const vehicle = ref({
 });
 
 const step = ref(1);
+
+function submit() {
+  console.log(vehicle.value);
+  vehicleStore.create(vehicle.value);
+}
 </script>
 
 <style scoped></style>
