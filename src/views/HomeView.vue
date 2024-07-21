@@ -2,12 +2,18 @@
 import { ref } from 'vue';
 
 import AppIcon from '@/components/common/AppIcon.vue';
+import GarageList from './garage/GarageList.vue';
+import { useGarageStore } from '@/store/garage';
+import { computed } from 'vue';
 
-const tab = ref(null);
+const store = useGarageStore();
+const garageAmount = computed(() => store.getListItems?.items?.length || 0);
+
+const tab = ref(0);
 </script>
 
 <template>
-  <v-container class="space-y-10">
+  <v-container class="space-y-10 max-w-[1010px]">
     <div class="p-10 pb-0 shadow-lg rounded-lg mt-10">
       <div class="grid grid-cols-3 gap-10">
         <div class="col-span-2 space-y-3">
@@ -91,13 +97,31 @@ const tab = ref(null);
       </div>
     </div>
     <div>
-      <v-tabs v-model="tab" color="blue" align-tabs="start">
-        <v-tab :value="1">Garage (0)</v-tab>
+      <v-tabs v-model="tab" color="blue" align-tabs="start" class="mb-[30px]">
+        <v-tab :value="1">Garage ({{ garageAmount }})</v-tab>
         <v-tab :value="2">Locate (0)</v-tab>
         <v-tab :value="3">Charts (0)</v-tab>
       </v-tabs>
       <v-window v-model="tab">
-        <v-window-item v-for="n in 3" :key="n" :value="n">
+        <v-window-item :key="1" :value="1">
+          <GarageList />
+        </v-window-item>
+        <v-window-item :key="2" :value="2">
+          <v-container fluid>
+            <div class="card space-y-4 text-center">
+              <div class="text-grey">You don't have any Garage yet.</div>
+              <div>
+                <v-btn
+                  color="#212529"
+                  class="text-white text-none font-normal w-[200px]"
+                >
+                  Add Garage
+                </v-btn>
+              </div>
+            </div>
+          </v-container>
+        </v-window-item>
+        <v-window-item :key="3" :value="3">
           <v-container fluid>
             <div class="card space-y-4 text-center">
               <div class="text-grey">You don't have any Garage yet.</div>
