@@ -59,9 +59,9 @@ const router = useRouter();
         <div class="text-3xl font-medium mb-3">My garage</div>
       </div>
       <div class="grid grid-cols-3 gap-10 mb-[70px]">
-        <div class="col-span-2">
+        <div class="col-span-3 lg:col-span-2">
           <div class="card">
-            <div class="flex justify-between">
+            <div class="flex justify-between flex-wrap gap-3">
               <div>
                 <div class="font-semibold text-2xl">Current plan</div>
                 <b>Plan Ready</b>
@@ -110,7 +110,7 @@ const router = useRouter();
           </div>
         </div>
 
-        <div class="card space-y-6 text-center">
+        <div class="max-lg:col-span-3 card space-y-6 text-center">
           <div class="font-semibold text-2xl">My wallet</div>
           <small class="font-medium">Available credit in my wallet</small>
 
