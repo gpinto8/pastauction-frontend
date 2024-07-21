@@ -9,9 +9,15 @@ import { useGeneralStore } from '@/store/datas/general';
 
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
+import Button from '@/components/common/button.vue';
 
 /** Router */
 const router = useRouter();
+const snackbar = ref({
+  text: '',
+  color: '',
+  show: false,
+});
 
 /** Store */
 const globalStore = useGlobalStore();
@@ -52,17 +58,36 @@ globalStore
   .globalFilter('bidwatcher_country', 'name')
   .then(res => (countries.value = res));
 
-const submit = () => {
-  store.create(garage.value).then(res => {
-    console.log('response create garage', res);
+async function postForm() {
+  const res = (await store.create(garage.value)) as any; // TODO type
+  console.log('response create garage', res);
 
-    // @ts-ignore
-    generalStore.uploadMedia('garage_set', res.id, photo.value).then(res => {
-      console.log('response upload media', res);
+  if (photo.value) {
+    await generalStore
+      .uploadMedia('garage_set', res.id, photo.value)
+      .then(res => {
+        console.log('response upload media', res);
+      })
+      .catch(err => {
+        throw new Error(
+          'An error occurred while uploading the picture. Please try again.'
+        );
+      });
+  }
+}
+
+async function submit() {
+  postForm()
+    .then(res => {
       router.push('/garage');
+    })
+    .catch(err => {
+      snackbar.value.text =
+        err?.message || 'An error occurred. Please try again.';
+      snackbar.value.color = 'error';
+      snackbar.value.show = true;
     });
-  });
-};
+}
 
 const file2Base64 = (file: File): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
@@ -197,5 +222,19 @@ const uploadImage = (e: any) => {
       />
     </div>
   </v-container>
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top right"
+  >
+    {{ snackbar.text }}
+    <Button
+      classes="min-w-[100px] ml-2"
+      variant="white"
+      @click="snackbar.show = false"
+    >
+      Close
+    </Button>
+  </v-snackbar>
 </template>
 <style lang="poscss"></style>
