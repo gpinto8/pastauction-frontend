@@ -55,8 +55,8 @@ globalStore
 const submit = () => {
   store.create(garage.value).then(res => {
     console.log('response create garage', res);
-    
-      // @ts-ignore
+
+    // @ts-ignore
     generalStore.uploadMedia('garage_set', res.id, photo.value).then(res => {
       console.log('response upload media', res);
       router.push('/garage');
@@ -82,7 +82,7 @@ const uploadImage = (e: any) => {
 };
 </script>
 <template>
-  <v-container>
+  <v-container fluid>
     <br />
     <v-btn icon size="small" @click="router.back()">
       <app-icon type="arrow_left" />
@@ -93,8 +93,8 @@ const uploadImage = (e: any) => {
         Organize your vehicles in a more comfortable way by creating a garage.
       </span>
     </div>
-    <div class="bg-white grid grid-cols-2 gap-20 max-w-6xl mx-auto">
-      <div class="px-16 py-9">
+    <div class="bg-white lg:grid grid-cols-2 max-w-6xl mx-auto">
+      <div class="p-9 lg:p-[44px]">
         <div class="text-center">
           <h5 class="text-lg font-semibold">Content</h5>
           <small>Upload a photo of your garage</small>
@@ -116,6 +116,7 @@ const uploadImage = (e: any) => {
                 id="dropzone-file"
                 type="file"
                 class="hidden"
+                accept="image/*"
                 @change="uploadImage"
               />
             </label>
@@ -148,7 +149,7 @@ const uploadImage = (e: any) => {
           <label>Name garage*</label>
           <v-text-field
             v-model="garage.name"
-            :error-messages="(v$.name.$errors.map(e => e.$message) as any)"
+            :error-messages="v$.name.$errors.map(e => e.$message) as any"
             placeholder="Name garage*"
             required
             variant="outlined"
@@ -190,7 +191,10 @@ const uploadImage = (e: any) => {
           </v-btn>
         </v-form>
       </div>
-      <img src="@/assets/images/create_garage.png" />
+      <img
+        class="object-cover h-full max-lg:hidden"
+        src="@/assets/images/create_garage.png"
+      />
     </div>
   </v-container>
 </template>
