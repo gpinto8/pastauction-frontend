@@ -1,38 +1,44 @@
 <script setup lang="ts">
 import { ref, mergeProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useGarageStore } from '@/store/garage';
+import { useGarageStore, type Garage } from '@/store/garage';
 import { useVehicleStore } from '@/store/datas/singleDetailVehicle';
 import { useGeneralStore } from '@/store/datas/general';
+import { MediaStore } from '@/lib/media-store';
 
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
+import { onBeforeMount } from 'vue';
+import Button from '@/components/common/button.vue';
 
 const router = useRouter();
 const route = useRoute();
 
 /** Store */
-const store = useGarageStore();
+const garageStore = useGarageStore();
 const vehicleStore = useVehicleStore();
 const generalStore = useGeneralStore();
 
-const loadedMedia = ref([]);
+const garage = ref<Garage | null>(null);
+const loading = ref(false);
+const mediaStore = new MediaStore();
 
 /** Methods */
-vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id });
+onBeforeMount(async () => {
+  const promise = Promise.all([
+    garageStore.getById(route.params.id.toString()),
+    // vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id }),
+  ]);
 
-const loadMedia = async (id: number, media: string) => {
-  await generalStore.loadMedia(media).then(res => {
-    if (
-      loadedMedia.value?.length === 0 ||
-      loadedMedia.value?.findIndex((el: any) => el.id === id) === -1
-    )
-    
-      // @ts-ignore
-      loadedMedia.value.push({ id: id, photo: res });
+  loading.value = true;
+  promise.finally(() => {
+    loading.value = false;
   });
-  return loadedMedia;
-};
+
+  const [_garage] = await promise;
+  mediaStore.loadMedia(_garage.photo);
+  garage.value = _garage;
+});
 </script>
 
 <template>
@@ -49,38 +55,54 @@ const loadMedia = async (id: number, media: string) => {
       </span>
     </div>
 
-    <div class="card">
-      <div class="flex justify-between">
-        <div class="space-y-3">
-          <div class="flex items-center">
-            <v-avatar color="grey" class="mr-3">
-              <v-icon icon="mdi-account-circle" />
-            </v-avatar>
-            <h4 class="text-2xl">Garage GTC Full (3)</h4>
+    <div v-if="loading" class="flex justify-center items-center h-[200px]">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </div>
+    <v-slide-y-transition>
+      <div class="card" v-if="garage">
+        <div class="flex max-sm:flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center">
+              <v-avatar color="grey" class="mr-3" :size="50">
+                <v-icon
+                  v-if="!mediaStore.map.value[garage.photo]"
+                  icon="mdi-account-circle"
+                />
+                <img
+                  icon="mdi-account-circle"
+                  v-if="mediaStore.map.value[garage.photo]"
+                  :src="mediaStore.map.value[garage.photo]"
+                />
+              </v-avatar>
+              <h4 class="text-2xl">{{ garage?.name }}</h4>
+            </div>
+            <div class="flex items-center" v-if="garage.country">
+              <v-avatar color="grey" class="mr-3" :size="16">
+                <img
+                  class="h-full"
+                  icon="mdi-account-circle"
+                  :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/ITA.jpeg`"
+                />
+                <!-- TODO :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/${garage.country}.jpeg`" -->
+              </v-avatar>
+              <h6>{{ garage.country }}</h6>
+            </div>
+            <div class="text-grey" v-if="garage.vehicle_capacity">
+              Garage capacity:
+              <b>{{ garage.vehicle_capacity }}</b>
+            </div>
+            <div class="text-grey" v-if="garage.description">
+              Additional description:
+              <b>{{ garage.description }}</b>
+            </div>
           </div>
-          <div class="flex items-center">
-            <v-avatar color="grey" class="mr-3" size="small">
-              <v-icon icon="mdi-account-circle" />
-            </v-avatar>
-            <h6>Italy</h6>
-          </div>
-          <div class="text-grey">
-            Garage capacity:
-            <b>10</b>
-          </div>
-          <div class="text-grey">
-            Additional description:
-            <b>Lorem ipsum dolor sit</b>
-          </div>
-        </div>
 
-        <div>
-          <v-btn color="#212529" class="text-white text-none font-normal">
-            Edit
-          </v-btn>
+          <div class="max-sm:w-full">
+            <Button classes="min-w-[155px] w-full" variant="black">Edit</Button>
+          </div>
         </div>
       </div>
-    </div>
+    </v-slide-y-transition>
 
     <div class="my-4">
       <div class="text-2xl font-medium mb-1">Services available</div>
@@ -187,10 +209,9 @@ const loadMedia = async (id: number, media: string) => {
         :key="item.id"
         width="350"
       >
-        <span class="hidden">{{ loadMedia(item.id, item.main_photo) }}</span>
         <v-img
           height="200"
-          :src="(loadedMedia.find((el: any) => el.id === item.id) as any)?.photo"
+          :src="mediaStore.map.value[item.photo]"
           cover
           class="text-white"
         >
