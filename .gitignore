@@ -37,3 +37,6 @@ coverage/
 # Special File
 .husky/
 src/Meta.ts
+.firebase/hosting.ZGlzdA.cache
+.firebaserc
+firebase.json
