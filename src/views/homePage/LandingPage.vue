@@ -9,8 +9,8 @@ import { getBrandAndFounder as getBrandAndFounders, homepageSections, type Brand
 import { groupIntoPairs } from '../../utils/functions/groupIntoPairs';
 import BrandsSlider from './BrandsSlider.vue';
 import ChartsCarousel from './ChartsCarousel.vue';
-import VideoCarousel from './videoCarousel/VideoCarousel.vue'
-import Footer from './Footer.vue'
+import LastSection from './LastSection.vue';
+import VideoCarousel from './videoCarousel/VideoCarousel.vue';
 
 const sections = ref<Section[]>([])
 
@@ -115,7 +115,7 @@ getBrandAndFounders()
             </div>
             <div class="section h-screen">
                 <div class="h-screen flex flex-col">
-                    <Footer class="h-full" />
+                    <LastSection class="h-full" />
                 </div>
             </div>
         </full-page>

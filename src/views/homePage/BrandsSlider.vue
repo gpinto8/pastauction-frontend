@@ -2,32 +2,14 @@
 
 import InfiniteSlider from '@/components/common/InfiniteSlider.vue'
 import { desaturatedBrandLogoUrl, type BrandInfo } from '@/api/landingPage/landingPage';
+import { BRANDS_UNVEILED } from '@/router';
 
 const props = defineProps<{
     brands: BrandInfo[]
 }>()
 
+// To exract the brand id we use the brand_origin_col which (should) always contain a string like this: 1234.jpg
 const extractBrandId = (brand: BrandInfo) => +brand.brand_origin_col.split('.')[0]
-
-import Brand1Image from './assets/brandsIcons/brand1.png'
-import Brand2Image from './assets/brandsIcons/brand2.png'
-import Brand3Image from './assets/brandsIcons/brand3.png'
-import Brand4Image from './assets/brandsIcons/brand4.png'
-import Brand5Image from './assets/brandsIcons/brand5.png'
-import Brand6Image from './assets/brandsIcons/brand6.png'
-import Brand7Image from './assets/brandsIcons/brand7.png'
-import Brand8Image from './assets/brandsIcons/brand8.png'
-
-const images = [
-    Brand1Image,
-    Brand2Image,
-    Brand3Image,
-    Brand4Image,
-    Brand5Image,
-    Brand6Image,
-    Brand7Image,
-    Brand8Image,
-]
 
 </script>
 
@@ -45,9 +27,10 @@ const images = [
         </InfiniteSlider>
 
         <div class="flex justify-end px-32 w-full">
-            <button class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2">
+            <RouterLink :to="{ name: BRANDS_UNVEILED }"
+                class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2">
                 MORE BRANDS
-            </button>
+            </RouterLink>
         </div>
 
     </div>

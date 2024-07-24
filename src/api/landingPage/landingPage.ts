@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { paramNameForFirstNLetters } from '../filter/filterApi';
 
 export type Section = {
   text_title: string;
@@ -70,5 +71,11 @@ export const brandLogoUrl = (brandId: number) =>
 export const getBrandAndFounder = () => {
   return axios.get(
     'bidwatcher_brand_and_founder_hp/?search=brand_homepage_display:true'
+  );
+};
+
+export const getBrandAndFounderByFirstLetter = (initial: string) => {
+  return axios.get(
+    `bidwatcher_brand_and_founder_hp/?search=brand_homepage_display:true,${paramNameForFirstNLetters('brand_name', 1)}:${initial}&sort=brand_name:asc`
   );
 };
