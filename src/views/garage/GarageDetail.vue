@@ -79,6 +79,7 @@ onBeforeMount(async () => {
                   icon="mdi-account-circle"
                 />
                 <img
+                  class="h-full object-cover"
                   icon="mdi-account-circle"
                   v-if="mediaStore.map.value[garage.photo]"
                   :src="mediaStore.map.value[garage.photo]"
@@ -89,7 +90,7 @@ onBeforeMount(async () => {
             <div class="flex items-center" v-if="garage.country">
               <v-avatar color="grey" class="mr-3" :size="16">
                 <img
-                  class="h-full"
+                  class="h-full object-cover"
                   icon="mdi-account-circle"
                   :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/ITA.jpeg`"
                 />
