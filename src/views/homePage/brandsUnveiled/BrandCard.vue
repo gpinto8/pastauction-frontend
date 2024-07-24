@@ -11,20 +11,35 @@ const desaturatedBrandLogo = computed(() => desaturatedBrandLogoUrl(extractBrand
 const selected = ref(false)
 
 const hovered = ref(false)
+
+const containerStyles = computed(() => {
+
+    let styles = { marginTop: '3rem', marginBottom: '0rem' }
+
+    if (hovered.value == true)
+        styles = { marginTop: '-3rem', marginBottom: '4rem' }
+
+    if (selected.value == true)
+        styles = { marginTop: '0rem', marginBottom: '4rem' }
+
+    return styles
+})
+
 </script>
 
 <template>
-    <div class="flex flex-col justify-between bg-white group relative overflow-hidden duration-[500ms] [&_*]:duration-[500ms] h-[22rem]"
-        @mouseleave="selected = false; hovered = false" @mouseenter="hovered = true">
-        <div class="flex flex-col transition-[padding] px-5 flex-1"
-            :style="hovered ? { paddingTop: '0rem', paddingBottom: '4rem' } : { paddingTop: '4rem', paddingBottom: '0rem' }">
+    <button
+        class="flex flex-col justify-between bg-white group relative duration-[500ms] [&_*]:duration-[500ms] h-[20rem]"
+        @mouseleave="selected = false; hovered = false" @mouseenter="hovered = true" @click="selected = true">
+        <div class="flex flex-col transition-[margin] px-5 flex-1" :style="containerStyles">
+            <!-- :style="hovered && !selected ? { marginTop: '-3rem', marginBottom: '4rem' } : { marginTop: '4rem', marginBottom: '0rem' }" -->
             <div class="relative [&>*]:transition-[opacity,transform] transition-[margin,height] [&>*]:max-h-full group-hover:[&>*]:-translate-y-[7.5rem]1"
                 :class="selected ? 'h-10 mb-2 mt-2' : 'h-36 mb-10 mt-0'">
                 <img :src="brandLogo" class="absolute-center opacity-0 group-hover:opacity-100">
                 <img :src="desaturatedBrandLogo" class="absolute-center group-hover:opacity-0">
             </div>
             <div
-                class="flex flex-col text-sm gap-1 [&>*]:flex first:[&>*>span]:w-16 first:[&>*>span]:block first:[&>*>span]:font-semibold last:[&>*>span]:text-zinc-600">
+                class="flex flex-col text-sm gap-2 [&>*]:flex first:[&>*>span]:w-16 [&>*>span]:line-clamp-1 first:[&>*>span]:block first:[&>*>span]:font-semibold last:[&>*>span]:text-zinc-600">
                 <div>
                     <span class="">Brand:&nbsp;</span> <span>{{ brand.brand_name }}</span>
                 </div>
@@ -61,11 +76,12 @@ const hovered = ref(false)
                 </Transition>
             </div>
         </div>
-        <button @click="selected = true"
-            class="opacity-0 absolute bottom-0 uppercase w-full text-white flex-center transition-opacity group-hover:opacity-100 h-10 bg-yellow-300">
+        <button
+            class="opacity-0 absolute bottom-0 uppercase w-full text-white flex-center transition-opacity group-hover:opacity-100 h-10 bg-yellow-300"
+            :class="selected ? '!opacity-0' : ''">
             more details
         </button>
-    </div>
+    </button>
 </template>
 
 <style>
