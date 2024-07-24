@@ -68,6 +68,10 @@ export const desaturatedBrandLogoUrl = (brandId: number) =>
 export const brandLogoUrl = (brandId: number) =>
   `https://past-auction-p.s3.amazonaws.com/Home/Brand/LogoMarchIColored/${brandId}.png`;
 
+// To exract the brand id we use the brand_origin_col which (should) always contain a string like this: 1234.jpg
+export const extractBrandId = (brand: BrandInfo) =>
+  +brand.brand_origin_col.split('.')[0];
+
 export const getBrandAndFounder = () => {
   return axios.get(
     'bidwatcher_brand_and_founder_hp/?search=brand_homepage_display:true'

@@ -5,6 +5,7 @@ import { alphabet } from '@/utils/constants/alphabet';
 import { ref, watch } from 'vue';
 import { type BrandInfo, getBrandAndFounderByFirstLetter } from '@/api/landingPage/landingPage';
 import Footer from '../Footer.vue';
+import BrandCard from './BrandCard.vue';
 
 const selectedLetter = ref(alphabet[0])
 const brands = ref<BrandInfo[]>()
@@ -43,8 +44,8 @@ watch(selectedLetter, () => {
                     {{ letter }}
                 </button>
             </div>
-            <div class="grid grid-cols-3">
-                <div v-for="brand of brands" class="bg-white h-32">{{ brand.brand_name }}</div>
+            <div class="grid grid-cols-4 gap-7 mt-10">
+                <BrandCard v-for="brand of brands" :brand="brand" />
             </div>
         </div>
         <Footer />

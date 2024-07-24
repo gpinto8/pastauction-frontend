@@ -1,15 +1,12 @@
 <script setup lang="ts">
 
 import InfiniteSlider from '@/components/common/InfiniteSlider.vue'
-import { desaturatedBrandLogoUrl, type BrandInfo } from '@/api/landingPage/landingPage';
+import { desaturatedBrandLogoUrl, extractBrandId, type BrandInfo } from '@/api/landingPage/landingPage';
 import { BRANDS_UNVEILED } from '@/router';
 
 const props = defineProps<{
     brands: BrandInfo[]
 }>()
-
-// To exract the brand id we use the brand_origin_col which (should) always contain a string like this: 1234.jpg
-const extractBrandId = (brand: BrandInfo) => +brand.brand_origin_col.split('.')[0]
 
 </script>
 
