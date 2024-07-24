@@ -43,7 +43,7 @@ onBeforeMount(async () => {
   }
 
   mediaStore.loadMedia(_garage.photo);
-  vehicleStore.getListItems?.items.forEach(item => {
+  vehicleStore.getListItems?.items.forEach((item: any) => {
     mediaStore.loadMedia(item.photo || item.main_photo);
   });
 
