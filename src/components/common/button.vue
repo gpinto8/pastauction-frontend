@@ -20,7 +20,7 @@ const props = defineProps<{
   classes?: string;
   disabled?: boolean;
   size?: string;
-  onClick: (event: MouseEvent) => any;
+  onClick?: (event: MouseEvent) => any;
 }>();
 
 const variants: {
