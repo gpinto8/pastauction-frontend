@@ -71,7 +71,7 @@ function setOrder(item: Order) {
       <div class="text-center my-10">
         <div class="text-3xl font-medium mb-3">My garage</div>
       </div>
-      <div class="grid grid-cols-3 gap-10 mb-[70px]">
+      <div class="grid grid-cols-3 gap-10 mb-[32px]">
         <div class="col-span-3 lg:col-span-2">
           <div class="card">
             <div class="flex justify-between flex-wrap gap-3">
@@ -173,6 +173,9 @@ function setOrder(item: Order) {
             </div>
           </div>
         </div>
+      </div>
+      <div class="mb-[16px] text-blue-500">
+        Vehicles ({{ store.getListItems?.total || 0 }})
       </div>
     </template>
     <GarageList :order="order" />
