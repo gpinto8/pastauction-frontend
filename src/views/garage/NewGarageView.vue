@@ -55,7 +55,7 @@ const v$ = useVuelidate(rules, garage);
  * Methods
  */
 globalStore
-  .globalFilter('bidwatcher_country', 'name')
+  .globalFilterAll('bidwatcher_country', 'name')
   .then(res => (countries.value = res));
 
 async function postForm() {
