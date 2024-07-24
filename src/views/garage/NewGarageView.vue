@@ -6,7 +6,7 @@ import { required } from '@vuelidate/validators';
 import { useGlobalStore } from '@/store/GlobalStore';
 import { useGarageStore } from '@/store/garage';
 import { useGeneralStore } from '@/store/datas/general';
-
+import { alphabeticallyByKey } from '@/lib/sort';
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
 import Button from '@/components/common/button.vue';
@@ -55,8 +55,8 @@ const v$ = useVuelidate(rules, garage);
  * Methods
  */
 globalStore
-  .globalFilterAll('bidwatcher_country', 'name')
-  .then(res => (countries.value = res));
+  .globalFilterAll<{ name: string }>('bidwatcher_country', 'name')
+  .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
 
 async function postForm() {
   const res = (await store.create(garage.value)) as any; // TODO type
@@ -186,7 +186,7 @@ const uploadImage = (e: any) => {
           <v-autocomplete
             v-model="garage.country"
             :items="countries"
-            placeholder="Select"
+            placeholder="Select or type"
             variant="outlined"
             density="comfortable"
             item-title="name"
