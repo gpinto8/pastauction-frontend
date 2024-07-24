@@ -183,7 +183,7 @@ const uploadImage = (e: any) => {
             @blur="v$.name.$touch"
           />
           <label>Country</label>
-          <v-select
+          <v-autocomplete
             v-model="garage.country"
             :items="countries"
             placeholder="Select"
