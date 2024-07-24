@@ -6,6 +6,15 @@ import router from '../router';
 
 import { httpPost, httpGet } from '@/api/api';
 
+export type Garage = {
+  photo: string
+  name: string
+  description: string
+  country: string
+  id: number
+  vehicle_capacity: number
+}
+
 export const useGarageStore = defineStore('garage', () => {
   // state
   const list = ref();
@@ -52,6 +61,21 @@ export const useGarageStore = defineStore('garage', () => {
           reject(err);
         });
     });
+  }
+
+  async function getById (
+    id: string,
+  ): Promise<Garage> {
+    loadingListItems.value = true
+
+    return httpGet(`garage_set/query?search=id:${id}`)
+      .then(({ data }) => {
+        const [item] = data.items
+        return item
+      })
+      .finally(() => {
+        loadingListItems.value = false
+      })
   }
 
   async function create(item: any) {
@@ -231,7 +255,7 @@ export const useGarageStore = defineStore('garage', () => {
     getListItems,
     getlLoadingListItems,
     getSocialRumorsDetails,
-
+    getById,
     // actions
     listPaginated,
     create,
