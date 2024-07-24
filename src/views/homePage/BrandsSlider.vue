@@ -1,6 +1,13 @@
 <script setup lang="ts">
 
 import InfiniteSlider from '@/components/common/InfiniteSlider.vue'
+import { desaturatedBrandLogoUrl, type BrandInfo } from '@/api/landingPage/landingPage';
+
+const props = defineProps<{
+    brands: BrandInfo[]
+}>()
+
+const extractBrandId = (brand: BrandInfo) => +brand.brand_origin_col.split('.')[0]
 
 import Brand1Image from './assets/brandsIcons/brand1.png'
 import Brand2Image from './assets/brandsIcons/brand2.png'
@@ -29,11 +36,10 @@ const images = [
         <div class="pl-24 text-slate-400 pt-32 text-5xl w-full cormorant-custom-600">
             Vintage Brands Unveiled
         </div>
-
-        <InfiniteSlider :bar-style="{}" class="my-32 shrink-0">
+        <InfiniteSlider :bar-style="{}" duration="120s" class="my-32 shrink-0">
             <div class="flex space-x-10">
-                <div class="h-24" v-for="image of images">
-                    <img :src="image" class="h-full">
+                <div class="h-24 shrink-0" v-for="brand in brands">
+                    <img :src="desaturatedBrandLogoUrl(extractBrandId(brand))" class="h-full w-auto">
                 </div>
             </div>
         </InfiniteSlider>
