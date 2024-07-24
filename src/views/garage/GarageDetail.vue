@@ -2,7 +2,8 @@
 import { ref, mergeProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useGarageStore, type Garage } from '@/store/garage';
-import { useVehicleStore } from '@/store/datas/singleDetailVehicle';
+// import { useVehicleStore } from '@/store/datas/singleDetailVehicle';
+import { useVehicleStore } from '@/store/vehicle/vehicle';
 import { useGeneralStore } from '@/store/datas/general';
 import { MediaStore } from '@/lib/media-store';
 
@@ -27,7 +28,7 @@ const mediaStore = new MediaStore();
 onBeforeMount(async () => {
   const promise = Promise.all([
     garageStore.getById(route.params.id.toString()),
-    // vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id }),
+    vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id }),
   ]);
 
   loading.value = true;
@@ -36,7 +37,16 @@ onBeforeMount(async () => {
   });
 
   const [_garage] = await promise;
+
+  if (!_garage) {
+    throw new Error('Garage not found');
+  }
+
   mediaStore.loadMedia(_garage.photo);
+  vehicleStore.getListItems?.items.forEach(item => {
+    mediaStore.loadMedia(item.photo || item.main_photo);
+  });
+
   garage.value = _garage;
 });
 </script>
@@ -236,15 +246,23 @@ onBeforeMount(async () => {
         </v-img>
 
         <v-card-text>
-          <div class="font-medium ms-1 mb-2 text-xl">Mercedes Benz</div>
+          <div class="font-medium ms-1 mb-2 text-xl">
+            Brand {{ item.id_brand }}
+          </div>
 
           <ul class="list-disc mt-4 pl-4">
-            <li>{{ item.miles }} mi (TMU)</li>
+            <li>{{ item.miles || 0 }} mi (TMU)</li>
             <li>{{ item.originality }}</li>
           </ul>
           <div class="flex items-center my-4">
             <v-avatar color="grey" class="mr-3" size="x-small">
-              <v-icon icon="mdi-account-circle" />
+              <img
+                v-if="item.location_id"
+                icon="mdi-account-circle"
+                class="h-full"
+                :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/${item.location_id}.jpeg`"
+              />
+              <v-icon v-else icon="mdi-account-circle" />
             </v-avatar>
             <h6>{{ item.location_id }}</h6>
           </div>
