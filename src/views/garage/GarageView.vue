@@ -16,7 +16,20 @@ const generalStore = useGeneralStore();
 /** Router */
 const router = useRouter();
 
+type Order = {
+  text: string;
+  value: Record<string, string>;
+};
+const orders = [
+  { text: 'Newest first', value: { id: 'desc' } },
+  { text: 'Oldest first', value: { id: 'asc' } },
+] as const;
+const order = ref<Record<string, string>>(orders[0].value);
+
 /** Methods */
+function setOrder(item: Order) {
+  order.value = item.value;
+}
 </script>
 
 <template>
@@ -142,11 +155,8 @@ const router = useRouter();
                   </template>
 
                   <v-list>
-                    <v-list-item>
-                      <v-list-item-title>Oldest first</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Newest first</v-list-item-title>
+                    <v-list-item v-for="item in orders" @click="setOrder(item)">
+                      <v-list-item-title>{{ item.text }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -165,6 +175,6 @@ const router = useRouter();
         </div>
       </div>
     </template>
-    <GarageList />
+    <GarageList :order="order" />
   </v-container>
 </template>

@@ -4,6 +4,12 @@ import { useRouter } from 'vue-router';
 import { useGarageStore } from '@/store/garage';
 
 import { useGeneralStore } from '@/store/datas/general';
+import { watch } from 'vue';
+import { onBeforeMount } from 'vue';
+
+const props = defineProps<{
+  order: Record<string, string>;
+}>();
 
 /** Store */
 const store = useGarageStore();
@@ -15,11 +21,15 @@ const router = useRouter();
 const loadedMedia = ref<Record<string, string>>({});
 
 /** Methods */
-store.listPaginated(1, 10, {}, { id: 'desc' }).then(() => {
-  store.getListItems?.items?.forEach((item: any) =>
-    loadMedia(item.id, item.photo)
-  );
-});
+function loadGarage() {
+  store.listPaginated(1, 10, {}, props.order).then(() => {
+    store.getListItems?.items?.forEach((item: any) =>
+      loadMedia(item.id, item.photo)
+    );
+  });
+}
+watch(() => props.order, loadGarage);
+onBeforeMount(loadGarage);
 
 const loadMedia = async (id: number, resource: string) => {
   if (resource && resource !== 'string') {
