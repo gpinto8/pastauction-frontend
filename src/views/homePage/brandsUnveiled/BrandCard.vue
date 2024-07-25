@@ -8,7 +8,7 @@ const props = defineProps<{
 
 const brandLogo = computed(() => brandLogoUrl(extractBrandId(props.brand)))
 const desaturatedBrandLogo = computed(() => desaturatedBrandLogoUrl(extractBrandId(props.brand)))
-const selected = ref(false)
+const selected = ref(true)
 
 const hovered = ref(false)
 
@@ -39,39 +39,47 @@ const containerStyles = computed(() => {
                 <img :src="desaturatedBrandLogo" class="absolute-center group-hover:opacity-0">
             </div>
             <div
-                class="flex flex-col text-sm gap-2 [&>*]:flex first:[&>*>span]:w-16 [&>*>span]:line-clamp-1 first:[&>*>span]:block first:[&>*>span]:font-semibold last:[&>*>span]:text-zinc-600">
+                class="flex flex-col text-sm gap-2 [&>*]:flex first:[&>*>span]:w-16 [&>*>span]:text-left first:[&>*>span]:block first:[&>*>span]:font-semibold [&>*>span]: last:[&>*>span]:text-zinc-600">
                 <div>
-                    <span class="">Brand:&nbsp;</span> <span>{{ brand.brand_name }}</span>
+                    <span class="">Brand:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_name }}</span>
                 </div>
                 <div>
-                    <span class="">Country:&nbsp;</span> <span class="">UK</span>
+                    <span class="">Country:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_country_code
+                        }}</span>
                 </div>
                 <div>
-                    <span class="">Type:&nbsp;</span> <span>{{ brand.brand_name }}</span>
+                    <span class="">Type:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_name }}</span>
                 </div>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">City:&nbsp;</span> <span class="">{{ brand.brand_city_name }}</span>
+                        <span class="">City:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Active:&nbsp;</span> <span class="">{{ brand.brand_city_name }}</span>
+                        <span class="">Active:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_date_start
+                            }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Vechicles:&nbsp;</span> <span class="">{{ brand.brand_city_name }}</span>
+                        <span class="">Vechicles:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
+                            }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Models:&nbsp;</span> <span class="">{{ brand.brand_city_name }}</span>
+                        <span class="">Models:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
+                            }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Founder:&nbsp;</span> <span class="">{{ brand.brand_city_name }}</span>
+                        <span class="">Founder:&nbsp;</span>
+                        <div class="[&]:line-clamp-2 text-left">
+                            <div class="line-clamp-1">{{ brand.fouder_name }}</div>
+                            ({{ brand.fouder_date_born }}-{{ brand.fouder_date_death }})
+                        </div>
                     </div>
                 </Transition>
             </div>
