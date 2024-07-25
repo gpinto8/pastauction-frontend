@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, mergeProps } from 'vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination } from 'swiper/modules';
 import { useRouter, useRoute } from 'vue-router';
 import { useGarageStore, type Garage } from '@/store/garage';
 // import { useVehicleStore } from '@/store/datas/singleDetailVehicle';
@@ -23,6 +25,43 @@ const generalStore = useGeneralStore();
 const garage = ref<Garage | null>(null);
 const loading = ref(false);
 const mediaStore = new MediaStore();
+const services = [
+  {
+    href: '/garage/detail/view',
+    icon: 'garage_dark',
+    title: 'Garage view',
+  },
+  {
+    href: '/garage/detail/social-media-rumors',
+    icon: 'globe',
+    title: 'Social Rumors',
+  },
+  {
+    href: '/garage/detail/auction-alert',
+    icon: 'calendar',
+    title: 'Auction Alerts',
+  },
+  {
+    href: '#',
+    icon: 'single_chart',
+    title: 'Single Charts',
+  },
+  {
+    href: '#',
+    icon: 'mini_dashboard',
+    title: 'Mini Dashboard',
+  },
+  {
+    href: '#',
+    icon: 'dashboard',
+    title: 'Dashboard',
+  },
+  {
+    href: '#',
+    icon: 'single_detail',
+    title: 'Single Detail',
+  },
+];
 
 /** Methods */
 onBeforeMount(async () => {
@@ -123,57 +162,50 @@ onBeforeMount(async () => {
       </span>
     </div>
 
-    <div class="flex items-center justify-between gap-3">
-      <router-link
-        to="/garage/detail/view"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
+    <div class="card p-0 min-[1280px]:px-[20px]">
+      <swiper
+        :space-between="17"
+        wrapper-class="max-[1280px]:pb-[40px] py-[20px]"
+        :pagination="{ clickable: true }"
+        :modules="[Pagination]"
+        :breakpoints="{
+          320: {
+            slidesPerView: 1.1,
+            enabled: true,
+            slidesOffsetAfter: 20,
+            slidesOffsetBefore: 20,
+          },
+          640: {
+            slidesPerView: 3.5,
+            enabled: true,
+            slidesOffsetAfter: 20,
+            slidesOffsetBefore: 20,
+          },
+          768: {
+            slidesPerView: 4.5,
+            enabled: true,
+            slidesOffsetAfter: 20,
+            slidesOffsetBefore: 20,
+          },
+          1280: {
+            enabled: false,
+            slidesPerView: services.length,
+            slidesOffsetAfter: 0,
+            slidesOffsetBefore: 0,
+          },
+        }"
       >
-        <app-icon type="garage_dark" class="mx-auto" />
-        <div>Garage view</div>
-      </router-link>
-      <router-link
-        to="/garage/detail/social-media-rumors"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
-      >
-        <app-icon type="globe" class="mx-auto" />
-        <div>Social Rumors</div>
-      </router-link>
-      <router-link
-        to="/garage/detail/auction-alert"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
-      >
-        <app-icon type="calendar" class="mx-auto" />
-        <div>Auction Alerts</div>
-      </router-link>
-
-      <router-link
-        to="#"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
-      >
-        <app-icon type="single_chart" class="mx-auto" />
-        <div>Single Charts</div>
-      </router-link>
-      <router-link
-        to="#"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
-      >
-        <app-icon type="mini_dashboard" class="mx-auto" />
-        <div>Mini Dashboard</div>
-      </router-link>
-      <router-link
-        to="#"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
-      >
-        <app-icon type="dashboard" class="mx-auto" />
-        <div>Dashboard</div>
-      </router-link>
-      <router-link
-        to="#"
-        class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
-      >
-        <app-icon type="single_detail" class="mx-auto" />
-        <div>Single Detail</div>
-      </router-link>
+        <!--  -->
+        <swiper-slide v-for="service in services">
+          <router-link
+            :to="service.href"
+            class="block border !border-[#212529] bg-[#F8F9FA] rounded-[4px] px-6 py-2 text-center space-y-2"
+          >
+            <app-icon :type="service.icon" class="mx-auto" />
+            <div>{{ service.title }}</div>
+          </router-link>
+        </swiper-slide>
+      </swiper>
     </div>
     <div class="card my-10">
       <div class="flex justify-between">
