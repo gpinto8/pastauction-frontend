@@ -1,14 +1,14 @@
-import { writeFileSync } from 'node:fs';
-import { fileURLToPath, URL } from 'node:url';
+import { writeFileSync } from 'node:fs'
+import { fileURLToPath, URL } from 'node:url'
 
-import vue from '@vitejs/plugin-vue';
-import { defineConfig, type UserConfig } from 'vite';
+import vue from '@vitejs/plugin-vue'
+import { defineConfig, type UserConfig } from 'vite'
 
-import { visualizer } from 'rollup-plugin-visualizer';
-import { checker } from 'vite-plugin-checker';
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import { visualizer } from 'rollup-plugin-visualizer'
+import { checker } from 'vite-plugin-checker'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
-import pkg from './package.json';
+import pkg from './package.json'
 
 /**
  * Vite Configure
@@ -18,7 +18,7 @@ import pkg from './package.json';
 export default defineConfig(({ command, mode }): UserConfig => {
   const config: UserConfig = {
     // https://vitejs.dev/config/shared-options.html#base
-    base: './',
+    // base: './',
     // https://vitejs.dev/config/shared-options.html#define
     define: { 'process.env': {} },
     plugins: [
@@ -26,7 +26,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
       // @ts-expect-error
       vue({
         script: {
-            defineModel: true
+          defineModel: true
         },
         template: {
           // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin#image-loading
@@ -93,11 +93,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
           plugins: [
             mode === 'analyze'
               ? // rollup-plugin-visualizer
-                // https://github.com/btd/rollup-plugin-visualizer
-                visualizer({
-                  open: true,
-                  filename: 'dist/stats.html',
-                })
+              // https://github.com/btd/rollup-plugin-visualizer
+              visualizer({
+                open: true,
+                filename: 'dist/stats.html',
+              })
               : undefined,
           ],
         },
@@ -107,7 +107,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
       // Drop console when production build.
       drop: command === 'serve' ? [] : ['console'],
     },
-  };
+  }
 
   // Write meta data.
   writeFileSync(
@@ -122,7 +122,7 @@ const meta: MetaInterface = {
 };
 export default meta;
 `
-  );
+  )
 
-  return config;
-});
+  return config
+})
