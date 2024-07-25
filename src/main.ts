@@ -1,5 +1,6 @@
 import store from '@/store';
 import { createApp } from 'vue';
+import 'swiper/swiper-bundle.css';
 
 import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
