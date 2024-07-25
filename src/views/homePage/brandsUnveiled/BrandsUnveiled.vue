@@ -44,8 +44,8 @@ watch(selectedLetter, () => {
                     {{ letter }}
                 </button>
             </div>
-            <div class="grid grid-cols-4 gap-7 mt-10">
-                <BrandCard v-for="brand of brands" :brand="brand" />
+            <div class="grid grid-cols-4 gap-7 mt-10 items-center ">
+                <BrandCard v-for="brand of brands" :brand="brand" class="max-w-[275px]" />
             </div>
         </div>
         <Footer />
