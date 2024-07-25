@@ -5,11 +5,12 @@ import Header from './Header.vue';
 
 import { getCarouselCharts, getCarouselChartsBackgroundImage, getHeadPageArea, getPhotoBoxes, getVideoPageArea, getVideos } from '@/utils/landingPage/landingPage';
 import { computed, ref } from 'vue';
-import { homepageSections, type Section } from '../../api/landingPage/landingPage';
+import { getBrandAndFounder as getBrandAndFounders, homepageSections, type BrandInfo, type Section } from '../../api/landingPage/landingPage';
 import { groupIntoPairs } from '../../utils/functions/groupIntoPairs';
 import BrandsSlider from './BrandsSlider.vue';
 import ChartsCarousel from './ChartsCarousel.vue';
-import VideoCarousel from './videoCarousel/VideoCarousel.vue'
+import LastSection from './LastSection.vue';
+import VideoCarousel from './videoCarousel/VideoCarousel.vue';
 
 const sections = ref<Section[]>([])
 
@@ -28,6 +29,11 @@ homepageSections()
     .then(response => {
         sections.value = response.data.items
     })
+
+const brands = ref<BrandInfo[]>([])
+getBrandAndFounders()
+    .then(response => brands.value = response.data.items)
+    .catch(console.log)
 
 </script>
 
@@ -101,12 +107,23 @@ homepageSections()
                 <VideoCarousel :videos="videos" class="h-screen" v-if="videos.length > 0" />
             </div>
             <div class="section h-screen flex justify-center items-center">
-                <BrandsSlider class="w-screen h-screen" />
+                <BrandsSlider :brands="brands" class="w-screen h-screen" />
             </div>
             <div class="section h-screen flex justify-center items-center">
                 <ChartsCarousel :images="carouselCharts" class="h-screen w-screen"
                     :backgroundImage="carouselChartsBackgroundImage?.media_path || ''" />
             </div>
+            <div class="section h-screen">
+                <div class="h-screen flex flex-col">
+                    <LastSection class="h-full" />
+                </div>
+            </div>
         </full-page>
     </div>
 </template>
+
+<style>
+.yellow-button {
+    @apply border-solid text-yellow-300 border-yellow-300 border-2
+}
+</style>

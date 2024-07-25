@@ -8,33 +8,25 @@ const slots = useSlots()
 
 const props = defineProps<{
     barStyle: Object,
-    duration?: {
-        type: string
-    },
-    direction?: {
-        type: string
-    },
-    delay?: {
-        type: string
-    },
-    paused?: {
-        type: boolean
-    }
+    duration?: string,
+    direction?: string,
+    delay?: string,
+    paused?: boolean
 }>()
 
 const customStyle = computed(() => {
     return {
         ...props.barStyle,
-        'animation-duration': props.duration ? props.duration.type : '30s',
-        'animation-direction': props.direction ? props.direction.type : 'normal',
-        'animation-delay': props.delay ? props.delay.type : '0s',
-        'animation-play-state': (props.paused && props.paused.type) ? 'paused' : 'running'
+        'animation-duration': props.duration ? props.duration : '30s',
+        'animation-direction': props.direction ? props.direction : 'normal',
+        'animation-delay': props.delay ? props.delay : '0s',
+        'animation-play-state': (props.paused != null && props.paused) ? 'paused' : 'running'
     }
 })
 
 const render = () => {
     // @ts-ignore
-    const bar = h('div', { class: 'vifnslb-bar' }, slots.default())
+    const bar = h('div', { class: 'vifnslb- ' }, slots.default())
     const slider = h('div', { class: 'vifnslb-element', style: customStyle.value }, [bar, bar])
     return h('div', { class: 'vifnslb-container' }, [slider])
 }

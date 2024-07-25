@@ -11,6 +11,7 @@ import { scrollBehaviour } from './utils/scrollBehaviours';
 import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue';
 
 export const LANDING_PAGE = 'landing page';
+export const BRANDS_UNVEILED = 'brands unveiled';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,12 @@ const router = createRouter({
       path: '/landing',
       name: LANDING_PAGE,
       component: () => import('@/views/homePage/LandingPage.vue'),
+    },
+    {
+      path: '/brands_unveiled',
+      name: BRANDS_UNVEILED,
+      component: () =>
+        import('@/views/homePage/brandsUnveiled/BrandsUnveiled.vue'),
     },
     {
       path: '/',
