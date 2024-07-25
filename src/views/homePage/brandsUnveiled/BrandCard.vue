@@ -31,7 +31,7 @@ const containerStyles = computed(() => {
     <button
         class="flex flex-col justify-between bg-white group relative duration-[500ms] [&_*]:duration-[500ms] h-[20rem]"
         @mouseleave="selected = false; hovered = false" @mouseenter="hovered = true" @click="selected = true">
-        <div class="flex flex-col transition-[margin] px-5 flex-1" :style="containerStyles">
+        <div class="flex flex-col transition-[margin] w-full px-5 flex-1" :style="containerStyles">
             <!-- :style="hovered && !selected ? { marginTop: '-3rem', marginBottom: '4rem' } : { marginTop: '4rem', marginBottom: '0rem' }" -->
             <div class="relative [&>*]:transition-[opacity,transform] transition-[margin,height] [&>*]:max-h-full group-hover:[&>*]:-translate-y-[7.5rem]1"
                 :class="selected ? 'h-10 mb-2 mt-2' : 'h-36 mb-10 mt-0'">
