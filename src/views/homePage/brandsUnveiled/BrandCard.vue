@@ -8,7 +8,7 @@ const props = defineProps<{
 
 const brandLogo = computed(() => brandLogoUrl(extractBrandId(props.brand)))
 const desaturatedBrandLogo = computed(() => desaturatedBrandLogoUrl(extractBrandId(props.brand)))
-const selected = ref(true)
+const selected = ref(false)
 
 const hovered = ref(false)
 
