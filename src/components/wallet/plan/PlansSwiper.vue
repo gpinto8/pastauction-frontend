@@ -5,29 +5,38 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import PlansCard from '@/components/wallet/plan/PlansCard.vue';
-import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList.js';
+import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';
 
 // Emits
 const emits = defineEmits(['handleInfoClicked', 'handleBuyClick']);
 
 // Variables
+const loading = ref(true);
 const productsData: Record<string, any> = ref({});
 const modules = ref([Pagination]);
 const swiperOptions = {
-  breakpoints: {       
-    360: {       
+  breakpoints: {
+    360: {
       slidesPerView: 1.2,
-      spaceBetween: 10     
+      spaceBetween: 10,
     },
-    670: {       
+    // 670: {
+    //   slidesPerView: 2.2,
+    //   spaceBetween: 30,
+    // },
+    768: {
       slidesPerView: 2.2,
-      spaceBetween: 50     
+      spaceBetween: 30,
     },
-    1024: {       
-      slidesPerView: 3.1,       
-      spaceBetween: 30     
-    } 
-  }   
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30,
+    },
+    // 1280: {
+    //   slidesPerView: 4,
+    //   spaceBetween: 30,
+    // },
+  },
 };
 
 // onMounted
@@ -42,10 +51,19 @@ onMounted(async () => {
       pro: 4,
     };
 
-    for (const family in familiesIds) {
-      const products = await fetchProductListById(familiesIds[family]);
-      productsData.value[family] = products;
-    }
+    Promise.all(
+      Object.entries(familiesIds).map(
+        async ([key, value]) => await fetchProductListById(value)
+      )
+    )
+      .then(products => {
+        for (const [index, family] of Object.entries(products)) {
+          productsData.value[index] = family;
+        }
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   } catch (error) {
     console.error('Errore durante il recupero dei dati dei prodotti:', error);
   }
@@ -62,18 +80,29 @@ function handleBuyClick(family: any) {
 </script>
 
 <template>
-  <swiper
-    :breakpoints="swiperOptions.breakpoints"
-    :centered-slides="false"
-    :pagination="{ clickable: true }"
-    :modules="modules"
-    class="swiperPlans"
-    style="padding-bottom: 50px; width: 100%"
-  >
-    <swiper-slide v-for="(family, index) in productsData" :key="index">
-      <PlansCard :data="family" @handleInfoClicked="handleMoreInfoClicked($event)" @handleBuyClick="handleBuyClick($event)" />
-    </swiper-slide>
-  </swiper>
+  <div v-if="loading" class="flex justify-center items-center h-96">
+    <v-progress-circular indeterminate size="64"></v-progress-circular>
+  </div>
+
+  <v-slide-y-transition>
+    <swiper
+      v-show="!loading"
+      :breakpoints="swiperOptions.breakpoints"
+      :centered-slides="false"
+      :pagination="{ clickable: true }"
+      :modules="modules"
+      class="swiperPlans max-xl:!overflow-visible"
+      style="padding-bottom: 50px; width: 100%"
+    >
+      <swiper-slide v-for="(family, index) in productsData" :key="index">
+        <PlansCard
+          :data="family"
+          @handleInfoClicked="handleMoreInfoClicked($event)"
+          @handleBuyClick="handleBuyClick($event)"
+        />
+      </swiper-slide>
+    </swiper>
+  </v-slide-y-transition>
 </template>
 
 <style scoped>

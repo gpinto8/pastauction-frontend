@@ -2,13 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+html,
+body {
   overflow-y: auto;
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  font-family: Inter, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Montserrat, Inter, sans-serif;
 }
 
 body {
   @apply text-primary;
   color: #212529;
+  background-color: #f8f9fa;
 }
 
 .v-application {
@@ -22,4 +36,8 @@ body {
 /* Removes landing page water mark */
 .fp-watermark {
   @apply !-z-40 !-bottom-40;
+}
+
+.v-expansion-panel__shadow {
+  box-shadow: 0px 0px 8px 0px #6666661f;
 }

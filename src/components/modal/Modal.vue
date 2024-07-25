@@ -2,7 +2,10 @@
 import AppIcon from '@/components/common/AppIcon.vue';
 import { defineProps, defineEmits } from 'vue';
 
-const props = defineProps(['isModalOpen']);
+const props = defineProps<{
+  isModalOpen: boolean;
+  background?: boolean;
+}>();
 const emits = defineEmits();
 
 const handleOverlayClick = (event: MouseEvent) => {
@@ -12,20 +15,31 @@ const handleOverlayClick = (event: MouseEvent) => {
   }
 };
 const closeModal = () => {
-    // Emetti un evento per notificare al genitore la chiusura della modale
-    emits('overlay-click');
+  // Emetti un evento per notificare al genitore la chiusura della modale
+  emits('overlay-click');
 };
 </script>
 
-<template class="modal-overlay ">
-    <div class="z-40">
-			<div v-if="isModalOpen" @click="handleOverlayClick" class="fixed inset-0 flex items-center justify-center modal-overlay">
-				<slot/>
-			</div>
+<template class="modal-overlay">
+  <div class="z-40">
+    <div
+      v-if="isModalOpen"
+      @click="handleOverlayClick"
+      class="fixed inset-0 flex items-center justify-center modal-overlay"
+    >
+      <div
+        :class="{
+          'flex flex-col gap-5 bg-white p-8 w-full sm:w-96 rounded-lg shadow-lg relative':
+            background,
+        }"
+      >
+        <slot />
+      </div>
     </div>
+  </div>
 </template>
 
-<style lang="postcss">
+<style lang="scss">
 /* Aggiungi questo stile per lo sfondo opaco */
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.7); /* Colore grigio con opacità 0.2 */

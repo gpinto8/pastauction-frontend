@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PLATFORMS="linux/amd64,linux/arm64"
+COMMIT_HASH=$(git rev-parse --short HEAD)
+IMAGE_NAME="pastauction/frontend"
+TAG_SET_FROM_UI="${IMAGE_NAME}:${DOCKER_TAG}"
+TAG_COMMIT="${IMAGE_NAME}:${COMMIT_HASH}"
+
+printf "hooks\nci\n.vscode\n.git\n.github\n.husky\n.env\n" > ../.dockerignore
+echo "cat .dockerignore"
+cat ../.dockerignore
+docker build -f ../ci/Dockerfile_node_yarn -t build-assets ../
+docker create --name extract build-assets
+docker cp extract:/app/dist .././dist
+docker rm extract
+
+git checkout ../.dockerignore
+docker buildx create --name multiarch --use || true
+cd ../ && docker buildx build --platform ${PLATFORMS} -f "${DOCKERFILE_PATH}" -t "$TAG_COMMIT" -t "$TAG_SET_FROM_UI" --push "${BUILD_PATH}"

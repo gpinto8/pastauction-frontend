@@ -8,6 +8,9 @@ import './assets/main.css';
 import './assets/fonts.css';
 import axios from 'axios';
 import config from '@/config';
+import { loadFonts } from './plugins/webfontloader'
+
+loadFonts();
 
 // https://github.com/alvarotrigo/vue-fullpage.js
 import 'vue-fullpage.js/dist/style.css';

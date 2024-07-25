@@ -1,0 +1,10 @@
+FROM node:18.16.0 as build
+
+RUN yarn --version
+WORKDIR /app
+RUN pwd
+COPY . .
+RUN ls -la
+RUN mv .env.prod .env
+RUN yarn install
+RUN yarn build
