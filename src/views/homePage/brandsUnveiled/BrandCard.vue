@@ -39,7 +39,7 @@ const containerStyles = computed(() => {
                 <img :src="desaturatedBrandLogo" class="absolute-center group-hover:opacity-0">
             </div>
             <div
-                class="flex flex-col text-sm gap-2 [&>*]:flex first:[&>*>span]:w-16 [&>*>span]:text-left first:[&>*>span]:block first:[&>*>span]:font-semibold [&>*>span]: last:[&>*>span]:text-zinc-600">
+                class="flex flex-col text-sm gap-2 [&>*]:flex first:[&>*>span]:w-[4.5rem] [&>*>span]:text-left first:[&>*>span]:block first:[&>*>span]:font-semibold [&>*>span]: last:[&>*>span]:text-zinc-600">
                 <div>
                     <span class="">Brand:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_name }}</span>
                 </div>
