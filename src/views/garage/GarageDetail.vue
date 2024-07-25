@@ -54,7 +54,7 @@ onBeforeMount(async () => {
 <template>
   <v-container>
     <br />
-    <v-btn icon size="small" @click="router.back()">
+    <v-btn icon size="small" @click="router.push('/garage')">
       <app-icon type="arrow_left" />
     </v-btn>
 
@@ -212,66 +212,84 @@ onBeforeMount(async () => {
       </div>
     </div>
     <div class="text-xl text-blue-500 font-medium">
-      Vehicles ({{ vehicleStore.getListItems?.items?.total ?? 0 }})
+      Vehicles ({{ vehicleStore.getListItems?.total ?? 0 }})
     </div>
-    <div class="grid grid-cols-3 my-4 gap-10">
-      <v-card
-        v-for="item in vehicleStore.getListItems?.items"
-        :key="item.id"
-        width="350"
+    <div v-if="loading" class="flex justify-center items-center h-[200px]">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </div>
+    <v-slide-y-transition>
+      <div
+        v-if="!loading"
+        class="grid sm:grid-cols-2 lg:grid-cols-3 my-4 gap-[24px]"
       >
-        <v-img
-          height="200"
-          :src="mediaStore.map.value[item.photo]"
-          cover
-          class="text-white"
+        <v-card
+          variant="flat"
+          v-for="item in vehicleStore.getListItems?.items"
+          :key="item.id"
+          class="rounded-[9px] card-shadow"
         >
-          <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
-            <template #append>
-              <v-btn
-                class="text-none font-normal bg-[#F2F2F2] mr-2"
-                icon
-                size="x-small"
-              >
-                <app-icon type="pencil" class="ml-2" />
-              </v-btn>
-              <v-btn
-                class="text-none font-normal bg-[#F2F2F2]"
-                icon
-                size="x-small"
-              >
-                <app-icon type="trash" class="ml-2.5" />
-              </v-btn>
-            </template>
-          </v-toolbar>
-        </v-img>
+          <v-img
+            height="200"
+            :src="
+              mediaStore.map.value[item.photo] ||
+              'https://images.unsplash.com/photo-1508974239320-0a029497e820?q=80&w=4140&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            "
+            cover
+            class="text-white"
+          >
+            <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
+              <template #append>
+                <v-btn
+                  class="text-none font-normal bg-[#F2F2F2] mr-2"
+                  icon
+                  size="x-small"
+                >
+                  <app-icon type="pencil" class="ml-2" />
+                </v-btn>
+                <v-btn
+                  class="text-none font-normal bg-[#F2F2F2]"
+                  icon
+                  size="x-small"
+                >
+                  <app-icon type="trash" class="ml-2.5" />
+                </v-btn>
+              </template>
+            </v-toolbar>
+          </v-img>
 
-        <v-card-text>
-          <div class="font-medium ms-1 mb-2 text-xl">
-            Brand {{ item.id_brand }}
-          </div>
+          <v-card-text>
+            <div class="font-medium ms-1 mb-2 text-xl">
+              Brand {{ item.id_brand }}
+            </div>
 
-          <ul class="list-disc mt-4 pl-4">
-            <li>{{ item.miles || 0 }} mi (TMU)</li>
-            <li>{{ item.originality }}</li>
-          </ul>
-          <div class="flex items-center my-4">
-            <v-avatar color="grey" class="mr-3" size="x-small">
-              <img
-                v-if="item.location_id"
-                icon="mdi-account-circle"
-                class="h-full"
-                :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/${item.location_id}.jpeg`"
-              />
-              <v-icon v-else icon="mdi-account-circle" />
-            </v-avatar>
-            <h6>{{ item.location_id }}</h6>
-          </div>
-          <v-btn variant="outlined" class="text-none font-normal">
-            Search spare parts
-          </v-btn>
-        </v-card-text>
-      </v-card>
-    </div>
+            <ul class="list-disc mt-4 pl-4">
+              <li>{{ item.miles || 0 }} mi (TMU)</li>
+              <li>{{ item.originality }}</li>
+            </ul>
+            <div class="flex items-center my-4">
+              <v-avatar color="grey" class="mr-[5px]" size="16">
+                <img
+                  v-if="item.location_id"
+                  icon="mdi-account-circle"
+                  class="h-full"
+                  :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/${item.location_id}.jpeg`"
+                />
+                <v-icon v-else icon="mdi-account-circle" />
+              </v-avatar>
+              <h6>{{ item.location_id }}</h6>
+            </div>
+            <v-btn variant="outlined" class="text-none font-normal">
+              Search spare parts
+            </v-btn>
+          </v-card-text>
+        </v-card>
+      </div>
+    </v-slide-y-transition>
   </v-container>
 </template>
+
+<style lang="scss" scoped>
+.card-shadow {
+  box-shadow: 0px 2px 4px 0px #00000013;
+}
+</style>
