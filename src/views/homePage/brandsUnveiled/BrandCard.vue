@@ -57,8 +57,8 @@ const containerStyles = computed(() => {
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Active:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_date_start
-                            }}</span>
+                        <span class="">Active:&nbsp;</span> <span class="line-clamp-1">
+                            {{ brand.brand_date_start }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
@@ -78,7 +78,7 @@ const containerStyles = computed(() => {
                         <span class="">Founder:&nbsp;</span>
                         <div class="[&]:line-clamp-2 text-left">
                             <div class="line-clamp-1">{{ brand.fouder_name }}</div>
-                            ({{ brand.fouder_date_born }}-{{ brand.fouder_date_death }})
+                            ({{ brand.fouder_date_born?.split('/')[2] }}-{{ brand.fouder_date_death?.split('/')[2] }})
                         </div>
                     </div>
                 </Transition>

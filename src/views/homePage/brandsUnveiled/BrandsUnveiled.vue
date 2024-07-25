@@ -11,7 +11,7 @@ const selectedLetter = ref(alphabet[0])
 const brands = ref<BrandInfo[]>()
 
 const updateBrands = () => getBrandAndFounderByFirstLetter(selectedLetter.value)
-    .then(response => brands.value = response.data.items)
+    .then(response => brands.value = response.data.items.filter((brand: any) => brand.brand_homepage_display == true))
     .catch(console.log)
 
 updateBrands()
