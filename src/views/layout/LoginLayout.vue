@@ -1,5 +1,18 @@
 <script setup lang="ts">
-import backgroundUrl from '@/assets/images/login.png';
+import { computed } from 'vue';
+import loginBackgroundUrl from '@/assets/images/login.jpg';
+import userDetailBackgroundUrl from '@/assets/images/edit-profile.jpg';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const backgroundUrl = computed(() => {
+  switch (route.name) {
+    case 'UserDetail':
+      return userDetailBackgroundUrl;
+    default:
+      return loginBackgroundUrl;
+  }
+});
 </script>
 <template>
   <v-app :theme="'light'">
