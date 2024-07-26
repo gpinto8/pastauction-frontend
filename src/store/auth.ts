@@ -71,8 +71,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function getLoggedUserInfo () {
-      const data = await httpGet('user_info')
+    const promise = httpGet('user_info')
+    promise.then((data) => {
       detail.value = data
+    })
+    return promise
   }
 
   async function changePassword(info: any) {
