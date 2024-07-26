@@ -1,107 +1,151 @@
 <template>
-  <div>
-    <div
-      class="bg-white p-14 rounded-r-3xl absolute left-0 top-0 bottom-0 w-[588px] max-h-[680px] my-auto space-y-6 !text-primary"
-    >
-      <div class="space-y-2 text-left">
-        <h2 class="text-4xl">Personal Information</h2>
-        <div class="text-grey">
-          Complete the data with your personal information
-        </div>
+  <div class="space-y-6">
+    <div class="space-y-2 text-left">
+      <h2 class="text-3xl">Personal Information</h2>
+      <div class="text-grey">
+        Complete the data with your personal information
       </div>
+    </div>
 
+    <v-form @submit.prevent="submit" class="flex flex-col gap-3">
       <ui-upload
         @change="store.uploadPicture($event)"
         @delete="store.deletePicture"
         :profile-img="store.getProfileImage"
       />
 
-      <UiInput
+      <v-text-field
         v-model="user.first_name"
-        type="text"
-        placeholder="Firstname"
+        :error-messages="v$.first_name.$errors.map(e => e.$message) as any"
+        :counter="10"
+        density="comfortable"
+        placeholder="Enter your name"
+        label="Name"
         required
-        @change="v$.first_name.$touch"
-        :error-message="v$.first_name.$errors.map((e: any) => e.$message)"
-      />
+        variant="outlined"
+        @input="v$.first_name.$touch"
+        @blur="v$.first_name.$touch"
+      ></v-text-field>
 
-      <UiInput
+      <v-text-field
         v-model="user.surname"
-        type="text"
-        placeholder="Surname"
+        :error-messages="v$.surname.$errors.map(e => e.$message) as any"
+        :counter="10"
+        density="comfortable"
+        placeholder="Enter your surname"
+        label="Surname"
         required
-        @change="v$.surname.$touch"
-        :error-message="v$.surname.$errors.map((e: any) => e.$message)"
-      />
+        variant="outlined"
+        @input="v$.surname.$touch"
+        @blur="v$.surname.$touch"
+      ></v-text-field>
 
-      <VueDatePicker
+      <v-date-input
+        :prepend-icon="null as any"
+        label="Birth Date"
         v-model="user.birthdate"
-        placeholder="Date"
-        :enable-time-picker="false"
-        :format="format"
-        required
-        @change="v$.birthdate.$touch"
-        :error-message="v$.birthdate.$errors.map((e: any) => e.$message)"
-      />
+        variant="outlined"
+      ></v-date-input>
 
-      <v-select
+      <v-autocomplete
         v-model="user.country"
         label="Country"
-        item-title="area"
-        item-value="area"
+        :items="countries"
+        placeholder="Select or type"
         variant="outlined"
-        density="compact"
-        :items="store.getListCountries"
+        density="comfortable"
+        item-title="name"
+        item-value="name"
       />
 
       <br />
-      <UiButton :disabled="v$.$invalid" @click="store.updateUser(user)">
+      <Button
+        classes="w-full"
+        variant="black"
+        :disabled="v$.$invalid"
+        type="submit"
+      >
         Complete
-      </UiButton>
-    </div>
+      </Button>
+    </v-form>
   </div>
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top right"
+  >
+    {{ snackbar.text }}
+    <Button
+      classes="min-w-[100px] ml-2"
+      variant="white"
+      @click="snackbar.show = false"
+    >
+      Close
+    </Button>
+  </v-snackbar>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue';
-
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
 import { useAuthStore } from '@/store/auth';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import UiButton from '@/components/ui/ui-button.vue';
 import UiCombobox from '@/components/ui/ui-combobox.vue';
 import UiInput from '@/components/ui/ui-input.vue';
 import UiUpload from '@/components/ui/ui-upload.vue';
 import useGlobalStore from '@/store/GlobalStore';
+import Button from '@/components/common/button.vue';
+import { alphabeticallyByKey } from '@/lib/sort';
+import { snackbarState } from '@/lib/snackbar-state';
+
+type User = {
+  // gender: string;
+  first_name: string;
+  surname: string;
+  // address: string;
+  // city: string;
+  country: string;
+  birthdate: Date;
+  // phone: string;
+  // vat: string;
+  // nickname: string;
+  // currency: string;
+};
 
 const store = useAuthStore();
 const globalStore = useGlobalStore();
-const user = ref<any>({
-  password: 'string',
-  user_category: 19,
-  gender: 'string',
-  first_name: 'string',
-  surname: 'string',
-  address: 'string',
-  city: 'string',
-  country: 'string',
-  birthdate: '2023-09-20',
-  phone: 'string',
-  vat: 'vat',
-  nickname: 'string',
-  currency: 'EUR',
+const user = ref<User>({
+  // gender: '',
+  first_name: '',
+  surname: '',
+  // address: '',
+  // city: '',
+  country: '',
+  birthdate: new Date('2023-09-20'),
+  // phone: '',
+  // vat: 'vat',
+  // nickname: '',
+  // currency: 'EUR',
 });
 
-store.getLoggedUserInfo().then(res => {
-  user.value = res;
+const countries = ref<{ name: string; iso_code?: string }[]>([]);
+const snackbar = snackbarState();
+const loading = ref(false);
+
+store.getLoggedUserInfo().then(({ data }) => {
+  user.value = {
+    ...data,
+    birthdate: new Date(data.birthdate || '2023-09-20'),
+  };
 });
 
 onMounted(() => {
-  globalStore.globalFilter('bidwatcher_country', 'name').then(res => {
-    console.log(res);
-  });
+  globalStore
+    .globalFilterAll<{ name: string }>('bidwatcher_country', 'name')
+    .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
+
   if (store.getDetail?.photo) store.loadImage(store.getDetail.photo);
 });
 
@@ -121,14 +165,25 @@ const rules = computed(() => {
   };
 });
 
-const format = (date: Date) => {
-  const day = date.getDate();
-  let month: any = date.getMonth() + 1;
-  const year = date.getFullYear();
-  if (month < 10) month = `0${month}`;
-  user.value.birth = `${year}-${month}-${day}`;
-  return `${day}-${month}-${year}`;
-};
+async function submit() {
+  loading.value = true;
+  store
+    .updateUser(user.value)
+    .then(() => {
+      snackbar.value.show = true;
+      snackbar.value.text = 'User updated successfully';
+      snackbar.value.color = 'success';
+    })
+    .catch(() => {
+      snackbar.value.show = true;
+      snackbar.value.text = 'Error updating user, please try again';
+      snackbar.value.color = 'error';
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+}
+
 const v$ = useVuelidate(rules, user);
 </script>
 

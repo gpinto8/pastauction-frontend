@@ -12,6 +12,7 @@ import { en } from 'vuetify/locale';
 // Styles
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
+import { VDateInput } from 'vuetify/labs/components'
 
 /**
  * Vuetify Components
@@ -59,6 +60,7 @@ if (import.meta.env.DEV) {
   vuetifyConfig = {
     components: {
       components,
+      VDateInput,
     },
     directives,
     ...vuetifyConfig,
