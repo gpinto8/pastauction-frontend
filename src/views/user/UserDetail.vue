@@ -88,6 +88,7 @@
 </template>
 
 <script setup lang="ts">
+import { VDateInput } from 'vuetify/labs/components';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
