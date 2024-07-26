@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 
 import router from '@/router';
 
-import { httpPost, httpGet, httpPut, httpDelete } from '@/api/api';
+import { httpPost, httpGet, httpPut, httpDelete, httpPatch } from '@/api/api'
 
 export const useAuthStore = defineStore('auth', () => {
   // state
@@ -90,7 +90,19 @@ export const useAuthStore = defineStore('auth', () => {
     });
   }
 
-  async function updateUser(postPayload: any) {
+  async function updateUser (postPayload: {
+    // gender: string;
+    first_name: string
+    surname: string
+    // address: string;
+    // city: string;
+    country: string
+    birthdate: Date
+    // phone: string;
+    // vat: string;
+    // nickname: string;
+    // currency: string;
+  }) {
     const format = (date: Date) => {
       const newDate = new Date(date);
       const day = newDate.getDate();
@@ -102,16 +114,15 @@ export const useAuthStore = defineStore('auth', () => {
       return `${day}-${month}-${year}`;
     };
 
-    let formData = new FormData();
-    formData.append('name', postPayload.name);
-    formData.append('surname', postPayload.surname);
-    formData.append('birth', format(postPayload.birth));
-    formData.append('country_id', postPayload.country_id);
-    formData.append('city_id', postPayload.city_id);
-
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      httpPut('user_info', formData)
+      httpPatch('user_info_update', {
+        first_name: postPayload.first_name,
+        surname: postPayload.surname,
+        birthdate: format(postPayload.birthdate),
+        country_id: postPayload.country,
+        // city_id: postPayload.city_id, // TODO
+      })
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
