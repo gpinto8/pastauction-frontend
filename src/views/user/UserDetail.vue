@@ -9,8 +9,8 @@
 
     <v-form @submit.prevent="submit" class="flex flex-col gap-3">
       <ui-upload
-        @change="store.uploadPicture($event)"
-        @delete="store.deletePicture"
+        @change="uploadPicture"
+        @delete="deletePicture"
         :profile-img="store.getProfileImage"
       />
 
@@ -60,9 +60,10 @@
 
       <br />
       <Button
+        :loading="loading"
         classes="w-full"
         variant="black"
-        :disabled="v$.$invalid"
+        :disabled="v$.$invalid || loading"
         type="submit"
       >
         Complete
@@ -98,6 +99,7 @@ import UiUpload from '@/components/ui/ui-upload.vue';
 import useGlobalStore from '@/store/GlobalStore';
 import Button from '@/components/common/button.vue';
 import { alphabeticallyByKey } from '@/lib/sort';
+import { withLoading } from '@/lib/with-loading';
 import { snackbarState } from '@/lib/snackbar-state';
 
 type User = {
@@ -165,23 +167,58 @@ const rules = computed(() => {
   };
 });
 
-async function submit() {
-  loading.value = true;
-  store
-    .updateUser(user.value)
+function uploadPicture(file: File) {
+  const promise = store
+    .uploadPicture(file)
     .then(() => {
       snackbar.value.show = true;
-      snackbar.value.text = 'User updated successfully';
+      snackbar.value.text = 'Profile picture updated successfully';
       snackbar.value.color = 'success';
     })
     .catch(() => {
       snackbar.value.show = true;
-      snackbar.value.text = 'Error updating user, please try again';
+      snackbar.value.text = 'Error updating profile picture, please try again';
+      snackbar.value.color = 'error';
+    });
+
+  withLoading(loading, promise);
+}
+
+function deletePicture() {
+  const promise = store
+    .deletePicture()
+    .then(() => {
+      snackbar.value.show = true;
+      snackbar.value.text = 'Profile picture deleted successfully';
+      snackbar.value.color = 'success';
+    })
+    .catch(() => {
+      snackbar.value.show = true;
+      snackbar.value.text = 'Error deleting profile picture, please try again';
+      snackbar.value.color = 'error';
+    });
+
+  withLoading(loading, promise);
+}
+
+async function submit() {
+  const promise = store
+    .updateUser(user.value)
+    .then(() => {
+      snackbar.value.show = true;
+      snackbar.value.text = 'Profile updated successfully';
+      snackbar.value.color = 'success';
+    })
+    .catch(() => {
+      snackbar.value.show = true;
+      snackbar.value.text = 'Error updating your profile, please try again';
       snackbar.value.color = 'error';
     })
     .finally(() => {
       loading.value = false;
     });
+
+  withLoading(loading, promise);
 }
 
 const v$ = useVuelidate(rules, user);

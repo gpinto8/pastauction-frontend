@@ -1,5 +1,6 @@
 <template>
   <v-btn
+    :loading="loading || false"
     :color="variant.bgColor"
     class="text-none font-normal"
     :size="size"
@@ -20,6 +21,7 @@ const props = defineProps<{
   classes?: string;
   disabled?: boolean;
   size?: string;
+  loading?: boolean;
   onClick?: (event: MouseEvent) => any;
 }>();
 
