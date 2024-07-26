@@ -41,10 +41,12 @@
       ></v-text-field>
 
       <v-date-input
-        :prepend-icon="null as any"
+        :clearable="true"
+        @click:clear="user.birthdate = undefined"
         label="Birth Date"
         v-model="user.birthdate"
         variant="outlined"
+        :prepend-icon="null as any"
       ></v-date-input>
 
       <v-autocomplete
@@ -58,7 +60,6 @@
         item-value="name"
       />
 
-      <br />
       <Button
         :loading="loading"
         classes="w-full"
@@ -101,6 +102,7 @@ import Button from '@/components/common/button.vue';
 import { alphabeticallyByKey } from '@/lib/sort';
 import { withLoading } from '@/lib/with-loading';
 import { snackbarState } from '@/lib/snackbar-state';
+import { onBeforeMount } from 'vue';
 
 type User = {
   // gender: string;
@@ -109,7 +111,7 @@ type User = {
   // address: string;
   // city: string;
   country: string;
-  birthdate: Date;
+  birthdate?: Date;
   // phone: string;
   // vat: string;
   // nickname: string;
@@ -125,7 +127,7 @@ const user = ref<User>({
   // address: '',
   // city: '',
   country: '',
-  birthdate: new Date('2023-09-20'),
+  // birthdate: new Date('2023-09-20'),
   // phone: '',
   // vat: 'vat',
   // nickname: '',
@@ -135,21 +137,6 @@ const user = ref<User>({
 const countries = ref<{ name: string; iso_code?: string }[]>([]);
 const snackbar = snackbarState();
 const loading = ref(false);
-
-store.getLoggedUserInfo().then(({ data }) => {
-  user.value = {
-    ...data,
-    birthdate: new Date(data.birthdate || '2023-09-20'),
-  };
-});
-
-onMounted(() => {
-  globalStore
-    .globalFilterAll<{ name: string }>('bidwatcher_country', 'name')
-    .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
-
-  if (store.getDetail?.photo) store.loadImage(store.getDetail.photo);
-});
 
 const rules = computed(() => {
   return {
@@ -161,11 +148,36 @@ const rules = computed(() => {
       required: helpers.withMessage('Required field', required),
       minLength: minLength(3),
     },
-    birthdate: {
-      required: helpers.withMessage('Required field', required),
-    },
+    // birthdate: {
+    //   required: helpers.withMessage('Required field', required),
+    // },
   };
 });
+
+onBeforeMount(() => {
+  loadUser();
+
+  globalStore
+    .globalFilterAll<{ name: string }>('bidwatcher_country', 'name')
+    .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
+
+  if (store.getDetail?.photo) store.loadImage(store.getDetail.photo);
+});
+
+function loadUser() {
+  const promise = store.getLoggedUserInfo().then(({ data }) => {
+    const fetchedUser = {
+      ...data,
+    };
+    if (data.birthdate) {
+      fetchedUser.birthdate = new Date(data.birthdate);
+    }
+
+    user.value = fetchedUser;
+  });
+
+  withLoading(loading, promise);
+}
 
 function uploadPicture(file: File) {
   const promise = store

@@ -100,7 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
     // address: string;
     // city: string;
     country: string
-    birthdate: Date
+    birthdate?: Date
     // phone: string;
     // vat: string;
     // nickname: string;
@@ -122,8 +122,8 @@ export const useAuthStore = defineStore('auth', () => {
       httpPatch('user_info_update', {
         first_name: postPayload.first_name,
         surname: postPayload.surname,
-        birthdate: format(postPayload.birthdate),
-        country_id: postPayload.country,
+        birthdate: postPayload.birthdate ? format(postPayload.birthdate) : null,
+        country: postPayload.country,
         // city_id: postPayload.city_id, // TODO
       })
         .then(({ data }) => {
