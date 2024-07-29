@@ -6,6 +6,9 @@ import { ref, watch } from 'vue';
 import { type BrandInfo, getBrandAndFounderByFirstLetter } from '@/api/landingPage/landingPage';
 import Footer from '../Footer.vue';
 import BrandCard from './BrandCard.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const selectedLetter = ref(alphabet[0])
 const brands = ref<BrandInfo[]>()
@@ -26,7 +29,12 @@ watch(selectedLetter, () => {
     <div class="flex flex-col relative bg-slate-500 min-h-screen">
         <Header class="w-full" />
         <div class="flex flex-col text-white px-14">
-            <div class="text-5xl cormorant-custom-500 mt-24 mb-6">
+            <div>
+                <div class="h-fit w-fit scale-150 mt-24" @click="router.go(-1)">
+                    <AppIcon type="arrow_up" class="-rotate-90" />
+                </div>
+            </div>
+            <div class="text-5xl cormorant-custom-500 mt-10 mb-6">
                 Vintage Brands Unveiled
             </div>
             <div class="text-xl w-3/4">
