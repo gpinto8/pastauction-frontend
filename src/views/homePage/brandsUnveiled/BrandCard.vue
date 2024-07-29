@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { carCategoryImages } from '@/api/landingPage/brandsAndFounders';
 import { brandLogoUrl, desaturatedBrandLogoUrl, extractBrandId, type BrandInfo } from '@/api/landingPage/landingPage';
 import { computed, ref } from 'vue';
 
@@ -48,11 +49,16 @@ const containerStyles = computed(() => {
                         }}</span>
                 </div>
                 <div>
-                    <span class="">Type:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_name }}</span>
+                    <span class="">Type:&nbsp;</span>
+                    <div class="flex-center">
+                        <img :src="carCategoryImages[brand.brand_category_vehicle as keyof typeof carCategoryImages]"
+                            class="w-7">
+                    </div>
                 </div>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">City:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name }}</span>
+                        <span class="">City:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
+                            }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
@@ -78,7 +84,8 @@ const containerStyles = computed(() => {
                         <span class="">Founder:&nbsp;</span>
                         <div class="[&]:line-clamp-2 text-left">
                             <div class="line-clamp-1">{{ brand.fouder_name }}</div>
-                            ({{ brand.fouder_date_born?.split('/')[2] }}-{{ brand.fouder_date_death?.split('/')[2] }})
+                            ({{ brand.fouder_date_born?.split('/')[2] }}-{{ brand.fouder_date_death?.split('/')[2]
+                            }})
                         </div>
                     </div>
                 </Transition>
