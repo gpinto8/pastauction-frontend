@@ -112,6 +112,7 @@ type User = {
   // address: string;
   // city: string;
   country: string;
+  photo: string;
   birthdate?: Date;
   // phone: string;
   // vat: string;
@@ -128,6 +129,7 @@ const user = ref<User>({
   // address: '',
   // city: '',
   country: '',
+  photo: '',
   // birthdate: new Date('2023-09-20'),
   // phone: '',
   // vat: 'vat',
@@ -161,8 +163,6 @@ onBeforeMount(() => {
   globalStore
     .globalFilterAll<{ name: string }>('bidwatcher_country', 'name')
     .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
-
-  if (store.getDetail?.photo) store.loadImage(store.getDetail.photo);
 });
 
 function loadUser() {
@@ -175,6 +175,9 @@ function loadUser() {
     }
 
     user.value = fetchedUser;
+    if (user.value?.photo) {
+      store.loadImage(user.value.photo);
+    }
   });
 
   withLoading(loading, promise);

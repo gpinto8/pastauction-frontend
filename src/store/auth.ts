@@ -4,6 +4,7 @@ import { ref, computed } from 'vue';
 import router from '@/router';
 
 import { httpPost, httpGet, httpPut, httpDelete, httpPatch } from '@/api/api'
+import { useGeneralStore } from './datas/general'
 
 export const useAuthStore = defineStore('auth', () => {
   // state
@@ -199,26 +200,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function loadImage(imgUrl: string) {
-    return await new Promise((resolve, reject) => {
-      httpGet(`${imgUrl}`)
-        .then(({ data }) => {
-          console.log('img', data);
-          imageUrl.value = URL.createObjectURL(data);
-          let image = document.createElement('img') as any;
-          let reader = new FileReader();
-          reader.addEventListener('loadend', () => {
-            let contents = reader.result;
-            image.src = contents;
-            document.body.appendChild(image);
-          });
-          if (Blob instanceof Blob) reader.readAsDataURL(data);
-
-          resolve(data);
-        })
-        .catch((err: any) => {
-          reject(err);
-        });
-    });
+    imageUrl.value = await useGeneralStore().loadMedia(imgUrl)
   }
 
   function saveToken(token: string) {
