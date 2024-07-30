@@ -1,5 +1,9 @@
 <template>
   <div class="space-y-6">
+    <v-btn icon size="small" @click="router.back()">
+      <AppIcon type="arrow_left" />
+    </v-btn>
+
     <div class="space-y-2 text-left">
       <h2 class="text-3xl">Personal Information</h2>
       <div class="text-grey">
@@ -104,6 +108,8 @@ import { alphabeticallyByKey } from '@/lib/sort';
 import { withLoading } from '@/lib/with-loading';
 import { snackbarState } from '@/lib/snackbar-state';
 import { onBeforeMount } from 'vue';
+import { useRouter } from 'vue-router';
+import AppIcon from '@/components/common/AppIcon.vue';
 
 type User = {
   // gender: string;
@@ -120,6 +126,7 @@ type User = {
   // currency: string;
 };
 
+const router = useRouter();
 const store = useAuthStore();
 const globalStore = useGlobalStore();
 const user = ref<User>({
