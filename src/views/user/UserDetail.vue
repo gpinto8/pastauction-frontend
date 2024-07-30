@@ -176,7 +176,7 @@ function loadUser() {
 
     user.value = fetchedUser;
     if (user.value?.photo) {
-      store.loadImage(user.value.photo);
+      return store.loadImage(user.value.photo);
     }
   });
 
