@@ -114,7 +114,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (month < 10) month = `0${month}`;
 
-      return `${day}-${month}-${year}`;
+      return `${year}-${month}-${day}`;
     };
 
     loading.value = true;
@@ -172,7 +172,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      httpPost('profile_image', formData)
+      httpPost('profile_image/', formData)
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -186,7 +186,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function deletePicture() {
     return await new Promise((resolve, reject) => {
-      httpDelete('profile_image')
+      httpDelete('profile_image/')
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
