@@ -146,7 +146,7 @@ const router = useRouter();
                   @click="
                     () => {
                       close();
-                      router.push('/user-info');
+                      router.push('/profile');
                     }
                   "
                 >
