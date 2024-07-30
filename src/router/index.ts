@@ -61,12 +61,32 @@ const router = createRouter({
         },
         {
           path: '/garage/detail/:id',
-          name: 'GarageDetail',
+          name: 'GarageLayout',
           component: async () =>
             await import(
-              /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
+              /* webpackChunkName: "GarageLayout" */ '@/views/garage/GarageLayout.vue'
             ),
-        meta: { authentication: true },
+          meta: { authentication: true },
+          children: [
+            {
+              path: '',
+              name: 'GarageDetail',
+              component: async () =>
+                await import(
+                  /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
+                ),
+              meta: { authentication: true },
+            },
+            {
+              path: 'edit',
+              name: 'Edit Garage',
+              component: async () =>
+                await import(
+                  /* webpackChunkName: "NewGarage" */ '@/views/garage/NewGarageView.vue'
+                ),
+                meta: { authentication: true }
+            },
+          ],
         },
         {
           path: '/garage/detail/:garageId/vehicle/:id',

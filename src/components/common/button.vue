@@ -2,6 +2,8 @@
   <v-btn
     :loading="loading || false"
     :color="variant.bgColor"
+    :href="href"
+    :to="to"
     class="text-none font-normal"
     :size="size"
     :disabled="disabled"
@@ -21,6 +23,8 @@ const props = defineProps<{
   classes?: string;
   disabled?: boolean;
   size?: string;
+  href?: string;
+  to?: string;
   loading?: boolean;
   onClick?: (event: MouseEvent) => any;
 }>();

@@ -82,18 +82,27 @@ export const useGarageStore = defineStore('garage', () => {
     console.log('create item', item);
 
     loading.value = true;
-    return await new Promise((resolve, reject) => {
-      httpPost('garage_set/create', item)
-        .then(({ data }) => {
-          console.log(data);
-          loading.value = false;
-          resolve(data);
-        })
-        .catch((err: any) => {
-          loading.value = false;
-          reject(err);
-        });
-    });
+    return httpPost('garage_set/create', item)
+      .finally(() => {
+        loading.value = false;
+      })
+  }
+
+  async function upsert(item: any) {
+    if (item.id) {
+      return update(item);
+    }
+    return create(item);
+  }
+
+  async function update(item: any) {
+    console.log('edit item', item);
+
+    loading.value = true;
+    return httpPost('garage_set/update', item)
+      .finally(() => {
+        loading.value = false;
+      })
   }
 
   async function fetchDetail(id: number) {
@@ -259,6 +268,8 @@ export const useGarageStore = defineStore('garage', () => {
     // actions
     listPaginated,
     create,
+    update,
+    upsert,
     fetchDetail,
     garageView,
     socialMediaRumors,

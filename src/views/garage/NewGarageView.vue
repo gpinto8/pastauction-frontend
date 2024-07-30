@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useGlobalStore } from '@/store/GlobalStore';
@@ -10,6 +10,8 @@ import { alphabeticallyByKey } from '@/lib/sort';
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
 import Button from '@/components/common/button.vue';
+import { onBeforeMount } from 'vue';
+import { computed } from 'vue';
 
 /** Router */
 const router = useRouter();
@@ -18,6 +20,8 @@ const snackbar = ref({
   color: '',
   show: false,
 });
+const _loading = ref(false);
+const loading = computed(() => _loading.value || store.getLoading);
 
 /** Store */
 const globalStore = useGlobalStore();
@@ -26,6 +30,7 @@ const generalStore = useGeneralStore();
 
 /** Interfaces */
 interface Garage {
+  id?: string | number;
   name: string;
   vehicle_capacity: number | null;
   description: string;
@@ -59,7 +64,7 @@ globalStore
   .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
 
 async function postForm() {
-  const res = (await store.create(garage.value)) as any; // TODO type
+  const res = (await store.upsert(garage.value)) as any; // TODO type
   console.log('response create garage', res);
 
   if (photo.value) {
@@ -75,6 +80,27 @@ async function postForm() {
       });
   }
 }
+async function loadGarage() {
+  const route = useRoute();
+  if (route.params.id) {
+    const res = await store.getById(route.params.id.toString());
+
+    if (res.photo) {
+      await generalStore.loadMedia(res.photo).then(res => {
+        console.log({ res });
+        // photo.value = res;
+        photoPreview.value = res;
+      });
+    }
+
+    garage.value = res;
+  }
+}
+
+onBeforeMount(() => {
+  _loading.value = true;
+  loadGarage().finally(() => (_loading.value = false));
+});
 
 async function submit() {
   postForm()
@@ -127,7 +153,7 @@ const uploadImage = (e: any) => {
         <v-form @submit.prevent="submit">
           <div class="flex items-center justify-center w-32 mx-auto my-4">
             <label
-              v-if="!photo"
+              v-if="!garage.photo"
               for="dropzone-file"
               class="flex flex-col items-center justify-center w-full h-32 border-1 border-gray-300 border-dashed rounded-full px-1 cursor-pointer bg-gray-50"
             >
@@ -150,7 +176,7 @@ const uploadImage = (e: any) => {
                 <img
                   :src="photoPreview"
                   alt="Garage Image"
-                  class="rounded-full w-[120px] h-[120px] bg-cover"
+                  class="rounded-full w-[120px] h-[120px] object-cover"
                 />
               </v-avatar>
               <button type="button">
@@ -204,13 +230,17 @@ const uploadImage = (e: any) => {
           />
 
           <label>Additiona description</label>
-          <v-textarea placeholder="Write here" variant="outlined"></v-textarea>
+          <v-textarea
+            placeholder="Write here"
+            variant="outlined"
+            v-model="garage.description"
+          ></v-textarea>
           <v-btn
             class="!bg-primary text-white w-full !rounded-lg"
             :disabled="v$.$invalid"
             size="large"
             type="submit"
-            :loading="store.getLoading"
+            :loading="loading"
           >
             Continue
           </v-btn>

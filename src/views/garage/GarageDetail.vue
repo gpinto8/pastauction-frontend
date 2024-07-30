@@ -148,7 +148,13 @@ onBeforeMount(async () => {
           </div>
 
           <div class="max-sm:w-full">
-            <Button classes="min-w-[155px] w-full" variant="black">Edit</Button>
+            <Button
+              :to="`/garage/detail/${route.params.id}/edit`"
+              classes="min-w-[155px] w-full"
+              variant="black"
+            >
+              Edit
+            </Button>
           </div>
         </div>
       </div>
