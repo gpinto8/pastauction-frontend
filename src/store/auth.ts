@@ -189,6 +189,7 @@ export const useAuthStore = defineStore('auth', () => {
     return await new Promise((resolve, reject) => {
       httpDelete('profile_image/')
         .then(({ data }) => {
+          imageUrl.value = null;
           loading.value = false;
           resolve(data);
         })
