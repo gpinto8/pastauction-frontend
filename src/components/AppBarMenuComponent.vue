@@ -26,12 +26,12 @@ const menuItems = [
 	<!-- mobile only -->
 	<div v-if="isMobileAvatarMenuOpen" class="md:hidden bg-white z-10 shadow-gray-600 shadow-lg rounded-b-lg absolute top-full right-0 flex flex-col gap-x-2 gap-y-3 p-4 text-xl items-center">
 		
-		<a href="/profile">
+		<RouterLink to="/profile">
 			<div class="flex flex-row items-center gap-2 pl-3 border-b-[2px] border-[#21252940] w-full pb-[2px] pr-6">
 				<img class="h-10 !w-10 aspect-square" src="@/assets/images/user-photo-sample.png" alt="Logo" />
 				<span class="font-medium">Gianfranco</span>
 			</div>
-		</a>
+		</RouterLink>
 
 		<div v-for="item in menuItems" class="flex items-center flex-row gap-2 pl-3 border-b-[1px] border-[#21252940] w-full pb-3 pr-6">
 			<RouterLink :to="item.to">
@@ -66,8 +66,8 @@ const menuItems = [
 		<!-- <v-avatar color="info" class="mr-6">
       <v-icon icon="mdi-account-circle" />
     </v-avatar> -->
-		<a href="/profile">
+		<RouterLink to="/profile">
 			<img class="h-10 !w-10 aspect-square mr-6" src="@/assets/images/user-photo-sample.png" alt="Logo" />
-		</a>
+		</RouterLink>
   </div>
 </template>
