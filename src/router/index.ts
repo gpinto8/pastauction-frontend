@@ -12,6 +12,7 @@ import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue'
 
 export const LANDING_PAGE = 'landing page';
 export const BRANDS_UNVEILED = 'brands unveiled';
+export const TEAM = 'team';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       name: BRANDS_UNVEILED,
       component: () =>
         import('@/views/homePage/brandsUnveiled/BrandsUnveiled.vue'),
+    },
+    {
+      path: '/team',
+      name: TEAM,
+      component: () => import('@/views/homePage/team/Team.vue'),
     },
     {
       path: '/',

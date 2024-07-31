@@ -83,3 +83,7 @@ export const getBrandAndFounderByFirstLetter = (initial: string) => {
     `bidwatcher_brand_and_founder_hp/?search=brand_homepage_display:true,${paramNameForFirstNLetters('brand_name', 1)}:${initial}&sort=brand_name:asc`
   );
 };
+
+export const getTeamMembers = () => {
+  return axios.get(`bidwatcher_homepage_team`);
+};
