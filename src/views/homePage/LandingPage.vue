@@ -11,6 +11,7 @@ import BrandsSlider from './BrandsSlider.vue';
 import ChartsCarousel from './ChartsCarousel.vue';
 import LastSection from './LastSection.vue';
 import VideoCarousel from './videoCarousel/VideoCarousel.vue';
+import SearchSection from './searchSection/SearchSection.vue';
 
 const sections = ref<Section[]>([])
 
@@ -105,6 +106,9 @@ getBrandAndFounders()
             </div>
             <div class="section h-screen">
                 <VideoCarousel :videos="videos" class="h-screen" v-if="videos.length > 0" />
+            </div>
+            <div class="section h-screen">
+                <SearchSection :videos="videos" class="max-h-screen h-screen w-full" v-if="videos.length > 0" />
             </div>
             <div class="section h-screen flex justify-center items-center">
                 <BrandsSlider :brands="brands" class="w-screen h-screen" />
