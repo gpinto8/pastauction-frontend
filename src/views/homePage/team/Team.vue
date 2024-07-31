@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 import Footer from '../Footer.vue';
 import Header from '../Header.vue';
 import TeamMember from './TeamMember.vue';
+import AppIcon from '@/components/common/AppIcon.vue';
 
 const router = useRouter()
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue';
+import { TEAM } from '@/router';
 import { ref } from 'vue';
 
 const email = ref('')
@@ -21,7 +22,7 @@ const email = ref('')
                     <div class="font-bold text-lg mb-2">Jump To</div>
                     <div>Home</div>
                     <div>Pricing</div>
-                    <div>Team</div>
+                    <RouterLink :to="{ name: TEAM }">Team</RouterLink>
                     <div>Mission</div>
                 </div>
                 <div class="flex flex-col">
