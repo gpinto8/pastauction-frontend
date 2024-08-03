@@ -113,6 +113,10 @@ export const useVehicleStore = defineStore('vehicle', () => {
     return data
   }
 
+  async function getVehiclePhotos (id: number) {
+    return httpGet(`garage_vehicle_photo/list/`)
+  }
+
   return {
     // state
     // getters
@@ -128,5 +132,6 @@ export const useVehicleStore = defineStore('vehicle', () => {
     update,
     upsert,
     filter,
+    getVehiclePhotos,
   }
 })

@@ -16,7 +16,7 @@
     <router-view @submit="submit"></router-view>
   </form>
   <!-- </keep-alive> -->
-  <div class="grid grid-cols-2">
+  <div class="grid grid-cols-2 mt-[32px]">
     <div>
       <Button @click="router.back()" variant="white">Back</Button>
     </div>
