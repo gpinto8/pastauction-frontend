@@ -7,7 +7,7 @@ import pinia from '@/store'
 
 export function mockVehicle (): Vehicle {
   return {
-    "purchase_year": 0,
+    "purchase_year": new Date().getFullYear(),
     "purchase_value": 0,
     "garage_set_id": "0",
     "garage_choice": "",
@@ -50,11 +50,13 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
     families: ref([]),
     models: ref([]),
     bodies: ref([]),
+    countries: ref([]),
     loading: reactive({
       brands: false,
       families: false,
       models: false,
       bodies: false,
+      countries: false,
     }),
     vehicle: ref<Vehicle>(mockVehicle()),
     async submit () {
@@ -63,17 +65,17 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
 
     async fetchInitialData () {
       if (store.brands.value.length === 0) {  // Only fetch if not already loaded
-        const [brand_names, families, models, body] = await Promise.all([
-          vehicleStore.filter('bidwatcher_brand', 'name'),
-          vehicleStore.filter('bidwatcher_family', 'name'),
-          vehicleStore.filter('bidwatcher_model', 'family_a'),
-          vehicleStore.filter('bidwatcher_body', 'type'),
-        ]).then(res => res.map(r => r.items))
+        // const [brand_names, families, models, body] = await Promise.all([
+        //   vehicleStore.filter('bidwatcher_brand', 'name'),
+        //   vehicleStore.filter('bidwatcher_family', 'name'),
+        //   vehicleStore.filter('bidwatcher_model', 'family_a'),
+        //   vehicleStore.filter('bidwatcher_body', 'type'),
+        // ]).then(res => res.map(r => r.items))
 
-        store.brands.value = brand_names
-        store.families.value = families
-        store.models.value = models
-        store.bodies.value = body
+        // store.brands.value = brand_names
+        // store.families.value = families
+        // store.models.value = models
+        // store.bodies.value = body
       }
     },
     // ---
@@ -85,6 +87,11 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
     familySearch$: new Subject<string>(),
     async searchFamilies (search: string) {
       store.familySearch$.next(search)
+    },
+    // ---
+    countrySearch$: new Subject<string>(),
+    async searchCountries (search: string) {
+      store.countrySearch$.next(search)
     },
   }
 
@@ -105,6 +112,15 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       store.loading.families = true
       const { items } = await vehicleStore.filter('bidwatcher_family', 'name', search).finally(() => store.loading.families = false)
       store.families.value = items
+    })
+  // ----
+  store.countrySearch$.pipe(
+    debounceTime(100),
+  )
+    .subscribe(async (search) => {
+      store.loading.countries = true
+      const { items } = await vehicleStore.filter('bidwatcher_country', 'name', search).finally(() => store.loading.countries = false)
+      store.countries.value = items
     })
 
 

@@ -242,8 +242,11 @@ onBeforeMount(async () => {
           <v-btn
             color="#212529"
             class="text-white text-none font-normal"
-            @click="router.push(`/garage/detail/${route.params.id}/vehicle/0`)"
+            :to="`/garage/detail/${route.params.id}/vehicle/new/edit`"
           >
+            <!-- @click="
+              router.push()
+            " -->
             Add vehicle
           </v-btn>
         </div>

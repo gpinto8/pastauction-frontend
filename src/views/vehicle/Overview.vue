@@ -1,95 +1,102 @@
 <template>
   <v-container>
-    <br />
-    <v-btn icon size="small" @click="router.back()">
-      <app-icon type="arrow_left" />
-    </v-btn>
     <div class="text-center pb-4">
-      <template v-if="step === 1">
+      <template>
         <h3 class="text-2xl font-medium mb-2">Add vehicles</h3>
         <span class="font-medium text-grey">
           Fill in the following data to add your vehicle to the garage
         </span>
       </template>
-      <template v-if="step === 2">
-        <h3 class="text-2xl font-medium mb-2">Details</h3>
-        <span class="font-medium text-grey">
-          These additional specs will help us provide the most accurate comps.
-        </span>
-      </template>
     </div>
 
-    <div v-if="step === 1" class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-2 gap-6">
       <div class="col-span-2">
         <v-radio-group
           v-model="vehicle.purchase_value"
           label="Is this a vehicle you want, have or had?"
           inline
+          required
         >
           <v-radio label="I have it" value="I have it" />
           <v-radio label="I want it" value="I want it" />
           <v-radio label="I had it " value="I had it" />
         </v-radio-group>
       </div>
-      <v-select
-        v-model="vehicle.year"
+      <v-autocomplete
+        required
+        v-model="vehicle.purchase_year"
         label="Year"
         variant="outlined"
         density="compact"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="years"
       />
-      <v-select
+      <v-autocomplete
+        required
         v-model="vehicle.id_brand"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="store.brands || []"
+        @update:search="store.searchBrands"
+        :loading="store.loading.brands"
         label="Make"
+        item-value="id"
+        item-title="name"
         variant="outlined"
         density="compact"
       />
-      <v-select
+      <!-- {{ store.families }} -->
+      <v-autocomplete
+        required
         v-model="vehicle.id_family"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="store.families || []"
+        @update:search="store.searchFamilies"
+        :loading="store.loading.families"
+        item-value="id"
+        item-title="name"
         label="Family"
         variant="outlined"
         density="compact"
       />
-      <v-select
+      <v-autocomplete
         v-model="vehicle.model_id"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="store.models"
         label="Model"
+        item-value="id"
+        item-title="family_a"
         variant="outlined"
         density="compact"
       />
       <v-select
         v-model="(vehicle as any).variant"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="[]"
         label="Variant"
         variant="outlined"
         density="compact"
       />
       <v-select
         v-model="(vehicle as any).variant"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="[]"
         label="Series"
         variant="outlined"
         density="compact"
       />
       <v-select
         v-model="(vehicle as any).type_vehicle"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="[]"
         label="Vehicle Type"
         variant="outlined"
         density="compact"
       />
-      <v-select
+      <v-autocomplete
         v-model="vehicle.body_id"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="store.bodies"
         label="Body"
+        item-value="id"
+        item-title="type"
         variant="outlined"
         density="compact"
       />
       <v-select
         v-model="(vehicle as any).doors"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="[2, 3, 4, 5]"
         label="Doors"
         variant="outlined"
         density="compact"
@@ -100,13 +107,13 @@
           label="Transmittion"
           inline
         >
-          <v-radio label="Manual" value="Manual" />
-          <v-radio label="Automatic" value="Automatic" />
+          <v-radio label="Manual" value="manual" />
+          <v-radio label="Automatic" value="automatic" />
         </v-radio-group>
       </div>
       <v-select
         v-model="(vehicle as any).power"
-        :items="[2020, 2021, 2022, 2023]"
+        :items="[]"
         label="Power"
         variant="outlined"
         density="compact"
@@ -212,71 +219,6 @@
         </v-radio-group>
       </div>
     </div>
-    <div v-if="step === 2" class="grid grid-cols-2 gap-6">
-      <v-text-field
-        v-model="vehicle.mileage"
-        label="Mileage"
-        variant="outlined"
-        density="compact"
-      />
-
-      <v-select
-        v-model="vehicle.original_miles as any"
-        label="Miles"
-        variant="outlined"
-        density="compact"
-        :items="[2020, 2021, 2022, 2023]"
-      />
-      <div class="col-span-2">
-        <v-radio-group
-          v-model="vehicle.original_miles"
-          label="Original miles"
-          inline
-        >
-          <v-radio label="Yes" value="Yes" />
-          <v-radio label="Unknow" value="Unknow" />
-        </v-radio-group>
-      </div>
-      <v-select
-        v-model="vehicle.location_id as any"
-        label="County"
-        variant="outlined"
-        density="compact"
-        :items="[2020, 2021, 2022, 2023]"
-      />
-      <v-text-field
-        v-model="vehicle.plate_numb"
-        label="Plate Numb"
-        variant="outlined"
-        density="compact"
-      />
-      <v-text-field
-        v-model="vehicle.vin"
-        label="Vin"
-        variant="outlined"
-        density="compact"
-        hint="If you know it, add your VIN or Chassis Number below."
-      />
-    </div>
-    <div class="grid grid-cols-2">
-      <div>
-        <v-btn @click="step--">Cancel</v-btn>
-      </div>
-      <div class="text-right">
-        <v-btn
-          color="black"
-          @click="
-            () => {
-              // if ((setp as any) === 2) save();
-              // else step++;
-              step++;
-            }
-          "
-        >
-          {{ step === 1 ? `Continue` : 'Salva' }}
-        </v-btn>
-      </div>
-    </div>
   </v-container>
 </template>
 
@@ -284,63 +226,21 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useMaisonVehicleStore } from '@/store/datas/masionVehicle';
-import { useVehicleStore } from '@/store/vehicle/vehicle';
+import { type Vehicle } from '@/store/vehicle/vehicle';
+import { useEditVehicleStore } from '@/store/vehicle/edit-vehicle';
+import { storeToRefs } from 'pinia';
 
-/** Components */
-import AppIcon from '@/components/common/AppIcon.vue';
-
-/** Router */
+const store = useEditVehicleStore();
+const { vehicle } = storeToRefs(store);
+const emit = defineEmits(['submit']);
 const router = useRouter();
-const store = useMaisonVehicleStore();
-const vehicleStore = useVehicleStore();
-const route = useRoute();
-const years = ref();
-const brands = ref();
 
-vehicleStore.filter('bidwatcher_brand', 'name').then(res => {
-  console.log(res);
-});
+const years = (() => {
+  const from = 1800;
+  const to = new Date().getFullYear();
 
-const vehicle = ref({
-  id: route.params.id,
-  purchase_year: 0,
-  purchase_value: 0,
-  garage_set_id: route.params.garageId,
-  garage_choice: '',
-  id_brand: 4855,
-  id_family: 134213,
-  model_id: 185437,
-  location_id: '',
-  body_id: 1,
-  exterior_color_id: 0,
-  interior_color_id: 0,
-  variant: '',
-  type_vehicle: '',
-  year: 0,
-  doors: '',
-  transmission: '',
-  power: '',
-  engine_capacity: '',
-  interior_type: '',
-  driver_side: '',
-  originality: '',
-  status: '',
-  mileage: 0,
-  original_miles: '',
-  plate_numb: '',
-  vin: '',
-  main_photo: '',
-  registration_certificate: '',
-  service_book: '',
-  purchase_currency: '',
-});
-
-const step = ref(1);
-
-function submit() {
-  console.log(vehicle.value);
-  vehicleStore.create(vehicle.value);
-}
+  return Array.from({ length: to - from + 1 }, (_, i) => to - i);
+})();
 </script>
 
 <style scoped></style>

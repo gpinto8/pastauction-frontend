@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { httpGet} from '@/api/api';
 import { buildQS } from '@/utils/functions/buildQS';
 
-export const useVehicleStore = defineStore('vehicle', () => {
+export const useVehicleStore = defineStore('single-vehicle', () => {
   // state
   const listItems = ref();
   const listAreas = ref();
