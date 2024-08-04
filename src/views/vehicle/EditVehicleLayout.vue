@@ -30,6 +30,20 @@
       {{ nextButtonLabel }}
     </Button>
   </div>
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top right"
+  >
+    {{ snackbar.text }}
+    <Button
+      classes="min-w-[100px] ml-2"
+      variant="white"
+      @click="snackbar.show = false"
+    >
+      Close
+    </Button>
+  </v-snackbar>
 </template>
 
 <script setup lang="ts">
@@ -42,12 +56,14 @@ import { noop } from '@/utils/functions/noop';
 import { ref } from 'vue';
 import { match } from 'ts-pattern';
 import { computed } from 'vue';
+import { snackbarState } from '@/lib/snackbar-state';
 
 const formRef = ref<HTMLFormElement | null>(null);
 
 const router = useRouter();
 const route = useRoute();
 const vehicleStore = useEditVehicleStore();
+const snackbar = snackbarState();
 
 const nextButtonLabel = computed(() => {
   return match(route.path.split('/').pop())
@@ -71,8 +87,16 @@ onMounted(() => {
 });
 
 function submit() {
-  console.log(vehicleStore.vehicle);
-  vehicleStore.submit();
+  vehicleStore
+    .submit()
+    .then(() => {
+      router.push(`/garage/detail/${route.params.garageId}`);
+    })
+    .catch(error => {
+      snackbar.value.show = true;
+      snackbar.value.text = error.message || 'An error occurred';
+      snackbar.value.color = 'error';
+    });
 }
 
 function next() {
