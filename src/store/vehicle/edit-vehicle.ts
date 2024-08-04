@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useVehicleStore, type Vehicle } from './vehicle'
 import { reactive, ref } from 'vue'
 import { debounceTime, Subject } from 'rxjs'
+import { match } from 'ts-pattern'
 import pinia from '@/store'
 type Entry = { name: string, id: string }
 export function mockVehicle (): Vehicle {
@@ -57,10 +58,24 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       models: false,
       bodies: false,
       countries: false,
+      submit: false,
     }),
     vehicle: ref<Vehicle>(mockVehicle()),
     async submit () {
+      if (store.loading.submit) return
 
+      store.loading.submit = true
+      return match(store.vehicle.value.id)
+        .with('new', () => {
+          const payload = {
+            ...store.vehicle.value,
+          }
+          delete payload.id
+
+          return vehicleStore.create(payload)
+        })
+        .otherwise(() => vehicleStore.update(store.vehicle.value))
+        .finally(() => store.loading.submit = false)
     },
 
     async fetchInitialData () {

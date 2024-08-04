@@ -21,7 +21,12 @@
       {{ backButtonLabel }}
     </Button>
 
-    <Button classes="min-w-[250px]" @click="next" variant="black">
+    <Button
+      classes="min-w-[250px]"
+      @click="next"
+      variant="black"
+      :loading="vehicleStore.loading.submit"
+    >
       {{ nextButtonLabel }}
     </Button>
   </div>
@@ -67,7 +72,6 @@ onMounted(() => {
 
 function submit() {
   console.log(vehicleStore.vehicle);
-  alert('submit');
   vehicleStore.submit();
 }
 
