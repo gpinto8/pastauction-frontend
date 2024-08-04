@@ -129,5 +129,7 @@ function back() {
   if (to) {
     return router.push(to);
   }
+
+  router.push(`/garage/detail/${route.params.garageId}`);
 }
 </script>
