@@ -4,7 +4,7 @@ import { useVehicleStore, type Vehicle } from './vehicle'
 import { reactive, ref } from 'vue'
 import { debounceTime, Subject } from 'rxjs'
 import pinia from '@/store'
-
+type Entry = { name: string, id: string }
 export function mockVehicle (): Vehicle {
   return {
     "purchase_year": new Date().getFullYear(),
@@ -46,11 +46,11 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
   const vehicleStore = useVehicleStore()
 
   const store = {
-    brands: ref<Array<{ name: string; id: number }>>([]),
-    families: ref([]),
-    models: ref([]),
-    bodies: ref([]),
-    countries: ref([]),
+    brands: ref<Array<Entry>>([]),
+    families: ref<Array<Entry>>([]),
+    models: ref<Array<Entry>>([]),
+    bodies: ref<Array<Entry>>([]),
+    countries: ref<Entry[]>([]),
     loading: reactive({
       brands: false,
       families: false,
