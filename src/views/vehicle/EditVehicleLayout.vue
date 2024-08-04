@@ -1,6 +1,6 @@
 <template>
   <br />
-  <v-btn icon size="small" @click="router.back()">
+  <v-btn icon size="small" @click="back">
     <app-icon type="arrow_left" />
   </v-btn>
   <div class="text-center mb-[29px]">
@@ -16,13 +16,14 @@
     <router-view @submit="submit"></router-view>
   </form>
   <!-- </keep-alive> -->
-  <div class="grid grid-cols-2 mt-[32px]">
-    <div>
-      <Button @click="router.back()" variant="white">Back</Button>
-    </div>
-    <div class="text-right">
-      <Button @click="next" variant="black">Continue</Button>
-    </div>
+  <div class="flex justify-between max-sm:flex-col gap-3 mt-[32px]">
+    <Button classes="min-w-[250px]" @click="back" variant="white">
+      {{ backButtonLabel }}
+    </Button>
+
+    <Button classes="min-w-[250px]" @click="next" variant="black">
+      {{ nextButtonLabel }}
+    </Button>
   </div>
 </template>
 
@@ -35,12 +36,24 @@ import Button from '@/components/common/button.vue';
 import { noop } from '@/utils/functions/noop';
 import { ref } from 'vue';
 import { match } from 'ts-pattern';
+import { computed } from 'vue';
 
 const formRef = ref<HTMLFormElement | null>(null);
 
 const router = useRouter();
 const route = useRoute();
 const vehicleStore = useEditVehicleStore();
+
+const nextButtonLabel = computed(() => {
+  return match(route.path.split('/').pop())
+    .with('submit', () => 'Add vehicle')
+    .otherwise(() => 'Next');
+});
+const backButtonLabel = computed(() => {
+  return match(route.path.split('/').pop())
+    .with('overview', () => 'Cancel')
+    .otherwise(() => 'Back');
+});
 
 // Initialize vehicle in store if needed
 onMounted(() => {
@@ -76,5 +89,17 @@ function next() {
   }
 
   submit();
+}
+
+function back() {
+  const to = match(route.path.split('/').pop())
+    .with('details', () => 'overview')
+    .with('photos', () => 'details')
+    .with('submit', () => 'photos')
+    .otherwise(() => null);
+
+  if (to) {
+    return router.push(to);
+  }
 }
 </script>
