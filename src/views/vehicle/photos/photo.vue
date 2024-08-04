@@ -1,5 +1,9 @@
 <template>
-  <div class="photo" :class="{ 'sm:col-span-2 sm:row-span-2 h-full': big }">
+  <!-- {{ classes }} -->
+  <div
+    class="photo"
+    :class="{ 'sm:col-span-2 sm:row-span-2 h-full': big, ...classes }"
+  >
     <label
       for="dropzone-file"
       class="h-full w-full flex items-center justify-center"
@@ -23,7 +27,7 @@
 import AppIcon from '@/components/common/AppIcon.vue';
 
 defineEmits(['uploadImage']);
-defineProps<{ big?: boolean }>();
+defineProps<{ big?: boolean; classes?: Record<string, boolean> }>();
 </script>
 
 <style lang="scss" scoped>

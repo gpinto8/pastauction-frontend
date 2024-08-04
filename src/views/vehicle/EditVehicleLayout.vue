@@ -4,10 +4,10 @@
     <app-icon type="arrow_left" />
   </v-btn>
   <div class="text-center mb-[29px]">
-    <h2 class="text-[28px] mb-[16px]">
+    <h2 class="text-[28px] mb-[16px] font-[500]">
       {{ route.name }}
     </h2>
-    <p v-if="route.meta.subtitle">
+    <p v-if="route.meta.subtitle" class="text-[#6C757D]">
       {{ route.meta.subtitle }}
     </p>
   </div>
