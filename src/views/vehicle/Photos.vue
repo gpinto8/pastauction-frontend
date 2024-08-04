@@ -1,11 +1,7 @@
 <template>
   <div>
     <div :class="gridLayout">
-      <Photo
-        v-for="i in 9"
-        :big="i == 1"
-        :class="{ 'sm:col-span-2 sm:row-span-2 h-full': i == 1 }"
-      ></Photo>
+      <Photo v-for="i in 9" :big="i == 1"></Photo>
     </div>
 
     <div class="flex justify-end mt-4">

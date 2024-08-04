@@ -20,6 +20,8 @@
 </template>
 
 <script setup lang="ts">
+import AppIcon from '@/components/common/AppIcon.vue';
+
 defineEmits(['uploadImage']);
 defineProps<{ big?: boolean }>();
 </script>
