@@ -8,7 +8,7 @@ import { useGeneralStore } from './datas/general'
 
 export const useAuthStore = defineStore('auth', () => {
   // state
-  const isUserLogged = ref(window.localStorage.getItem('past_token'));
+  const authToken = ref(window.localStorage.getItem('past_token'));
   const loading = ref(false);
   const detail = ref();
   const listCountries = ref();
@@ -16,11 +16,11 @@ export const useAuthStore = defineStore('auth', () => {
   const imageUrl = ref();
 
   // getters
-  const isUserLoggedIn = computed(() => !!isUserLogged.value);
+  const isUserLoggedIn = computed(() => !!authToken.value);
   const getLoading = computed(() => loading.value);
   const getDetail = computed(() => detail.value);
   const isUserAuthenticated = computed(() =>
-    isUserLogged.value ? true : false
+    Boolean(authToken.value)
   );
 
   const getListCountries = computed(() => listCountries.value);
@@ -206,7 +206,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   function saveToken(token: string) {
     window.localStorage.setItem('past_token', token);
-    isUserLogged.value = token;
+    authToken.value = token;
     router.push({ name: 'Home' }).catch(() => {});
   }
 
@@ -219,6 +219,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     // state
     detail,
+    authToken,
 
     // getters
     isUserLoggedIn,

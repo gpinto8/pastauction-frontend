@@ -1,5 +1,5 @@
 import store from '@/store';
-import { createApp } from 'vue';
+import { createApp, watch } from 'vue';
 import 'swiper/swiper-bundle.css';
 
 import App from '@/App.vue';
@@ -10,6 +10,7 @@ import './assets/fonts.css';
 import axios from 'axios';
 import config from '@/config';
 import { loadFonts } from './plugins/webfontloader'
+import { useAuthStore } from './store/auth'
 
 loadFonts();
 
@@ -24,15 +25,9 @@ vue.use(store);
 vue.use(vuetify);
 
 axios.defaults.baseURL = config.apiUrl;
-
 axios.interceptors.request.use(
-  config => {
-    const token = window.localStorage.getItem('past_token')
-      ? window.localStorage.getItem('past_token')
-      : null;
+  (config: any) => {
     if (config.cancelToken) return config;
-
-    if (token) config.headers['Authorization'] = 'Bearer ' + token;
     return { ...config, cancelToken: axios.CancelToken.source().token };
   },
   err => {
@@ -40,6 +35,22 @@ axios.interceptors.request.use(
     throw err;
   }
 );
+
+function setToken (token:string| null = window.localStorage.getItem('past_token')) {
+  if (!token) return
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+setToken()
+
+const auth = useAuthStore()
+watch(() => auth.authToken, (token) => {
+  if (token) {
+    setToken(token)
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+})
+
 
 // Run!
 router
