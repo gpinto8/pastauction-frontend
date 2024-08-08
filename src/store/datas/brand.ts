@@ -1,71 +1,71 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { httpGet} from '@/api/api';
-import { buildQS } from '@/utils/functions/buildQS';
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import { httpGet } from '@/api/api'
+import { buildQS } from '@/utils/functions/buildQS'
 
 export const useBrandStore = defineStore('brand', () => {
   // state
-  const listItems = ref();
-  const listFirstLetters = ref();
-  const listFirstTwoLetters = ref();
-  const listBrand = ref();
-  const loading = ref(false);
-  const detail = ref();
-  const loadingListItems = ref(false);
+  const listItems = ref()
+  const listFirstLetters = ref()
+  const listFirstTwoLetters = ref()
+  const listBrand = ref()
+  const loading = ref(false)
+  const detail = ref()
+  const loadingListItems = ref(false)
   // getters
 
-  const getListItems = computed(() => listItems.value);
-  const getListFirstLetters = computed(() => listFirstLetters.value);
-  const getListFirstTwoLetters = computed(() => listFirstTwoLetters.value);
-  const getListBrands = computed(() => listBrand.value);
-  const getLoading = computed(() => loading.value);
-  const getDetail = computed(() => detail.value);
-  const getLoadingListItems = computed(() => loadingListItems.value);
+  const getListItems = computed(() => listItems.value)
+  const getListFirstLetters = computed(() => listFirstLetters.value)
+  const getListFirstTwoLetters = computed(() => listFirstTwoLetters.value)
+  const getListBrands = computed(() => listBrand.value)
+  const getLoading = computed(() => loading.value)
+  const getDetail = computed(() => detail.value)
+  const getLoadingListItems = computed(() => loadingListItems.value)
 
   // actions
-  async function listPaginated(
+  async function listPaginated (
     page: number,
     size: number,
     search?: any,
     sort?: any
   ) {
-    loadingListItems.value = true;
+    loadingListItems.value = true
     const qs = buildQS({
       page: page,
       size: size,
       search: search,
       sort: sort,
-    });
+    })
 
     return await new Promise((resolve, reject) => {
       httpGet(`bidwatcher_model/query_m?${qs}`)
         .then(({ data }) => {
-          console.log(data);
-          listItems.value = data;
-          loadingListItems.value = false;
-          resolve(data);
+          console.log(data)
+          listItems.value = data
+          loadingListItems.value = false
+          resolve(data)
         })
         .catch((err: any) => {
-          loadingListItems.value = false;
-          reject(err);
-        });
-    });
+          loadingListItems.value = false
+          reject(err)
+        })
+    })
   }
 
-  async function auctionLetters(tablename?: string, columnName?: string) {
+  async function auctionLetters (tablename?: string, columnName?: string) {
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}`)
+      httpGet(`filter/${tablename}/${columnName}/`)
         .then(({ data }) => {
-          console.log(data);
-          listFirstLetters.value = data.items;
-          resolve(data);
+          console.log(data)
+          listFirstLetters.value = data.items
+          resolve(data)
         })
         .catch((err: any) => {
-          reject(err);
-        });
-    });
+          reject(err)
+        })
+    })
   }
-  async function auctionTwoLetters(
+  async function auctionTwoLetters (
     tablename?: string,
     columnName?: string,
     qs?: string
@@ -73,17 +73,17 @@ export const useBrandStore = defineStore('brand', () => {
     return await new Promise((resolve, reject) => {
       httpGet(`filter/${tablename}/${columnName}/?${qs}`)
         .then(({ data }) => {
-          console.log(data);
-          listFirstTwoLetters.value = data.items;
-          resolve(data);
+          console.log(data)
+          listFirstTwoLetters.value = data.items
+          resolve(data)
         })
         .catch((err: any) => {
-          reject(err);
-        });
-    });
+          reject(err)
+        })
+    })
   }
 
-  async function auctionBrands(
+  async function auctionBrands (
     tablename?: string,
     columnName?: string,
     qs?: string
@@ -91,14 +91,14 @@ export const useBrandStore = defineStore('brand', () => {
     return await new Promise((resolve, reject) => {
       httpGet(`filter/${tablename}/${columnName}/?${qs}`)
         .then(({ data }) => {
-          console.log(data);
-          listBrand.value = data.items;
-          resolve(data);
+          console.log(data)
+          listBrand.value = data.items
+          resolve(data)
         })
         .catch((err: any) => {
-          reject(err);
-        });
-    });
+          reject(err)
+        })
+    })
   }
 
   return {
@@ -117,5 +117,5 @@ export const useBrandStore = defineStore('brand', () => {
     auctionLetters,
     auctionTwoLetters,
     auctionBrands,
-  };
-});
+  }
+})
