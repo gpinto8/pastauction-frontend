@@ -3,6 +3,9 @@ import { ref, computed, watch, reactive } from 'vue'
 import { httpGet } from '@/api/api'
 import { buildQS } from '@/utils/functions/buildQS'
 import { alphabetically, alphabeticallyByKey, ascendingByKey, descending, descendingByKey } from '@/lib/sort'
+import { BehaviorSubject, debounceTime, Subject } from 'rxjs'
+
+const debounceSearch = debounceTime(200)
 
 export const useGlobalStore = defineStore('dataGlobal', () => {
   // state
@@ -107,14 +110,20 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   async function auctionCities (columnName: string = 'name') {
     const country = store.filters.country_auction_name // TODO actually filter by country
     const search: Record<string, string> = {}
+    const like = store.citySearch$.value
 
     if (country) {
       search.country_name = country
+    }
+    if (like) {
+      // columnName += `_like:${encodeURIComponent(like)}`
+      search.name_like = like
     }
 
     const qs = buildQS({
       search: search
     })
+
 
     return await new Promise((resolve, reject) => {
       httpGet(`filter/bidwatcher_city/${columnName}/?${qs}`)
@@ -146,6 +155,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   async function auctionEvents () {
     const area = store.filters.auction_area
     const year = store.filters.auction_year
+    const name = store.eventSearch$.value
     const search: Record<string, string | number> = {}
 
     if (area) {
@@ -153,6 +163,9 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     }
     if (year) {
       search.year = year
+    }
+    if (name) {
+      search.name_event_like = name
     }
 
     const qs = buildQS({
@@ -212,6 +225,12 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     getLoadingListItems,
     getListEvents,
 
+    loading: reactive({
+      cities: false,
+      events: false,
+      submit: false,
+    }),
+
     // actions
     listPaginated,
     auctionAreas,
@@ -243,6 +262,16 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       city_auction_name: null,
       auction_year: null,
     }),
+
+    citySearch$: new BehaviorSubject<string>(''),
+    async searchCities (search: string) {
+      store.citySearch$.next(search)
+    },
+
+    eventSearch$: new BehaviorSubject<string>(''),
+    async searchEvents (search: string) {
+      store.eventSearch$.next(search)
+    },
 
     init () {
       auctionAreas()
@@ -278,6 +307,19 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     console.log('auction_year', store.filters.auction_year)
     auctionEvents()
   })
+
+  store.citySearch$.pipe(debounceSearch)
+    .subscribe(async () => {
+      store.loading.cities = true
+      auctionCities().finally(() => store.loading.cities = false)
+    })
+
+  store.eventSearch$.pipe(debounceSearch)
+    .subscribe(async () => {
+      store.loading.events = true
+      auctionEvents().finally(() => store.loading.events = false)
+    })
+
 
 
   return store

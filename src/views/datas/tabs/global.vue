@@ -5,7 +5,7 @@
         <div class="text-[#D80027]">
           <!-- {{ filters }} -->
           <span v-if="getLengthOfFilters < 3">
-            Please, select almost 3 parameters
+            Please, select at least 3 parameters
           </span>
         </div>
         <div class="text-right">
@@ -41,6 +41,8 @@
         <v-autocomplete
           v-model="filters.city_auction_name"
           label="Auction City"
+          @update:search="store.searchCities"
+          :loading="store.loading.cities"
           item-title="name"
           item-value="name"
           variant="outlined"
@@ -50,6 +52,8 @@
         <v-autocomplete
           v-model="filters.name_event"
           label="Auction Event"
+          @update:search="store.searchEvents"
+          :loading="store.loading.events"
           item-title="name_event"
           item-value="name_event"
           variant="outlined"
