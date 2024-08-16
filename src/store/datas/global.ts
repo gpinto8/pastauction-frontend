@@ -259,15 +259,18 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       total: 0,
     }),
 
-    sort: ref({
-      auction_area: null,
-      name_event: null,
-      country_auction_name: null,
-      country_maison: null,
-      maison_name: null,
-      city_auction_name: null,
-      auction_year: null,
+    sort: computed(function (): Record<string, string> {
+      if (!store.orderBy.value) {
+        return {}
+      }
+      return {
+        [store.orderBy.value]: store.orderByDirection.value
+      }
     }),
+
+    orderBy: ref<string>(''),
+    orderByDirection: ref<'asc' | 'desc'>('asc'),
+
 
     citySearch$: new BehaviorSubject<string>(''),
     async searchCities (search: string) {
@@ -318,6 +321,8 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   })
 
   watch(() => store.pager.value.page, store.paginate)
+  watch(() => store.orderBy.value, store.submit)
+  watch(() => store.orderByDirection.value, store.submit)
 
   store.citySearch$.pipe(debounceSearch)
     .subscribe(async () => {

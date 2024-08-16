@@ -89,7 +89,33 @@
         />
       </div>
     </form>
-    <div class="p-2 bg-white">
+    <div class="p-2">
+      <div class="mb-5 grid md:grid-cols-2 gap-3 md:max-w-[500px]">
+        <!-- <div> -->
+        <v-autocomplete
+          v-model="store.orderBy"
+          label="Order by"
+          item-title="title"
+          item-value="key"
+          variant="solo"
+          density="comfortable"
+          :items="headers"
+        />
+        <v-select
+          v-model="store.orderByDirection"
+          label="Direction"
+          item-title="title"
+          item-value="key"
+          variant="solo"
+          density="comfortable"
+          :items="[
+            { title: 'Ascending', key: 'asc' },
+            { title: 'Descending', key: 'desc' },
+          ]"
+        />
+        <!-- </div> -->
+      </div>
+
       <v-data-table
         v-model:items-per-page="pager.size"
         :headers="headers as any"
@@ -100,16 +126,15 @@
         item-value="name"
         density="compact"
       >
-        <template #top>
+        <template class="" #top></template>
+        <template class="" #bottom>
           <v-pagination
-            class="mb-4"
             :disabled="store.loading.submit"
             :length="store.pager.pages"
             v-model="store.pager.page"
             total-visible="6"
           />
         </template>
-        <template #bottom></template>
       </v-data-table>
     </div>
   </div>
@@ -247,5 +272,8 @@ submit();
       }
     }
   }
+}
+.v-input__details {
+  display: none;
 }
 </style>
