@@ -123,7 +123,7 @@
         v-model:items-per-page="pager.size"
         :headers="headers as any"
         :items-length="store.pager.total || 0"
-        :items="store.getListItems?.items || []"
+        :items="store.queryItems"
         :loading="store.loading.submit"
         class="elevation-1"
         item-value="name"

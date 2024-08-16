@@ -9,7 +9,7 @@ const debounceSearch = debounceTime(200)
 
 export const useGlobalStore = defineStore('dataGlobal', () => {
   // state
-  const listItems = ref()
+  const queryResult = ref()
   const listAreas = ref()
   const listCountries = ref()
   const listCities = ref()
@@ -17,18 +17,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   const listYears = ref()
   const loading = ref(false)
   const detail = ref()
-  const loadingListItems = ref(false)
   const listEvents = ref()
-  // getters
-  const getListItems = computed(() => listItems.value)
-  const getListAreas = computed(() => listAreas.value)
-  const getListCountries = computed(() => listCountries.value)
-  const getListCities = computed(() => listCities.value)
-  const getListMaison = computed(() => listMaison.value)
-  const getListYears = computed(() => listYears.value)
-  const getLoading = computed(() => loading.value)
-  const getDetail = computed(() => detail.value)
-  const getListEvents = computed(() => listEvents.value)
   // actions
   async function listPaginated (
     page: number,
@@ -59,7 +48,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     return httpGet(`bidwatcher_auction/query_0?${qs}`)
       .then(({ data }) => {
         console.log(data)
-        listItems.value = data
+        queryResult.value = data
         store.pager.value = {
           page: parseInt(data.page) ?? 0,
           size: parseInt(data.size) ?? 0,
@@ -219,15 +208,21 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   const store = {
     // state
     // getters
-    getListItems,
-    getListAreas,
-    getLoading,
-    getDetail,
-    getListCountries,
-    getListCities,
-    getListMaison,
-    getListYears,
-    getListEvents,
+    queryItems: computed(() => (queryResult.value?.items || []).map((item: any) => {
+      return {
+        ...item,
+        ratio_sales: (item.ratio_sales).toFixed(2) + '%',
+        avg_sales: (item.avg_sales).toFixed(2),
+      }
+    })),
+    getListAreas: computed(() => listAreas.value),
+    getListCountries: computed(() => listCountries.value),
+    getListCities: computed(() => listCities.value),
+    getListMaison: computed(() => listMaison.value),
+    getListYears: computed(() => listYears.value),
+    getLoading: computed(() => loading.value),
+    getDetail: computed(() => detail.value),
+    getListEvents: computed(() => listEvents.value),
 
     loading: reactive({
       cities: false,
