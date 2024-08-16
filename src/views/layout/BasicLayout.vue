@@ -20,6 +20,7 @@ import DrawerComponent from '@/components/DrawerComponent.vue';
 import AppIcon from '@/components/common/AppIcon.vue';
 import useGlobalStore from '@/store/GlobalStore';
 import { storeToRefs } from 'pinia';
+import { match } from 'ts-pattern';
 
 /** Vuetify Theme */
 const theme = useTheme();
@@ -68,6 +69,12 @@ watch(isMobileAvatarMenuOpen, () => {
       { once: true }
     );
   }
+});
+
+const constrainedLayout = computed(() => {
+  return match(route.name)
+    .with('Datas', () => false)
+    .otherwise(() => true);
 });
 </script>
 
@@ -150,7 +157,10 @@ watch(isMobileAvatarMenuOpen, () => {
       </div>
 
       <!-- main page / content box -->
-      <div class="p-4 duration-150 max-w-[1100px] mx-auto">
+      <div
+        class="p-4 duration-150 mx-auto"
+        :class="{ 'max-w-[1100px]': constrainedLayout }"
+      >
         <router-view v-slot="{ Component, route }">
           <transition>
             <component :is="Component" :key="route.name" />
