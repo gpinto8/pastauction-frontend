@@ -1,24 +1,10 @@
 <template>
   <div class="py-4">
-    <form class="p-4 bg-white mb-4" @submit.prevent="submit">
-      <div class="grid grid-cols-2 mb-4 justify-between items-center">
-        <div class="text-[#D80027]">
-          <!-- {{ filters }} -->
-          <span v-if="getLengthOfFilters < 3">
-            Please, select at least 3 parameters
-          </span>
-        </div>
-        <div class="text-right">
-          <v-btn
-            @click="submit"
-            :disabled="store.loading.submit"
-            class="!bg-primary text-white !rounded-sm w-[130px]"
-          >
-            Run search
-          </v-btn>
-        </div>
-      </div>
-      <div class="grid grid-cols-7 gap-2">
+    <form
+      class="p-4 bg-white mb-4 flex flex-column gap-4"
+      @submit.prevent="submit"
+    >
+      <div class="grid lg:grid-cols-7 md:grid-cols-4 sm:grid-cols-2 gap-5">
         <v-autocomplete
           v-model="filters.auction_area"
           label="Area"
@@ -87,6 +73,23 @@
           density="compact"
           :items="store.getListYears"
         />
+      </div>
+      <div class="grid grid-cols-2 justify-between items-center">
+        <div class="text-[#D80027]">
+          <!-- {{ filters }} -->
+          <span v-if="getLengthOfFilters < 3">
+            Please, select at least 3 parameters
+          </span>
+        </div>
+        <div class="text-right">
+          <v-btn
+            @click="submit"
+            :disabled="store.loading.submit"
+            class="!bg-primary text-white !rounded-sm w-[130px]"
+          >
+            Run search
+          </v-btn>
+        </div>
       </div>
     </form>
     <div class="p-2">
