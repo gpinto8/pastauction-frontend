@@ -28,7 +28,6 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   const getListYears = computed(() => listYears.value)
   const getLoading = computed(() => loading.value)
   const getDetail = computed(() => detail.value)
-  const getLoadingListItems = computed(() => loadingListItems.value)
   const getListEvents = computed(() => listEvents.value)
   // actions
   async function listPaginated (
@@ -49,7 +48,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     // name_event
 
 
-    loadingListItems.value = true
+    store.loading.submit = true
     const qs = buildQS({
       page: page,
       size: size,
@@ -61,10 +60,16 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       .then(({ data }) => {
         console.log(data)
         listItems.value = data
+        store.pager.value = {
+          page: parseInt(data.page) ?? 0,
+          size: parseInt(data.size) ?? 0,
+          pages: parseInt(data.pages) ?? 0,
+          total: parseInt(data.total) ?? 0,
+        }
         return data
       })
       .finally(() => {
-        loadingListItems.value = false
+        store.loading.submit = false
       })
   }
 
@@ -222,7 +227,6 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     getListCities,
     getListMaison,
     getListYears,
-    getLoadingListItems,
     getListEvents,
 
     loading: reactive({
@@ -251,6 +255,8 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     pager: ref({
       page: 1,
       size: 10,
+      pages: 1,
+      total: 0,
     }),
 
     sort: ref({
@@ -284,6 +290,9 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
 
     paginate () {
       return store.listPaginated(store.pager.value.page, store.pager.value.size, store.filters, store.sort.value)
+    },
+    submit () {
+      return store.listPaginated(1, store.pager.value.size, store.filters, store.sort.value)
     }
   }
 
@@ -307,6 +316,8 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     console.log('auction_year', store.filters.auction_year)
     auctionEvents()
   })
+
+  watch(() => store.pager.value.page, store.paginate)
 
   store.citySearch$.pipe(debounceSearch)
     .subscribe(async () => {

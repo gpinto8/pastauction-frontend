@@ -11,7 +11,7 @@
         <div class="text-right">
           <v-btn
             @click="submit"
-            :disabled="store.getLoadingListItems"
+            :disabled="store.loading.submit"
             class="!bg-primary text-white !rounded-sm w-[130px]"
           >
             Run search
@@ -91,15 +91,24 @@
     </form>
     <div class="p-2 bg-white">
       <v-data-table
-        v-model:items-per-page="itemsPerPage"
+        v-model:items-per-page="pager.size"
         :headers="headers as any"
-        :items-length="store.getListItems?.total || 0"
+        :items-length="store.pager.total || 0"
         :items="store.getListItems?.items || []"
-        :loading="store.getLoadingListItems"
+        :loading="store.loading.submit"
         class="elevation-1"
         item-value="name"
         density="compact"
       >
+        <template #top>
+          <v-pagination
+            class="mb-4"
+            :disabled="store.loading.submit"
+            :length="store.pager.pages"
+            v-model="store.pager.page"
+            total-visible="6"
+          />
+        </template>
         <template #bottom></template>
       </v-data-table>
     </div>
@@ -138,7 +147,6 @@ const filters = store.filters;
 
 const sort = store.sort;
 
-const itemsPerPage = ref(5);
 const headers = ref([
   {
     title: 'Maison',
@@ -207,7 +215,7 @@ const getLengthOfFilters = computed(
   () => Object.values(filters).filter(Boolean).length
 );
 function submit() {
-  store.paginate().catch(error => {
+  store.submit().catch(error => {
     snackbar.value.show = true;
     snackbar.value.text =
       error.message ||
