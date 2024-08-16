@@ -275,6 +275,11 @@ submit();
       }
     }
   }
+
+  td,
+  th {
+    white-space: nowrap;
+  }
 }
 .v-input__details {
   display: none;
