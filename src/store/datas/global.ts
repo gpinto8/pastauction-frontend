@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch, reactive } from 'vue'
 import { httpGet } from '@/api/api'
 import { buildQS } from '@/utils/functions/buildQS'
+import { alphabetically, alphabeticallyByKey, ascendingByKey, descending, descendingByKey } from '@/lib/sort'
 
 export const useGlobalStore = defineStore('dataGlobal', () => {
   // state
@@ -33,6 +34,18 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     search?: any,
     sort?: any
   ) {
+    // id_auction
+    // auction_area
+    // auction_data
+    // auction_year
+    // city_auction_name
+    // country_auction_name
+    // country_maison
+    // maison_name
+    // maison_type
+    // name_event
+
+
     loadingListItems.value = true
     const qs = buildQS({
       page: page,
@@ -41,27 +54,23 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       sort: sort,
     })
 
-    return await new Promise((resolve, reject) => {
-      httpGet(`bidwatcher_auction/query_0?${qs}`)
-        .then(({ data }) => {
-          console.log(data)
-          listItems.value = data
-          loadingListItems.value = false
-          resolve(data)
-        })
-        .catch((err: any) => {
-          loadingListItems.value = false
-          reject(err)
-        })
-    })
+    return httpGet(`bidwatcher_auction/query_0?${qs}`)
+      .then(({ data }) => {
+        console.log(data)
+        listItems.value = data
+        return data
+      })
+      .finally(() => {
+        loadingListItems.value = false
+      })
   }
 
-  async function auctionAreas (tablename?: string, columnName?: string) {
+  async function auctionAreas () {
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}/`)
+      httpGet(`filter/bidwatcher_auction/area/`)
         .then(({ data }) => {
           console.log(data)
-          listAreas.value = data.items
+          listAreas.value = data.items.sort(alphabeticallyByKey('area'))
           resolve(data)
         })
         .catch((err: any) => {
@@ -70,12 +79,23 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
   }
 
-  async function auctionCountries (tablename?: string, columnName?: string) {
+  async function auctionCountries (columnName: string = 'name') {
+    const area = store.filters.auction_area
+    const search: Record<string, string> = {}
+
+    if (area) {
+      search.area = area
+    }
+
+    const qs = buildQS({
+      search: search,
+    })
+
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}/`)
+      httpGet(`filter/bidwatcher_country/${columnName}/?${qs}`)
         .then(({ data }) => {
           console.log(data)
-          listCountries.value = data.items
+          listCountries.value = data.items.sort(alphabeticallyByKey('name'))
           resolve(data)
         })
         .catch((err: any) => {
@@ -84,9 +104,20 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
   }
 
-  async function auctionCities (tablename?: string, columnName?: string) {
+  async function auctionCities (columnName: string = 'name') {
+    const country = store.filters.country_auction_name // TODO actually filter by country
+    const search: Record<string, string> = {}
+
+    if (country) {
+      search.country_name = country
+    }
+
+    const qs = buildQS({
+      search: search
+    })
+
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}/`)
+      httpGet(`filter/bidwatcher_city/${columnName}/?${qs}`)
         .then(({ data }) => {
           console.log(data)
           listCities.value = data.items
@@ -98,9 +129,9 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
   }
 
-  async function auctionMaison (tablename?: string, columnName?: string) {
+  async function auctionMaison (columnName: string = 'name') {
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}/`)
+      httpGet(`filter/bidwatcher_maison/${columnName}/`)
         .then(({ data }) => {
           console.log(data)
           listMaison.value = data.items
@@ -112,9 +143,24 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
   }
 
-  async function auctionEvents (tablename?: string, columnName?: string) {
+  async function auctionEvents () {
+    const area = store.filters.auction_area
+    const year = store.filters.auction_year
+    const search: Record<string, string | number> = {}
+
+    if (area) {
+      search.area = area
+    }
+    if (year) {
+      search.year = year
+    }
+
+    const qs = buildQS({
+      search: search,
+    })
+
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}/`)
+      httpGet(`filter/bidwatcher_auction/name_event/?${qs}`)
         .then(({ data }) => {
           console.log(data)
           listEvents.value = data.items
@@ -126,12 +172,24 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
   }
 
-  async function auctionYear (tablename?: string, columnName?: string) {
+  async function auctionYear () {
+    const area = store.filters.auction_area
+    const search: Record<string, string> = {}
+
+    if (area) {
+      search.area = area
+    }
+
+    const qs = buildQS({
+      search: search,
+    })
+
+
     return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}/`)
+      httpGet(`filter/bidwatcher_auction/year/?${qs}`)
         .then(({ data }) => {
           console.log(data)
-          listYears.value = data.items
+          listYears.value = data.items.sort(ascendingByKey('year'))
           resolve(data)
         })
         .catch((err: any) => {
@@ -140,7 +198,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
   }
 
-  return {
+  const store = {
     // state
     // getters
     getListItems,
@@ -162,5 +220,65 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     auctionMaison,
     auctionYear,
     auctionEvents,
+    filters: reactive({
+      auction_area: 'UK',
+      name_event: '',
+      country_auction_name: 'United Kingdom',
+      country_maison: 'United Kingdom',
+      maison_name: '',
+      city_auction_name: 'London',
+      auction_year: 2021,
+    }),
+    pager: ref({
+      page: 1,
+      size: 10,
+    }),
+
+    sort: ref({
+      auction_area: null,
+      name_event: null,
+      country_auction_name: null,
+      country_maison: null,
+      maison_name: null,
+      city_auction_name: null,
+      auction_year: null,
+    }),
+
+    init () {
+      auctionAreas()
+      auctionCountries()
+      auctionCities()
+      auctionMaison()
+      auctionYear()
+      auctionEvents()
+    },
+
+    paginate () {
+      return store.listPaginated(store.pager.value.page, store.pager.value.size, store.filters, store.sort.value)
+    }
   }
+
+  watch(() => store.filters.auction_area, () => {
+    console.log('auction_area', store.filters.auction_area)
+    store.filters.country_auction_name = ''
+    store.filters.city_auction_name = ''
+    // store.filters.auction_year = null
+    store.filters.name_event = ''
+    auctionCountries()
+    auctionEvents()
+    auctionYear()
+  })
+  watch(() => store.filters.country_auction_name, () => {
+    console.log('country_auction_name', store.filters.country_auction_name)
+    store.filters.city_auction_name = ''
+    auctionCities()
+  })
+  // watch year and query events
+  watch(() => store.filters.auction_year, () => {
+    console.log('auction_year', store.filters.auction_year)
+    auctionEvents()
+  })
+
+
+  return store
 })

@@ -1,15 +1,17 @@
 <template>
   <div class="py-4">
-    <div class="p-4 bg-white mb-4">
+    <form class="p-4 bg-white mb-4" @submit.prevent="submit">
       <div class="grid grid-cols-2 mb-4 justify-between items-center">
         <div class="text-[#D80027]">
+          <!-- {{ filters }} -->
           <span v-if="getLengthOfFilters < 3">
             Please, select almost 3 parameters
           </span>
         </div>
         <div class="text-right">
           <v-btn
-            @click="paginate"
+            @click="submit"
+            :disabled="store.getLoadingListItems"
             class="!bg-primary text-white !rounded-sm w-[130px]"
           >
             Run search
@@ -17,7 +19,7 @@
         </div>
       </div>
       <div class="grid grid-cols-7 gap-2">
-        <v-select
+        <v-autocomplete
           v-model="filters.auction_area"
           label="Area"
           item-title="area"
@@ -26,7 +28,7 @@
           density="compact"
           :items="store.getListAreas"
         />
-        <v-select
+        <v-autocomplete
           v-model="filters.country_auction_name"
           label="Auction Country"
           item-title="name"
@@ -36,7 +38,7 @@
           :return-object="false"
           :items="store.getListCountries"
         />
-        <v-select
+        <v-autocomplete
           v-model="filters.city_auction_name"
           label="Auction City"
           item-title="name"
@@ -45,7 +47,7 @@
           density="compact"
           :items="store.getListCities"
         />
-        <v-select
+        <v-autocomplete
           v-model="filters.name_event"
           label="Auction Event"
           item-title="name_event"
@@ -54,7 +56,7 @@
           density="compact"
           :items="store.getListEvents"
         />
-        <v-select
+        <v-autocomplete
           v-model="filters.maison_name"
           label="Maison"
           item-title="name"
@@ -63,7 +65,7 @@
           density="compact"
           :items="store.getListMaison"
         />
-        <v-select
+        <v-autocomplete
           v-model="filters.country_maison"
           label="Maison Country"
           item-title="name"
@@ -72,7 +74,7 @@
           density="compact"
           :items="store.getListCountries"
         />
-        <v-select
+        <v-autocomplete
           v-model="filters.auction_year"
           label="Auction Year"
           item-title="year"
@@ -82,7 +84,7 @@
           :items="store.getListYears"
         />
       </div>
-    </div>
+    </form>
     <div class="p-2 bg-white">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
@@ -98,40 +100,39 @@
       </v-data-table>
     </div>
   </div>
+
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top right"
+  >
+    <div class="flex gap-1 justify-between">
+      {{ snackbar.text }}
+      <Button
+        classes="min-w-[100px] ml-2"
+        variant="white"
+        @click="snackbar.show = false"
+      >
+        Close
+      </Button>
+    </div>
+  </v-snackbar>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useGlobalStore } from '@/store/datas/global';
+import { snackbarState } from '@/lib/snackbar-state';
+import Button from '@/components/common/button.vue';
 
 const store = useGlobalStore();
+store.init();
 
-store.auctionAreas('bidwatcher_auction', 'area');
-store.auctionCountries('bidwatcher_country', 'name');
-store.auctionCities('bidwatcher_city', 'name');
-store.auctionMaison('bidwatcher_maison', 'name');
-store.auctionYear('bidwatcher_auction', 'year');
-store.auctionEvents('bidwatcher_auction', 'name_event');
+const snackbar = snackbarState();
 
-const filters = ref({
-  auction_area: null,
-  name_event: null,
-  country_auction_name: null,
-  country_maison: null,
-  maison_name: null,
-  city_auction_name: null,
-  auction_year: null,
-});
+const filters = store.filters;
 
-const sort = ref({
-  auction_area: null,
-  name_event: null,
-  country_auction_name: null,
-  country_maison: null,
-  maison_name: null,
-  city_auction_name: null,
-  auction_year: null,
-});
+const sort = store.sort;
 
 const itemsPerPage = ref(5);
 const headers = ref([
@@ -197,24 +198,21 @@ const headers = ref([
   },
 ]);
 
-const pager = ref<any>({
-  page: 1,
-  size: 10,
-});
-
+const pager = store.pager;
 const getLengthOfFilters = computed(
-  () => Object.values(filters.value).filter(el => el !== null).length
+  () => Object.values(filters).filter(Boolean).length
 );
+function submit() {
+  store.paginate().catch(error => {
+    snackbar.value.show = true;
+    snackbar.value.text =
+      error.message ||
+      'There was an error while fetching data, please try again';
+    snackbar.value.color = 'error';
+  });
+}
 
-const paginate = () => {
-  store.listPaginated(
-    pager.value.page,
-    pager.value.size,
-    filters.value,
-    sort.value
-  );
-};
-paginate();
+submit();
 </script>
 
 <style lang="postcss">
