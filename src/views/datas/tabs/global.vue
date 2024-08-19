@@ -171,6 +171,7 @@ import { ref, computed } from 'vue';
 import { useGlobalStore } from '@/store/datas/global';
 import { snackbarState } from '@/lib/snackbar-state';
 import Button from '@/components/common/button.vue';
+import { onBeforeUnmount } from 'vue';
 
 const store = useGlobalStore();
 store.init();
@@ -257,6 +258,11 @@ function submit() {
 function clear() {
   store.clear();
 }
+
+onBeforeUnmount(() => {
+  store.clear();
+  store.clearResults();
+});
 </script>
 
 <style lang="postcss">

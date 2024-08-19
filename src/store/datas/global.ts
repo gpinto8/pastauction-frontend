@@ -315,6 +315,9 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
           store.filters[key] = value
         }
       })
+    },
+    clearResults () {
+      queryResult.value = null
     }
   }
 
