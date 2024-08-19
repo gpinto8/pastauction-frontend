@@ -211,7 +211,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     queryItems: computed(() => (queryResult.value?.items || []).map((item: any) => {
       return {
         ...item,
-        ratio_sales: (item.ratio_sales).toFixed(2) + '%',
+        ratio_sales: (item.ratio_sales * 100).toFixed(2) + '%',
         avg_sales: (item.avg_sales).toFixed(2),
       }
     })),
