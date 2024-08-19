@@ -74,20 +74,26 @@
           :items="store.getListYears"
         />
       </div>
-      <div class="grid grid-cols-2 justify-between items-center">
+      <div class="grid sm:grid-cols-2 gap-3 justify-between items-center">
         <div class="text-[#D80027]">
-          <!-- {{ filters }} -->
-          <span v-if="getLengthOfFilters < 3">
+          <span v-if="store.filterAmount < 3">
             Please, select at least 3 parameters
           </span>
         </div>
-        <div class="text-right">
+        <div class="flex justify-end gap-3">
           <v-btn
             @click="submit"
             :disabled="store.loading.submit"
             class="!bg-primary text-white !rounded-sm w-[130px]"
           >
             Run search
+          </v-btn>
+          <v-btn
+            @click="clear"
+            :disabled="store.filterAmount === 0"
+            class="!bg-primary text-white !rounded-sm w-[130px]"
+          >
+            Clear
           </v-btn>
         </div>
       </div>
@@ -239,9 +245,6 @@ const headers = ref([
 ]);
 
 const pager = store.pager;
-const getLengthOfFilters = computed(
-  () => Object.values(filters).filter(Boolean).length
-);
 function submit() {
   store.submit().catch(error => {
     snackbar.value.show = true;
@@ -251,8 +254,9 @@ function submit() {
     snackbar.value.color = 'error';
   });
 }
-
-submit();
+function clear() {
+  store.clear();
+}
 </script>
 
 <style lang="postcss">

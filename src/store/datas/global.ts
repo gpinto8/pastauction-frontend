@@ -6,6 +6,23 @@ import { alphabetically, alphabeticallyByKey, ascendingByKey, descending, descen
 import { BehaviorSubject, debounceTime, Subject } from 'rxjs'
 
 const debounceSearch = debounceTime(200)
+const filters = () => reactive<{
+  auction_area: string
+  name_event: string
+  country_auction_name: string
+  country_maison: string
+  maison_name: string
+  city_auction_name: string
+  auction_year: number | null
+}>({
+  auction_area: '',
+  name_event: '',
+  country_auction_name: '',
+  country_maison: '',
+  maison_name: '',
+  city_auction_name: '',
+  auction_year: null,
+})
 
 export const useGlobalStore = defineStore('dataGlobal', () => {
   // state
@@ -35,6 +52,10 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     // maison_name
     // maison_type
     // name_event
+
+    if (store.filterAmount.value < 3) {
+      throw new Error('Please select at least 3 filters')
+    }
 
 
     store.loading.submit = true
@@ -238,14 +259,9 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     auctionMaison,
     auctionYear,
     auctionEvents,
-    filters: reactive({
-      auction_area: 'UK',
-      name_event: '',
-      country_auction_name: 'United Kingdom',
-      country_maison: 'United Kingdom',
-      maison_name: '',
-      city_auction_name: 'London',
-      auction_year: 2021,
+    filters: filters(),
+    filterAmount: computed(function (): number {
+      return Object.values(store.filters).filter(Boolean).length
     }),
     pager: ref({
       page: 1,
@@ -291,6 +307,14 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     },
     submit () {
       return store.listPaginated(1, store.pager.value.size, store.filters, store.sort.value)
+    },
+    clear () {
+      Object.entries(filters()).forEach(([key, value]) => {
+        if (key in store.filters) {
+          // @ts-ignore
+          store.filters[key] = value
+        }
+      })
     }
   }
 
