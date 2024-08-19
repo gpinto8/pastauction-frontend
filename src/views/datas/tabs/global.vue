@@ -199,7 +199,7 @@ const headers = ref([
     title: 'Auction country',
     align: 'start',
     sortable: false,
-    key: 'country_maison',
+    key: 'country_auction_name',
   },
   {
     title: 'Auction city',
