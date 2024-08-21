@@ -84,17 +84,12 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   }
 
   async function auctionAreas () {
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/bidwatcher_auction/area/`)
-        .then(({ data }) => {
-          console.log(data)
-          listAreas.value = data.items.sort(alphabeticallyByKey('area'))
-          resolve(data)
-        })
-        .catch((err: any) => {
-          reject(err)
-        })
-    })
+    return httpGet(`filter/bidwatcher_auction/area/`)
+      .then(({ data }) => {
+        console.log(data)
+        listAreas.value = data.items.sort(alphabeticallyByKey('area'))
+        return data
+      })
   }
 
   async function auctionCountries (columnName: string = 'name') {
@@ -109,17 +104,12 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       search: search,
     })
 
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/bidwatcher_country/${columnName}/?${qs}`)
-        .then(({ data }) => {
-          console.log(data)
-          listCountries.value = data.items.sort(alphabeticallyByKey('name'))
-          resolve(data)
-        })
-        .catch((err: any) => {
-          reject(err)
-        })
-    })
+    return httpGet(`filter/bidwatcher_country/${columnName}/?${qs}`)
+      .then(({ data }) => {
+        console.log(data)
+        listCountries.value = data.items.sort(alphabeticallyByKey('name'))
+        return data
+      })
   }
 
   async function auctionCities (columnName: string = 'name') {
@@ -140,31 +130,21 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
 
 
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/bidwatcher_city/${columnName}/?${qs}`)
-        .then(({ data }) => {
-          console.log(data)
-          listCities.value = data.items
-          resolve(data)
-        })
-        .catch((err: any) => {
-          reject(err)
-        })
-    })
+    return httpGet(`filter/bidwatcher_city/${columnName}/?${qs}`)
+      .then(({ data }) => {
+        console.log(data)
+        listCities.value = data.items
+        return data
+      })
   }
 
   async function auctionMaison (columnName: string = 'name') {
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/bidwatcher_maison/${columnName}/`)
-        .then(({ data }) => {
-          console.log(data)
-          listMaison.value = data.items
-          resolve(data)
-        })
-        .catch((err: any) => {
-          reject(err)
-        })
-    })
+    return httpGet(`filter/bidwatcher_maison/${columnName}/`)
+      .then(({ data }) => {
+        console.log(data)
+        listMaison.value = data.items
+        return data
+      })
   }
 
   async function auctionEvents () {
@@ -187,17 +167,12 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       search: search,
     })
 
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/bidwatcher_auction/name_event/?${qs}`)
-        .then(({ data }) => {
-          console.log(data)
-          listEvents.value = data.items
-          resolve(data)
-        })
-        .catch((err: any) => {
-          reject(err)
-        })
-    })
+    return httpGet(`filter/bidwatcher_auction/name_event/?${qs}`)
+      .then(({ data }) => {
+        console.log(data)
+        listEvents.value = data.items
+        return data
+      })
   }
 
   async function auctionYear () {
@@ -213,17 +188,12 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
 
 
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/bidwatcher_auction/year/?${qs}`)
-        .then(({ data }) => {
-          console.log(data)
-          listYears.value = data.items.sort(ascendingByKey('year'))
-          resolve(data)
-        })
-        .catch((err: any) => {
-          reject(err)
-        })
-    })
+    return httpGet(`filter/bidwatcher_auction/year/?${qs}`)
+      .then(({ data }) => {
+        console.log(data)
+        listYears.value = data.items.sort(ascendingByKey('year'))
+        return data
+      })
   }
 
   const store = {
