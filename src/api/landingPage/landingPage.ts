@@ -60,6 +60,9 @@ export type BrandInfo = {
   brand_city_longitude: number;
   brand_city_latitude: number;
   brand_city_country_code: string;
+  iso: string;
+  unique_model_count: number;
+  unique_vehicle_count: number;
 };
 
 export const desaturatedBrandLogoUrl = (brandId: number) =>
@@ -85,5 +88,5 @@ export const getBrandAndFounderByFirstLetter = (initial: string) => {
 };
 
 export const getTeamMembers = () => {
-  return axios.get(`bidwatcher_homepage_team`);
+  return axios.get(`bidwatcher_homepage_team/`);
 };
