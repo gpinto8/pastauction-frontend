@@ -77,15 +77,4 @@ const selected = ref(false)
     opacity: 1;
     transform: rotateY(0deg);
 }
-
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
 </style>
