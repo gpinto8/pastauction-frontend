@@ -69,13 +69,14 @@ const containerStyles = computed(() => {
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Vechicles:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
-                            }}</span>
+                        <span class="">Vechicles:&nbsp;</span> <span class="line-clamp-1">{{
+                            brand.unique_vehicle_count || '-' }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Models:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
+                        <span class="">Models:&nbsp;</span> <span class="line-clamp-1">{{ brand.unique_model_count ||
+                            '-'
                             }}</span>
                     </div>
                 </Transition>
