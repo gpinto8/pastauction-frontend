@@ -35,7 +35,6 @@ import Filters from '../filters.vue';
 const useStore = queryStore('query_0');
 const store = useStore();
 
-console.log(`output->`, store);
 store.init();
 
 const headers = ref([
@@ -102,18 +101,6 @@ const headers = ref([
 ]);
 
 const pager = store.pager;
-function submit() {
-  store.submit().catch(error => {
-    snackbar.value.show = true;
-    snackbar.value.text =
-      error.message ||
-      'There was an error while fetching data, please try again';
-    snackbar.value.color = 'error';
-  });
-}
-function clear() {
-  store.clear();
-}
 
 onBeforeUnmount(() => {
   store.clear();
