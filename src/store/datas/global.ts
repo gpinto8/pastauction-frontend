@@ -216,7 +216,7 @@ function newStore (name: string, queryTable: string) {
       return queryColumn(column, search)
         .then((data) => {
           console.log(data)
-          store.listYears.value = data.items.sort(ascendingByKey('year'))
+          store.listYears.value = data.items.sort(ascendingByKey(column))
           return data
         })
     }
