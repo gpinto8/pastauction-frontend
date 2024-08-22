@@ -47,3 +47,15 @@ export function cachableWithKey<T> (fn: (key: key) => Promise<T>, ttlInMinutes =
     return cache[key] as Promise<T>
   }
 }
+
+export function cachableWithArgs<T> (fn: (...args: any[]) => Promise<T>, ttlInMinutes = MAX_CACHE_IN_MINUTES) {
+  const cachable = cachableWithKey((key: key) => {
+    const { args } = JSON.parse(key + '')
+    return fn(...args)
+  })
+
+  return (...args: any[]) => {
+    const key = JSON.stringify({ args })
+    return cachable(key)
+  }
+}
