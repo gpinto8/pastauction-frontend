@@ -8,70 +8,70 @@
         <v-autocomplete
           v-model="filters.auction_area"
           label="Area"
-          item-title="area"
-          item-value="area"
+          :item-title="Columns.area"
+          :item-value="Columns.area"
           variant="outlined"
           density="compact"
-          :items="store.getListAreas"
+          :items="store.listAreas"
         />
         <v-autocomplete
           v-model="filters.country_auction_name"
           label="Auction Country"
-          item-title="name"
-          item-value="name"
+          :item-title="Columns.auctionCountry"
+          :item-value="Columns.auctionCountry"
           variant="outlined"
           density="compact"
           :return-object="false"
-          :items="store.getListCountries"
+          :items="store.listCountries"
         />
         <v-autocomplete
           v-model="filters.city_auction_name"
           label="Auction City"
           @update:search="store.searchCities"
           :loading="store.loading.cities"
-          item-title="name"
-          item-value="name"
+          :item-title="Columns.auctionCity"
+          :item-value="Columns.auctionCity"
           variant="outlined"
           density="compact"
-          :items="store.getListCities"
+          :items="store.listCities"
         />
         <v-autocomplete
           v-model="filters.name_event"
           label="Auction Event"
           @update:search="store.searchEvents"
           :loading="store.loading.events"
-          item-title="name_event"
-          item-value="name_event"
+          :item-title="Columns.auctionEvent"
+          :item-value="Columns.auctionEvent"
           variant="outlined"
           density="compact"
-          :items="store.getListEvents"
+          :items="store.listEvents"
         />
         <v-autocomplete
           v-model="filters.maison_name"
           label="Maison"
-          item-title="name"
-          item-value="name"
+          :item-title="Columns.maison"
+          :item-value="Columns.maison"
           variant="outlined"
           density="compact"
-          :items="store.getListMaison"
+          :items="store.listMaison"
         />
         <v-autocomplete
           v-model="filters.country_maison"
           label="Maison Country"
-          item-title="name"
-          item-value="name"
+          :item-title="Columns.maisonCountry"
+          :item-value="Columns.maisonCountry"
           variant="outlined"
           density="compact"
-          :items="store.getListCountries"
+          :items="store.listMaisonCountries"
         />
         <v-autocomplete
           v-model="filters.auction_year"
           label="Auction Year"
-          item-title="year"
-          item-value="year"
+          :item-title="Columns.auctionYear"
+          :item-value="Columns.auctionYear"
           variant="outlined"
           density="compact"
-          :items="store.getListYears"
+          :items="store.listYears"
         />
       </div>
       <div class="grid sm:grid-cols-2 gap-3 justify-between items-center">
@@ -168,7 +168,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useGlobalStore } from '@/store/datas/global';
+import { useGlobalStore, Columns } from '@/store/datas/global';
 import { snackbarState } from '@/lib/snackbar-state';
 import Button from '@/components/common/button.vue';
 import { onBeforeUnmount } from 'vue';

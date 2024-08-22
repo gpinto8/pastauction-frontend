@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
-import { ref, computed, watch, reactive } from 'vue'
 import { httpGet } from '@/api/api'
+import { alphabeticallyByKey, ascendingByKey } from '@/lib/sort'
 import { buildQS } from '@/utils/functions/buildQS'
-import { alphabetically, alphabeticallyByKey, ascendingByKey, descending, descendingByKey } from '@/lib/sort'
-import { BehaviorSubject, debounceTime, Subject } from 'rxjs'
+import { defineStore } from 'pinia'
+import { BehaviorSubject, debounceTime } from 'rxjs'
+import { computed, reactive, ref, watch } from 'vue'
 
 const debounceSearch = debounceTime(200)
 const filters = () => reactive<{
@@ -24,17 +24,20 @@ const filters = () => reactive<{
   auction_year: null,
 })
 
+
+export enum Columns {
+  area = "country_auction_area",
+  auctionCountry = "country_auction_name",
+  auctionCity = "city_auction_name",
+  auctionEvent = "name_event",
+  maison = "maison_name",
+  maisonCountry = "country_maison",
+  auctionYear = "auction_year",
+}
+
 export const useGlobalStore = defineStore('dataGlobal', () => {
   // state
   const queryResult = ref()
-  const listAreas = ref()
-  const listCountries = ref()
-  const listCities = ref()
-  const listMaison = ref()
-  const listYears = ref()
-  const loading = ref(false)
-  const detail = ref()
-  const listEvents = ref()
   // actions
   async function listPaginated (
     page: number,
@@ -84,41 +87,65 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
   }
 
   async function auctionAreas () {
-    return httpGet(`filter/bidwatcher_auction/area/`)
+    const column = Columns.area
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/`)
       .then(({ data }) => {
         console.log(data)
-        listAreas.value = data.items.sort(alphabeticallyByKey('area'))
+        store.listAreas.value = data.items.sort(alphabeticallyByKey(column))
         return data
       })
   }
 
-  async function auctionCountries (columnName: string = 'name') {
+  async function auctionCountries () {
+    const column = Columns.auctionCountry
     const area = store.filters.auction_area
     const search: Record<string, string> = {}
 
     if (area) {
-      search.area = area
+      search.country_auction_area = area
     }
 
     const qs = buildQS({
       search: search,
     })
 
-    return httpGet(`filter/bidwatcher_country/${columnName}/?${qs}`)
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
       .then(({ data }) => {
         console.log(data)
-        listCountries.value = data.items.sort(alphabeticallyByKey('name'))
+        store.listCountries.value = data.items.sort(alphabeticallyByKey(column))
         return data
       })
   }
 
-  async function auctionCities (columnName: string = 'name') {
-    const country = store.filters.country_auction_name // TODO actually filter by country
+  async function maisonCountries () {
+    const column = Columns.maisonCountry
+    const area = store.filters.auction_area
+    const search: Record<string, string> = {}
+
+    if (area) {
+      search.country_auction_area = area
+    }
+
+    const qs = buildQS({
+      search: search,
+    })
+
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+      .then(({ data }) => {
+        console.log(data)
+        store.listMaisonCountries.value = data.items.sort(alphabeticallyByKey(column))
+        return data
+      })
+  }
+
+  async function auctionCities () {
+    const column = Columns.auctionCity
+    const country = store.filters.country_auction_name
     const search: Record<string, string> = {}
     const like = store.citySearch$.value
 
     if (country) {
-      search.country_name = country
+      search[Columns.auctionCountry] = country
     }
     if (like) {
       // columnName += `_like:${encodeURIComponent(like)}`
@@ -130,24 +157,26 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     })
 
 
-    return httpGet(`filter/bidwatcher_city/${columnName}/?${qs}`)
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
       .then(({ data }) => {
         console.log(data)
-        listCities.value = data.items
+        store.listCities.value = data.items
         return data
       })
   }
 
   async function auctionMaison (columnName: string = 'name') {
-    return httpGet(`filter/bidwatcher_maison/${columnName}/`)
+    const column = Columns.maison
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?`)
       .then(({ data }) => {
         console.log(data)
-        listMaison.value = data.items
+        store.listMaison.value = data.items
         return data
       })
   }
 
   async function auctionEvents () {
+    const column = Columns.auctionEvent
     const area = store.filters.auction_area
     const year = store.filters.auction_year
     const name = store.eventSearch$.value
@@ -167,15 +196,16 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       search: search,
     })
 
-    return httpGet(`filter/bidwatcher_auction/name_event/?${qs}`)
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
       .then(({ data }) => {
         console.log(data)
-        listEvents.value = data.items
+        store.listEvents.value = data.items
         return data
       })
   }
 
   async function auctionYear () {
+    const column = Columns.auctionYear
     const area = store.filters.auction_area
     const search: Record<string, string> = {}
 
@@ -183,21 +213,27 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       search.area = area
     }
 
-    const qs = buildQS({
-      search: search,
-    })
+    const qs = buildQS(store.filters)
 
 
-    return httpGet(`filter/bidwatcher_auction/year/?${qs}`)
+    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
       .then(({ data }) => {
         console.log(data)
-        listYears.value = data.items.sort(ascendingByKey('year'))
+        store.listYears.value = data.items.sort(ascendingByKey('year'))
         return data
       })
   }
 
   const store = {
     // state
+    listCountries: ref(),
+    listCities: ref(),
+    listMaison: ref(),
+    listMaisonCountries: ref(),
+    listYears: ref(),
+    listEvents: ref(),
+    listAreas: ref(),
+
     // getters
     queryItems: computed(() => (queryResult.value?.items || []).map((item: any) => {
       return {
@@ -206,18 +242,15 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
         avg_sales: (item.avg_sales).toFixed(2),
       }
     })),
-    getListAreas: computed(() => listAreas.value),
-    getListCountries: computed(() => listCountries.value),
-    getListCities: computed(() => listCities.value),
-    getListMaison: computed(() => listMaison.value),
-    getListYears: computed(() => listYears.value),
-    getLoading: computed(() => loading.value),
-    getDetail: computed(() => detail.value),
-    getListEvents: computed(() => listEvents.value),
 
-    loading: reactive({
-      cities: false,
-      events: false,
+    loading: reactive<Record<Columns | 'submit', boolean>>({
+      [Columns.area]: false,
+      [Columns.auctionCountry]: false,
+      [Columns.auctionCity]: false,
+      [Columns.auctionEvent]: false,
+      [Columns.maison]: false,
+      [Columns.maisonCountry]: false,
+      [Columns.auctionYear]: false,
       submit: false,
     }),
 
@@ -225,6 +258,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     listPaginated,
     auctionAreas,
     auctionCountries,
+    maisonCountries,
     auctionCities,
     auctionMaison,
     auctionYear,
@@ -266,6 +300,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     init () {
       auctionAreas()
       auctionCountries()
+      maisonCountries()
       auctionCities()
       auctionMaison()
       auctionYear()
@@ -288,7 +323,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     },
     clearResults () {
       queryResult.value = null
-    }
+    },
   }
 
   watch(() => store.filters.auction_area, () => {
@@ -298,6 +333,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
     // store.filters.auction_year = null
     store.filters.name_event = ''
     auctionCountries()
+    maisonCountries()
     auctionEvents()
     auctionYear()
   })
@@ -318,14 +354,14 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
 
   store.citySearch$.pipe(debounceSearch)
     .subscribe(async () => {
-      store.loading.cities = true
-      auctionCities().finally(() => store.loading.cities = false)
+      store.loading[Columns.auctionCity] = true
+      auctionCities().finally(() => store.loading[Columns.auctionCity] = false)
     })
 
   store.eventSearch$.pipe(debounceSearch)
     .subscribe(async () => {
-      store.loading.events = true
-      auctionEvents().finally(() => store.loading.events = false)
+      store.loading[Columns.area] = true
+      auctionEvents().finally(() => store.loading[Columns.area] = false)
     })
 
 
