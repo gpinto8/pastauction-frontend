@@ -44,6 +44,20 @@ export const queryStore = (queryTable: string) => {
   return stores[name] || (stores[name] = newStore(name, queryTable))
 }
 
+function queryColumn (column: Columns, search: Record<string, any>) {
+  const qs = buildQS({ search })
+  return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+    .then(({ data }) => {
+      return data as {
+        items: Record<Columns, any>[],
+        page: number,
+        pages: number,
+        size: number,
+        total: number,
+      }
+    })
+}
+
 
 function newStore (name: string, queryTable: string) {
   return defineStore(name, () => {
@@ -89,8 +103,8 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionAreas () {
       const column = Columns.area
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/`)
-        .then(({ data }) => {
+      return queryColumn(column, {})
+        .then((data) => {
           console.log(data)
           store.listAreas.value = data.items.sort(alphabeticallyByKey(column))
           return data
@@ -106,12 +120,8 @@ function newStore (name: string, queryTable: string) {
         search.country_auction_area = area
       }
 
-      const qs = buildQS({
-        search: search,
-      })
-
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-        .then(({ data }) => {
+      return queryColumn(column, search)
+        .then((data) => {
           console.log(data)
           store.listCountries.value = data.items.sort(alphabeticallyByKey(column))
           return data
@@ -127,12 +137,8 @@ function newStore (name: string, queryTable: string) {
         search.country_auction_area = area
       }
 
-      const qs = buildQS({
-        search: search,
-      })
-
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-        .then(({ data }) => {
+      return queryColumn(column, search)
+        .then((data) => {
           console.log(data)
           store.listMaisonCountries.value = data.items.sort(alphabeticallyByKey(column))
           return data
@@ -153,13 +159,8 @@ function newStore (name: string, queryTable: string) {
         search.name_like = like
       }
 
-      const qs = buildQS({
-        search: search
-      })
-
-
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-        .then(({ data }) => {
+      return queryColumn(column, search)
+        .then((data) => {
           console.log(data)
           store.listCities.value = data.items
           return data
@@ -193,12 +194,8 @@ function newStore (name: string, queryTable: string) {
         search.name_event_like = name
       }
 
-      const qs = buildQS({
-        search: search,
-      })
-
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-        .then(({ data }) => {
+      return queryColumn(column, search)
+        .then((data) => {
           console.log(data)
           store.listEvents.value = data.items
           return data
@@ -214,11 +211,8 @@ function newStore (name: string, queryTable: string) {
         search.area = area
       }
 
-      const qs = buildQS(store.filters)
-
-
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-        .then(({ data }) => {
+      return queryColumn(column, search)
+        .then((data) => {
           console.log(data)
           store.listYears.value = data.items.sort(ascendingByKey('year'))
           return data
