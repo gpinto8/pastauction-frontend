@@ -1,4 +1,5 @@
 import { httpGet } from '@/api/api'
+import { cachableWithArgs } from '@/lib/cachable'
 import { alphabeticallyByKey, ascendingByKey } from '@/lib/sort'
 import { buildQS } from '@/utils/functions/buildQS'
 import { defineStore } from 'pinia'
@@ -40,11 +41,11 @@ export type DatasStore = ReturnType<UseDatasStore>
 const stores: Record<string, UseDatasStore> = {}
 
 export const queryStore = (queryTable: string) => {
-  const name = `store${queryTable}`
+  const name = `store-${queryTable}`
   return stores[name] || (stores[name] = newStore(name, queryTable))
 }
 
-function queryColumn (column: Columns, search: Record<string, any>) {
+function _queryColumn (column: Columns, search: Record<string, any>) {
   const qs = buildQS({ search })
   return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
     .then(({ data }) => {
@@ -58,6 +59,7 @@ function queryColumn (column: Columns, search: Record<string, any>) {
     })
 }
 
+const queryColumn = cachableWithArgs(_queryColumn)
 
 function newStore (name: string, queryTable: string) {
   return defineStore(name, () => {
@@ -156,7 +158,7 @@ function newStore (name: string, queryTable: string) {
       }
       if (like) {
         // columnName += `_like:${encodeURIComponent(like)}`
-        search.name_like = like
+        search[column] = like
       }
 
       return queryColumn(column, search)
@@ -246,11 +248,17 @@ function newStore (name: string, queryTable: string) {
 
       // getters
       queryItems: computed(() => (queryResult.value?.items || []).map((item: any) => {
-        return {
+        const parsed = {
           ...item,
-          ratio_sales: (item.ratio_sales * 100).toFixed(2) + '%',
-          avg_sales: (item.avg_sales).toFixed(2),
         }
+        if ('ratio_sales' in item) {
+          parsed.ratio_sales = (item?.ratio_sales * 100).toFixed(2) + '%'
+        }
+        if ('avg_sales' in item) {
+          parsed.avg_sales = (item?.avg_sales).toFixed(2)
+        }
+
+        return parsed
       })),
 
       loading: reactive<Record<Columns | 'submit', boolean>>({
