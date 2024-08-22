@@ -35,351 +35,351 @@ export enum Columns {
   auctionYear = "auction_year",
 }
 
-export const useGlobalStore = defineStore('dataGlobal', () => {
-  // state
-  const queryResult = ref()
-  // actions
-  async function listPaginated (
-    page: number,
-    size: number,
-    search?: any,
-    sort?: any
-  ) {
-    // id_auction
-    // auction_area
-    // auction_data
-    // auction_year
-    // city_auction_name
-    // country_auction_name
-    // country_maison
-    // maison_name
-    // maison_type
-    // name_event
+export type UseDatasStore = ReturnType<typeof newStore>
+export type DatasStore = ReturnType<UseDatasStore>
+const stores: Record<string, UseDatasStore> = {}
 
-    if (store.filterAmount.value < 3) {
-      throw new Error('Please select at least 3 filters')
-    }
+export const queryStore = (queryTable: string) => {
+  const name = `store${queryTable}`
+  return stores[name] || (stores[name] = newStore(name, queryTable))
+}
 
 
-    store.loading.submit = true
-    const qs = buildQS({
-      page: page,
-      size: size,
-      search: search,
-      sort: sort,
-    })
-
-    return httpGet(`bidwatcher_auction/query_0?${qs}`)
-      .then(({ data }) => {
-        console.log(data)
-        queryResult.value = data
-        store.pager.value = {
-          page: parseInt(data.page) ?? 0,
-          size: parseInt(data.size) ?? 0,
-          pages: parseInt(data.pages) ?? 0,
-          total: parseInt(data.total) ?? 0,
-        }
-        return data
-      })
-      .finally(() => {
-        store.loading.submit = false
-      })
-  }
-
-  async function _auctionAreas () {
-    const column = Columns.area
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listAreas.value = data.items.sort(alphabeticallyByKey(column))
-        return data
-      })
-  }
-
-  async function _auctionCountries () {
-    const column = Columns.auctionCountry
-    const area = store.filters.auction_area
-    const search: Record<string, string> = {}
-
-    if (area) {
-      search.country_auction_area = area
-    }
-
-    const qs = buildQS({
-      search: search,
-    })
-
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listCountries.value = data.items.sort(alphabeticallyByKey(column))
-        return data
-      })
-  }
-
-  async function _maisonCountries () {
-    const column = Columns.maisonCountry
-    const area = store.filters.auction_area
-    const search: Record<string, string> = {}
-
-    if (area) {
-      search.country_auction_area = area
-    }
-
-    const qs = buildQS({
-      search: search,
-    })
-
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listMaisonCountries.value = data.items.sort(alphabeticallyByKey(column))
-        return data
-      })
-  }
-
-  async function _auctionCities () {
-    const column = Columns.auctionCity
-    const country = store.filters.country_auction_name
-    const search: Record<string, string> = {}
-    const like = store.citySearch$.value
-
-    if (country) {
-      search[Columns.auctionCountry] = country
-    }
-    if (like) {
-      // columnName += `_like:${encodeURIComponent(like)}`
-      search.name_like = like
-    }
-
-    const qs = buildQS({
-      search: search
-    })
-
-
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listCities.value = data.items
-        return data
-      })
-  }
-
-  async function _auctionMaison (columnName: string = 'name') {
-    const column = Columns.maison
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listMaison.value = data.items
-        return data
-      })
-  }
-
-  async function _auctionEvents () {
-    const column = Columns.auctionEvent
-    const area = store.filters.auction_area
-    const year = store.filters.auction_year
-    const name = store.eventSearch$.value
-    const search: Record<string, string | number> = {}
-
-    if (area) {
-      search.area = area
-    }
-    if (year) {
-      search.year = year
-    }
-    if (name) {
-      search.name_event_like = name
-    }
-
-    const qs = buildQS({
-      search: search,
-    })
-
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listEvents.value = data.items
-        return data
-      })
-  }
-
-  async function _auctionYear () {
-    const column = Columns.auctionYear
-    const area = store.filters.auction_area
-    const search: Record<string, string> = {}
-
-    if (area) {
-      search.area = area
-    }
-
-    const qs = buildQS(store.filters)
-
-
-    return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
-      .then(({ data }) => {
-        console.log(data)
-        store.listYears.value = data.items.sort(ascendingByKey('year'))
-        return data
-      })
-  }
-
-  function withLoading<T> (fn: () => Promise<T>, column: Columns) {
-    return async () => {
-      store.loading[column] = true
-      return fn().finally(() => store.loading[column] = false)
-    }
-  }
-
-  const auctionAreas = withLoading(_auctionAreas, Columns.area)
-  const auctionCountries = withLoading(_auctionCountries, Columns.auctionCountry)
-  const maisonCountries = withLoading(_maisonCountries, Columns.maisonCountry)
-  const auctionCities = withLoading(_auctionCities, Columns.auctionCity)
-  const auctionMaison = withLoading(_auctionMaison, Columns.maison)
-  const auctionYear = withLoading(_auctionYear, Columns.auctionEvent)
-  const auctionEvents = withLoading(_auctionEvents, Columns.auctionYear)
-
-  const store = {
+function newStore (name: string, queryTable: string) {
+  return defineStore(name, () => {
     // state
-    listCountries: ref(),
-    listCities: ref(),
-    listMaison: ref(),
-    listMaisonCountries: ref(),
-    listYears: ref(),
-    listEvents: ref(),
-    listAreas: ref(),
-
-    // getters
-    queryItems: computed(() => (queryResult.value?.items || []).map((item: any) => {
-      return {
-        ...item,
-        ratio_sales: (item.ratio_sales * 100).toFixed(2) + '%',
-        avg_sales: (item.avg_sales).toFixed(2),
-      }
-    })),
-
-    loading: reactive<Record<Columns | 'submit', boolean>>({
-      [Columns.area]: false,
-      [Columns.auctionCountry]: false,
-      [Columns.auctionCity]: false,
-      [Columns.auctionEvent]: false,
-      [Columns.maison]: false,
-      [Columns.maisonCountry]: false,
-      [Columns.auctionYear]: false,
-      submit: false,
-    }),
-
+    const queryResult = ref()
     // actions
-    listPaginated,
-    auctionAreas,
-    auctionCountries,
-    maisonCountries,
-    auctionCities,
-    auctionMaison,
-    auctionYear,
-    auctionEvents,
-    filters: filters(),
-    filterAmount: computed(function (): number {
-      return Object.values(store.filters).filter(Boolean).length
-    }),
-    pager: ref({
-      page: 1,
-      size: 10,
-      pages: 1,
-      total: 0,
-    }),
+    async function listPaginated (
+      page: number,
+      size: number,
+      search?: any,
+      sort?: any
+    ) {
 
-    sort: computed(function (): Record<string, string> {
-      if (!store.orderBy.value) {
-        return {}
+      if (store.filterAmount.value < 3) {
+        throw new Error('Please select at least 3 filters')
       }
-      return {
-        [store.orderBy.value]: store.orderByDirection.value
+
+
+      store.loading.submit = true
+      const qs = buildQS({
+        page: page,
+        size: size,
+        search: search,
+        sort: sort,
+      })
+
+      return httpGet(`bidwatcher_auction/${queryTable}?${qs}`)
+        .then(({ data }) => {
+          console.log(data)
+          queryResult.value = data
+          store.pager.value = {
+            page: parseInt(data.page) ?? 0,
+            size: parseInt(data.size) ?? 0,
+            pages: parseInt(data.pages) ?? 0,
+            total: parseInt(data.total) ?? 0,
+          }
+          return data
+        })
+        .finally(() => {
+          store.loading.submit = false
+        })
+    }
+
+    async function _auctionAreas () {
+      const column = Columns.area
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listAreas.value = data.items.sort(alphabeticallyByKey(column))
+          return data
+        })
+    }
+
+    async function _auctionCountries () {
+      const column = Columns.auctionCountry
+      const area = store.filters.auction_area
+      const search: Record<string, string> = {}
+
+      if (area) {
+        search.country_auction_area = area
       }
-    }),
 
-    orderBy: ref<string>(''),
-    orderByDirection: ref<'asc' | 'desc'>('asc'),
+      const qs = buildQS({
+        search: search,
+      })
+
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listCountries.value = data.items.sort(alphabeticallyByKey(column))
+          return data
+        })
+    }
+
+    async function _maisonCountries () {
+      const column = Columns.maisonCountry
+      const area = store.filters.auction_area
+      const search: Record<string, string> = {}
+
+      if (area) {
+        search.country_auction_area = area
+      }
+
+      const qs = buildQS({
+        search: search,
+      })
+
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listMaisonCountries.value = data.items.sort(alphabeticallyByKey(column))
+          return data
+        })
+    }
+
+    async function _auctionCities () {
+      const column = Columns.auctionCity
+      const country = store.filters.country_auction_name
+      const search: Record<string, string> = {}
+      const like = store.citySearch$.value
+
+      if (country) {
+        search[Columns.auctionCountry] = country
+      }
+      if (like) {
+        // columnName += `_like:${encodeURIComponent(like)}`
+        search.name_like = like
+      }
+
+      const qs = buildQS({
+        search: search
+      })
 
 
-    citySearch$: new BehaviorSubject<string>(''),
-    async searchCities (search: string) {
-      store.citySearch$.next(search)
-    },
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listCities.value = data.items
+          return data
+        })
+    }
 
-    eventSearch$: new BehaviorSubject<string>(''),
-    async searchEvents (search: string) {
-      store.eventSearch$.next(search)
-    },
+    async function _auctionMaison (columnName: string = 'name') {
+      const column = Columns.maison
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listMaison.value = data.items
+          return data
+        })
+    }
 
-    init () {
-      auctionAreas()
+    async function _auctionEvents () {
+      const column = Columns.auctionEvent
+      const area = store.filters.auction_area
+      const year = store.filters.auction_year
+      const name = store.eventSearch$.value
+      const search: Record<string, string | number> = {}
+
+      if (area) {
+        search.area = area
+      }
+      if (year) {
+        search.year = year
+      }
+      if (name) {
+        search.name_event_like = name
+      }
+
+      const qs = buildQS({
+        search: search,
+      })
+
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listEvents.value = data.items
+          return data
+        })
+    }
+
+    async function _auctionYear () {
+      const column = Columns.auctionYear
+      const area = store.filters.auction_area
+      const search: Record<string, string> = {}
+
+      if (area) {
+        search.area = area
+      }
+
+      const qs = buildQS(store.filters)
+
+
+      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
+        .then(({ data }) => {
+          console.log(data)
+          store.listYears.value = data.items.sort(ascendingByKey('year'))
+          return data
+        })
+    }
+
+    function withLoading<T> (fn: () => Promise<T>, column: Columns) {
+      return async () => {
+        store.loading[column] = true
+        return fn().finally(() => store.loading[column] = false)
+      }
+    }
+
+    const auctionAreas = withLoading(_auctionAreas, Columns.area)
+    const auctionCountries = withLoading(_auctionCountries, Columns.auctionCountry)
+    const maisonCountries = withLoading(_maisonCountries, Columns.maisonCountry)
+    const auctionCities = withLoading(_auctionCities, Columns.auctionCity)
+    const auctionMaison = withLoading(_auctionMaison, Columns.maison)
+    const auctionYear = withLoading(_auctionYear, Columns.auctionEvent)
+    const auctionEvents = withLoading(_auctionEvents, Columns.auctionYear)
+
+    const store = {
+      // state
+      listCountries: ref(),
+      listCities: ref(),
+      listMaison: ref(),
+      listMaisonCountries: ref(),
+      listYears: ref(),
+      listEvents: ref(),
+      listAreas: ref(),
+
+      // getters
+      queryItems: computed(() => (queryResult.value?.items || []).map((item: any) => {
+        return {
+          ...item,
+          ratio_sales: (item.ratio_sales * 100).toFixed(2) + '%',
+          avg_sales: (item.avg_sales).toFixed(2),
+        }
+      })),
+
+      loading: reactive<Record<Columns | 'submit', boolean>>({
+        [Columns.area]: false,
+        [Columns.auctionCountry]: false,
+        [Columns.auctionCity]: false,
+        [Columns.auctionEvent]: false,
+        [Columns.maison]: false,
+        [Columns.maisonCountry]: false,
+        [Columns.auctionYear]: false,
+        submit: false,
+      }),
+
+      // actions
+      listPaginated,
+      auctionAreas,
+      auctionCountries,
+      maisonCountries,
+      auctionCities,
+      auctionMaison,
+      auctionYear,
+      auctionEvents,
+      filters: filters(),
+      filterAmount: computed(function (): number {
+        return Object.values(store.filters).filter(Boolean).length
+      }),
+      pager: ref({
+        page: 1,
+        size: 10,
+        pages: 1,
+        total: 0,
+      }),
+
+      sort: computed(function (): Record<string, string> {
+        if (!store.orderBy.value) {
+          return {}
+        }
+        return {
+          [store.orderBy.value]: store.orderByDirection.value
+        }
+      }),
+
+      orderBy: ref<string>(''),
+      orderByDirection: ref<'asc' | 'desc'>('asc'),
+
+
+      citySearch$: new BehaviorSubject<string>(''),
+      async searchCities (search: string) {
+        store.citySearch$.next(search)
+      },
+
+      eventSearch$: new BehaviorSubject<string>(''),
+      async searchEvents (search: string) {
+        store.eventSearch$.next(search)
+      },
+
+      init () {
+        auctionAreas()
+        auctionCountries()
+        maisonCountries()
+        auctionCities()
+        auctionMaison()
+        auctionYear()
+        auctionEvents()
+      },
+
+      paginate () {
+        return store.listPaginated(store.pager.value.page, store.pager.value.size, store.filters, store.sort.value)
+      },
+      submit () {
+        return store.listPaginated(1, store.pager.value.size, store.filters, store.sort.value)
+      },
+      clear () {
+        Object.entries(filters()).forEach(([key, value]) => {
+          if (key in store.filters) {
+            // @ts-ignore
+            store.filters[key] = value
+          }
+        })
+      },
+      clearResults () {
+        queryResult.value = null
+      },
+    }
+
+    watch(() => store.filters.auction_area, () => {
+      console.log('auction_area', store.filters.auction_area)
+      store.filters.country_auction_name = ''
+      store.filters.city_auction_name = ''
+      // store.filters.auction_year = null
+      store.filters.name_event = ''
       auctionCountries()
       maisonCountries()
-      auctionCities()
-      auctionMaison()
-      auctionYear()
       auctionEvents()
-    },
+      auctionYear()
+    })
+    watch(() => store.filters.country_auction_name, () => {
+      console.log('country_auction_name', store.filters.country_auction_name)
+      store.filters.city_auction_name = ''
+      auctionCities()
+    })
+    // watch year and query events
+    watch(() => store.filters.auction_year, () => {
+      console.log('auction_year', store.filters.auction_year)
+      auctionEvents()
+    })
 
-    paginate () {
-      return store.listPaginated(store.pager.value.page, store.pager.value.size, store.filters, store.sort.value)
-    },
-    submit () {
-      return store.listPaginated(1, store.pager.value.size, store.filters, store.sort.value)
-    },
-    clear () {
-      Object.entries(filters()).forEach(([key, value]) => {
-        if (key in store.filters) {
-          // @ts-ignore
-          store.filters[key] = value
-        }
+    watch(() => store.pager.value.page, store.paginate)
+    watch(() => store.orderBy.value, store.submit)
+    watch(() => store.orderByDirection.value, store.submit)
+
+    store.citySearch$.pipe(debounceSearch)
+      .subscribe(async () => {
+        store.loading[Columns.auctionCity] = true
+        auctionCities().finally(() => store.loading[Columns.auctionCity] = false)
       })
-    },
-    clearResults () {
-      queryResult.value = null
-    },
-  }
 
-  watch(() => store.filters.auction_area, () => {
-    console.log('auction_area', store.filters.auction_area)
-    store.filters.country_auction_name = ''
-    store.filters.city_auction_name = ''
-    // store.filters.auction_year = null
-    store.filters.name_event = ''
-    auctionCountries()
-    maisonCountries()
-    auctionEvents()
-    auctionYear()
+    store.eventSearch$.pipe(debounceSearch)
+      .subscribe(async () => {
+        store.loading[Columns.area] = true
+        auctionEvents().finally(() => store.loading[Columns.area] = false)
+      })
+
+    return store
   })
-  watch(() => store.filters.country_auction_name, () => {
-    console.log('country_auction_name', store.filters.country_auction_name)
-    store.filters.city_auction_name = ''
-    auctionCities()
-  })
-  // watch year and query events
-  watch(() => store.filters.auction_year, () => {
-    console.log('auction_year', store.filters.auction_year)
-    auctionEvents()
-  })
-
-  watch(() => store.pager.value.page, store.paginate)
-  watch(() => store.orderBy.value, store.submit)
-  watch(() => store.orderByDirection.value, store.submit)
-
-  store.citySearch$.pipe(debounceSearch)
-    .subscribe(async () => {
-      store.loading[Columns.auctionCity] = true
-      auctionCities().finally(() => store.loading[Columns.auctionCity] = false)
-    })
-
-  store.eventSearch$.pipe(debounceSearch)
-    .subscribe(async () => {
-      store.loading[Columns.area] = true
-      auctionEvents().finally(() => store.loading[Columns.area] = false)
-    })
-
-
-
-  return store
-})
+}
