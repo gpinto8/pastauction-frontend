@@ -86,7 +86,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function auctionAreas () {
+  async function _auctionAreas () {
     const column = Columns.area
     return httpGet(`filter/bidwatcher_auction_query_1/${column}/`)
       .then(({ data }) => {
@@ -96,7 +96,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function auctionCountries () {
+  async function _auctionCountries () {
     const column = Columns.auctionCountry
     const area = store.filters.auction_area
     const search: Record<string, string> = {}
@@ -117,7 +117,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function maisonCountries () {
+  async function _maisonCountries () {
     const column = Columns.maisonCountry
     const area = store.filters.auction_area
     const search: Record<string, string> = {}
@@ -138,7 +138,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function auctionCities () {
+  async function _auctionCities () {
     const column = Columns.auctionCity
     const country = store.filters.country_auction_name
     const search: Record<string, string> = {}
@@ -165,7 +165,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function auctionMaison (columnName: string = 'name') {
+  async function _auctionMaison (columnName: string = 'name') {
     const column = Columns.maison
     return httpGet(`filter/bidwatcher_auction_query_1/${column}/?`)
       .then(({ data }) => {
@@ -175,7 +175,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function auctionEvents () {
+  async function _auctionEvents () {
     const column = Columns.auctionEvent
     const area = store.filters.auction_area
     const year = store.filters.auction_year
@@ -204,7 +204,7 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
       })
   }
 
-  async function auctionYear () {
+  async function _auctionYear () {
     const column = Columns.auctionYear
     const area = store.filters.auction_area
     const search: Record<string, string> = {}
@@ -223,6 +223,21 @@ export const useGlobalStore = defineStore('dataGlobal', () => {
         return data
       })
   }
+
+  function withLoading<T> (fn: () => Promise<T>, column: Columns) {
+    return async () => {
+      store.loading[column] = true
+      return fn().finally(() => store.loading[column] = false)
+    }
+  }
+
+  const auctionAreas = withLoading(_auctionAreas, Columns.area)
+  const auctionCountries = withLoading(_auctionCountries, Columns.auctionCountry)
+  const maisonCountries = withLoading(_maisonCountries, Columns.maisonCountry)
+  const auctionCities = withLoading(_auctionCities, Columns.auctionCity)
+  const auctionMaison = withLoading(_auctionMaison, Columns.maison)
+  const auctionYear = withLoading(_auctionYear, Columns.auctionEvent)
+  const auctionEvents = withLoading(_auctionEvents, Columns.auctionYear)
 
   const store = {
     // state
