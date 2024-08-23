@@ -9,7 +9,7 @@
         label="Area"
         :item-title="Columns.area"
         :item-value="Columns.area"
-        :loading="store.loading[Columns.auctionCountry]"
+        :loading="store.loading[Columns.area]"
         variant="outlined"
         density="compact"
         :items="store.listAreas"
