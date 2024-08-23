@@ -171,8 +171,8 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionMaison (columnName: string = 'name') {
       const column = Columns.maison
-      return httpGet(`filter/bidwatcher_auction_query_1/${column}/?`)
-        .then(({ data }) => {
+      return queryColumn(column, {})
+        .then((data) => {
           console.log(data)
           store.listMaison.value = data.items
           return data
