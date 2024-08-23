@@ -43,7 +43,7 @@
             <div>
               Vehicles sold %
               <span class="border rounded sm p-1">
-                {{ store.queryItems[0]?.ratio_sales?.toFixed(2) || '-' }}
+                {{ store.queryItems[0]?.ratio_sales || '-' }}
               </span>
             </div>
             <div>
