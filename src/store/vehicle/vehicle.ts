@@ -105,11 +105,16 @@ export const useVehicleStore = defineStore('vehicle', () => {
     return 'id' in item ? update(item) : create(item)
   }
 
-  async function filter (tablename?: string, columnName?: string, search?: string) {
+  async function filter (tablename?: string, columnName?: string, search?: string, withId: boolean = false) {
+    const query: Record<string, any> = {}
     if (search) {
       columnName += `_like:${search}`
     }
-    const { data } = await httpGet(`filter/${tablename}/${columnName}/?page=1&size=50`)
+    if (withId) {
+      query['with_id'] = true
+    }
+    const qs = buildQS({ search: query })
+    const { data } = await httpGet(`filter/${tablename}/${columnName}/?page=1&size=50&${qs}`)
     return data
   }
 

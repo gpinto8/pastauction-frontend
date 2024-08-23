@@ -125,7 +125,7 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
   )
     .subscribe(async (search) => {
       store.loading.families = true
-      const { items } = await vehicleStore.filter('bidwatcher_family', 'name', search).finally(() => store.loading.families = false)
+      const { items } = await vehicleStore.filter('bidwatcher_family', 'name', search, true).finally(() => store.loading.families = false)
       store.families.value = items
     })
   // ----
