@@ -137,6 +137,7 @@
       class="elevation-1"
       item-value="name"
       density="compact"
+      @click:row="handleClickRow"
     >
       <template class="" #top></template>
       <template class="" #bottom>
@@ -182,6 +183,12 @@ const props = defineProps<{
     key: string;
   }[];
 }>();
+
+const emit = defineEmits(['click:row']);
+
+function handleClickRow(...args: any[]) {
+  emit('click:row', ...args);
+}
 
 const filters = props.store.filters;
 const sort = props.store.sort;
