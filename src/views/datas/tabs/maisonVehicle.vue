@@ -324,7 +324,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeUnmount } from 'vue';
 import router from '@/router';
 import Filters from '../filters.vue';
 import { queryStore } from '@/store/datas/global';
@@ -426,6 +426,11 @@ const handleClick = (item, row) => {
     },
   });
 };
+
+onBeforeUnmount(() => {
+  store.clear();
+  store.clearResults();
+});
 </script>
 
 <style lang="postcss">

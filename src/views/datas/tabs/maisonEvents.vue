@@ -324,7 +324,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeUnmount } from 'vue';
 import Filters from '../filters.vue';
 import { queryStore } from '@/store/datas/global';
 
@@ -406,6 +406,11 @@ const headers = ref([
 const pager = ref<any>({
   page: 1,
   size: 10,
+});
+
+onBeforeUnmount(() => {
+  store.clear();
+  store.clearResults();
 });
 </script>
 
