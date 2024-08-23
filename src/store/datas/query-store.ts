@@ -7,7 +7,7 @@ import { BehaviorSubject, debounceTime } from 'rxjs'
 import { computed, reactive, ref, watch } from 'vue'
 
 const debounceSearch = debounceTime(200)
-const filters = () => reactive<{
+const useFilters = () => reactive<{
   auction_area: string
   name_event: string
   country_auction_name: string
@@ -45,7 +45,7 @@ export const queryStore = (queryTable: string) => {
   return stores[name] || (stores[name] = newStore(name, queryTable))
 }
 
-function _queryColumn (column: Columns, search: Record<string, any>) {
+const queryColumn = cachableWithArgs((column: Columns, search: Record<string, any>) => {
   const qs = buildQS({ search })
   return httpGet(`filter/bidwatcher_auction_query_1/${column}/?${qs}`)
     .then(({ data }) => {
@@ -57,14 +57,13 @@ function _queryColumn (column: Columns, search: Record<string, any>) {
         total: number,
       }
     })
-}
-
-const queryColumn = cachableWithArgs(_queryColumn)
+})
 
 function newStore (name: string, queryTable: string) {
   return defineStore(name, () => {
     // state
     const queryResult = ref()
+    const filters = useFilters()
     // actions
     async function listPaginated (
       page: number,
@@ -105,7 +104,7 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionAreas () {
       const column = Columns.area
-      return queryColumn(column, {})
+      return queryColumn(column, filters)
         .then((data) => {
           console.log(data)
           store.listAreas.value = data.items.sort(alphabeticallyByKey(column))
@@ -115,14 +114,14 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionCountries () {
       const column = Columns.auctionCountry
-      const area = store.filters.auction_area
+      const area = filters.auction_area
       const search: Record<string, string> = {}
 
       if (area) {
         search.country_auction_area = area
       }
 
-      return queryColumn(column, search)
+      return queryColumn(column, { ...filters, ...search })
         .then((data) => {
           console.log(data)
           store.listCountries.value = data.items.sort(alphabeticallyByKey(column))
@@ -132,14 +131,14 @@ function newStore (name: string, queryTable: string) {
 
     async function _maisonCountries () {
       const column = Columns.maisonCountry
-      const area = store.filters.auction_area
+      const area = filters.auction_area
       const search: Record<string, string> = {}
 
       if (area) {
         search.country_auction_area = area
       }
 
-      return queryColumn(column, search)
+      return queryColumn(column, { ...filters, ...search })
         .then((data) => {
           console.log(data)
           store.listMaisonCountries.value = data.items.sort(alphabeticallyByKey(column))
@@ -149,7 +148,7 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionCities () {
       const column = Columns.auctionCity
-      const country = store.filters.country_auction_name
+      const country = filters.country_auction_name
       const search: Record<string, string> = {}
       const like = store.citySearch$.value
 
@@ -161,7 +160,7 @@ function newStore (name: string, queryTable: string) {
         search[column] = like
       }
 
-      return queryColumn(column, search)
+      return queryColumn(column, { ...filters, ...search })
         .then((data) => {
           console.log(data)
           store.listCities.value = data.items
@@ -169,7 +168,7 @@ function newStore (name: string, queryTable: string) {
         })
     }
 
-    async function _auctionMaison (columnName: string = 'name') {
+    async function _auctionMaison () {
       const column = Columns.maison
       return queryColumn(column, {})
         .then((data) => {
@@ -181,8 +180,8 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionEvents () {
       const column = Columns.auctionEvent
-      const area = store.filters.auction_area
-      const year = store.filters.auction_year
+      const area = filters.auction_area
+      const year = filters.auction_year
       const name = store.eventSearch$.value
       const search: Record<string, string | number> = {}
 
@@ -196,7 +195,7 @@ function newStore (name: string, queryTable: string) {
         search.name_event_like = name
       }
 
-      return queryColumn(column, search)
+      return queryColumn(column, { ...filters, ...search })
         .then((data) => {
           console.log(data)
           store.listEvents.value = data.items
@@ -206,14 +205,14 @@ function newStore (name: string, queryTable: string) {
 
     async function _auctionYear () {
       const column = Columns.auctionYear
-      const area = store.filters.auction_area
+      const area = filters.auction_area
       const search: Record<string, string> = {}
 
       if (area) {
         search.area = area
       }
 
-      return queryColumn(column, search)
+      return queryColumn(column, { ...filters, ...search })
         .then((data) => {
           console.log(data)
           store.listYears.value = data.items.sort(ascendingByKey(column))
@@ -281,9 +280,9 @@ function newStore (name: string, queryTable: string) {
       auctionMaison,
       auctionYear,
       auctionEvents,
-      filters: filters(),
+      filters,
       filterAmount: computed(function (): number {
-        return Object.values(store.filters).filter(Boolean).length
+        return Object.values(filters).filter(Boolean).length
       }),
       pager: ref({
         page: 1,
@@ -325,17 +324,21 @@ function newStore (name: string, queryTable: string) {
         auctionEvents()
       },
 
+      filter () {
+        store.init()
+      },
+
       paginate () {
-        return store.listPaginated(store.pager.value.page, store.pager.value.size, store.filters, store.sort.value)
+        return store.listPaginated(store.pager.value.page, store.pager.value.size, filters, store.sort.value)
       },
       submit () {
-        return store.listPaginated(1, store.pager.value.size, store.filters, store.sort.value)
+        return store.listPaginated(1, store.pager.value.size, filters, store.sort.value)
       },
       clear () {
-        Object.entries(filters()).forEach(([key, value]) => {
-          if (key in store.filters) {
+        Object.entries(useFilters()).forEach(([key, value]) => {
+          if (key in filters) {
             // @ts-ignore
-            store.filters[key] = value
+            filters[key] = value
           }
         })
       },
@@ -344,42 +347,20 @@ function newStore (name: string, queryTable: string) {
       },
     }
 
-    watch(() => store.filters.auction_area, () => {
-      console.log('auction_area', store.filters.auction_area)
-      store.filters.country_auction_name = ''
-      store.filters.city_auction_name = ''
-      // store.filters.auction_year = null
-      store.filters.name_event = ''
-      auctionCountries()
-      maisonCountries()
-      auctionEvents()
-      auctionYear()
-    })
-    watch(() => store.filters.country_auction_name, () => {
-      console.log('country_auction_name', store.filters.country_auction_name)
-      store.filters.city_auction_name = ''
-      auctionCities()
-    })
-    // watch year and query events
-    watch(() => store.filters.auction_year, () => {
-      console.log('auction_year', store.filters.auction_year)
-      auctionEvents()
-    })
-
     watch(() => store.pager.value.page, store.paginate)
     watch(() => store.orderBy.value, store.submit)
     watch(() => store.orderByDirection.value, store.submit)
 
+    watch(() => filters, store.filter, { deep: true })
+
     store.citySearch$.pipe(debounceSearch)
       .subscribe(async () => {
-        store.loading[Columns.auctionCity] = true
-        auctionCities().finally(() => store.loading[Columns.auctionCity] = false)
+        auctionCities()
       })
 
     store.eventSearch$.pipe(debounceSearch)
       .subscribe(async () => {
-        store.loading[Columns.area] = true
-        auctionEvents().finally(() => store.loading[Columns.area] = false)
+        auctionEvents()
       })
 
     return store
