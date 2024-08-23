@@ -187,21 +187,6 @@
 
     <Filters :store="store" :headers="headers" />
 
-    <div class="p-2 bg-white">
-      <v-data-table
-        v-model:items-per-page="itemsPerPage"
-        :headers="headers as any"
-        :items-length="store.queryItems?.total || 0"
-        :items="store.queryItems || []"
-        :loading="store?.loading.submit"
-        class="elevation-1"
-        item-value="name"
-        density="compact"
-      >
-        <template #bottom></template>
-      </v-data-table>
-    </div>
-
     <v-card-text class="mt-5 bg-white p-2">
       <v-tabs v-model="tab" bg-color="transparent" class="mb-4">
         <v-tab value="one">Only sold</v-tab>
@@ -339,32 +324,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeUnmount } from 'vue';
 import { queryStore, Columns } from '@/store/datas/global';
 import Filters from '../filters.vue';
 
 const useStore = queryStore('query_1');
 const store = useStore();
 store.init();
-
-// const store = useAuctionEventsStore();
-
-// store.auctionAreas('bidwatcher_auction', 'area');
-// store.auctionCountries('bidwatcher_country', 'name');
-// store.auctionCities('bidwatcher_city', 'name');
-// store.auctionMaison('bidwatcher_maison', 'name');
-// store.auctionYear('bidwatcher_auction', 'year');
-// store.auctionEvents('bidwatcher_auction', 'name_event');
-
-// const filters = ref({
-//   auction_area: 'UK',
-//   name_event: '',
-//   country_auction_name: null,
-//   country_maison: null,
-//   maison_name: 'Bonhams',
-//   city_auction_name: null,
-//   auction_year: 2020,
-// });
 
 const sort = ref({
   auction_area: null,
@@ -446,9 +412,9 @@ const headers = ref([
   },
 ]);
 
-const pager = ref<any>({
-  page: 1,
-  size: 10,
+onBeforeUnmount(() => {
+  store.clear();
+  store.clearResults();
 });
 </script>
 

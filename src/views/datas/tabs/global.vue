@@ -1,28 +1,6 @@
 <template>
   <div class="py-4">
     <Filters :store="store" :headers="headers" />
-    <div>
-      <v-data-table
-        v-model:items-per-page="pager.size"
-        :headers="headers as any"
-        :items-length="store.pager.total || 0"
-        :items="store.queryItems"
-        :loading="store.loading.submit"
-        class="elevation-1"
-        item-value="name"
-        density="compact"
-      >
-        <template class="" #top></template>
-        <template class="" #bottom>
-          <v-pagination
-            :disabled="store.loading.submit"
-            :length="store.pager.pages"
-            v-model="store.pager.page"
-            total-visible="6"
-          />
-        </template>
-      </v-data-table>
-    </div>
   </div>
 </template>
 
@@ -100,41 +78,8 @@ const headers = ref([
   },
 ]);
 
-const pager = store.pager;
-
 onBeforeUnmount(() => {
   store.clear();
   store.clearResults();
 });
 </script>
-
-<style lang="postcss">
-.v-table {
-  thead tr {
-    th {
-      @apply !bg-[#0D6EFD]/20 text-sm font-medium;
-    }
-  }
-
-  tbody tr {
-    &:nth-child(odd) {
-      td {
-        @apply !bg-white;
-      }
-    }
-    &:nth-child(even) {
-      td {
-        @apply !bg-gray-50;
-      }
-    }
-  }
-
-  td,
-  th {
-    white-space: nowrap;
-  }
-}
-.v-input__details {
-  display: none;
-}
-</style>

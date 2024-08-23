@@ -127,6 +127,29 @@
     <!-- </div> -->
   </div>
 
+  <div class="bg-white">
+    <v-data-table
+      v-model:items-per-page="store.pager.size"
+      :headers="headers as any"
+      :items-length="store.pager.total || 0"
+      :items="store.queryItems"
+      :loading="store.loading.submit"
+      class="elevation-1"
+      item-value="name"
+      density="compact"
+    >
+      <template class="" #top></template>
+      <template class="" #bottom>
+        <v-pagination
+          :disabled="store.loading.submit"
+          :length="store.pager.pages"
+          v-model="store.pager.page"
+          total-visible="6"
+        />
+      </template>
+    </v-data-table>
+  </div>
+
   <v-snackbar
     v-model="snackbar.show"
     :color="snackbar.color"
