@@ -173,7 +173,7 @@
 <script setup lang="ts">
 import Button from '@/components/common/button.vue';
 import { snackbarState } from '@/lib/snackbar-state';
-import { Columns, type DatasStore } from '@/store/datas/global';
+import { Columns, type DatasStore } from '@/store/datas/query-store';
 const snackbar = snackbarState();
 const props = defineProps<{
   store: DatasStore;

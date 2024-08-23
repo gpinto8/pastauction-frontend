@@ -326,7 +326,7 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue';
 import Filters from '../filters.vue';
-import { queryStore } from '@/store/datas/global';
+import { queryStore } from '@/store/datas/query-store';
 
 const useStore = queryStore('query_2e');
 const store = useStore();

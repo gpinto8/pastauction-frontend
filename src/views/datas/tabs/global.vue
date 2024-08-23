@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { queryStore, Columns } from '@/store/datas/global';
+import { queryStore, Columns } from '@/store/datas/query-store';
 import { onBeforeUnmount } from 'vue';
 import Filters from '../filters.vue';
 

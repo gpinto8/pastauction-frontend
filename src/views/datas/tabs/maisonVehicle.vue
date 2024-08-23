@@ -327,7 +327,7 @@
 import { ref, computed, onBeforeUnmount } from 'vue';
 import router from '@/router';
 import Filters from '../filters.vue';
-import { queryStore } from '@/store/datas/global';
+import { queryStore } from '@/store/datas/query-store';
 
 const useStore = queryStore('query_2v');
 const store = useStore();
