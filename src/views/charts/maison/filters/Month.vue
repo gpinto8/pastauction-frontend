@@ -40,7 +40,7 @@ function resetFilter() {
             <v-btn
                 v-for="monthName in months"
                 :key="monthName"
-                class="letter-button selection lg:flex-1"
+                class="letter-button selection lg:flex-1 rounded-sm"
                 :variant="selectedMonths.includes(monthName) ? 'elevated' : 'outlined'"
                 @click="toggleValueInArray(selectedMonths, monthName)"
                 :color="selectedMonths.includes(monthName) ? 'black' : ''"

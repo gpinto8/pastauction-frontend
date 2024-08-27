@@ -5,10 +5,19 @@ import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
 import router from '@/router/index';
 import './assets/main.css';
+import './assets/fonts.css';
 import axios from 'axios';
 import config from '@/config';
+import { loadFonts } from './plugins/webfontloader'
+
+loadFonts();
+
+// https://github.com/alvarotrigo/vue-fullpage.js
+import 'vue-fullpage.js/dist/style.css';
+import VueFullPage from 'vue-fullpage.js';
 
 const vue = createApp(App);
+vue.use(VueFullPage);
 vue.use(router);
 vue.use(store);
 vue.use(vuetify);
@@ -16,7 +25,7 @@ vue.use(vuetify);
 axios.defaults.baseURL = config.apiUrl;
 
 axios.interceptors.request.use(
-  (config) => {
+  config => {
     const token = window.localStorage.getItem('past_token')
       ? window.localStorage.getItem('past_token')
       : null;

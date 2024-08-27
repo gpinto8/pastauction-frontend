@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { httpGet } from '@/api/api';
+import { httpGet} from '@/api/api';
 import { buildQS } from '@/utils/functions/buildQS';
 
 export const useMaisonEventsStore = defineStore('maisonEvents', () => {

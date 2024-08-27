@@ -11,7 +11,8 @@
                         </v-chip>
                     </v-col>
                     <div class="flex-center">
-                        <router-link :to="{name: CHART_HISTORY}" class="bg-blue-500 text-white px-10 py-[3px] rounded-sm">
+                        <router-link :to="{ name: CHART_HISTORY }"
+                            class="bg-blue-500 text-white px-10 py-[3px] rounded-sm">
                             My Charts
                         </router-link>
                     </div>
@@ -93,12 +94,17 @@ export default {
     methods: {
         async fetchChartSelection() {
             try {
-                const response = await requestChartsSelection()
-                this.firstRowCards = response.data.items.slice(0, 3).map((item: any) => ({
+                const response = await axios.get('/chart/selection');
+                console.log(response.data);
+                this.firstRowCards = response.data.items.filter((el: any) => {
+                    return ["brand", "family", "model"].includes(el.title.toLocaleLowerCase())
+                }).map((item: any) => ({
                     ...item,
                     isActive: item.available === 1
                 }));
-                this.secondRowCards = response.data.items.slice(3).map((item: any) => ({
+                this.secondRowCards = response.data.items.filter((el: any) => {
+                    return ["maison", "auction", "index"].includes(el.title.toLocaleLowerCase())
+                }).map((item: any) => ({
                     ...item,
                     isActive: item.available === 1
                 }));

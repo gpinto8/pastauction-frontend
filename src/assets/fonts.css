@@ -1,0 +1,100 @@
+.cormorant-custom-300 {
+  font-family: 'Cormorant', serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.cormorant-custom-400 {
+  font-family: 'Cormorant', serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cormorant-custom-500 {
+  font-family: 'Cormorant', serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.cormorant-custom-600 {
+  font-family: 'Cormorant', serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.cormorant-custom-700 {
+  font-family: 'Cormorant', serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Palatino Linotype Bold';
+  src: url('./fonts/Palatino\ Linotype/palatinolinotype_bold.ttf')
+    format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Palatino Linotype Bold';
+  src: url('fonts/palatinolinotype_bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Palatino Linotype Bold Italic';
+  src: url('fonts/palatinolinotype_bolditalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Palatino Linotype Italic';
+  src: url('fonts/palatinolinotype_italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Palatino Linotype Roman';
+  src: url('fonts/palatinolinotype_roman.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.palatino-bold {
+  font-family: 'Palatino Linotype Bold', serif;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.palatino-bold {
+  font-family: 'Palatino Linotype Bold', serif;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.palatino-bold-italic {
+  font-family: 'Palatino Linotype Bold Italic', serif;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.palatino-italic {
+  font-family: 'Palatino Linotype Italic', serif;
+  font-weight: normal;
+  font-style: italic;
+}
+
+.palatino-roman {
+  font-family: 'Palatino Linotype Roman', serif;
+  font-weight: normal;
+  font-style: normal;
+}

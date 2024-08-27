@@ -39,7 +39,7 @@ watch(selectedMaisonsFirstTwoLetters, async () => {
         const response = await requestListOfMaisonNamesStartingWith(selectedMaisonsFirstTwoLetters.value)
         console.log(response);
         
-        maisonList.value = response.data.items.map((item: any) => item.name_event as string);
+        maisonList.value = response.data.items.map((item: any) => item.maison_name as string);
     } catch (error) {
         console.error('Error fetching brands:', error);
     }

@@ -152,7 +152,7 @@ export default {
           'boltReq': 3,
           'chartsToday': 2,
           'chartsMonth': 15,
-          type: 'Minidashboard'
+          type: 'MiniDash'
         },
         {
           'title': 'Dashboard',
@@ -160,7 +160,7 @@ export default {
           'boltReq': 4,
           'chartsToday': 27,
           'chartsMonth': 1,
-          type: 'Fulldashboard'
+          type: 'FullDash'
         }
       ]
     }

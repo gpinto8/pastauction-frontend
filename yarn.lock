@@ -324,6 +324,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@googlemaps/js-api-loader@npm:^1.16.6":
+  version: 1.16.6
+  resolution: "@googlemaps/js-api-loader@npm:1.16.6"
+  dependencies:
+    fast-deep-equal: ^3.1.3
+  checksum: 715640dfac073a706761c682bc142946ba0766926c610331411d25ba0aabf2089bcb2fdb28d7ee78b1a433647ccb5682c00a16312ee14e272fa2e27db7a16a9a
+  languageName: node
+  linkType: hard
+
 "@heroicons/vue@npm:^2.0.18":
   version: 2.0.18
   resolution: "@heroicons/vue@npm:2.0.18"
@@ -561,6 +570,13 @@ __metadata:
   version: 4.3.6
   resolution: "@types/chai@npm:4.3.6"
   checksum: 32a6c18bf53fb3dbd89d1bfcadb1c6fd45cc0007c34e436393cc37a0a5a556f9e6a21d1e8dd71674c40cc36589d2f30bf4d9369d7787021e54d6e997b0d7300a
+  languageName: node
+  linkType: hard
+
+"@types/google.maps@npm:^3.55.7":
+  version: 3.55.7
+  resolution: "@types/google.maps@npm:3.55.7"
+  checksum: 0b34b39ccafed6af238fe0a0ff6a023ce95f370e77471f889317a1d34cf31439e63e1722d83655911670b4ab7887f4f389862aed604dbbd70b7b36d2aa2bc753
   languageName: node
   linkType: hard
 
@@ -3499,6 +3515,13 @@ eslint-config-standard-with-typescript@latest:
   languageName: node
   linkType: hard
 
+"fullpage.js@npm:^4.0.22":
+  version: 4.0.25
+  resolution: "fullpage.js@npm:4.0.25"
+  checksum: 8d5ee6157bdc94e8dc06b87377abb31543c205d5383dafb8a6779d5720ae80a6c282c3df27c45e72bc313fa516f4a9afd9695fae39653f2caa023f2ee5798dec
+  languageName: node
+  linkType: hard
+
 "function-bind@npm:^1.1.1":
   version: 1.1.1
   resolution: "function-bind@npm:1.1.1"
@@ -5938,12 +5961,67 @@ eslint-config-standard-with-typescript@latest:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.0.1":
-  version: 3.0.3
-  resolution: "prettier@npm:3.0.3"
+"prettier-plugin-tailwindcss@npm:^0.5.14":
+  version: 0.5.14
+  resolution: "prettier-plugin-tailwindcss@npm:0.5.14"
+  peerDependencies:
+    "@ianvs/prettier-plugin-sort-imports": "*"
+    "@prettier/plugin-pug": "*"
+    "@shopify/prettier-plugin-liquid": "*"
+    "@trivago/prettier-plugin-sort-imports": "*"
+    "@zackad/prettier-plugin-twig-melody": "*"
+    prettier: ^3.0
+    prettier-plugin-astro: "*"
+    prettier-plugin-css-order: "*"
+    prettier-plugin-import-sort: "*"
+    prettier-plugin-jsdoc: "*"
+    prettier-plugin-marko: "*"
+    prettier-plugin-organize-attributes: "*"
+    prettier-plugin-organize-imports: "*"
+    prettier-plugin-sort-imports: "*"
+    prettier-plugin-style-order: "*"
+    prettier-plugin-svelte: "*"
+  peerDependenciesMeta:
+    "@ianvs/prettier-plugin-sort-imports":
+      optional: true
+    "@prettier/plugin-pug":
+      optional: true
+    "@shopify/prettier-plugin-liquid":
+      optional: true
+    "@trivago/prettier-plugin-sort-imports":
+      optional: true
+    "@zackad/prettier-plugin-twig-melody":
+      optional: true
+    prettier-plugin-astro:
+      optional: true
+    prettier-plugin-css-order:
+      optional: true
+    prettier-plugin-import-sort:
+      optional: true
+    prettier-plugin-jsdoc:
+      optional: true
+    prettier-plugin-marko:
+      optional: true
+    prettier-plugin-organize-attributes:
+      optional: true
+    prettier-plugin-organize-imports:
+      optional: true
+    prettier-plugin-sort-imports:
+      optional: true
+    prettier-plugin-style-order:
+      optional: true
+    prettier-plugin-svelte:
+      optional: true
+  checksum: 205a774e53cdd9f8e61640ae3b778402758fad3d215fc57dd31172f12cf2b145095f5f973a431d495a6551b638bbb7e54c9f3a49848f0a0f755f5ad975b7c321
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.2.5":
+  version: 3.2.5
+  resolution: "prettier@npm:3.2.5"
   bin:
     prettier: bin/prettier.cjs
-  checksum: e10b9af02b281f6c617362ebd2571b1d7fc9fb8a3bd17e371754428cda992e5e8d8b7a046e8f7d3e2da1dcd21aa001e2e3c797402ebb6111b5cd19609dd228e0
+  checksum: 2ee4e1417572372afb7a13bb446b34f20f1bf1747db77cf6ccaf57a9be005f2f15c40f903d41a6b79eec3f57fff14d32a20fb6dee1f126da48908926fe43c311
   languageName: node
   linkType: hard
 
@@ -7009,6 +7087,13 @@ eslint-config-standard-with-typescript@latest:
   languageName: node
   linkType: hard
 
+"swiper@npm:^11.0.5":
+  version: 11.1.4
+  resolution: "swiper@npm:11.1.4"
+  checksum: 386ea824ae8ab3b1992c54f02c8593068c96203feb9da4c23e165a7277a539de7bba6f9d40adc068268ff06314443ca714d75348f5b20039e43b022f62e65f67
+  languageName: node
+  linkType: hard
+
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -7611,10 +7696,12 @@ eslint-config-standard-with-typescript@latest:
   resolution: "vite-vuetify-ts-starter@workspace:."
   dependencies:
     "@babel/types": ^7.22.10
+    "@googlemaps/js-api-loader": ^1.16.6
     "@heroicons/vue": ^2.0.18
     "@mdi/font": ^7.2.96
     "@rushstack/eslint-patch": ^1.3.3
     "@tsconfig/node-lts": ^18.12.3
+    "@types/google.maps": ^3.55.7
     "@types/jsdom": ^21.1.1
     "@types/node": ^20.4.9
     "@types/webfontloader": ^1.6.35
@@ -7655,7 +7742,8 @@ eslint-config-standard-with-typescript@latest:
     pinia-plugin-persistedstate: ^3.2.0
     postcss: ^8.4.28
     postcss-html: ^1.5.0
-    prettier: ^3.0.1
+    prettier: ^3.2.5
+    prettier-plugin-tailwindcss: ^0.5.14
     rimraf: ^5.0.1
     rollup-plugin-visualizer: ^5.9.2
     sass: ^1.64.2
@@ -7663,6 +7751,7 @@ eslint-config-standard-with-typescript@latest:
     stylelint-config-recommended-scss: ^12.0.0
     stylelint-config-recommended-vue: ^1.5.0
     stylelint-order: ^6.0.3
+    swiper: ^11.0.5
     tailwindcss: ^3.3.3
     typescript: ^5.0.2
     vee-validate: ^4.11.2
@@ -7672,6 +7761,7 @@ eslint-config-standard-with-typescript@latest:
     vitest: ^0.34.1
     vue: ^3.3.4
     vue-chartjs: ^5.2.0
+    vue-fullpage.js: ^0.2.17
     vue-gallery-slideshow: ^1.5.2
     vue-router: ^4.2.4
     vue-tsc: ^1.8.8
@@ -7943,6 +8033,17 @@ eslint-config-standard-with-typescript@latest:
   peerDependencies:
     eslint: ">=6.0.0"
   checksum: 6d1476b45fcc5b456a1e5c0f33ec695cf1d392ca6113250d5e3441e6cf3b2a0ec28a9455699363641dfb7c48358f215db07856c98385a31ace9bc58196f4156e
+  languageName: node
+  linkType: hard
+
+"vue-fullpage.js@npm:^0.2.17":
+  version: 0.2.17
+  resolution: "vue-fullpage.js@npm:0.2.17"
+  dependencies:
+    fullpage.js: ^4.0.22
+  peerDependencies:
+    vue: ^3.2.26
+  checksum: eb19ac4c162be3681eabbb7e057f4d459dac0b0da058fb3cfde9d8715f266c33c4fc155358716cba47650daec6a49ce8d43be3e3cd8e9c70e07aa8bebf6f1f97
   languageName: node
   linkType: hard
 

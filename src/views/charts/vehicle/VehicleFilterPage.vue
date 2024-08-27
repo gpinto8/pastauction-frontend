@@ -132,8 +132,9 @@ import CountriesFilter from './filters/Countries.vue';
 import FamilyFilter from './filters/Family.vue';
 import ModelFilter from './filters/Model.vue';
 import TypesFilter from './filters/Types.vue';
-import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/maison/maisonSearchParams';
+import { getAttributesSearchParams, getBrandsSearchParams, getColorsSearchParams, getCountriesSearchParams, getFamilySearchParams, getMiscSearchParams, getModelSearchParams, getPeriodsSearchParams, getTypesSearchParams } from '@/api/filter/vehicles/vehicleSearchParams';
 import { useChartsStore } from '@/store/charts/charts';
+import { vehiclesCountryBrandArea } from '@/api/filter/vehicles/vehicles';
 
 type MiscSoldType = "Sold" | "Not sold"
 type MiscQuoteType = "Quoted" | "Not Quoted"
@@ -210,8 +211,8 @@ export default {
     methods: {
         async fetchContinents() {
             try {
-                const response = await axios.get('/filter/filter_charts_vehicles/country_brand_area/');
-                this.continents = response.data.items; 
+                const response = await vehiclesCountryBrandArea()
+                this.continents = response.data.items;
             } catch (error) {
                 console.error('Errore nel recupero dei paesi:', error);
             }
@@ -296,7 +297,7 @@ export default {
             console.log(searchParams.join(','));
             
             try {
-                const response = await axios.get(`/bidwatcher_auction/query_2v`, {
+                const response = await axios.get(`/bidwatcher_vehicle/query_0`, {
                     params: {
                         search: searchParams.join(','),
                     }
@@ -358,7 +359,7 @@ export default {
                 this.colorIsSelected,
                 this.miscellaneousIsSelected,
             ]
-            return selectedConditions.reduce((accumulator, el) => el == true ? accumulator + 1 : accumulator, 0) >= 3
+            return selectedConditions.filter(criteria => criteria).length
         }
     }
 };
