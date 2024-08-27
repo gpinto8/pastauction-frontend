@@ -67,6 +67,7 @@
 
 import axios from 'axios';
 import { useChartsStore } from '../../../store/charts/charts';
+import Selection from './Selection.vue';
 
 export default {
     components: { Selection, },
