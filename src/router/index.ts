@@ -13,37 +13,11 @@ import { authGuard } from './utils/guards';
 import { scrollBehaviour } from './utils/scrollBehaviours';
 import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue';
 
-<<<<<<< HEAD
-=======
-export const LANDING_PAGE = 'landing page';
-export const BRANDS_UNVEILED = 'brands unveiled';
-export const TEAM = 'team';
-
->>>>>>> f495d5ddbd7963564a85191a0440661f25b5b4d1
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: scrollBehaviour,
   routes: [
     {
-<<<<<<< HEAD
-=======
-      path: '/landing',
-      name: LANDING_PAGE,
-      component: () => import('@/views/homePage/LandingPage.vue'),
-    },
-    {
-      path: '/brands_unveiled',
-      name: BRANDS_UNVEILED,
-      component: () =>
-        import('@/views/homePage/brandsUnveiled/BrandsUnveiled.vue'),
-    },
-    {
-      path: '/team',
-      name: TEAM,
-      component: () => import('@/views/homePage/team/Team.vue'),
-    },
-    {
->>>>>>> f495d5ddbd7963564a85191a0440661f25b5b4d1
       path: '/',
       name: 'dashboard',
       component: async () =>
