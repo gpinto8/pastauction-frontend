@@ -38,7 +38,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Garage" */ '@/views/garage/GarageView.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail',
@@ -47,7 +47,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/create_garage',
@@ -56,7 +56,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "NewGarage" */ '@/views/garage/NewGarageView.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/:id',
@@ -65,7 +65,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/:garageId/vehicle/:id',
@@ -74,7 +74,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "VehicleDetail" */ '@/views/vehicle/createVehicleStep1.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/view',
@@ -83,7 +83,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageViewPage" */ '@/views/garage/tables/GarageViewPage.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/social-media-rumors',
@@ -92,7 +92,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "SocialMediaRumors" */ '@/views/garage/tables/SocialMediaRumors.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/social-media-rumors-detail',
@@ -101,7 +101,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "SocialMediaRumorsDetail" */ '@/views/garage/tables/SocialMediaRumorsDetail.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/auction-alert',
@@ -110,7 +110,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "AuctionAlert" */ '@/views/garage/tables/AuctionAlert.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/auction-alert-detail/:id',
@@ -119,7 +119,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "AuctionAlertDetail" */ '@/views/garage/tables/AuctionAlertDetail.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/wallet',
@@ -136,7 +136,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Datas" */ '@/views/datas/index.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/datas/vehicle/detail/:id',
@@ -145,8 +145,8 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "VehicleDetail" */ '@/views/datas/VehicleDetail.vue'
             ),
-            meta: { authentication: true }
-            
+        meta: { authentication: true },
+
         },
         {
           path: '/charts',
@@ -155,7 +155,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Charts" */ '@/views/charts/index.vue'
             ),
-            meta: { authentication: true }
+        meta: { authentication: true },
         },
         {
           path: '/charts/filters',

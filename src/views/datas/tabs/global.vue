@@ -116,11 +116,11 @@ store.auctionEvents('bidwatcher_auction', 'name_event');
 const filters = ref({
   auction_area: null,
   name_event: null,
-  country_auction_name: 'United Kingdom',
+  country_auction_name: null,
   country_maison: null,
   maison_name: null,
-  city_auction_name: 'London',
-  auction_year: 2021,
+  city_auction_name: null,
+  auction_year: null,
 });
 
 const sort = ref({
