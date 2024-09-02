@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5">
+  <div class="m-5 max-w-[1000px] mx-auto">
     <v-container fluid>
       <v-alert color="info" variant="tonal">
         <v-row justify="center">
@@ -30,7 +30,7 @@
     </v-container>
 
     <v-container fluid>
-      <v-row justify="center">
+      <div class="flex flex-col lg:flex-row" justify="center">
         <v-col v-for="(card, index) in brandRow" :key="index">
           <v-card class="mx-auto">
             <v-card-item>
@@ -49,7 +49,8 @@
                 <div class="d-flex justify-space-around mt-2">
                   <img class="" src="@/assets/images/brand-card.svg" alt="Immagine brand">
                 </div>
-                <div class="text-caption text-center mt-2 mb-2">
+                <div class="flex-center">
+                  <div class="text-caption text-center mt-2 mb-2 w-full max-w-[400px]">
                   <v-alert v-if="card.title === 'Dashboard'" style="border: 1px solid;" color="info" variant="tonal"
                     class="d-flex justify-space-around">
                     <div class="d-flex">
@@ -62,7 +63,7 @@
                     </div>
                     <div class="d-flex">
                       <strong>{{ card.chartsMonth }}</strong>
-                      <p class="ms-2 text-black">Charts still available this month</p>
+                      <p class="ms-2 text-black text-left">Charts still available this month</p>
                     </div>
                   </v-alert>
                   <v-alert v-if="card.title === 'Single chart'" style="border: 1px solid;" color="#FFDA44" variant="tonal"
@@ -77,7 +78,7 @@
                     </div>
                     <div class="d-flex">
                       <strong>{{ card.chartsMonth }}</strong>
-                      <p class="ms-2 text-black">Charts still available this month</p>
+                      <p class="ms-2 text-black text-left">Charts still available this month</p>
                     </div>
                   </v-alert>
                   <v-alert v-if="card.title === 'Minidashboard'" style="border: 1px solid;" color="success"
@@ -92,15 +93,16 @@
                     </div>
                     <div class="d-flex">
                       <strong>{{ card.chartsMonth }}</strong>
-                      <p class="ms-2 text-black">Charts still available this month</p>
+                      <p class="ms-2 text-black text-left">Charts still available this month</p>
                     </div>
                   </v-alert>
+                </div>
                 </div>
               </div>
             </v-card-item>
 
-            <v-card-actions class="d-flex justify-center">
-              <v-btn size="small" class="float-right px-15" :variant="card.isSelected ? 'elevated' : 'outlined'"
+            <v-card-actions class="d-flex justify-center mx-2">
+              <v-btn size="small" class="float-right px-15 w-full max-w-[400px]" :variant="card.isSelected ? 'elevated' : 'outlined'"
                 :color="card.isSelected ? 'black' : ''" @click="selectCard(card)">
                 {{ card.isSelected ? 'Selected' : 'Select' }}
               </v-btn>
@@ -108,7 +110,7 @@
 
           </v-card>
         </v-col>
-      </v-row>
+      </div>
     </v-container>
 
     <v-container fluid>
@@ -128,11 +130,13 @@
 
 <script lang="ts">
 import router from '@/router/index';
+import { useChartsStore } from '../../store/charts/charts';
 
 export default {
   data() {
     return {
       cardSelected: false,
+      chartStore: useChartsStore(),
       brandRow: [
         {
           'title': 'Single chart',
@@ -140,7 +144,7 @@ export default {
           'boltReq': 3,
           'chartsToday': 20,
           'chartsMonth': 15,
-
+          type: 'Single'
         },
         {
           'title': 'Minidashboard',
@@ -148,6 +152,7 @@ export default {
           'boltReq': 3,
           'chartsToday': 2,
           'chartsMonth': 15,
+          type: 'MiniDash'
         },
         {
           'title': 'Dashboard',
@@ -155,6 +160,7 @@ export default {
           'boltReq': 4,
           'chartsToday': 27,
           'chartsMonth': 1,
+          type: 'FullDash'
         }
       ]
     }
@@ -162,6 +168,8 @@ export default {
   methods: {
     continueProcess() {
       const selectedCard = this.brandRow.find(card => card.isSelected);
+      if (selectedCard == null) return
+      this.chartStore.setSelectedChartType(selectedCard.type)
       router.push({
         path: '/charts/filters/brand/preview',
         query: {
