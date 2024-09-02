@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { carCategoryImages } from '@/api/landingPage/brandsAndFounders';
 import { brandLogoUrl, desaturatedBrandLogoUrl, extractBrandId, type BrandInfo } from '@/api/landingPage/landingPage';
+import { getCountryFlag } from '@/api/photo/photo';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -41,35 +43,47 @@ const containerStyles = computed(() => {
             <div
                 class="flex flex-col text-sm gap-2 [&>*]:flex first:[&>*>span]:w-[4.5rem] [&>*>span]:text-left first:[&>*>span]:block first:[&>*>span]:font-semibold [&>*>span]: last:[&>*>span]:text-zinc-600">
                 <div>
+                    <span class="">Country:&nbsp;</span>
+                    <div class="line-clamp-1 flex items-center gap-2">
+                        <img :src="getCountryFlag(brand.brand_country_code || '')" class="h-3">
+                        <Transition name="fade" mode="out-in">
+                            <div v-if="selected" class="!duration-150">{{ brand.brand_country_name }}</div>
+                            <div v-else class="!duration-150">{{ brand.brand_country_code }}</div>
+                        </Transition>
+                    </div>
+                </div>
+                <div>
                     <span class="">Brand:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_name }}</span>
                 </div>
                 <div>
-                    <span class="">Country:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_country_code
-                        }}</span>
-                </div>
-                <div>
-                    <span class="">Type:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_name }}</span>
-                </div>
-                <Transition name="to-from-down">
-                    <div v-if="selected">
-                        <span class="">City:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name }}</span>
+                    <span class="">Type:&nbsp;</span>
+                    <div class="flex-center">
+                        <img :src="carCategoryImages[brand.brand_category_vehicle as keyof typeof carCategoryImages]"
+                            class="w-7">
                     </div>
-                </Transition>
+                </div>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Active:&nbsp;</span> <span class="line-clamp-1">
-                            {{ brand.brand_date_start }}</span>
-                    </div>
-                </Transition>
-                <Transition name="to-from-down">
-                    <div v-if="selected">
-                        <span class="">Vechicles:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
+                        <span class="">City:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
                             }}</span>
                     </div>
                 </Transition>
                 <Transition name="to-from-down">
                     <div v-if="selected">
-                        <span class="">Models:&nbsp;</span> <span class="line-clamp-1">{{ brand.brand_city_name
+                        <span class="">Active:&nbsp;</span> <span class="line-clamp-1">
+                            {{ brand.brand_date_end }}</span>
+                    </div>
+                </Transition>
+                <Transition name="to-from-down">
+                    <div v-if="selected">
+                        <span class="">Vechicles:&nbsp;</span> <span class="line-clamp-1">{{
+                            brand.unique_vehicle_count || '-' }}</span>
+                    </div>
+                </Transition>
+                <Transition name="to-from-down">
+                    <div v-if="selected">
+                        <span class="">Models:&nbsp;</span> <span class="line-clamp-1">{{ brand.unique_model_count ||
+                            '-'
                             }}</span>
                     </div>
                 </Transition>
@@ -78,7 +92,8 @@ const containerStyles = computed(() => {
                         <span class="">Founder:&nbsp;</span>
                         <div class="[&]:line-clamp-2 text-left">
                             <div class="line-clamp-1">{{ brand.fouder_name }}</div>
-                            ({{ brand.fouder_date_born?.split('/')[2] }}-{{ brand.fouder_date_death?.split('/')[2] }})
+                            ({{ brand.fouder_date_born?.split('/')[2] }}-{{ brand.fouder_date_death?.split('/')[2]
+                            }})
                         </div>
                     </div>
                 </Transition>

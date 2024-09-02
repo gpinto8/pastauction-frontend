@@ -10,7 +10,7 @@ import Footer from './Footer.vue';
 
 <template>
     <div class="flex flex-col">
-        <div class="flex-1 h-full relative group overflow-hidden">
+        <div class="flex-1 h-full relative group overflow-hidden bg-white">
             <div class="h-full w-full flex-center
             transition-opacity duration-700 group-hover:opacity-0">
                 <img :src="LogoTitle" />
