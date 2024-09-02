@@ -286,7 +286,7 @@
     <div class="p-2 bg-white">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
-        :headers="(headers as any)"
+        :headers="headers as any"
         :items-length="store?.getListItems?.total || 0"
         :items="store.getListItems?.items || []"
         :loading="store?.getLoadingListItems"
@@ -462,6 +462,7 @@
 </template>
 
 <script setup lang="ts">
+import { VDataTable } from 'vuetify/labs/components';
 import { ref, computed } from 'vue';
 import { useMaisonVehicleStore } from '@/store/datas/masionVehicle';
 import router from '@/router';
@@ -596,8 +597,7 @@ const paginate = () => {
 };
 paginate();
 
-
-      // @ts-ignore
+// @ts-ignore
 const handleClick = (item, row) => {
   console.log('click', row.item.raw.vehicle_id);
   router.push({

@@ -62,17 +62,9 @@ export const useAuthStore = defineStore('auth', () => {
     });
   }
 
-  async function getLoggedUserInfo() {
-    return await new Promise((resolve, reject) => {
-      httpGet('user_info')
-        .then(({ data }) => {
-          detail.value = data;
-          resolve(data);
-        })
-        .catch((err: any) => {
-          reject(err);
-        });
-    });
+  async function getLoggedUserInfo () {
+      const data = await httpGet('user_info')
+      detail.value = data
   }
 
   async function changePassword(info: any) {
