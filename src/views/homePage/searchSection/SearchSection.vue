@@ -52,7 +52,7 @@ const angles = [
 
 <template>
     <div class="bg-slate-500 flex flex-col px-24 pt-32 pb-20 relative">
-        <img :src="Car" class="absolute right-0 h-3/4 z-10" />
+        <img :src="Car" class="absolute right-0 top-20 h-5/6 z-10" />
         <div class="text-white text-5xl w-full cormorant-custom-600">
             Advanced and detailed search
         </div>
