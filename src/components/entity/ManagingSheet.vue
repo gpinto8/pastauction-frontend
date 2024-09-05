@@ -1,24 +1,30 @@
 <script setup lang="ts">
-import {defineProps, computed} from 'vue';
+import { computed } from 'vue';
 
 import { useManagingForm } from '@/composables/entity/managingForm';
 
 const props = defineProps<{
-  title: string,
-  modelValue: any,
-  editCallback?: () => Promise<void>,
-  onStartClicked?: () => void,
-  onCancelClicked?: () => void,
-  onSaveClicked?: () => void
-}>()
-const emit = defineEmits(['update:modelValue'])
+  title: string;
+  modelValue: any;
+  editCallback?: () => Promise<void>;
+  onStartClicked?: () => void;
+  onCancelClicked?: () => void;
+  onSaveClicked?: () => void;
+}>();
+const emit = defineEmits(['update:modelValue']);
 
 const wrappedData = computed({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
-})
+  set: value => emit('update:modelValue', value),
+});
 
-const managingForm = useManagingForm(wrappedData, props.editCallback ?? (async () => {}), props.onStartClicked ?? (() => {}), props.onCancelClicked ?? (() => {}), props.onSaveClicked ?? (() => {}));
+const managingForm = useManagingForm(
+  wrappedData,
+  props.editCallback ?? (async () => {}),
+  props.onStartClicked ?? (() => {}),
+  props.onCancelClicked ?? (() => {}),
+  props.onSaveClicked ?? (() => {})
+);
 </script>
 
 <template>
@@ -29,7 +35,12 @@ const managingForm = useManagingForm(wrappedData, props.editCallback ?? (async (
           <span class="font-weight-bold">{{ title }}</span>
         </v-col>
         <v-col class="text-end">
-          <v-btn :icon="managingForm.editBtnIcon.value" :color="managingForm.editBtnColor.value" density="compact" @click="managingForm.editBtnCallback.value" />
+          <v-btn
+            :icon="managingForm.editBtnIcon.value"
+            :color="managingForm.editBtnColor.value"
+            density="compact"
+            @click="managingForm.editBtnCallback.value"
+          />
         </v-col>
       </v-row>
 
@@ -37,7 +48,9 @@ const managingForm = useManagingForm(wrappedData, props.editCallback ?? (async (
 
       <v-row v-if="managingForm.isEditing.value">
         <v-col class="d-flex justify-end" :cols="12">
-          <v-btn class="px-16" color="primary" @click="managingForm.editSave">Save</v-btn>
+          <v-btn class="px-16" color="primary" @click="managingForm.editSave">
+            Save
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -49,5 +62,3 @@ const managingForm = useManagingForm(wrappedData, props.editCallback ?? (async (
   background: rgba(64, 123, 255, 0.12);
 }
 </style>
-
-

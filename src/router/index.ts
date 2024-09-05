@@ -1,4 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+} from 'vue-router';
 
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
@@ -10,30 +13,10 @@ import { authGuard } from './utils/guards';
 import { scrollBehaviour } from './utils/scrollBehaviours';
 import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue';
 
-export const LANDING_PAGE = 'landing page';
-export const BRANDS_UNVEILED = 'brands unveiled';
-export const TEAM = 'team';
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: scrollBehaviour,
   routes: [
-    {
-      path: '/landing',
-      name: LANDING_PAGE,
-      component: () => import('@/views/homePage/LandingPage.vue'),
-    },
-    {
-      path: '/brands_unveiled',
-      name: BRANDS_UNVEILED,
-      component: () =>
-        import('@/views/homePage/brandsUnveiled/BrandsUnveiled.vue'),
-    },
-    {
-      path: '/team',
-      name: TEAM,
-      component: () => import('@/views/homePage/team/Team.vue'),
-    },
     {
       path: '/',
       name: 'dashboard',
@@ -41,12 +24,12 @@ const router = createRouter({
         await import(
           /* webpackChunkName: "BasicLayout" */ '@/views/layout/BasicLayout.vue'
         ),
-      meta: { authentication: true },
+        meta: { authentication: true },
       children: [
         {
           path: '/home',
           name: 'Home',
-          component: HomeView,
+          component: HomeView
         },
         {
           path: '/garage',
@@ -55,7 +38,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Garage" */ '@/views/garage/GarageView.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail',
@@ -64,7 +47,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/create_garage',
@@ -73,7 +56,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "NewGarage" */ '@/views/garage/NewGarageView.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/:id',
@@ -82,7 +65,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/:garageId/vehicle/:id',
@@ -91,7 +74,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "VehicleDetail" */ '@/views/vehicle/createVehicleStep1.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/view',
@@ -100,7 +83,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageViewPage" */ '@/views/garage/tables/GarageViewPage.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/social-media-rumors',
@@ -109,7 +92,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "SocialMediaRumors" */ '@/views/garage/tables/SocialMediaRumors.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/social-media-rumors-detail',
@@ -118,7 +101,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "SocialMediaRumorsDetail" */ '@/views/garage/tables/SocialMediaRumorsDetail.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/auction-alert',
@@ -127,7 +110,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "AuctionAlert" */ '@/views/garage/tables/AuctionAlert.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/garage/detail/auction-alert-detail/:id',
@@ -136,7 +119,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "AuctionAlertDetail" */ '@/views/garage/tables/AuctionAlertDetail.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/wallet',
@@ -144,7 +127,7 @@ const router = createRouter({
           component: async () =>
             await import(
               /* webpackChunkName: "Datas" */ '@/views/wallet/index.vue'
-            ),
+              ),
         },
         {
           path: '/datas',
@@ -153,7 +136,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Datas" */ '@/views/datas/index.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/datas/vehicle/detail/:id',
@@ -162,7 +145,8 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "VehicleDetail" */ '@/views/datas/VehicleDetail.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
+
         },
         {
           path: '/charts',
@@ -171,64 +155,56 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Charts" */ '@/views/charts/index.vue'
             ),
-          meta: { authentication: true },
+        meta: { authentication: true },
         },
         {
           path: '/charts/filters',
           name: 'Filters',
           component: async () =>
-            await import(
-              /* webpackChunkName: "FiltersPage" */ '@/views/charts/vehicle/VehicleFilterPage.vue'
-            ),
-        },
-        {
-          path: '/charts/filters/maison',
-          name: 'Maison filter',
-          component: async () =>
-            await import(
-              /* webpackChunkName: "BrandPage" */ '@/views/charts/maison/MaisonFilterPage.vue'
-            ),
+          await import(
+          /* webpackChunkName: "FiltersPage" */ '@/views/charts/FiltersPage.vue'
+          )
         },
         {
           path: '/charts/filters/brand',
           name: 'Brand',
           component: async () =>
-            await import(
-              /* webpackChunkName: "BrandPage" */ '@/views/charts/BrandPage.vue'
-            ),
+          await import(
+          /* webpackChunkName: "BrandPage" */ '@/views/charts/BrandPage.vue'
+          )
         },
         {
           path: '/charts/filters/brand/preview',
           name: 'Preview',
           component: async () =>
-            await import(
-              /* webpackChunkName: "PreviewPage" */ '@/views/charts/previewPage/PreviewPage.vue'
-            ),
+          await import(
+              /* webpackChunkName: "PreviewPage" */ '@/views/charts/PreviewPage.vue'
+          ),
         },
         {
           path: '/locate',
           name: 'Locate',
-          component: async () =>
-            await import(
-              /* webpackChunkName: "Login" */ '@/views/layout/LocateLayout.vue'
-            ),
-          children: [
-            {
-              path: '/locate',
-              name: 'Locate ',
-              component: LocateView,
-            },
-            {
-              path: '/locate/roadmaps',
-              name: 'Locate',
-              component: LocateRoadmapsView,
-            },
-            {
-              path: '/locate/roadmap-detail',
-              name: 'Locate  ',
-              component: LocateRoadmapDetailView,
-            },
-          ],
+					component: async () =>
+						await import(
+						/* webpackChunkName: "Login" */ '@/views/layout/LocateLayout.vue'
+					),
+					children: [
+						{
+							path: '/locate',
+							name: 'Locate ',
+							component: LocateView,
+						},
+						{
+							path: '/locate/roadmaps',
+							name: 'Locate',
+							component: LocateRoadmapsView,
+						},
+						{
+							path: "/locate/roadmap-detail",
+							name: 'Locate  ',
+							component: LocateRoadmapDetailView,
+						}
+					],
         },
         {
           path: '/entity',
@@ -239,76 +215,76 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Entity" */ '@/views/layout/EntityLayout.vue'
             ),
-          children: [
-            {
-              path: '/entity/profile',
-              name: 'EntityProfile',
-              component: async () =>
-                await import(
-                  /* webpackChunkName: "Profile" */ '@/views/entity/profile/Profile'
-                ),
-            },
-            {
-              path: '/entity/administration',
-              name: 'EntityAdministration',
-              component: async () =>
-                await import(
-                  /* webpackChunkName: "Administration" */ '@/views/entity/Administration'
-                ),
-            },
-            {
-              path: '/entity/services',
-              name: 'EntityServices',
-              component: async () =>
-                await import(
-                  /* webpackChunkName: "Services" */ '@/views/entity/services/Services'
-                ),
-            },
-            {
-              path: '/entity/events',
-              name: 'EntityEvents',
-              redirect: { name: 'EntityEventsAll' },
-              component: async () =>
-                await import(
-                  /* webpackChunkName: "EntityEvents" */ '@/views/layout/EntityEventsLayout.vue'
-                ),
-              children: [
-                {
-                  path: 'all',
-                  name: 'EntityEventsAll',
-                  component: async () =>
-                    await import(
-                      /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/all/EventsAll.vue'
-                    ),
-                },
-                {
-                  path: 'new',
-                  name: 'EntityEventsNew',
-                  component: async () =>
-                    await import(
-                      /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/new/EventsNew.vue'
-                    ),
-                },
-                {
-                  path: 'event/:id',
-                  name: 'EntityEventsEvent',
-                  props: true,
-                  component: async () =>
-                    await import(
-                      /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/event/EventsEvent.vue'
-                    ),
-                },
-              ],
-            },
-            {
-              path: '/entity/requests',
-              name: 'EntityRequests',
-              component: async () =>
-                await import(
-                  /* webpackChunkName: "Requests" */ '@/views/entity/Requests'
-                ),
-            },
-          ],
+            children: [
+              {
+                path: '/entity/profile',
+                name: 'EntityProfile',
+                component: async () =>
+                  await import(
+                    /* webpackChunkName: "Profile" */ '@/views/entity/profile/Profile'
+                  ),
+              },
+              {
+                path: '/entity/administration',
+                name: 'EntityAdministration',
+                component: async () =>
+                  await import(
+                    /* webpackChunkName: "Administration" */ '@/views/entity/Administration'
+                  ),
+              },
+              {
+                path: '/entity/services',
+                name: 'EntityServices',
+                component: async () =>
+                  await import(
+                    /* webpackChunkName: "Services" */ '@/views/entity/services/Services'
+                  ),
+              },
+              {
+                path: '/entity/events',
+                name: 'EntityEvents',
+                redirect: { name: 'EntityEventsAll' },
+                component: async () =>
+                  await import(
+                    /* webpackChunkName: "EntityEvents" */ '@/views/layout/EntityEventsLayout.vue'
+                  ),
+                  children: [
+                    {
+                      path: 'all',
+                      name: 'EntityEventsAll',
+                      component: async () =>
+                        await import(
+                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/all/EventsAll.vue'
+                        ),
+                    },
+                    {
+                      path: 'new',
+                      name: 'EntityEventsNew',
+                      component: async () =>
+                        await import(
+                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/new/EventsNew.vue'
+                        ),
+                    },
+                    {
+                      path: 'event/:id',
+                      name: 'EntityEventsEvent',
+                      props: true,
+                      component: async () =>
+                        await import(
+                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/event/EventsEvent.vue'
+                        ),
+                    },
+                  ]
+              },
+              {
+                path: '/entity/requests',
+                name: 'EntityRequests',
+                component: async () =>
+                  await import(
+                    /* webpackChunkName: "Requests" */ '@/views/entity/Requests'
+                  ),
+              },
+            ]
         },
       ],
     },

@@ -16,7 +16,7 @@ interface Product {
 }
 
 // Import
-import { defineProps, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import PlansInfoSelection from '@/components/wallet/common/PlansInfoSelection.vue';
 import ComparePlans from '@/components/wallet/plan/ComparePlans.vue';
 import { fetchProductListById } from '@/components/wallet/ajax/AjaxProductList';

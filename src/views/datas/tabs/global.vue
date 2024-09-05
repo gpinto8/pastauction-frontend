@@ -86,7 +86,7 @@
     <div class="p-2 bg-white">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
-        :headers="(headers as any)"
+        :headers="headers as any"
         :items-length="store.getListItems?.total || 0"
         :items="store.getListItems?.items || []"
         :loading="store.getLoadingListItems"
@@ -103,6 +103,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useGlobalStore } from '@/store/datas/global';
+import { VDataTable } from 'vuetify/labs/components';
 
 const store = useGlobalStore();
 
@@ -116,11 +117,11 @@ store.auctionEvents('bidwatcher_auction', 'name_event');
 const filters = ref({
   auction_area: null,
   name_event: null,
-  country_auction_name: 'United Kingdom',
+  country_auction_name: null,
   country_maison: null,
   maison_name: null,
-  city_auction_name: 'London',
-  auction_year: 2021,
+  city_auction_name: null,
+  auction_year: null,
 });
 
 const sort = ref({

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Interface 
+// Interface
 interface Product {
   category: string;
   currency: string;
@@ -13,18 +13,18 @@ interface Product {
     tipo: string;
     value: string;
   };
-};
+}
 
 import Button from '@/components/common/button.vue';
 // Import
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed, defineProps } from 'vue';
 
 // Emits
 const emits = defineEmits(['handleInfoClicked', 'handleBuyClick']);
 
 // Props
 const props = defineProps<{
-  data: Product,
+  data: Product;
 }>();
 
 // Variables
@@ -41,7 +41,10 @@ const mappedDatas = (props.data as any).map((item: Product) => ({
   propertiesTipo: item.properties.tipo,
   propertiesValue: item.properties.value,
 }));
-const nameFamilies = mappedDatas.filter((item: Product) => item.category === 'Subscription' || item.category === 'Subscription_ppu');
+const nameFamilies = mappedDatas.filter(
+  (item: Product) =>
+    item.category === 'Subscription' || item.category === 'Subscription_ppu'
+);
 const mappedDataFamily = nameFamilies.map((item: any) => ({
   name: item.name,
   family: item.family,

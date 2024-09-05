@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { defineProps, computed, defineEmits, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
-    width?: number,
-    height?: number,
-    color: 'red' | 'green' | 'blue',
+  width?: number;
+  height?: number;
+  color: 'red' | 'green' | 'blue';
 }>();
 
 const defaultWidth = 40;
@@ -16,20 +16,25 @@ const colorClass = computed(() => props.color);
 </script>
 
 <template>
-    <v-sheet rounded="rounded" class="mx-auto" :class="colorClass" :height="internalHeight"
-        :width="internalWidth"></v-sheet>
+  <v-sheet
+    rounded="rounded"
+    class="mx-auto"
+    :class="colorClass"
+    :height="internalHeight"
+    :width="internalWidth"
+  ></v-sheet>
 </template>
 
 <style scoped>
 .red {
-    background-color: #D80027;
+  background-color: #d80027;
 }
 
 .green {
-    background-color: #6DA544;
+  background-color: #6da544;
 }
 
 .blue {
-    background-color: #227AD2;
+  background-color: #227ad2;
 }
 </style>

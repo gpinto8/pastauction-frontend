@@ -32,7 +32,7 @@
                             </v-col>
                         </v-row>
                         <v-card-text>
-                            <v-simple-table>
+                            <!-- <v-simple-table>
                                 <template v-slot:default>
                                     <tbody>
                                         <tr v-for="(item, index) in selectedItems" :key="index">
@@ -41,11 +41,10 @@
                                                     @click.stop></v-checkbox>
                                             </td>
                                             <td>{{ item.title }}</td>
-                                            <!-- Aggiungi altre colonne se necessario -->
                                         </tr>
                                     </tbody>
                                 </template>
-                            </v-simple-table>
+</v-simple-table> -->
                         </v-card-text>
                     </v-card>
                 </v-col>
@@ -66,10 +65,9 @@
 
 <script lang="ts">
 
-import Selection from './Selection.vue';
-import { useChartsStore } from '../../../store/charts/charts';
 import axios from 'axios';
-import { getProductsDashboards } from '@/api/charts/charts';
+import { useChartsStore } from '../../../store/charts/charts';
+import Selection from './Selection.vue';
 
 export default {
     components: { Selection, },

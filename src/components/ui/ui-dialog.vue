@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { defineProps, computed, defineEmits } from "vue";
-import { useRouter } from "vue-router";
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 interface Props {
   modelValue: boolean;
@@ -9,9 +9,9 @@ interface Props {
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: boolean): void;
-  (e: "close"): void;
-  (e: "confirm"): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'close'): void;
+  (e: 'confirm'): void;
 }>();
 
 const router = useRouter();
@@ -21,7 +21,7 @@ const value = computed<typeof props.modelValue>({
     return props.modelValue;
   },
   set(value: any) {
-    emit("update:modelValue", value);
+    emit('update:modelValue', value);
   },
 });
 </script>
