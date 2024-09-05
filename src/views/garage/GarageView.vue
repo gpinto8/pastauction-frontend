@@ -7,6 +7,7 @@ import { useGeneralStore } from '@/store/datas/general';
 
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
+import GarageList from './GarageList.vue';
 
 /** Store */
 const store = useGarageStore();
@@ -15,24 +16,20 @@ const generalStore = useGeneralStore();
 /** Router */
 const router = useRouter();
 
-const loadedMedia = ref([]);
+type Order = {
+  text: string;
+  value: Record<string, string>;
+};
+const orders = [
+  { text: 'Newest first', value: { id: 'desc' } },
+  { text: 'Oldest first', value: { id: 'asc' } },
+] as const;
+const order = ref<Record<string, string>>(orders[0].value);
 
 /** Methods */
-store.listPaginated(1, 10, {}, {});
-
-const loadMedia = async (id: number, media: string) => {
-  if (media !== 'string') {
-    await generalStore.loadMedia(media).then(res => {
-      if (
-        loadedMedia.value?.length === 0 ||
-        loadedMedia.value?.findIndex((el: any) => el.id === id) === -1
-      )
-      
-      // @ts-ignore
-        loadedMedia.value.push({ id: id, photo: res });
-    });
-  }
-};
+function setOrder(item: Order) {
+  order.value = item.value;
+}
 </script>
 
 <template>
@@ -74,10 +71,10 @@ const loadMedia = async (id: number, media: string) => {
       <div class="text-center my-10">
         <div class="text-3xl font-medium mb-3">My garage</div>
       </div>
-      <div class="grid grid-cols-3 gap-10">
-        <div class="col-span-2">
+      <div class="grid grid-cols-3 gap-10 mb-[32px]">
+        <div class="col-span-3 lg:col-span-2">
           <div class="card">
-            <div class="flex justify-between">
+            <div class="flex justify-between flex-wrap gap-3">
               <div>
                 <div class="font-semibold text-2xl">Current plan</div>
                 <b>Plan Ready</b>
@@ -126,7 +123,7 @@ const loadMedia = async (id: number, media: string) => {
           </div>
         </div>
 
-        <div class="card space-y-6 text-center">
+        <div class="max-lg:col-span-3 card space-y-6 text-center">
           <div class="font-semibold text-2xl">My wallet</div>
           <small class="font-medium">Available credit in my wallet</small>
 
@@ -158,11 +155,8 @@ const loadMedia = async (id: number, media: string) => {
                   </template>
 
                   <v-list>
-                    <v-list-item>
-                      <v-list-item-title>Oldest first</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Newest first</v-list-item-title>
+                    <v-list-item v-for="item in orders" @click="setOrder(item)">
+                      <v-list-item-title>{{ item.text }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -179,42 +173,11 @@ const loadMedia = async (id: number, media: string) => {
             </div>
           </div>
         </div>
-        <router-link
-          v-for="item in store.getListItems?.items"
-          :key="item.id"
-          :to="`/garage/detail/${item.id}`"
-        >
-          <v-card class="mx-auto" max-width="400">
-            <v-img
-              v-if="(loadedMedia.find((el: any) => el.id === item.id) as any)?.photo"
-              class="align-end text-white"
-              height="200"
-              :src="(loadedMedia.find((el: any) => el.id === item.id) as any)?.photo"
-              cover
-            />
-            <v-img
-              v-else
-              class="align-end text-white"
-              height="200"
-              src="@/assets/images/img-1.png"
-              cover
-            />
-            <span class="hidden">{{ loadMedia(item.id, item.photo) }}</span>
-            <v-card-title class="pt-4">{{ item.name }}</v-card-title>
-
-            <v-card-text class="text-[#5E5E5E]">
-              <div>{{ item.description }}</div>
-
-              <ul class="list-disc mt-4 pl-4">
-                <li>
-                  Number of vehicles:
-                  <b>{{ item.vehicle_capacity }}</b>
-                </li>
-              </ul>
-            </v-card-text>
-          </v-card>
-        </router-link>
+      </div>
+      <div class="mb-[16px] text-blue-500">
+        Vehicles ({{ store.getListItems?.total || 0 }})
       </div>
     </template>
+    <GarageList :order="order" />
   </v-container>
 </template>

@@ -1,102 +1,125 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { buildQS } from '@/utils/functions/buildQS';
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import { buildQS } from '@/utils/functions/buildQS'
 
-import { httpPost, httpGet, httpPut } from '@/api/api';
+import { httpPost, httpGet, httpPut } from '@/api/api'
+
+export type Vehicle = {
+  id?: string | number
+  purchase_year: number
+  purchase_value: number
+  garage_set_id: string
+  garage_choice: string
+  id_brand: number,
+  id_family: number,
+  model_id: number,
+  location_id: string
+  body_id: number
+  exterior_color_id: number
+  interior_color_id: number
+  variant: string
+  type_vehicle: string
+  year: number
+  doors: string
+  transmission: string
+  power: string
+  engine_capacity: string
+  interior_type: string
+  driver_side: string
+  originality: string
+  status: string
+  mileage: number
+  original_miles: string
+  plate_numb: string
+  vin: string
+  main_photo: string
+  registration_certificate: string
+  service_book: string
+  purchase_currency: string
+  logo: string
+}
+
+export type CreateVehiclePayload = Omit<Vehicle, 'id'>
 
 export const useVehicleStore = defineStore('vehicle', () => {
   // state
-  const list = ref();
-  const loading = ref(false);
-  const detail = ref();
-  const listItems = ref();
-  const loadingListItems = ref(false);
+  const list = ref()
+  const loading = ref(false)
+  const detail = ref()
+  const listItems = ref()
+  const loadingListItems = ref(false)
 
   // getters
-  const getList = computed(() => list.value);
-  const getLoading = computed(() => loading.value);
-  const getDetail = computed(() => detail.value);
-  const getListItems = computed(() => listItems.value);
-  const getlLoadingListItems = computed(() => loadingListItems.value);
+  const getList = computed(() => list.value)
+  const getLoading = computed(() => loading.value)
+  const getDetail = computed(() => detail.value)
+  const getListItems = computed(() => listItems.value)
+  const getlLoadingListItems = computed(() => loadingListItems.value)
 
   // actions
-  async function listPaginated(
+  async function listPaginated (
     page: number,
     size: number,
     search?: any,
     sort?: any
   ) {
-    loadingListItems.value = true;
+    loadingListItems.value = true
     const qs = buildQS({
       page: page,
       size: size,
       search: search,
       sort: sort,
-    });
+    })
 
     return await new Promise((resolve, reject) => {
       httpGet(`garage_vehicle/query?${qs}`)
         .then(({ data }) => {
-          console.log('Garage', data);
+          console.log('Garage', data)
 
-          listItems.value = data;
-          loadingListItems.value = false;
-          resolve(data);
+          listItems.value = data
+          loadingListItems.value = false
+          resolve(data)
         })
         .catch((err: any) => {
-          loadingListItems.value = false;
-          reject(err);
-        });
-    });
+          loadingListItems.value = false
+          reject(err)
+        })
+    })
   }
 
-  async function create(item: any) {
-    console.log('create item', item);
-
-    loading.value = true;
-    return await new Promise((resolve, reject) => {
-      httpPost('garage_vehicle/create', item)
-        .then(({ data }) => {
-          console.log(data);
-          loading.value = false;
-          resolve(data);
-        })
-        .catch((err: any) => {
-          loading.value = false;
-          reject(err);
-        });
-    });
+  async function create (item: CreateVehiclePayload) {
+    console.log('create item', item)
+    loading.value = true
+    const { data } = await httpPost('garage_vehicle/create', item).finally(() => loading.value = false)
+    return data
   }
 
-  async function update(item: any) {
-    console.log('edit item', item);
-
-    loading.value = true;
-    return await new Promise((resolve, reject) => {
-      httpPut('garage_vehicle/update', item)
-        .then(({ data }) => {
-          console.log(data);
-          loading.value = false;
-          resolve(data);
-        })
-        .catch((err: any) => {
-          loading.value = false;
-          reject(err);
-        });
-    });
+  async function update (item: Vehicle) {
+    console.log('edit item', item)
+    loading.value = true
+    const { data } = await httpPut('garage_vehicle/update', item).finally(() => loading.value = false)
+    return data
   }
 
-  async function filter(tablename?: string, columnName?: string) {
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tablename}/${columnName}?page=1&size=50`)
-        .then(({ data }) => {
-          console.log(data);
-          resolve(data);
-        })
-        .catch((err: any) => {
-          reject(err);
-        });
-    });
+  async function upsert (item: Vehicle | CreateVehiclePayload) {
+    return 'id' in item ? update(item) : create(item)
+  }
+
+  async function filter (tablename?: string, columnName?: string, search?: string, withId: boolean = false) {
+    const query: Record<string, any> = {}
+    if (search) {
+      columnName += `_like:${search}`
+    }
+    if (withId) {
+      query['with_id'] = true
+    }
+    const qs = buildQS({ search: query })
+    const { data } = await httpGet(`filter/${tablename}/${columnName}/?page=1&size=50&${qs}`)
+    return data
+  }
+
+  async function getVehiclePhotos (id: number) {
+    return httpGet(`garage_vehicle_photo/list/`)
   }
 
   return {
@@ -112,6 +135,8 @@ export const useVehicleStore = defineStore('vehicle', () => {
     listPaginated,
     create,
     update,
+    upsert,
     filter,
-  };
-});
+    getVehiclePhotos,
+  }
+})

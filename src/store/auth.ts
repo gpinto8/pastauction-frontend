@@ -3,11 +3,12 @@ import { ref, computed } from 'vue';
 
 import router from '@/router';
 
-import { httpPost, httpGet, httpPut, httpDelete } from '@/api/api';
+import { httpPost, httpGet, httpPut, httpDelete, httpPatch } from '@/api/api'
+import { useGeneralStore } from './datas/general'
 
 export const useAuthStore = defineStore('auth', () => {
   // state
-  const isUserLogged = ref(window.localStorage.getItem('past_token'));
+  const authToken = ref(window.localStorage.getItem('past_token'));
   const loading = ref(false);
   const detail = ref();
   const listCountries = ref();
@@ -15,11 +16,11 @@ export const useAuthStore = defineStore('auth', () => {
   const imageUrl = ref();
 
   // getters
-  const isUserLoggedIn = computed(() => !!isUserLogged.value);
+  const isUserLoggedIn = computed(() => !!authToken.value);
   const getLoading = computed(() => loading.value);
   const getDetail = computed(() => detail.value);
   const isUserAuthenticated = computed(() =>
-    isUserLogged.value ? true : false
+    Boolean(authToken.value)
   );
 
   const getListCountries = computed(() => listCountries.value);
@@ -45,6 +46,14 @@ export const useAuthStore = defineStore('auth', () => {
     });
   }
 
+  async function forgotPassword (email: string) {
+    loading.value = true
+    return httpPost('reset_password?email=' + email, {})
+      .finally(() => {
+        loading.value = false
+      })
+  }
+
   async function register(user: any) {
     loading.value = true;
     return await new Promise((resolve, reject) => {
@@ -63,8 +72,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function getLoggedUserInfo () {
-      const data = await httpGet('user_info')
+    const promise = httpGet('user_info')
+    promise.then((data) => {
       detail.value = data
+    })
+    return promise
   }
 
   async function changePassword(info: any) {
@@ -82,7 +94,19 @@ export const useAuthStore = defineStore('auth', () => {
     });
   }
 
-  async function updateUser(postPayload: any) {
+  async function updateUser (postPayload: {
+    // gender: string;
+    first_name: string
+    surname: string
+    // address: string;
+    // city: string;
+    country: string
+    birthdate?: Date
+    // phone: string;
+    // vat: string;
+    // nickname: string;
+    // currency: string;
+  }) {
     const format = (date: Date) => {
       const newDate = new Date(date);
       const day = newDate.getDate();
@@ -91,19 +115,18 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (month < 10) month = `0${month}`;
 
-      return `${day}-${month}-${year}`;
+      return `${year}-${month}-${day}`;
     };
-
-    let formData = new FormData();
-    formData.append('name', postPayload.name);
-    formData.append('surname', postPayload.surname);
-    formData.append('birth', format(postPayload.birth));
-    formData.append('country_id', postPayload.country_id);
-    formData.append('city_id', postPayload.city_id);
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      httpPut('user_info', formData)
+      httpPatch('user_info_update', {
+        first_name: postPayload.first_name,
+        surname: postPayload.surname,
+        birthdate: postPayload.birthdate ? format(postPayload.birthdate) : null,
+        country: postPayload.country,
+        // city_id: postPayload.city_id, // TODO
+      })
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -150,7 +173,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     loading.value = true;
     return await new Promise((resolve, reject) => {
-      httpPost('profile_image', formData)
+      httpPost('profile_image/', formData)
         .then(({ data }) => {
           loading.value = false;
           resolve(data);
@@ -164,8 +187,9 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function deletePicture() {
     return await new Promise((resolve, reject) => {
-      httpDelete('profile_image')
+      httpDelete('profile_image/')
         .then(({ data }) => {
+          imageUrl.value = null;
           loading.value = false;
           resolve(data);
         })
@@ -177,31 +201,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function loadImage(imgUrl: string) {
-    return await new Promise((resolve, reject) => {
-      httpGet(`${imgUrl}`)
-        .then(({ data }) => {
-          console.log('img', data);
-          imageUrl.value = URL.createObjectURL(data);
-          let image = document.createElement('img') as any;
-          let reader = new FileReader();
-          reader.addEventListener('loadend', () => {
-            let contents = reader.result;
-            image.src = contents;
-            document.body.appendChild(image);
-          });
-          if (Blob instanceof Blob) reader.readAsDataURL(data);
-
-          resolve(data);
-        })
-        .catch((err: any) => {
-          reject(err);
-        });
-    });
+    imageUrl.value = await useGeneralStore().loadMedia(imgUrl)
   }
 
   function saveToken(token: string) {
     window.localStorage.setItem('past_token', token);
-    isUserLogged.value = token;
+    authToken.value = token;
     router.push({ name: 'Home' }).catch(() => {});
   }
 
@@ -214,6 +219,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     // state
     detail,
+    authToken,
 
     // getters
     isUserLoggedIn,
@@ -226,6 +232,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     // actions
     login,
+    forgotPassword,
     getLoggedUserInfo,
     changePassword,
     saveToken,

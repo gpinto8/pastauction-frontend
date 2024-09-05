@@ -1,17 +1,27 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useGlobalStore } from '@/store/GlobalStore';
 import { useGarageStore } from '@/store/garage';
 import { useGeneralStore } from '@/store/datas/general';
-
+import { alphabeticallyByKey } from '@/lib/sort';
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
+import Button from '@/components/common/button.vue';
+import { onBeforeMount } from 'vue';
+import { computed } from 'vue';
 
 /** Router */
 const router = useRouter();
+const snackbar = ref({
+  text: '',
+  color: '',
+  show: false,
+});
+const _loading = ref(false);
+const loading = computed(() => _loading.value || store.getLoading);
 
 /** Store */
 const globalStore = useGlobalStore();
@@ -20,6 +30,7 @@ const generalStore = useGeneralStore();
 
 /** Interfaces */
 interface Garage {
+  id?: string | number;
   name: string;
   vehicle_capacity: number | null;
   description: string;
@@ -49,20 +60,60 @@ const v$ = useVuelidate(rules, garage);
  * Methods
  */
 globalStore
-  .globalFilter('bidwatcher_country', 'name')
-  .then(res => (countries.value = res));
+  .globalFilterAll<{ name: string }>('bidwatcher_country', 'name')
+  .then(res => (countries.value = res.sort(alphabeticallyByKey('name'))));
 
-const submit = () => {
-  store.create(garage.value).then(res => {
-    console.log('response create garage', res);
-    
-      // @ts-ignore
-    generalStore.uploadMedia('garage_set', res.id, photo.value).then(res => {
-      console.log('response upload media', res);
+async function postForm() {
+  const res = (await store.upsert(garage.value)) as any; // TODO type
+  console.log('response create garage', res);
+
+  if (photo.value) {
+    await generalStore
+      .uploadMedia('garage_set', res.id, photo.value)
+      .then(res => {
+        console.log('response upload media', res);
+      })
+      .catch(err => {
+        throw new Error(
+          'An error occurred while uploading the picture. Please try again.'
+        );
+      });
+  }
+}
+async function loadGarage() {
+  const route = useRoute();
+  if (route.params.id) {
+    const res = await store.getById(route.params.id.toString());
+
+    if (res.photo) {
+      await generalStore.loadMedia(res.photo).then(res => {
+        console.log({ res });
+        // photo.value = res;
+        photoPreview.value = res;
+      });
+    }
+
+    garage.value = res;
+  }
+}
+
+onBeforeMount(() => {
+  _loading.value = true;
+  loadGarage().finally(() => (_loading.value = false));
+});
+
+async function submit() {
+  postForm()
+    .then(res => {
       router.push('/garage');
+    })
+    .catch(err => {
+      snackbar.value.text =
+        err?.message || 'An error occurred. Please try again.';
+      snackbar.value.color = 'error';
+      snackbar.value.show = true;
     });
-  });
-};
+}
 
 const file2Base64 = (file: File): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
@@ -82,7 +133,7 @@ const uploadImage = (e: any) => {
 };
 </script>
 <template>
-  <v-container>
+  <v-container fluid>
     <br />
     <v-btn icon size="small" @click="router.back()">
       <app-icon type="arrow_left" />
@@ -93,8 +144,8 @@ const uploadImage = (e: any) => {
         Organize your vehicles in a more comfortable way by creating a garage.
       </span>
     </div>
-    <div class="bg-white grid grid-cols-2 gap-20 max-w-6xl mx-auto">
-      <div class="px-16 py-9">
+    <div class="bg-white lg:grid grid-cols-2 max-w-6xl mx-auto">
+      <div class="p-9 lg:p-[44px]">
         <div class="text-center">
           <h5 class="text-lg font-semibold">Content</h5>
           <small>Upload a photo of your garage</small>
@@ -102,7 +153,7 @@ const uploadImage = (e: any) => {
         <v-form @submit.prevent="submit">
           <div class="flex items-center justify-center w-32 mx-auto my-4">
             <label
-              v-if="!photo"
+              v-if="!garage.photo"
               for="dropzone-file"
               class="flex flex-col items-center justify-center w-full h-32 border-1 border-gray-300 border-dashed rounded-full px-1 cursor-pointer bg-gray-50"
             >
@@ -116,6 +167,7 @@ const uploadImage = (e: any) => {
                 id="dropzone-file"
                 type="file"
                 class="hidden"
+                accept="image/*"
                 @change="uploadImage"
               />
             </label>
@@ -124,7 +176,7 @@ const uploadImage = (e: any) => {
                 <img
                   :src="photoPreview"
                   alt="Garage Image"
-                  class="rounded-full w-[120px] h-[120px] bg-cover"
+                  class="rounded-full w-[120px] h-[120px] object-cover"
                 />
               </v-avatar>
               <button type="button">
@@ -148,7 +200,7 @@ const uploadImage = (e: any) => {
           <label>Name garage*</label>
           <v-text-field
             v-model="garage.name"
-            :error-messages="(v$.name.$errors.map(e => e.$message) as any)"
+            :error-messages="v$.name.$errors.map(e => e.$message) as any"
             placeholder="Name garage*"
             required
             variant="outlined"
@@ -157,10 +209,10 @@ const uploadImage = (e: any) => {
             @blur="v$.name.$touch"
           />
           <label>Country</label>
-          <v-select
+          <v-autocomplete
             v-model="garage.country"
             :items="countries"
-            placeholder="Select"
+            placeholder="Select or type"
             variant="outlined"
             density="comfortable"
             item-title="name"
@@ -178,20 +230,41 @@ const uploadImage = (e: any) => {
           />
 
           <label>Additiona description</label>
-          <v-textarea placeholder="Write here" variant="outlined"></v-textarea>
+          <v-textarea
+            placeholder="Write here"
+            variant="outlined"
+            v-model="garage.description"
+          ></v-textarea>
           <v-btn
             class="!bg-primary text-white w-full !rounded-lg"
             :disabled="v$.$invalid"
             size="large"
             type="submit"
-            :loading="store.getLoading"
+            :loading="loading"
           >
             Continue
           </v-btn>
         </v-form>
       </div>
-      <img src="@/assets/images/create_garage.png" />
+      <img
+        class="object-cover h-full max-lg:hidden"
+        src="@/assets/images/create_garage.png"
+      />
     </div>
   </v-container>
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top right"
+  >
+    {{ snackbar.text }}
+    <Button
+      classes="min-w-[100px] ml-2"
+      variant="white"
+      @click="snackbar.show = false"
+    >
+      Close
+    </Button>
+  </v-snackbar>
 </template>
 <style lang="poscss"></style>

@@ -56,16 +56,27 @@ export const useGlobalStore = defineStore('global', () => {
    *
    * @param global - filters
    */
-  async function globalFilter(tableName: any, column: any) {
-    return await new Promise((resolve, reject) => {
-      httpGet(`filter/${tableName}/${column}/?page=1&size=50`)
-        .then(({ data }) => {
-          resolve(data.items);
-        })
-        .catch((err: any) => {
-          reject(err);
-        });
-    });
+  function globalFilter (tableName: any, column: any, page = 1, size = 50) {
+    return httpGet(`filter/${tableName}/${column}/?page=${page}&size=${size}`)
+      .then(({ data }) => data.items)
+  }
+
+  async function globalFilterAll<T> (tableName: string, column: string, _page = 1, _size = 100, _items: T[] = []): Promise<T[]> {
+    const {
+      items,
+      page,
+      pages,
+      size,
+      total,
+    } = await httpGet(`filter/${tableName}/${column}/?page=${_page}&size=${_size}`).then(({ data }) => data)
+
+    _items = _items.concat(items)
+
+    if (page < pages) {
+      return globalFilterAll(tableName, column, page + 1, _size, _items)
+    }
+
+    return _items
   }
 
 	const vuetifyDisplay = useDisplay();
@@ -93,6 +104,7 @@ export const useGlobalStore = defineStore('global', () => {
     setProgress,
     setMessage,
     globalFilter,
+    globalFilterAll,
   };
 });
 

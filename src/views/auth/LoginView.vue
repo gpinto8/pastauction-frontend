@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/auth';
 
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
+import Button from '@/components/common/button.vue'
 
 const store = useAuthStore();
 
@@ -19,8 +20,22 @@ const rules = {
 
 const v$ = useVuelidate(rules, user);
 
+const snackbar = ref({
+  text: '',
+  color: '',
+  show: false,
+});
+
 const submit = () => {
-  store.login(user.value);
+  store.login(user.value)
+  .catch((error) => {
+    const data = error?.response?.data || {}
+    snackbar.value = {
+      text:  data.detail || data.message || 'An error occurred. Please try again.',
+      color: 'error',
+      show: true,
+    };
+  })
 };
 </script>
 
@@ -30,7 +45,7 @@ const submit = () => {
     <div class="text-grey">Welcome back! Login to your account</div>
   </div>
 
-  <v-form @submit.prevent="submit" class="space-y-4">
+  <v-form @submit.prevent="submit" class="flex flex-col gap-3">
     <v-text-field v-model="user.email" :error-messages="(v$.email.$errors.map(e => e.$message) as any)"
       placeholder="Enter your email" label="Email" required variant="outlined" density="comfortable"
       @input="v$.email.$touch" @blur="v$.email.$touch"></v-text-field>
@@ -57,4 +72,18 @@ const submit = () => {
       </router-link>
     </div>
   </v-form>
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top right"
+  >
+    {{ snackbar.text }}
+    <Button
+      classes="min-w-[100px] ml-2"
+      variant="white"
+      @click="snackbar.show = false"
+    >
+      Close
+    </Button>
+  </v-snackbar>
 </template>
