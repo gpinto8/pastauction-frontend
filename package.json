@@ -21,9 +21,8 @@
   },
   "engines": {
     "node": ">=18.16.0",
-    "yarn": ">=1.22.19"
+    "pnpm": ">=8.0.0"
   },
-  "packageManager": "yarn@3.6.1",
   "scripts": {
     "dev": "vite",
     "clean": "rimraf ./node_modules/.vite",
@@ -52,16 +51,14 @@
     "deep-clone": "^4.0.0",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
-    "rxjs": "^7.8.1",
     "swiper": "^11.0.5",
-    "ts-pattern": "^5.2.0",
     "vee-validate": "^4.11.2",
     "vue": "^3.3.4",
     "vue-chartjs": "^5.2.0",
     "vue-fullpage.js": "^0.2.17",
     "vue-gallery-slideshow": "^1.5.2",
     "vue-router": "^4.2.4",
-    "vuetify": "^3.6.13",
+    "vuetify": "^3.3.12",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
