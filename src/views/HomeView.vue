@@ -4,9 +4,121 @@ import { ref } from 'vue';
 import AppIcon from '@/components/common/AppIcon.vue';
 
 const tab = ref(null);
+
 </script>
 
+
 <template>
+  <div class="top_on_box" v-if="false">
+    <div class="black_box" >
+      <div class="top_up_info" v-if="false">
+        <div class="complete_info_box">
+          <div class="close_box">X</div>
+          <div class="complete_head_info_box">
+            <div class="person_box_in_complete">
+              <img class="person_icon_complete_info_box" src="@/assets/icons/person_circle.png" alt="Person">
+            </div>
+            <h3 class="headtext_of_complete">Finish completing your information.</h3>
+            <span class="bodytext_of_complete">
+              Complete your account information to discover the benefits of Past Auction.
+            </span>
+            <div class="action_box_in_topup_complete">
+              <div class="btnbox_in_topup_complete">
+                <button id="cancel">Cancel</button>
+                <button id="complete"> Complete profile</button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="area_manage_topup_question" v-if="false">
+        <div class="complete_info_box">
+          <div class="close_box">X</div>
+          <div class="complete_head_areamanagement_box">
+            <h3 class="headtext_of_complete">Which area do you want to manage?</h3>
+            <span class="bodytext_of_complete">
+              Select one of the options to visualize the information
+            </span>
+            <div class="action_box_in_topup_complete">
+              <div class="selectboxes_of_area_management">
+                <div class="select_box_in_areamanagement">
+
+                  <div class="icon_in_select_areamanagement usericarea">
+                    <img src="@/assets/icons/white_person.svg" alt="white person  ">
+                  </div>
+
+                  <div class="select_managearea_sedcbox">
+                    <h3 class="select_managearea_sedcbox_title">
+                      User area
+                    </h3>
+                    <span class="select_managearea_sedcbox_desc">
+                      Select if you want to manage your Garage, Charts area, Find parts and much more
+                    </span>
+                  </div>
+
+
+                </div>
+                <div class="select_box_in_areamanagement">
+
+
+                  <div class="icon_in_select_areamanagement shieldicon">
+                    <img src="@/assets/icons/shield.svg" alt="entity">
+                  </div>
+
+                  <div class="select_managearea_sedcbox">
+                    <h3 class="select_managearea_sedcbox_title">
+                      User area
+                    </h3>
+                    <span class="select_managearea_sedcbox_desc">
+                      Select if you want to manage your Garage, Charts area, Find parts and much more
+                    </span>
+                  </div>
+
+
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+  </div>
+
+
+
   <v-container class="space-y-10">
     <div class="p-10 pb-0 shadow-lg rounded-lg mt-10">
       <div class="grid grid-cols-3 gap-10">
@@ -115,11 +227,158 @@ const tab = ref(null);
       </v-window>
     </div>
   </v-container>
+
+
+
 </template>
 
 <style lang="postcss">
 .card {
   @apply p-10 rounded-lg bg-white;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.075);
 }
+.black_box {
+  width: 100%;
+  height: 100%;
+  z-index: 31;
+  top: 0;
+  left: 0;
+  position: fixed;
+ background-color: #000c;
+}
+.close_box{
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+.top_up_info {
+  width: 400px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #fff;
+  margin: 163px auto;
+}
+.area_manage_topup_question {
+    width: 800px;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: #fff;
+    margin: 163px auto;
+}
+.complete_info_box {
+  position: relative;
+}
+.person_icon_complete_info_box {
+  max-width: 24px;
+}
+.person_box_in_complete {
+  background-color: #E4E7EC;
+  width: fit-content;
+  padding: 10px;
+  margin: 0 auto 25px;
+  border-radius: 50px;
+  box-shadow: 0 0 0 10px #F4F4F4;
+}
+.complete_head_info_box {
+  padding: 20px 0 10px 0;
+  margin: 0 auto;}
+.complete_head_areamanagement_box {
+  padding: 50px 0 30px 0;
+  margin: 0 auto;
+ }
+.headtext_of_complete {
+  //styleName: Text lg / Semibold;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  width: 95%;
+  margin: 0 auto;
+  text-align: center;
+}
+.bodytext_of_complete{
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 5px auto;
+  width: 85%;
+  text-align: center;
+  display: block;
+}
+.btnbox_in_topup_complete {
+  width: 85%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: space-around;
+  button {
+    padding: 10px 12px;
+    border-radius: 4px ;
+    gap: 8px;
+    &#cancel {
+      background: #F8F9FA;
+      border: 1px solid #F8F9FA
+    }
+    &#complete {
+      background: #000;
+      color: #fff;
+
+    }
+    width: 47%;
+  }
+}
+.action_box_in_topup_complete {
+  margin: 25px 0;
+}
+
+.selectboxes_of_area_management{
+  display: flex;
+  justify-content: space-around;
+  .select_box_in_areamanagement{
+    cursor: pointer;
+    border: 1px solid #CECECE;
+    border-radius: 12px;
+    width: 45%;
+  }
+}
+.select_managearea_sedcbox {
+  text-align: center;
+  width: 75%;
+  margin: 20px auto;
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+  }
+  .select_managearea_sedcbox_desc {
+    font-family: Inter;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+
+  }
+}
+.icon_in_select_areamanagement{
+  &.usericarea {
+    background: #2D8EFF;
+    width: fit-content;
+    padding: 12px;
+    margin: 30px auto 0;
+    box-shadow: 0 0 0 7px #DEEDFF;
+    border-radius: 50px;
+  }
+  &.shieldicon {
+    background: #6C757D;
+    width: fit-content;
+    padding: 12px;
+    margin: 30px auto 0;
+    box-shadow: 0 0 0 7px #CECECE;
+    border-radius: 50px;
+  }
+  img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 </style>
