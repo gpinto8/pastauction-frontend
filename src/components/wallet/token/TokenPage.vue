@@ -954,7 +954,7 @@ const resetCounters = () => {
     <!-- /SelectedPlan -->
   </div>
 
-  <Modal :is-modal-open="tokenModalOpen" :background="true">
+  <Modal :is-modal-open="tokenModalOpen" :background="true" :auto-width="true">
     <!-- <div class="modal-content"> -->
     <span class="close" @click="closeTokenModal">&times;</span>
     <img

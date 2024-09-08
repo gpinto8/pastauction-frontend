@@ -105,7 +105,7 @@ getBrandAndFounders()
                 </div>
             </div>
             <div class="section h-screen">
-                <VideoCarousel :videos="videos" class="h-screen" v-if="videos.length > 0" />
+                <VideoCarousel :videos="videos" class="h-screen" />
             </div>
             <div class="section h-screen">
                 <SearchSection :videos="videos" class="max-h-screen h-screen w-full" v-if="videos.length > 0" />

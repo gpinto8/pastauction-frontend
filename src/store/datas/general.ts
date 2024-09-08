@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
 import { upload, getHtml, load } from '@/api/api';
+import { cachableWithKey } from '@/lib/cachable'
 
 export const useGeneralStore = defineStore('general', () => {
   // state
@@ -53,18 +54,11 @@ export const useGeneralStore = defineStore('general', () => {
     });
   }
 
-  function loadMedia(stringUrlMedia: string) {
-    return new Promise((resolve, reject) => {
-      load(`photo/${stringUrlMedia}`)
-        .then(({ data }) => {
-          console.log(data);
-          blobToBase64(data).then(res => resolve(res));
-        })
-        .catch((err: any) => {
-          reject(err);
-        });
-    });
-  }
+  const loadMedia = cachableWithKey(async function (stringUrlMedia: string | number) {
+    const { data } = await load(`photo/${stringUrlMedia}`)
+    console.log(data)
+    return blobToBase64(data) as Promise<string>
+  })
 
   function blobToBase64(blob: Blob) {
     return new Promise((resolve, _) => {

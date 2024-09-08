@@ -216,7 +216,7 @@ const closeModal = () => {
     </div>
     <!-- CTA -->
 
-    <Modal :is-modal-open="modalOpen" :background="true">
+    <Modal :is-modal-open="modalOpen" :background="true" :auto-width="true">
       <div>
         <span class="close" @click="closeModal">&times;</span>
         <div v-if="!showSecondModalContent">

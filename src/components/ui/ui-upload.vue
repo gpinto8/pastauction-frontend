@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 const emit = defineEmits<{
-  (e: "change", value: any): void;
-  (e: "delete"): void;
+  (e: 'change', value: any): void;
+  (e: 'delete'): void;
 }>();
 
 interface Props {
@@ -11,41 +11,45 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const preview = ref<any>("");
+const preview = ref<any>('');
 
 const onupload = (e: any) => {
   let reader = new FileReader();
 
-  reader.onload = (e) => {
+  reader.onload = e => {
     preview.value = e?.target?.result;
   };
   reader.readAsDataURL(e.target.files[0]);
-  emit("change", e.target.files[0]);
+  emit('change', e.target.files[0]);
 };
 </script>
 <template>
   <div class="text-center mx-auto">
     <div
       v-if="preview || profileImg"
-      class="relative w-28 h-28 shadow-xl text-center flex rounded-md flex-col items-center justify-center mx-auto"
+      class="relative w-28 h-28 shadow-xl text-center flex rounded-[6px] flex-col items-center justify-center mx-auto"
     >
       <img v-if="preview" :src="preview" class="rounded-md" />
       <img v-if="profileImg" :src="profileImg" class="rounded-md" />
-      <img
-        class="absolute bg-blue-500 w-6 h-6 p-1 rounded-full right-[-5px] bottom-[-5px] cursor-pointer"
-        src="@/assets/icons/trash.svg"
-        @click="
-          () => {
-            preview = '';
-            $emit('delete');
-          }
-        "
-      />
+      <div
+        class="absolute bg-blue-500 w-6 h-6 rounded-full right-[-5px] bottom-[-5px] cursor-pointer flex justify-center items-center"
+      >
+        <img
+          class="invert"
+          src="@/assets/icons/trash.svg"
+          @click="
+            () => {
+              preview = '';
+              $emit('delete');
+            }
+          "
+        />
+      </div>
     </div>
 
     <label v-else class="cursor-pointer mt-6">
       <div
-        class="w-28 h-28 shadow-lg p-4 rounded-md text-center flex flex-col items-center space-y-2 justify-center mx-auto"
+        class="w-28 h-28 shadow-lg p-4 rounded-md text-center flex flex-col items-center space-y-2 justify-center mx-auto bg-[#F8F9FA]"
       >
         <svg
           width="14"
@@ -78,7 +82,9 @@ const onupload = (e: any) => {
         accept="image/*"
         @change="onupload"
       />
-      <small class="text-gray-500">Select your profile image</small>
     </label>
+    <small class="text-gray-500 block mt-[8px]">
+      Select your profile image
+    </small>
   </div>
 </template>

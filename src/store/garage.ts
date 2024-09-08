@@ -6,6 +6,15 @@ import router from '../router';
 
 import { httpPost, httpGet } from '@/api/api';
 
+export type Garage = {
+  photo: string
+  name: string
+  description: string
+  country: string
+  id: number
+  vehicle_capacity: number
+}
+
 export const useGarageStore = defineStore('garage', () => {
   // state
   const list = ref();
@@ -54,22 +63,46 @@ export const useGarageStore = defineStore('garage', () => {
     });
   }
 
+  async function getById (
+    id: string,
+  ): Promise<Garage> {
+    loadingListItems.value = true
+
+    return httpGet(`garage_set/query?search=id:${id}`)
+      .then(({ data }) => {
+        const [item] = data.items
+        return item
+      })
+      .finally(() => {
+        loadingListItems.value = false
+      })
+  }
+
   async function create(item: any) {
     console.log('create item', item);
 
     loading.value = true;
-    return await new Promise((resolve, reject) => {
-      httpPost('garage_set/create', item)
-        .then(({ data }) => {
-          console.log(data);
-          loading.value = false;
-          resolve(data);
-        })
-        .catch((err: any) => {
-          loading.value = false;
-          reject(err);
-        });
-    });
+    return httpPost('garage_set/create', item)
+      .finally(() => {
+        loading.value = false;
+      })
+  }
+
+  async function upsert(item: any) {
+    if (item.id) {
+      return update(item);
+    }
+    return create(item);
+  }
+
+  async function update(item: any) {
+    console.log('edit item', item);
+
+    loading.value = true;
+    return httpPost('garage_set/update', item)
+      .finally(() => {
+        loading.value = false;
+      })
   }
 
   async function fetchDetail(id: number) {
@@ -231,10 +264,12 @@ export const useGarageStore = defineStore('garage', () => {
     getListItems,
     getlLoadingListItems,
     getSocialRumorsDetails,
-
+    getById,
     // actions
     listPaginated,
     create,
+    update,
+    upsert,
     fetchDetail,
     garageView,
     socialMediaRumors,
