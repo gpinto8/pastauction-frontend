@@ -51,6 +51,9 @@ export default defineConfig(({ command, mode }): UserConfig => {
     ],
     // https://vitejs.dev/config/server-options.html
     server: {
+      hmr: {
+        overlay: false,
+      },
       fs: {
         // Allow serving files from one level up to the project root
         allow: ['..'],

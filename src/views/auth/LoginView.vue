@@ -25,9 +25,9 @@ const submit = () => {
   </div>
 
   <div class="login_social_main_box">
-    <div class="login_social_box"><img src="@/assets/images/google.png" alt="Google"></div>
-    <div class="login_social_box x_logo"><img src="@/assets/icons/twitterLogo.svg" alt="Google"></div>
-    <div class="login_social_box fb_logo"><img src="@/assets/icons/facebookLogo.svg" alt="Google"></div>
+    <a href="https://pastauction.com/api/v1/login/google" class="login_social_box"><img src="@/assets/images/google.png" alt="Google"></a>
+    <a href="https://pastauction.com/api/v1/login/twitter" class="login_social_box x_logo"><img src="@/assets/icons/twitterLogo.svg" alt="X"></a>
+    <a href="#" class="login_social_box fb_logo"><img src="@/assets/icons/facebookLogo.svg" alt="facebook"></a>
   </div>
 
 
@@ -72,6 +72,7 @@ const submit = () => {
       background: #fff;
       width: 30%;
       cursor: pointer;
+      outline: none;
       border: 1px solid #E0E0E9;
       padding: 12px;
       border-radius: 8px;
