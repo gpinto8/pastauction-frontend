@@ -61,6 +61,7 @@
     "vue-gallery-slideshow": "^1.5.2",
     "vue-router": "^4.2.4",
     "vuetify": "^3.3.12",
+    "vuex": "^4.1.0",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
@@ -133,6 +134,6 @@
     "yaml": "^2.2.2"
   },
   "stackblitz": {
-    "startCommand": "yarn run test:unit"
+    "startCommand": "pnpm run test:unit"
   }
 }

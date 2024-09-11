@@ -1,9 +1,73 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
+import { onMounted , ref } from 'vue';
+import { useStore } from 'vuex';
 import AppIcon from '@/components/common/AppIcon.vue';
+import axios, { type AxiosResponse } from 'axios';
+
+
+interface WalletBalance {
+  balance: number;
+}
 
 const tab = ref(null);
+const creditsAvailable = ref(NaN)
+const store = useStore()
+const authToken = ref(window.localStorage.getItem('past_token'));
+const myGarage = ref(null)
+
+
+onMounted(async () => {
+    try {
+      const [response] = await Promise.all([axios.get('https://pastauction.com/api/v1/bidwatcher_wallet_balance/query', {
+        headers: {
+          'authorization': 'Bearer '+authToken.value,
+          'Content-Type': 'application/json'
+
+        }
+      })]);
+
+    // Assuming the response has a 'balance' field
+    creditsAvailable.value = response.data.balance_tokens;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error(error);
+    } else {
+      // Non-Axios error handling
+      console.error('Unexpected error:', error);
+    }
+  }
+
+
+
+  // GARAGE REQUEST
+
+  try {
+   // console.log("Ciao")
+
+      const [response] = await Promise.all([axios.get('https://pastauction.com/api/v1/garage_set/query', {
+        data: {
+          page: 1,
+          size: 50
+        },
+        headers: {
+          'authorization': 'Bearer '+authToken.value,
+          'Content-Type': 'application/json'
+        },
+      })]);
+
+    myGarage.value = response.data
+    // Assuming the response has a 'balance' field
+    // Assuming the response has a 'balance' field
+    // creditsAvailable.value = response.data.balance_tokens;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error(error);
+    } else {
+      // Non-Axios error handling
+      console.error('Unexpected error:', error);
+    }
+  }
+});
 
 </script>
 
@@ -191,7 +255,7 @@ const tab = ref(null);
         <small class="font-medium">Available credit in my wallet</small>
 
         <app-icon type="credits" class="mx-auto !w-[60px]" />
-        <small class="text-grey">20 credit</small>
+        <small class="text-grey">{{creditsAvailable}} credit</small>
         <div>
           <v-btn
             color="#212529"
@@ -210,7 +274,7 @@ const tab = ref(null);
       </v-tabs>
       <v-window v-model="tab">
         <v-window-item v-for="n in 3" :key="n" :value="n">
-          <v-container fluid>
+          <v-container fluid v-if="tab === 1 && myGarage.total === 0">
             <div class="card space-y-4 text-center">
               <div class="text-grey">You don't have any Garage yet.</div>
               <div>
