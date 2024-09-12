@@ -46,6 +46,41 @@ function setOrder(item: Order) {
     </v-overlay>
 
     <template v-if="!store.getListItems?.items?.length">
+
+
+<!--
+      <div class="top_on_box">
+
+      <div class="black_box">
+        <div class="top_up_info" v-if="true">
+          <div class="complete_info_box">
+            <div class="close_box">X</div>
+            <div class="complete_head_info_box">
+              <div class="person_box_in_complete">
+                <img class="person_icon_complete_info_box" src="@/assets/icons/person_circle.png" alt="Person">
+              </div>
+              <h3 class="headtext_of_complete">Finish completing your information.</h3>
+              <span class="bodytext_of_complete">
+              Complete your account information to discover the benefits of Past Auction.
+            </span>
+              <div class="action_box_in_topup_complete">
+                <div class="btnbox_in_topup_complete">
+                  <button id="cancel">Cancel</button>
+                  <button id="complete"> Complete profile</button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+-->
+
+
+
+
       <div class="text-center my-10">
         <div class="text-3xl font-medium mb-3">Welcome to the garage area</div>
         <span class="text-grey">
@@ -181,3 +216,4 @@ function setOrder(item: Order) {
     <GarageList :order="order" />
   </v-container>
 </template>
+

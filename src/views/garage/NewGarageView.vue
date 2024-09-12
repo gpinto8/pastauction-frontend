@@ -13,6 +13,10 @@ import Button from '@/components/common/button.vue';
 import { onBeforeMount } from 'vue';
 import { computed } from 'vue';
 
+// Preview
+
+
+
 /** Router */
 const router = useRouter();
 const snackbar = ref({
@@ -128,6 +132,7 @@ const uploadImage = (e: any) => {
   photo.value = e.target.files[0];
   file2Base64(e.target.files[0]).then(res => {
     console.log(res);
+    garage.value.photo = res;
     photoPreview.value = res;
   });
 };

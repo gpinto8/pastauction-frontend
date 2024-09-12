@@ -13,7 +13,12 @@ const tab = ref(null);
 const creditsAvailable = ref(NaN)
 const store = useStore()
 const authToken = ref(window.localStorage.getItem('past_token'));
-const myGarage = ref(null)
+const myGarage = ref({
+  total: 0 ,
+  items: [
+    {"name":"Garage di test","description":"","country":"Italy","vehicle_capacity":5,"id":410,"photo":null}
+  ]
+})
 
 
 onMounted(async () => {
@@ -74,7 +79,7 @@ onMounted(async () => {
 
 <template>
   <div class="top_on_box" v-if="false">
-    <div class="black_box" >
+    <div class="top_on_box" >
       <div class="top_up_info" v-if="false">
         <div class="complete_info_box">
           <div class="close_box">X</div>
@@ -268,13 +273,15 @@ onMounted(async () => {
     </div>
     <div>
       <v-tabs v-model="tab" color="blue" align-tabs="start">
-        <v-tab :value="1">Garage (0)</v-tab>
+        <v-tab :value="1">Garage ({{myGarage.total}})</v-tab>
         <v-tab :value="2">Locate (0)</v-tab>
         <v-tab :value="3">Charts (0)</v-tab>
       </v-tabs>
       <v-window v-model="tab">
         <v-window-item v-for="n in 3" :key="n" :value="n">
-          <v-container fluid v-if="tab === 1 && myGarage.total === 0">
+          <v-container fluid
+                       v-if="tab === 1 && myGarage.total === 0"
+          >
             <div class="card space-y-4 text-center">
               <div class="text-grey">You don't have any Garage yet.</div>
               <div>
@@ -287,6 +294,28 @@ onMounted(async () => {
               </div>
             </div>
           </v-container>
+          <div v-else-if="tab === 1 " class="garage_items_list_main_box">
+            <div class="garage_items">
+              <a class="garage_item" v-for="item in myGarage.items">
+                <div class="garage_image">
+                  <img :src="item.photo" alt="">
+                </div>
+                <div class="garage_data">
+                  <div class="garage_title">
+                    {{item.name}}
+                  </div>
+                  <div class="garage_desc">
+                    hello my name is is
+                    {{item.description}}
+                  </div>
+                  <div class="garage_counting">
+                    <ul class="counting_gar">                    Number of vehicles:
+                      <li>{{item.vehicle_capacity}}</li></ul>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
         </v-window-item>
       </v-window>
     </div>
@@ -445,4 +474,58 @@ onMounted(async () => {
   }
 }
 
+.garage_items {
+  margin-top: 30px;
+  display: flex;
+  .garage_item {
+    background-color: #fff;
+    width: 30%;
+    margin: 0 2%;
+    border-radius: 8px;
+    overflow: hidden;
+    .garage_data {
+      padding: 30px 15px 20px;
+      .garage_desc {
+        font-size: 14px;
+        line-height: 24px;
+        text-align: left;
+        margin: 10px auto 13px;
+      }
+      .garage_title {
+        font-family: Inter;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px;
+        text-align: left;
+      }
+      .garage_counting {
+        font-family: Inter;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px;
+        text-align: left;
+        .counting_gar {
+          list-style: circle;
+          li {
+            display: inline;
+
+            display: inline;
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 24px;
+            text-align: left;
+          }
+        }
+      }
+    }
+    .garage_image {
+      height: 200px;
+      img {
+        max-height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
 </style>
