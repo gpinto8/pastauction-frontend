@@ -10,8 +10,9 @@ interface WalletBalance {
 }
 
 const tab = ref(null);
-const creditsAvailable = ref(NaN)
 const store = useStore()
+
+const creditsAvailable = ref(NaN)
 const authToken = ref(window.localStorage.getItem('past_token'));
 const myGarage = ref({
   total: 0 ,

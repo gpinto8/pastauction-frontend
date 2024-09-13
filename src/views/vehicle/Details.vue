@@ -13,6 +13,14 @@
       variant="outlined"
       density="compact"
     />
+    <v-radio-group
+      label="KM OR MILE"
+      inline
+    >
+      <v-radio label="KM" value="km" />
+      <v-radio label="Miles" value="mile" />
+    </v-radio-group>
+
     <div class="col-span-2">
       <v-radio-group
         v-model="vehicle.original_miles"

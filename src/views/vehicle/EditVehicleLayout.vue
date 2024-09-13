@@ -100,11 +100,11 @@ function submit() {
 }
 
 function next() {
-  console.log(formRef, vehicleStore.vehicle);
-  if (!formRef.value?.checkValidity()) {
-    formRef.value?.reportValidity();
-    return;
-  }
+    // console.log(formRef, vehicleStore.vehicle);
+    // if (!formRef.value?.checkValidity()) {
+    //   formRef.value?.reportValidity();
+    //   return;
+    // }
 
   const to = match(route.path.split('/').pop())
     .with('overview', () => 'details')

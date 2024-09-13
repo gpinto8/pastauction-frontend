@@ -303,6 +303,7 @@ const router = createRouter({
                 await import(
                     /* webpackChunkName: "Services" */ '@/views/entity/services/Services'
                 ),
+
             },
             {
               path: '/entity/events',

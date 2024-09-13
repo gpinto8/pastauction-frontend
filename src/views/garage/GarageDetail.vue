@@ -13,6 +13,7 @@ import { MediaStore } from '@/lib/media-store';
 import AppIcon from '@/components/common/AppIcon.vue';
 import { onBeforeMount } from 'vue';
 import Button from '@/components/common/button.vue';
+import axios from 'axios';
 
 const router = useRouter();
 const route = useRoute();
@@ -22,6 +23,8 @@ const garageStore = useGarageStore();
 const vehicleStore = useVehicleStore();
 const generalStore = useGeneralStore();
 
+// const ve = ref(NaN)
+const authToken = ref(window.localStorage.getItem('past_token'));
 const garage = ref<Garage | null>(null);
 const loading = ref(false);
 const mediaStore = new MediaStore();
@@ -87,6 +90,34 @@ onBeforeMount(async () => {
   });
 
   garage.value = _garage;
+
+
+  //
+  // try {
+  //   const [response] = await Promise.all([axios.delete(
+  //     'https://pastauction.com/api/v1/garage/garage_vehicle/',
+  //     {
+  //     headers: {
+  //       'authorization': 'Bearer '+authToken.value,
+  //       'Content-Type': 'application/json'
+  //
+  //     }
+  //   })]);
+  //
+  //   // Assuming the response has a 'balance' field
+  //   creditsAvailable.value = response.data.balance_tokens;
+  // } catch (error: any) {
+  //   if (axios.isAxiosError(error)) {
+  //     console.error(error);
+  //   } else {
+  //     // Non-Axios error handling
+  //     console.error('Unexpected error:', error);
+  //   }
+  // }
+
+
+
+
 });
 </script>
 
@@ -281,6 +312,7 @@ onBeforeMount(async () => {
             <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
               <template #append>
                 <v-btn
+                  @click="router.push('/garage/detail/' + garage.id +'/vehicle/' + item.id + '/edit')"
                   class="text-none font-normal bg-[#F2F2F2] mr-2"
                   icon
                   size="x-small"

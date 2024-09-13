@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div :class="gridLayout">
-      <Photo v-for="i in 9" :big="i == 1"></Photo>
-    </div>
+      <div :class="gridLayout">
+        <Photo
+          v-for="i in 9" :big="i == 1"
+
+        ></Photo>
+      </div>
 
     <div class="flex justify-end mt-4">
       <div class="flex items-center blue">

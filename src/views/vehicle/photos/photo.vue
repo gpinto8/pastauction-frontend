@@ -5,6 +5,7 @@
     :class="{ 'sm:col-span-2 sm:row-span-2 h-full': big, ...classes }"
   >
     <label
+      v-if="!uploadedImg"
       for="dropzone-file"
       class="h-full w-full flex items-center justify-center"
     >
@@ -17,17 +18,27 @@
         type="file"
         class="hidden"
         accept="image/*"
-        @change="$emit('uploadImage', $event)"
+        @change="uploadImageToggle()"
       />
     </label>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue';
+import { ref } from 'vue';
 
-defineEmits(['uploadImage']);
+const theFile = ref();
+const emit = defineEmits(['uploadImage']);
 defineProps<{ big?: boolean; classes?: Record<string, boolean> }>();
+const uploadedImg = ref(false);
+function uploadImageToggle(){
+  emit("uploadImage")
+  uploadedImg.value = !uploadedImg.value
+
+}
+
 </script>
 
 <style lang="scss" scoped>
