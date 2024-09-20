@@ -37,6 +37,7 @@ function uploadImageToggle(){
   emit("uploadImage")
   uploadedImg.value = !uploadedImg.value
 
+
 }
 
 </script>

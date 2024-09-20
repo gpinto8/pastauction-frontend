@@ -3,6 +3,7 @@
       <div :class="gridLayout">
         <Photo
           v-for="i in 9" :big="i == 1"
+          :id="store.vehicle.id"
 
         ></Photo>
       </div>

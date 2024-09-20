@@ -91,6 +91,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
     console.log('create item', item)
     loading.value = true
     const { data } = await httpPost('garage_vehicle/create', item).finally(() => loading.value = false)
+
     return data
   }
 

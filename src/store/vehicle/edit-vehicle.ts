@@ -65,17 +65,23 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       if (store.loading.submit) return
 
       store.loading.submit = true
-      return match(store.vehicle.value.id)
-        .with('new', () => {
+      // return match(store.vehicle.value.id)
+        // .with('new', () => {
+
           const payload = {
             ...store.vehicle.value,
           }
           delete payload.id
+          const addingvehicle = vehicleStore.create(payload).then((result) => {
+            store.vehicle.value.id = result.id
+          })
+          // console.log(addingvehicle.)
+          // store.vehicle.value.id = addingvehicle.id
+          return addingvehicle
 
-          return vehicleStore.create(payload)
-        })
-        .otherwise(() => vehicleStore.update(store.vehicle.value))
-        .finally(() => store.loading.submit = false)
+        // })
+        // .otherwise(() => vehicleStore.update(store.vehicle.value))
+        // .finally(() => store.loading.submit = false)
     },
 
     async fetchInitialData () {
