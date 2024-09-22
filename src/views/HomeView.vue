@@ -481,7 +481,7 @@ onMounted(async () => {
   display: flex;
   .garage_item {
     background-color: #fff;
-    width: 30%;
+    min-width: 30%;
     margin: 0 2%;
     border-radius: 8px;
     overflow: hidden;
