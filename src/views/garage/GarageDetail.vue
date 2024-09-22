@@ -66,8 +66,30 @@ const services = [
   },
 ];
 
+
+
 /** Methods */
+
+ async function deleteGarageVehicle (vehicleId : number, index : number) {
+   vehicleStore.getListItems.items.splice(index, 1);
+  const apiUrl = "https://pastauction.com/api/v1/garage/garage_vehicle/" + vehicleId
+  const authToken = window.localStorage.getItem('past_token')
+  try {
+    const response =  await axios.delete(apiUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer '+authToken,
+      },
+    });
+    return true;
+
+  }catch (error) {
+    return false;
+  }
+};
+
 onBeforeMount(async () => {
+
   const promise = Promise.all([
     garageStore.getById(route.params.id.toString()),
     vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id }),
@@ -114,6 +136,10 @@ onBeforeMount(async () => {
   //     console.error('Unexpected error:', error);
   //   }
   // }
+
+
+
+
 
 
 
@@ -296,7 +322,7 @@ onBeforeMount(async () => {
       >
         <v-card
           variant="flat"
-          v-for="item in vehicleStore.getListItems?.items"
+          v-for="(item , index) in vehicleStore.getListItems?.items"
           :key="item.id"
           class="rounded-[9px] card-shadow"
         >
@@ -310,9 +336,9 @@ onBeforeMount(async () => {
             class="text-white"
           >
             <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
-              <template #append>
+<!--              <template #append>-->
                 <v-btn
-                  @click="router.push('/garage/detail/' + garage.id +'/vehicle/' + item.id + '/edit')"
+                  @click="router.push('/garage/detail/' + garage?.id +'/vehicle/' + item.id + '/edit')"
                   class="text-none font-normal bg-[#F2F2F2] mr-2"
                   icon
                   size="x-small"
@@ -322,11 +348,13 @@ onBeforeMount(async () => {
                 <v-btn
                   class="text-none font-normal bg-[#F2F2F2]"
                   icon
+                  @click="deleteGarageVehicle(item.id , index)"
+
                   size="x-small"
                 >
                   <app-icon type="trash" class="ml-2.5" />
                 </v-btn>
-              </template>
+<!--              </template>-->
             </v-toolbar>
           </v-img>
 

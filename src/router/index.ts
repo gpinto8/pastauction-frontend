@@ -212,39 +212,39 @@ const router = createRouter({
           meta: { authentication: true }
 
         },
-        {
-          path: '/charts',
-          name: 'Charts',
-          component: async () =>
-            await import(
-              /* webpackChunkName: "Charts" */ '@/views/charts/index.vue'
-            ),
-          meta: { authentication: true }
-        },
-        {
-          path: '/charts/filters',
-          name: 'Filters',
-          component: async () =>
-            await import(
-          /* webpackChunkName: "FiltersPage" */ '@/views/charts/FiltersPage.vue'
-            )
-        },
-        {
-          path: '/charts/filters/brand',
-          name: 'Brand',
-          component: async () =>
-            await import(
-          /* webpackChunkName: "BrandPage" */ '@/views/charts/BrandPage.vue'
-            )
-        },
-        {
-          path: '/charts/filters/brand/preview',
-          name: 'Preview',
-          component: async () =>
-            await import(
-              /* webpackChunkName: "PreviewPage" */ '@/views/charts/PreviewPage.vue'
-            ),
-        },
+        // {
+        //   path: '/charts',
+        //   name: 'Charts',
+        //   component: async () =>
+        //     await import(
+        //       /* webpackChunkName: "Charts" */ '@/views/charts/index.vue'
+        //     ),
+        //   meta: { authentication: true }
+        // },
+        // {
+        //   path: '/charts/filters',
+        //   name: 'Filters',
+        //   component: async () =>
+        //     await import(
+        //   /* webpackChunkName: "FiltersPage" */ '@/views/charts/FiltersPage.vue'
+        //     )
+        // },
+        // {
+        //   path: '/charts/filters/brand',
+        //   name: 'Brand',
+        //   component: async () =>
+        //     await import(
+        //   /* webpackChunkName: "BrandPage" */ '@/views/charts/BrandPage.vue'
+        //     )
+        // },
+        // {
+        //   path: '/charts/filters/brand/preview',
+        //   name: 'Preview',
+        //   component: async () =>
+        //     await import(
+        //       /* webpackChunkName: "PreviewPage" */ '@/views/charts/PreviewPage.vue'
+        //     ),
+        // },
         {
           path: '/locate',
           name: 'Locate',

@@ -2,7 +2,8 @@
 
 import InfiniteSlider from '@/components/common/InfiniteSlider.vue'
 import { desaturatedBrandLogoUrl, extractBrandId, type BrandInfo } from '@/api/landingPage/landingPage';
-import { BRANDS_UNVEILED } from '@/router';
+// import { BRANDS_UNVEILED } from '@/router';
+import BRANDS_UNVEILED from '@/api/landingPage/brands/BRANDS_UNVEILED';
 
 const props = defineProps<{
     brands: BrandInfo[]
@@ -24,7 +25,8 @@ const props = defineProps<{
         </InfiniteSlider>
 
         <div class="flex justify-end px-32 w-full">
-            <RouterLink :to="{ name: BRANDS_UNVEILED }"
+            <RouterLink
+              :to="{ name: BRANDS_UNVEILED }"
                 class="text-xl px-5 py-2 border-solid text-yellow-300 border-yellow-300 border-2">
                 MORE BRANDS
             </RouterLink>

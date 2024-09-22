@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, mergeProps } from 'vue';
+import { ref, mergeProps, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useGarageStore } from '@/store/garage';
 
@@ -8,10 +8,14 @@ import { useGeneralStore } from '@/store/datas/general';
 /** Components */
 import AppIcon from '@/components/common/AppIcon.vue';
 import GarageList from './GarageList.vue';
+import axios from 'axios';
 
 /** Store */
+const authToken = ref(window.localStorage.getItem('past_token'));
+
 const store = useGarageStore();
 const generalStore = useGeneralStore();
+const creditsAvailable = ref(0)
 
 /** Router */
 const router = useRouter();
@@ -27,9 +31,34 @@ const orders = [
 const order = ref<Record<string, string>>(orders[0].value);
 
 /** Methods */
+
+
 function setOrder(item: Order) {
   order.value = item.value;
 }
+
+onMounted(async () => {
+  try {
+    const [response] = await Promise.all([axios.get('https://pastauction.com/api/v1/bidwatcher_wallet_balance/query', {
+      headers: {
+        'authorization': 'Bearer ' + authToken.value,
+        'Content-Type': 'application/json'
+
+      }
+    })]);
+
+    // Assuming the response has a 'balance' field
+    creditsAvailable.value = response.data.balance_tokens;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error(error);
+    } else {
+      // Non-Axios error handling
+      console.error('Unexpected error:', error);
+    }
+  }
+})
+
 </script>
 
 <template>
@@ -163,7 +192,7 @@ function setOrder(item: Order) {
           <small class="font-medium">Available credit in my wallet</small>
 
           <app-icon type="credits" class="mx-auto !w-[60px]" />
-          <small class="text-grey">20 credit</small>
+          <small class="text-grey">{{creditsAvailable}} credit</small>
           <div>
             <v-btn
               color="#212529"

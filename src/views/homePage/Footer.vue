@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppIcon from '@/components/common/AppIcon.vue';
-import { TEAM } from '@/router';
+import TEAM from '@/components/common/Team.vue';
 import { ref } from 'vue';
 
 const email = ref('')

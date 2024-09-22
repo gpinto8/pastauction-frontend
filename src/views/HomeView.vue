@@ -299,7 +299,8 @@ onMounted(async () => {
             <div class="garage_items">
               <a class="garage_item" v-for="item in myGarage.items">
                 <div class="garage_image">
-                  <img :src="item.photo" alt="">
+                  <img :src="item.photo !== null ? item.photo : ''" alt="">
+
                 </div>
                 <div class="garage_data">
                   <div class="garage_title">
