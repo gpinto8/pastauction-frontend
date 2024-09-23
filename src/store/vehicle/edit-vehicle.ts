@@ -12,11 +12,11 @@ export function mockVehicle (): Vehicle {
     "purchase_value": 0,
     "garage_set_id": "0",
     "garage_choice": "",
-    "id_brand": 4855,
-    "id_family": 134213,
-    "model_id": 185437,
+    "id_brand": 0,
+    "id_family": 0,
+    "model_id": 0,
     "location_id": "ITA",
-    "body_id": 1,
+    "body_id": 0,
     "exterior_color_id": 0,
     "interior_color_id": 0,
     "interior_type": "",
@@ -47,6 +47,7 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
   const vehicleStore = useVehicleStore()
 
   const store = {
+
     brands: ref<Array<Entry>>([]),
     families: ref<Array<Entry>>([]),
     models: ref<Array<Entry>>([]),
@@ -59,8 +60,10 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       bodies: false,
       countries: false,
       submit: false,
+      done: false
     }),
     vehicle: ref<Vehicle>(mockVehicle()),
+
     async submit () {
       if (store.loading.submit) return
 
@@ -101,6 +104,9 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
     },
     // ---
     brandSearch$: new Subject<string>(),
+    done (){
+      store.loading.done = true
+    },
     async searchBrands (search: string) {
       store.brandSearch$.next(search)
     },

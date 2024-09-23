@@ -25,10 +25,10 @@
       classes="min-w-[250px]"
       @click="next"
       variant="black"
-      :loading="vehicleStore.loading.submit"
+      :loading="vehicleStore.loading.done"
     >
 <!--      {{}}-->
-      {{ nextButtonLabel }}
+      {{nextButtonLabel}}
     </Button>
   </div>
   <v-snackbar
@@ -91,8 +91,8 @@ function submit() {
   vehicleStore
     .submit()
     .then(() => {
-      // console.log(vehicleStore)
-      // router.push(`/garage/detail/${route.params.garageId}`);
+      console.log(vehicleStore)
+      router.push(`/garage/detail/${route.params.garageId}`);
     })
     .catch(error => {
       snackbar.value.show = true;
@@ -102,16 +102,12 @@ function submit() {
 }
 
 function next() {
-    // console.log(formRef, vehicleStore.vehicle);
-    // if (!formRef.value?.checkValidity()) {
-    //   formRef.value?.reportValidity();
-    //   return;
-    // }
 
   if(route.name === "Details"){
+    alert("DONE");
     submit();
-
   }
+
   const to = match(route.path.split('/').pop())
     .with('overview', () => 'details')
     .with('details', () => 'photos')
@@ -127,13 +123,13 @@ function next() {
 function back() {
   const to = match(route.path.split('/').pop())
     .with('details', () => 'overview')
-    .with('photos', () => 'details')
-    .with('submit', () => 'photos')
+    .with('photos', () => 'overview')
+    .with('submit', () => 'details')
     .otherwise(() => null);
 
-  // if (to) {
-  //   return router.push(to);
-  // }
+  if (to) {
+    return router.push(to);
+  }
 
   router.push(`/garage/detail/${route.params.garageId}`);
 }

@@ -135,7 +135,7 @@ onMounted(async () => {
       <div class="text-center my-10">
         <div class="text-3xl font-medium mb-3">My garage</div>
       </div>
-      <div class="grid grid-cols-3 gap-10 mb-[32px]">
+      <div class="mainnevbox grid grid-cols-3 gap-10 mb-[32px]">
         <div class="col-span-3 lg:col-span-2">
           <div class="card">
             <div class="flex justify-between flex-wrap gap-3">
@@ -242,7 +242,14 @@ onMounted(async () => {
         Vehicles ({{ store.getListItems?.total || 0 }})
       </div>
     </template>
-    <GarageList :order="order" />
+    <GarageList :overviewrder="order" />
   </v-container>
 </template>
 
+<style>
+@media screen and (max-width: 900px) {
+  .mainnevbox {
+    display: block;
+  }
+}
+</style>
