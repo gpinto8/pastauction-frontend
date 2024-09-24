@@ -37,7 +37,7 @@ import { boolean, number, string } from 'ts-pattern/dist/patterns';
 const theFile = ref();
 interface Props {
   idnum: any,
-  big?: boolean,
+  big?: any,
   classes?: any
 }
 

@@ -8,6 +8,8 @@
 
       <div class="grid lg:grid-cols-6 gap-[20px]">
         <Photo
+          :idnum="store.vehicle.id"
+
           v-for="i in 5"
           :big="i == 1"
           :classes="{
@@ -48,7 +50,10 @@
         <div>Edit</div>
       </div>
       <div :class="gridLayout">
-        <Photo v-for="i in 6" />
+        <Photo
+          :idnum="store.vehicle.id"
+
+          v-for="i in 6" />
       </div>
     </div>
 
@@ -58,7 +63,9 @@
         <div>Edit</div>
       </div>
       <div :class="gridLayout">
-        <Photo v-for="i in 6" />
+        <Photo v-for="i in 6"
+               :idnum="store.vehicle.id"
+        />
       </div>
     </div>
   </div>
