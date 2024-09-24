@@ -29,32 +29,65 @@
         variant="outlined"
         density="compact"
         :items="years"
+        @update:search="store.searchBrands"
       />
-      <v-autocomplete
+      <span class="position-relative">
+        <div class="title-of-select">Brand</div>
+      <select
+        class="selectBox"
         required
         v-model="vehicle.id_brand"
-        :items="store.brands || []"
-        @update:search="store.searchBrands"
-        :loading="store.loading.brands"
-        label="Make"
-        item-value="id"
-        item-title="name"
-        variant="outlined"
-        density="compact"
-      />
+        name="selectBrand"
+      >
+
+        <option
+          @select="store.searchFamilies"
+          v-for="itemB in store.brands" :value="itemB.id">{{itemB.name}}</option>
+      </select></span>
+
+
+<!--        <v-autocomplete-->
+<!--        @upda-->
+<!--          required-->
+<!--        @update:search="store.searchBrands"-->
+<!--        :items="store.brands"-->
+<!--        :loading="store.loading.brands"-->
+<!--        label="Make"-->
+<!--        item-title="name"-->
+<!--        item-value="name"-->
+<!--        variant="outlined"-->
+<!--        density="compact"-->
+<!--      />-->
       <!-- {{ store.families }} -->
-      <v-autocomplete
+<!--      <v-select-->
+<!--        required-->
+<!--        v-model="vehicle.id_family"-->
+
+<!--        :items="store.families || []"-->
+<!--        @update:search="store.searchFamilies"-->
+<!--        @update:focused="store.searchFamilies"-->
+
+<!--        :loading="store.loading.families"-->
+<!--        item-value="id"-->
+<!--        item-title="name"-->
+<!--        label="Family"-->
+<!--        variant="outlined"-->
+<!--        density="compact"-->
+<!--      />-->
+      <span class="position-relative"
+            @click="store.searchFamilies(null)"
+
+      >
+        <div class="title-of-select">Family</div>
+      <select
+        class="selectBox"
         required
         v-model="vehicle.id_family"
-        :items="store.families || []"
         @update:search="store.searchFamilies"
-        :loading="store.loading.families"
-        item-value="id"
-        item-title="name"
-        label="Family"
-        variant="outlined"
-        density="compact"
-      />
+      >
+        <option v-for="itemB in store .families" :value="itemB.id">{{itemB.name}}</option>
+      </select></span>
+
       <v-autocomplete
         v-model="vehicle.model_id"
         :items="store.models"
@@ -223,7 +256,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useMaisonVehicleStore } from '@/store/datas/masionVehicle';
 import { type Vehicle } from '@/store/vehicle/vehicle';
@@ -239,8 +272,28 @@ const years = (() => {
   const from = 1800;
   const to = new Date().getFullYear();
 
+
   return Array.from({ length: to - from + 1 }, (_, i) => to - i);
 })();
+
+console.log(store.brands)
 </script>
 
-<style scoped></style>
+<style scoped>
+.selectBox {
+  border: 1px solid #9a9a9a;
+  padding: 10px 10px;
+  height: 45px;
+  border-radius: 4px;
+  width: 100%;
+}
+.title-of-select {
+  background-color: #F8F9FA;
+  position: absolute;
+  top: -11px;
+  left: 9px;
+  font-size: 14px;
+  color: #888;
+  padding: 0 7px;
+}
+</style>

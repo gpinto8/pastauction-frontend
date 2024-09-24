@@ -91,6 +91,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
     console.log('create item', item)
     loading.value = true
     const { data } = await httpPost('garage_vehicle/create', item).finally(() => loading.value = false)
+
     return data
   }
 
@@ -105,7 +106,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
     return 'id' in item ? update(item) : create(item)
   }
 
-  async function filter (tablename?: string, columnName?: string, search?: string, withId: boolean = false) {
+  async function filter(tablename?: string, columnName?: string, search?: unknown, withId: boolean = false) {
     const query: Record<string, any> = {}
     if (search) {
       columnName += `_like:${search}`

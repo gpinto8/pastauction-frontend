@@ -191,7 +191,7 @@ onMounted(async () => {
 
   <v-container class="space-y-10">
     <div class="p-10 pb-0 shadow-lg rounded-lg mt-10">
-      <div class="grid grid-cols-3 gap-10">
+      <div class="mainnevbox grid grid-cols-3 gap-10">
         <div class="col-span-2 space-y-3">
           <span class="text-4xl font-medium">Hi Gianfraco!</span>
           <div>
@@ -299,7 +299,8 @@ onMounted(async () => {
             <div class="garage_items">
               <a class="garage_item" v-for="item in myGarage.items">
                 <div class="garage_image">
-                  <img :src="item.photo" alt="">
+                  <img :src="item.photo !== null ? item.photo : ''" alt="">
+
                 </div>
                 <div class="garage_data">
                   <div class="garage_title">
@@ -480,7 +481,7 @@ onMounted(async () => {
   display: flex;
   .garage_item {
     background-color: #fff;
-    width: 30%;
+    min-width: 30%;
     margin: 0 2%;
     border-radius: 8px;
     overflow: hidden;
@@ -527,6 +528,11 @@ onMounted(async () => {
         width: 100%;
       }
     }
+  }
+}
+@media screen and (max-width: 900px) {
+  .mainnevbox {
+    display: block;
   }
 }
 </style>

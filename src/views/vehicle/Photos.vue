@@ -3,6 +3,7 @@
       <div :class="gridLayout">
         <Photo
           v-for="i in 9" :big="i == 1"
+          :idnum="store.vehicle.id"
 
         ></Photo>
       </div>
@@ -17,7 +18,9 @@
     <div>
       <h2 class="text-lg mb-[16px]">Registration certificate</h2>
       <div :class="gridLayout">
-        <Photo v-for="i in 6" />
+        <Photo v-for="i in 6"
+             :id="store.vehicle.id"
+        />
       </div>
       <div class="flex justify-end mt-4">
         <div class="flex items-center blue">

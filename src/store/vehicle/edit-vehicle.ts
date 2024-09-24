@@ -1,12 +1,14 @@
 // In your vehicleStore.ts
 import { defineStore } from 'pinia'
 import { useVehicleStore, type Vehicle } from './vehicle'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue';
 import { debounceTime, Subject } from 'rxjs'
 import { match } from 'ts-pattern'
 import pinia from '@/store'
 type Entry = { name: string, id: string }
 export function mockVehicle (): Vehicle {
+
+
   return {
     "purchase_year": new Date().getFullYear(),
     "purchase_value": 0,
@@ -65,17 +67,23 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       if (store.loading.submit) return
 
       store.loading.submit = true
-      return match(store.vehicle.value.id)
-        .with('new', () => {
-          const payload = {
-            ...store.vehicle.value,
-          }
-          delete payload.id
+      // return match(store.vehicle.value.id)
+      // .with('new', () => {
 
-          return vehicleStore.create(payload)
-        })
-        .otherwise(() => vehicleStore.update(store.vehicle.value))
-        .finally(() => store.loading.submit = false)
+      const payload = {
+        ...store.vehicle.value,
+      }
+      delete payload.id
+      const addingvehicle = vehicleStore.create(payload).then((result) => {
+        store.vehicle.value.id = result.id
+      })
+      // console.log(addingvehicle.)
+      // store.vehicle.value.id = addingvehicle.id
+      return addingvehicle
+
+      // })
+      // .otherwise(() => vehicleStore.update(store.vehicle.value))
+      // .finally(() => store.loading.submit = false)
     },
 
     async fetchInitialData () {
@@ -116,7 +124,7 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
   )
     .subscribe(async (search) => {
       store.loading.brands = true
-      const { items } = await vehicleStore.filter('bidwatcher_brand', 'name', search).finally(() => store.loading.brands = false)
+      const { items } = await vehicleStore.filter('bidwatcher_brand', 'name', search, true).finally(() => store.loading.brands = false)
       store.brands.value = items
     })
   // ----
