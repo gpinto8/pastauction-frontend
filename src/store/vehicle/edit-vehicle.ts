@@ -1,22 +1,24 @@
 // In your vehicleStore.ts
 import { defineStore } from 'pinia'
 import { useVehicleStore, type Vehicle } from './vehicle'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue';
 import { debounceTime, Subject } from 'rxjs'
 import { match } from 'ts-pattern'
 import pinia from '@/store'
 type Entry = { name: string, id: string }
 export function mockVehicle (): Vehicle {
+
+
   return {
     "purchase_year": new Date().getFullYear(),
     "purchase_value": 0,
     "garage_set_id": "0",
     "garage_choice": "",
-    "id_brand": 0,
-    "id_family": 0,
-    "model_id": 0,
+    "id_brand": 4855,
+    "id_family": 134213,
+    "model_id": 185437,
     "location_id": "ITA",
-    "body_id": 0,
+    "body_id": 1,
     "exterior_color_id": 0,
     "interior_color_id": 0,
     "interior_type": "",
@@ -47,7 +49,6 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
   const vehicleStore = useVehicleStore()
 
   const store = {
-
     brands: ref<Array<Entry>>([]),
     families: ref<Array<Entry>>([]),
     models: ref<Array<Entry>>([]),
@@ -60,31 +61,29 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       bodies: false,
       countries: false,
       submit: false,
-      done: false
     }),
     vehicle: ref<Vehicle>(mockVehicle()),
-
     async submit () {
       if (store.loading.submit) return
 
       store.loading.submit = true
       // return match(store.vehicle.value.id)
-        // .with('new', () => {
+      // .with('new', () => {
 
-          const payload = {
-            ...store.vehicle.value,
-          }
-          delete payload.id
-          const addingvehicle = vehicleStore.create(payload).then((result) => {
-            store.vehicle.value.id = result.id
-          })
-          // console.log(addingvehicle.)
-          // store.vehicle.value.id = addingvehicle.id
-          return addingvehicle
+      const payload = {
+        ...store.vehicle.value,
+      }
+      delete payload.id
+      const addingvehicle = vehicleStore.create(payload).then((result) => {
+        store.vehicle.value.id = result.id
+      })
+      // console.log(addingvehicle.)
+      // store.vehicle.value.id = addingvehicle.id
+      return addingvehicle
 
-        // })
-        // .otherwise(() => vehicleStore.update(store.vehicle.value))
-        // .finally(() => store.loading.submit = false)
+      // })
+      // .otherwise(() => vehicleStore.update(store.vehicle.value))
+      // .finally(() => store.loading.submit = false)
     },
 
     async fetchInitialData () {
@@ -104,9 +103,6 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
     },
     // ---
     brandSearch$: new Subject<string>(),
-    done (){
-      store.loading.done = true
-    },
     async searchBrands (search: string) {
       store.brandSearch$.next(search)
     },
@@ -128,7 +124,7 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
   )
     .subscribe(async (search) => {
       store.loading.brands = true
-      const { items } = await vehicleStore.filter('bidwatcher_brand', 'name', search).finally(() => store.loading.brands = false)
+      const { items } = await vehicleStore.filter('bidwatcher_brand', 'name', search, true).finally(() => store.loading.brands = false)
       store.brands.value = items
     })
   // ----

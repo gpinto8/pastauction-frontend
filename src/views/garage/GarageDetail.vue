@@ -188,7 +188,7 @@ onBeforeMount(async () => {
                 <img
                   class="h-full object-cover"
                   icon="mdi-account-circle"
-                  :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/ITA.jpeg`"
+                  :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/`+garage.country.substring(0 , 3).toUpperCase()+`.jpeg`"
                 />
                 <!-- TODO :src="`https://past-auction-p.s3.amazonaws.com/LogoCountry/${garage.country}.jpeg`" -->
               </v-avatar>
@@ -227,6 +227,7 @@ onBeforeMount(async () => {
 
     <div class="card p-0 min-[1280px]:px-[20px]">
       <swiper
+        class="a_ones_titles"
         :space-between="17"
         wrapper-class="max-[1280px]:pb-[40px] py-[20px]"
         :pagination="{ clickable: true }"
@@ -392,5 +393,11 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .card-shadow {
   box-shadow: 0px 2px 4px 0px #00000013;
+}
+.a_ones_titles a{
+  height: 99px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
