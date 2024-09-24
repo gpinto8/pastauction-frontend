@@ -73,7 +73,7 @@ watch(isMobileAvatarMenuOpen, () => {
 
 const constrainedLayout = computed(() => {
   return match(route.name)
-    .with('Datas', () => false)
+    .with('Datas', 'Vehicle Update', () => false)
     .otherwise(() => true);
 });
 </script>

@@ -93,7 +93,7 @@ const router = createRouter({
           name: 'Vehicle Update',
           component: async () =>
             await import(
-              /* webpackChunkName: "VehicleDetail" */ '@/views/vehicle/updateVehicle.vue'
+              /* webpackChunkName: "VehicleDetail" */ '@/views/update-vehicle/UpdateVehicle.vue'
             ),
           meta: { authentication: true },
         },

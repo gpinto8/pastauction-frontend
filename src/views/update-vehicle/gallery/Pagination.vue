@@ -1,18 +1,25 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-const props = defineProps<{ items: number; maxItems: number }>();
+const props = defineProps<{
+  currentPage: number;
+  totalPages: number;
+  totalImages: number;
+}>();
 
-const emit = defineEmits(['currentPage']);
+const emit = defineEmits(['onPageChanged']);
 
-const pages = computed(() => {
-  const items = Math.ceil(props.items / props.maxItems);
-  return items;
-});
-const currentPage = ref<number>(1);
-const MAX_PAGES = 4; // Including 4
+const currentPage = ref(props.currentPage);
+watch(
+  () => props.currentPage,
+  value => (currentPage.value = value)
+);
 
 const visiblePages = computed(() => {
+  if (props.totalPages === 1) return [1];
+  if (props.totalPages === 2) return [1, 2];
+  if (props.totalPages === 3) return [1, 2, 3];
+
   const currentValue = currentPage.value;
   const firstValue = currentValue - 3 || 1;
   const secondValue = currentValue - 2 || 2;
@@ -25,80 +32,50 @@ const visiblePages = computed(() => {
   return [firstValue, secondValue, thirdValue, currentValue];
 });
 
-console.log({
-  pages,
-  currentPage,
-});
-
-watch(currentPage, value => {
-  console.log({ value });
-  emit('currentPage', value);
-});
-
-// defineExpose({
-//   currentPage,
-// });
-
 const handlePage = (page: number) => {
   currentPage.value = page;
 };
 const handleDots = (control: 'next' | 'prev') => {
-  console.log({ control });
   if (control === 'next') {
-    currentPage.value = pages.value;
+    currentPage.value = props.totalPages;
   } else {
     currentPage.value = 1;
   }
 };
 
 const handleControl = (control: 'next' | 'prev') => {
-  console.log({ control });
-
   const pagesRange = [];
-  pagesRange.length = pages.value;
-  for (let i = 0; i < pages.value; i++) {
+  pagesRange.length = props.totalPages;
+  for (let i = 0; i < props.totalPages; i++) {
     pagesRange[i] = i + 1;
   }
 
   if (control === 'next') {
     const newValue = currentPage.value + 1;
-    console.log('NEXT', {
-      currentPage: currentPage.value,
-      pages: pages.value,
-      newValue,
-    });
     if (!pagesRange.includes(newValue)) return;
-    // if (newValue > pages.value) return;
     currentPage.value = newValue;
   } else {
-    // console.log('else');
     const newValue = currentPage.value - 1;
-    console.log('PREVIOUS', {
-      currentPage: currentPage.value,
-      pages: pages.value,
-      newValue,
-      includes: pagesRange.includes(newValue),
-    });
     if (!pagesRange.includes(newValue)) return;
-
     currentPage.value = newValue;
   }
 };
+
+watch(currentPage, value => {
+  emit('onPageChanged', value);
+});
 </script>
 
 <template>
   <div class="pagination">
-    <div class="title">{{ items }} items</div>
-    {{ currentPage }}
-    {{ MAX_PAGES }}
-    {{ pages }}
-    <div class="buttons">
+    <div class="title">{{ totalImages }} items</div>
+    <div class="buttons" v-if="totalPages && totalImages">
       <div class="arrow" @click="handleControl('prev')">
-        <img src="@/assets/svg/arrow-right.svg" alt="Arrow right" />
+        <img src="@/assets/svg/greater-than.svg" alt="Arrow right" />
       </div>
       <div
         class="text !no-underline"
-        v-if="currentPage >= 5"
+        v-if="props.totalPages > 5 && currentPage >= 5"
         @click="handleDots('prev')"
       >
         ...
@@ -107,31 +84,22 @@ const handleControl = (control: 'next' | 'prev') => {
         class="text"
         :class="{
           'bg-[#0D6EFD] text-white': currentPage === page,
-          // hidden: page <= MAX_PAGES,
         }"
         @click="handlePage(page)"
-        v-for="(page, index) in visiblePages"
+        v-for="page in visiblePages"
         :key="page"
       >
-        <!-- v-show="page <= MAX_PAGES" -->
-        <!-- <div v-if="page <= MAX_PAGES"> -->
         {{ page }}
-        <!-- </div> -->
       </div>
-      <!-- <div class="text">1</div>
-      <div class="text">2</div>
-      <div class="text">3</div>
-      <div class="text">4</div> -->
-      <!-- v-if="pages > MAX_PAGES && currentPage !== pages" -->
       <div
         class="text !no-underline"
-        v-if="currentPage !== pages"
+        v-if="props.totalPages > 5 && currentPage !== props.totalPages"
         @click="handleDots('next')"
       >
         ...
       </div>
       <div class="arrow" @click="handleControl('next')">
-        <img src="@/assets/svg/arrow-left.svg" alt="Arrow left" />
+        <img src="@/assets/svg/less-than.svg" alt="Arrow left" />
       </div>
     </div>
   </div>
@@ -160,7 +128,8 @@ const handleControl = (control: 'next' | 'prev') => {
 
     .text {
       border: 1px solid #dee2e6;
-      width: 25px;
+      width: fit-content;
+      padding: 4px;
       height: 31px;
       font-family: Inter;
       font-size: 14px;
