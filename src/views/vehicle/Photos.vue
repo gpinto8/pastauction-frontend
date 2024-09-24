@@ -19,7 +19,7 @@
       <h2 class="text-lg mb-[16px]">Registration certificate</h2>
       <div :class="gridLayout">
         <Photo v-for="i in 6"
-             :id="store.vehicle.id"
+             :idnum="store.vehicle.id"
         />
       </div>
       <div class="flex justify-end mt-4">

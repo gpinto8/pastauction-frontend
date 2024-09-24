@@ -36,9 +36,9 @@ import { boolean, number, string } from 'ts-pattern/dist/patterns';
 // defineProps({idnum: number,  big : boolean, classes: string})
 const theFile = ref();
 interface Props {
-  idnum: number,
-  big: boolean,
-  classes: string
+  idnum: any,
+  big?: boolean,
+  classes?: any
 }
 
 const props = defineProps<Props>();

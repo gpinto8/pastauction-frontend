@@ -61,6 +61,7 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       bodies: false,
       countries: false,
       submit: false,
+      done: false,
     }),
     vehicle: ref<Vehicle>(mockVehicle()),
     async submit () {
@@ -84,6 +85,10 @@ export const useEditVehicleStore = defineStore('edit-vehicle', () => {
       // })
       // .otherwise(() => vehicleStore.update(store.vehicle.value))
       // .finally(() => store.loading.submit = false)
+    },
+
+    done(){
+      this.loading.done = true
     },
 
     async fetchInitialData () {
