@@ -80,7 +80,7 @@ import { reactive } from 'vue';
 
 const vehicleStore = useVehicleStore();
 const store = useEditVehicleStore();
-export const gridLayout = 'grid lg:grid-cols-6 gap-[16px]';
+ const gridLayout = 'grid lg:grid-cols-6 gap-[16px]';
 
 function uploadImage() {}
 
@@ -111,7 +111,7 @@ const details = reactive([
   ['Locate', store.vehicle.location_id],
 ]);
 
-export const cards = [
+ const cards = [
   {
     title: 'Specs',
     subtitle: 'Details about this vehicle.',
@@ -128,6 +128,10 @@ export const cards = [
   },
 ];
 
+defineExpose({
+  gridLayout,
+  cards
+});
 // onMounted(() => {
 //   vehicleStore.getVehiclePhotos(1).then(console.log);
 // });

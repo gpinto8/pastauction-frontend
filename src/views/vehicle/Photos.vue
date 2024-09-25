@@ -33,7 +33,10 @@
     <div>
       <h2 class="text-lg mb-[16px]">Service book</h2>
       <div :class="gridLayout">
-        <Photo v-for="i in 6" />
+        <Photo
+          :idnum="store.vehicle.id"
+
+          v-for="i in 6" />
       </div>
       <div class="flex justify-end mt-4">
         <div class="flex items-center blue">

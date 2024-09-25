@@ -21,17 +21,35 @@ export async function loadFonts (): Promise<void> {
 
   // WebFont loader Promise fix
   // https://github.com/typekit/webfontloader/issues/359#issuecomment-956395022
+  // await new Promise<void>(resolve => {
+  //   load(
+  //     /** Webfont Config */
+  //     {
+  //       google: {
+  //         families: ['Inter:100,300,400,500,700,900', 'Montserrat:100,300,400,500,700,900'],
+  //       },
+  //       active: () => {
+  //         resolve()
+  //       },
+  //     }
+  //   )
+  // })
+
   await new Promise<void>(resolve => {
-    load(
-      /** Webfont Config */
-      {
+    import('webfontloader').then(WebFontLoader => {
+      WebFontLoader.load({
         google: {
           families: ['Inter:100,300,400,500,700,900', 'Montserrat:100,300,400,500,700,900'],
         },
         active: () => {
-          resolve()
+          resolve();
         },
-      }
-    )
-  })
+      });
+    }).catch(err => {
+      console.error('Error loading webfontloader:', err);
+      resolve(); // Resolve to avoid blocking if there's an error
+    });
+  });
+
+
 }
