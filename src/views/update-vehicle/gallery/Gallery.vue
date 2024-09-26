@@ -33,14 +33,7 @@ const getImages = async (page: number) => {
       );
       const photoId = photoData.data?.items?.[0]?.logo_test;
       if (photoId) {
-        // console.log({ photoId });
-        // const imageData = await axios.get(
-        //   `https://pastauction.com/api/v1/photo/${photoId}`
-        // );
-        // console.log({ imageData });
-        // return photoId;
-        // return 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.roblox.com%2Fgames%2F5307215810%2FRandomizer-UPDATE&psig=AOvVaw2xZm5jby2DAHmi1tNDYNye&ust=1727021886239000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLDRj4S41IgDFQAAAAAdAAAAABAE';
-        return 'https://images.squarespace-cdn.com/content/v1/5e10bdc20efb8f0d169f85f9/09943d85-b8c7-4d64-af31-1a27d1b76698/arrow.png';
+        return `https://pastauction.com/api/v1/photo/${photoId}`;
       }
     } catch (error) {}
   };

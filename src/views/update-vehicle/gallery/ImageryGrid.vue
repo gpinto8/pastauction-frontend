@@ -34,10 +34,11 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
       v-for="(image, i) in images"
       :key="i"
       :src="image"
-      :alt="image"
+      alt="gallery image"
       :width="size"
       :height="size"
       class="block border-2 border-solid border-black"
+      :style="{ height: `${size}px`, width: `${size}px` }"
     />
   </div>
 </template>
