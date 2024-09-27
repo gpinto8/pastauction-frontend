@@ -5,6 +5,10 @@ import BeforeSuggested from './BeforeSuggested.vue';
 import MainPicture from './MainPicture.vue';
 import SelectionInputs from './SelectionInputs.vue';
 import AdminReview from './AdminReview.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const vehicleId = +router.currentRoute.value.params.id || 0;
 </script>
 
 <template>
@@ -14,7 +18,7 @@ import AdminReview from './AdminReview.vue';
       <div
         class="flex flex-col md:flex-row justify-between gap-6 overflow-auto h-full pb-3"
       >
-        <Gallery :key="_" v-for="_ in new Array(3)" />
+        <Gallery :vehicleId="vehicleId" :key="_" v-for="_ in new Array(3)" />
       </div>
       <div class="flex flex-col md:flex-row gap-4 w-full md:justify-between">
         <BeforeSuggested class="md:!w-1/3" />

@@ -4,6 +4,10 @@ import GalleryDesktop from './GalleryDesktop.vue';
 import GalleryMobile from './GalleryMobile.vue';
 import { onMounted, ref } from 'vue';
 
+const props = defineProps<{
+  vehicleId: number;
+}>();
+
 const images = ref<string[]>([]);
 const currentPage = ref(1);
 const imagesPerPage = 30;
@@ -12,8 +16,9 @@ const totalImages = ref(0);
 
 const getImages = async (page: number) => {
   const pageSizeParam = `page=${page}&size=${imagesPerPage}`;
+  
   const vehicleData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:14412`
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${props.vehicleId}`
   );
   const familyId = vehicleData.data.items[0].family_id;
   if (!familyId) return;

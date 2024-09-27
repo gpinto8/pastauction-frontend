@@ -89,7 +89,7 @@ const router = createRouter({
           ],
         },
         {
-          path: '/garage/test',
+          path: '/vehicle_update/:id',
           name: 'Vehicle Update',
           component: async () =>
             await import(
