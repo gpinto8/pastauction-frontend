@@ -75,7 +75,7 @@
 <!--        density="compact"-->
 <!--      />-->
       <span class="position-relative"
-            @click="store.searchFamilies(null)"
+            @click="store.searchFamilies('')"
 
       >
         <div class="title-of-select">Family</div>

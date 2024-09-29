@@ -19,7 +19,7 @@
       <h2 class="text-lg mb-[16px]">Registration certificate</h2>
       <div :class="gridLayout">
         <Photo v-for="i in 6"
-             :id="store.vehicle.id"
+             :idnum="store.vehicle.id"
         />
       </div>
       <div class="flex justify-end mt-4">
@@ -33,7 +33,10 @@
     <div>
       <h2 class="text-lg mb-[16px]">Service book</h2>
       <div :class="gridLayout">
-        <Photo v-for="i in 6" />
+        <Photo
+          :idnum="store.vehicle.id"
+
+          v-for="i in 6" />
       </div>
       <div class="flex justify-end mt-4">
         <div class="flex items-center blue">
