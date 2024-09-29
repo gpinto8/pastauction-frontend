@@ -12,7 +12,9 @@ const vehicleId = +router.currentRoute.value.params.id || 0;
 </script>
 
 <template>
-  <div class="flex flex-col justify-between gap-6 max-w-[1300px] my-0 mx-auto">
+  <div
+    class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto"
+  >
     <Filters />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
