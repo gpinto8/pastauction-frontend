@@ -1,6 +1,10 @@
 <script lang="tsx" setup>
 import { ref } from 'vue';
 
+defineProps<{
+  isUserAdmin: boolean;
+}>();
+
 const selectedBodies = ref<number[]>();
 const selectedColors = ref<string[]>();
 const selectedAttributes = ref<number[]>();
@@ -103,5 +107,11 @@ const handleAttributeSelection = (index: number) => {
         </button>
       </div>
     </div>
+    <v-btn
+      v-if="!isUserAdmin"
+      class="block w-full md:w-[160px] text-white bg-[#212529] rounded-md text-base p-2 text-none text-center md:grid md:place-content-center"
+    >
+      Submit review
+    </v-btn>
   </div>
 </template>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from 'axios';
 import ImageryGrid from './gallery/ImageryGrid.vue';
 
 const mockImage =
