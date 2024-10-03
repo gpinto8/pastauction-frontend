@@ -9,6 +9,7 @@
     "src/**/**/*.vue",
     "src/**/**/**/*.vue",
   ],
+
   "exclude": [],
   "compilerOptions": {
     "composite": true,

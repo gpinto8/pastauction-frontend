@@ -27,18 +27,22 @@
 </template>
 
 <script setup lang="ts">
-import AppIcon from '@/components/common/AppIcon.vue';
+import AppIcon from "@/components/common/AppIcon.vue";
 import { ref } from 'vue';
 import axios from 'axios';
+import { match } from 'ts-pattern';
+
 import { id } from 'vuetify/locale';
-import { boolean, number, string } from 'ts-pattern/dist/patterns';
+// import 'ts-pattern/dist/patterns'
+
+// import { boolean, number, string } from ;
 
 // defineProps({idnum: number,  big : boolean, classes: string})
 const theFile = ref();
 interface Props {
-  idnum: number,
-  big: boolean,
-  classes: string
+  idnum: any,
+  big?: any,
+  classes?: any
 }
 
 const props = defineProps<Props>();
