@@ -15,8 +15,8 @@ const totalPages = ref(0);
 const totalImages = ref(0);
 
 const getImages = async (page: number) => {
-  const pageSizeParam = `page=${page}&size=${imagesPerPage}`;
-  
+  const pageSizeParam = `page=${page}&size=${imagesPerPage * 2}`; // Fetch twice the amount of images per page so we can filter out the ones without a photo
+
   const vehicleData = await axios.get(
     `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${props.vehicleId}`
   );
@@ -44,7 +44,11 @@ const getImages = async (page: number) => {
   };
   const requests = familyIds.map((id: string) => fetchData(id) || '');
 
-  return { data: await Promise.all(requests), totalPages, totalImages };
+  return {
+    data: (await Promise.all(requests)).filter(Boolean).slice(0, imagesPerPage), // Here we filter out the empty strings and slice the array to the desired length
+    totalPages,
+    totalImages,
+  };
 };
 
 onMounted(async () => {
