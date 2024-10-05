@@ -1,6 +1,38 @@
 <script lang="ts" setup>
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+
+const props = defineProps<{
+  familyId: number;
+  brandName: string;
+}>();
+
+const filtersMap = ref<{ label: string; value: string[] }[]>();
+
+onMounted(async () => {
+  const fetchColumns = [
+    { key: 'brand_name', name: 'Brand' },
+    { key: 'bw_family_name', name: 'Family' },
+    { key: 'bw_model_name', name: 'Model' },
+    { key: 'bw_model_year_begin', name: 'Year' },
+    { key: 'bw_model_year_end', name: 'Year' },
+  ];
+
+  for await (const column of fetchColumns) {
+    const filterData = await axios.get(
+      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${column.key}/?search=brand_name:${props.brandName}&page=1&size=100`
+    );
+
+    const filterValues = filterData.data.items.map(
+      (item: any) => item[column.key]
+    );
+    filtersMap.value = [
+      ...(filtersMap.value || []),
+      { label: column.name, value: filterValues },
+    ];
+  }
+});
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
@@ -23,18 +55,11 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
     </button>
     <div class="w-full flex gap-2 flex-wrap">
       <v-autocomplete
-        v-for="item in new Array(5)"
+        v-for="filter in filtersMap"
         class="hidden sm:block w-fit min-w-[100px]"
-        label="Area"
+        :label="filter.label"
         variant="outlined"
-        :items="[
-          'California',
-          'Colorado',
-          'Florida',
-          'Georgia',
-          'Texas',
-          'Wyoming',
-        ]"
+        :items="filter.value"
         density="compact"
       />
       <!-- MOBILE -->
@@ -61,18 +86,11 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
         <template #default>
           <div class="w-full flex flex-col">
             <v-autocomplete
-              v-for="item in new Array(5)"
+              v-for="filter in filtersMap"
               class="w-full"
-              label="Area"
+              :label="filter.label"
               variant="outlined"
-              :items="[
-                'California',
-                'Colorado',
-                'Florida',
-                'Georgia',
-                'Texas',
-                'Wyoming',
-              ]"
+              :items="filter.value"
               density="compact"
             />
           </div>

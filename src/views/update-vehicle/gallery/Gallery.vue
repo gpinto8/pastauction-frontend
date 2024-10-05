@@ -5,7 +5,7 @@ import GalleryMobile from './GalleryMobile.vue';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
-  vehicleId: number;
+  familyId: number;
 }>();
 
 const images = ref<string[]>([]);
@@ -17,14 +17,8 @@ const totalImages = ref(0);
 const getImages = async (page: number) => {
   const pageSizeParam = `page=${page}&size=${imagesPerPage * 2}`; // Fetch twice the amount of images per page so we can filter out the ones without a photo
 
-  const vehicleData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${props.vehicleId}`
-  );
-  const familyId = vehicleData.data.items[0].family_id;
-  if (!familyId) return;
-
   const familyData = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_model/id/?search=family_id:${familyId}&${pageSizeParam}`
+    `https://pastauction.com/api/v1/filter/bidwatcher_model/id/?search=family_id:${props.familyId}&${pageSizeParam}`
   );
   const familyIds = familyData.data.items.map((item: any) => item.id);
   const totalPages = familyData.data.pages;
