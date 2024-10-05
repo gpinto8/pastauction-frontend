@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, mergeProps } from 'vue';
+import { ref, mergeProps, onMounted } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination } from 'swiper/modules';
 import { useRouter, useRoute } from 'vue-router';
@@ -14,14 +14,20 @@ import AppIcon from '@/components/common/AppIcon.vue';
 import { onBeforeMount } from 'vue';
 import Button from '@/components/common/button.vue';
 import axios from 'axios';
+import store from '@/store';
 
 const router = useRouter();
 const route = useRoute();
+const brandNames = ref<Record<number, string>>({});
+const modelNames = ref<Record<number, string>>({});
+
 
 /** Store */
 const garageStore = useGarageStore();
 const vehicleStore = useVehicleStore();
 const generalStore = useGeneralStore();
+const namesOfBrands = ref([])
+
 
 // const ve = ref(NaN)
 const authToken = ref(window.localStorage.getItem('past_token'));
@@ -72,7 +78,7 @@ const services = [
 
  async function deleteGarageVehicle (vehicleId : number, index : number) {
    vehicleStore.getListItems.items.splice(index, 1);
-  const apiUrl = "https://pastauction.com/api/v1/garage/garage_vehicle/" + vehicleId
+    const apiUrl = "https://pastauction.com/api/v1/garage/garage_vehicle/" + vehicleId
   const authToken = window.localStorage.getItem('past_token')
   try {
     const response =  await axios.delete(apiUrl, {
@@ -88,19 +94,73 @@ const services = [
   }
 };
 
-onBeforeMount(async () => {
+function getModelName(id: number) {
+  if (modelNames.value[id]) {
+    return; // Return cached value if available
+  }
 
-  const promise = Promise.all([
+  axios
+    .get('https://pastauction.com/api/v1/filter/bidwatcher_model/family_b/', {
+      params: {
+        page: 1,
+        size: 50,
+        search: `with_id:true,id:${id}`,
+      },
+      headers: {
+        Authorization: 'Bearer ' + authToken.value,  // Use authToken as you did before
+      },
+    })
+    .then((response) => {
+      if (response.data && response.data.items && response.data.items.length > 0) {
+        modelNames.value[id] = response.data.items[0].family_b;
+      } else {
+        modelNames.value[id] = 'Model not found';
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching model data:', error);
+      modelNames.value[id] = 'Error fetching model';
+    });
+}
+
+
+function getBrandName(id: number) {
+  if (brandNames.value[id]) {
+    return brandNames.value[id]; // Return cached value if it exists
+  }
+
+  axios
+    .get('https://pastauction.com/api/v1/filter/bidwatcher_brand/name/', {
+      params: {
+        page: 1,
+        size: 1,
+        search: `id:${id}`,
+      },
+      headers: {
+        Authorization: 'Bearer ' + authToken.value,
+      },
+    })
+    .then((response) => {
+      if (response.data && response.data.items && response.data.items.length > 0) {
+        brandNames.value[id] = response.data.items[0].name; // Save brand name to reactive object
+      } else {
+        brandNames.value[id] = 'Brand not found'; // Default message if no brand found
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching brand data:', error);
+      brandNames.value[id] = 'Error fetching brand'; // Handle error case
+    });
+}
+
+
+onBeforeMount(async () => {
+  loading.value = true;
+  const [_garage] = await Promise.all([
     garageStore.getById(route.params.id.toString()),
     vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id }),
   ]);
-
-  loading.value = true;
-  promise.finally(() => {
-    loading.value = false;
-  });
-
-  const [_garage] = await promise;
+  loading.value = false;
 
   if (!_garage) {
     throw new Error('Garage not found');
@@ -109,10 +169,35 @@ onBeforeMount(async () => {
   mediaStore.loadMedia(_garage.photo);
   vehicleStore.getListItems?.items.forEach((item: any) => {
     mediaStore.loadMedia(item.photo || item.main_photo);
+    getBrandName(item.id_brand); // Fetch the brand name for each
+    getModelName(item.model_id); // Fetch the model name for each item
+// item
   });
 
   garage.value = _garage;
-
+  //
+  // const promise = Promise.all([
+  //   garageStore.getById(route.params.id.toString()),
+  //   vehicleStore.listPaginated(1, 50, { garage_set_id: route.params.id }),
+  // ]);
+  //
+  // loading.value = true;
+  // promise.finally(() => {
+  //   loading.value = false;
+  // });
+  //
+  // const [_garage] = await promise;
+  //
+  // if (!_garage) {
+  //   throw new Error('Garage not found');
+  // }
+  //
+  // mediaStore.loadMedia(_garage.photo);
+  // vehicleStore.getListItems?.items.forEach((item: any) => {
+  //   mediaStore.loadMedia(item.photo || item.main_photo);
+  // });
+  //
+  // garage.value = _garage;
 
   //
   // try {
@@ -139,12 +224,11 @@ onBeforeMount(async () => {
 
 
 
+})
 
 
 
 
-
-});
 </script>
 
 <template>
@@ -361,11 +445,13 @@ onBeforeMount(async () => {
 
           <v-card-text>
             <div class="font-medium ms-1 mb-2 text-xl">
-              Brand {{ item.id_brand }}
+              {{ brandNames[item.id_brand] || 'Loading...' }}
+              {{ modelNames[item.model_id] || 'Loading model...' }}
+
             </div>
 
             <ul class="list-disc mt-4 pl-4">
-              <li>{{ item.miles || 0 }} mi (TMU)</li>
+              <li>{{ item.mileage || 0 }} mi (TMU)</li>
               <li>{{ item.originality }}</li>
             </ul>
             <div class="flex items-center my-4">

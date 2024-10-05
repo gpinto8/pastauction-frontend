@@ -1,6 +1,5 @@
 import { writeFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
-import commonjs from '@rollup/plugin-commonjs';
 
 import vue from '@vitejs/plugin-vue'
 import { defineConfig, type UserConfig } from 'vite'
@@ -23,8 +22,8 @@ export default defineConfig(({ command, mode }): UserConfig => {
     // https://vitejs.dev/config/shared-options.html#define
     define: { 'process.env': {} },
     plugins: [
-      commonjs(),
       // Vue3
+      // @ts-expect-error
       vue({
         script: {
           defineModel: true

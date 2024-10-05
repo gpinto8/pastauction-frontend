@@ -52,6 +52,7 @@ watch(() => auth.authToken, (token) => {
 })
 
 
+
 // Run!
 router
   .isReady()

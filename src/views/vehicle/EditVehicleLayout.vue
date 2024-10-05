@@ -30,7 +30,7 @@
 <!--      {{}}-->
       {{nextButtonLabel}}
     </Button>
-  </div>
+  </div>\
   <v-snackbar
     v-model="snackbar.show"
     :color="snackbar.color"
@@ -87,12 +87,13 @@ onMounted(() => {
   vehicleStore.fetchInitialData();
 });
 
+
 function submit() {
   vehicleStore
     .submit()
     .then(() => {
       console.log(vehicleStore)
-      router.push(`/garage/detail/${route.params.garageId}`);
+      // router.push(`/garage/detail/${route.params.garageId}`);
     })
     .catch(error => {
       snackbar.value.show = true;
@@ -104,14 +105,15 @@ function submit() {
 function next() {
 
   if(route.name === "Details"){
-    alert("DONE");
+    // alert("DONE");
     submit();
   }
 
   const to = match(route.path.split('/').pop())
     .with('overview', () => 'details')
-    .with('details', () => 'photos')
-    // .with('photos', () => 'submit')
+      .with('details', () => 'photos')
+    .with('photos', () => 'submit')
+    .with('submit', () => '../../../')
     .otherwise(() => null);
 
   if (to) {

@@ -29,71 +29,77 @@
         variant="outlined"
         density="compact"
         :items="years"
-        @update:search="store.searchBrands"
+
       />
-      <span class="position-relative">
-        <div class="title-of-select">Brand</div>
-      <select
-        class="selectBox"
-        required
-        v-model="vehicle.id_brand"
-        name="selectBrand"
-      >
+<!--      <span-->
+<!--        @mouseover="store.searchBrands()"-->
+<!--        class="position-relative">-->
+<!--        <div class="title-of-select">Brand</div>-->
+<!--      <select-->
+<!--        class="selectBox"-->
 
-        <option
-          @select="store.searchFamilies"
-          v-for="itemB in store.brands" :value="itemB.id">{{itemB.name}}</option>
-      </select></span>
-
-
-<!--        <v-autocomplete-->
-<!--        @upda-->
-<!--          required-->
-<!--        @update:search="store.searchBrands"-->
-<!--        :items="store.brands"-->
-<!--        :loading="store.loading.brands"-->
-<!--        label="Make"-->
-<!--        item-title="name"-->
-<!--        item-value="name"-->
-<!--        variant="outlined"-->
-<!--        density="compact"-->
-<!--      />-->
-      <!-- {{ store.families }} -->
-<!--      <v-select-->
 <!--        required-->
-<!--        v-model="vehicle.id_family"-->
+<!--        v-model="vehicle.id_brand"-->
+<!--        name="selectBrand"-->
+<!--      >-->
 
-<!--        :items="store.families || []"-->
-<!--        @update:search="store.searchFamilies"-->
-<!--        @update:focused="store.searchFamilies"-->
+<!--        <option-->
+<!--          @select="store.searchFamilies"-->
+<!--          v-for="itemB in store.brands" :value="itemB.id">{{itemB.name}}</option>-->
+<!--      </select></span>-->
 
-<!--        :loading="store.loading.families"-->
-<!--        item-value="id"-->
-<!--        item-title="name"-->
-<!--        label="Family"-->
-<!--        variant="outlined"-->
-<!--        density="compact"-->
-<!--      />-->
-      <span class="position-relative"
-            @click="store.searchFamilies('')"
 
-      >
-        <div class="title-of-select">Family</div>
-      <select
-        class="selectBox"
+        <v-autocomplete
+          :search-input.sync="tempBrandVal"
+        required
+        @update:search="updateBrands"
+        :items="listOfBrands"
+        :loading="store.loading.brands"
+        label="Make"
+        v-model="selectedBrand"
+        item-title="name"
+        item-value="id"
+        variant="outlined"
+        density="compact"
+           @change="updateBrand"
+          return-object
+
+
+        ></v-autocomplete>
+
+
+      <v-autocomplete
         required
         v-model="vehicle.id_family"
-        @update:search="store.searchFamilies"
-      >
-        <option v-for="itemB in store .families" :value="itemB.id">{{itemB.name}}</option>
-      </select></span>
+        :items="store.families"
+        @update:search="updateFamiliesAxios"
+        :loading="store.loading.families"
+        item-value="id"
+        item-title="name"
+        label="Family"
+        variant="outlined"
+        density="compact"
+      />
+<!--      <span class="position-relative"-->
+<!--            @click="store.searchFamilies('')"-->
+
+<!--      >-->
+<!--        <div class="title-of-select">Family</div>-->
+<!--      <select-->
+<!--        class="selectBox"-->
+<!--        required-->
+<!--        v-model="vehicle.id_family"-->
+<!--        @update:search="store.searchFamilies"-->
+<!--      >-->
+<!--        <option v-for="itemB in store .families" :value="itemB.id">{{itemB.name}}</option>-->
+<!--      </select></span>-->
 
       <v-autocomplete
         v-model="vehicle.model_id"
         :items="store.models"
         label="Model"
         item-value="id"
-        item-title="family_a"
+        item-title="family_b"
         variant="outlined"
         density="compact"
       />
@@ -170,7 +176,7 @@
         </v-radio-group>
       </div>
       <div>
-        <small class="font-semibold">Exteriour color</small>
+        <small class="font-semibold">Exteriour color: {{vehicle.exterior_color_id}}</small>
         <div class="flex gap-3">
           <div
             v-for="color in [
@@ -193,7 +199,8 @@
         </div>
       </div>
       <div>
-        <small class="font-semibold">Interior color</small>
+        <small class="font-semibold">Interior color: {{vehicle.interior_color_id}}
+        </small>
         <div class="flex gap-3">
           <div
             v-for="color in [
@@ -256,7 +263,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import { useMaisonVehicleStore } from '@/store/datas/masionVehicle';
 import { type Vehicle } from '@/store/vehicle/vehicle';
@@ -267,6 +275,10 @@ const store = useEditVehicleStore();
 const { vehicle } = storeToRefs(store);
 const emit = defineEmits(['submit']);
 const router = useRouter();
+const listOfBrands = ref()
+const listOfFamilies = ref()
+const tempBrandVal = ref<string>('')
+const selectedBrand = ref()
 
 const years = (() => {
   const from = 1800;
@@ -275,6 +287,122 @@ const years = (() => {
 
   return Array.from({ length: to - from + 1 }, (_, i) => to - i);
 })();
+
+onMounted(function(){
+  vehicle.value.id_family = 0
+  vehicle.value.id_brand = 0
+  vehicle.value.model_id = 0
+})
+
+function updateBrand (val: object){
+  vehicle.value.id_brand = selectedBrand.value.id
+
+}
+ function updateBrands (val: string){
+  store.searchBrands(val)
+  listOfBrands.value = []
+  store.brands.forEach(function(value){
+    // console.log(value.name)
+    listOfBrands.value.push({
+      id: value.id,
+      name: value.name
+    })
+
+  })
+}
+
+function updateFamiliesAxios (val: any){
+  const NameLikeVal = ref("")
+  const brandFiltering = ref("")
+//
+  if(val !== "" && val !== 0 && val !== null)
+    NameLikeVal.value = val
+
+  if(vehicle.value.id_brand !== 0)
+    brandFiltering.value = ",id_brand:" + vehicle.value.id_brand
+  else {
+    console.log("NULL")
+    brandFiltering.value = '';
+  }
+
+
+  axios.get(
+    "filter/bidwatcher_family/name_like:" + val + "/?page=1&size=50&search=with_id:true" + brandFiltering.value
+    , {
+
+      headers: {
+        "authorization": 'Bearer '+localStorage.getItem('past_token')
+      }
+    })
+    .then(response => {
+      store.families = response.data.items
+      // console.log(response)
+      // store.families.forEach(function(value){
+      //   // console.log(value.name)
+      //   listOfFamilies.value.push({
+      //     id: value.id,
+      //     name: value.name
+      //   })
+      //
+      // })
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error); // Handle any errors
+    });
+  // console.log("Ciao")
+}
+
+
+watch(() => vehicle.value.id_family, (newVal, oldVal) => {
+  console.log(`id_family changed from ${oldVal} to ${newVal}`);
+  if (newVal !== null) {
+    updateModelsAxios()  // Call the function when id_family changes
+  }
+});
+
+
+
+function updateModelsAxios (val?: any){
+  const familyFiltering = ref("")
+
+
+  if(vehicle.value.id_brand !== 0)
+    familyFiltering.value = ",id_family:" + vehicle.value.id_family
+  else {
+    console.log("NULL")
+    familyFiltering.value = '';
+  }
+
+
+  axios.get(
+    "/filter/bidwatcher_model/family_b/?page=1&size=50&search=with_id:true" + familyFiltering.value
+    , {
+
+      headers: {
+        "authorization": 'Bearer '+localStorage.getItem('past_token')
+      }
+    })
+    .then(response => {
+      store.models = response.data.items
+      // console.log(response)
+      // store.families.forEach(function(value){
+      //   // console.log(value.name)
+      //   listOfFamilies.value.push({
+      //     id: value.id,
+      //     name: value.name
+      //   })
+      //
+      // })
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error); // Handle any errors
+    });
+  // console.log("Ciao")
+}
+
+
+
+
 
 console.log(store.brands)
 </script>

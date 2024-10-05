@@ -40,7 +40,7 @@ import { id } from 'vuetify/locale';
 // defineProps({idnum: number,  big : boolean, classes: string})
 const theFile = ref();
 interface Props {
-  idnum: any,
+  idnum?: any,
   big?: any,
   classes?: any
 }
