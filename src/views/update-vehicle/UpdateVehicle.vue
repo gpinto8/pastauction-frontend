@@ -18,26 +18,31 @@ const familyId = ref(0);
 const brandName = ref('');
 
 onMounted(async () => {
-  const vehicleData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`
-  );
-
-  const _familyId = vehicleData.data.items[0].bw_family_id;
-  const _brandName = vehicleData.data.items[0].brand_name;
-  familyId.value = _familyId;
-  brandName.value = _brandName;
-
-  const userInfo = await getLoggedUserInfo();
-  if (userInfo) {
-    const isAdmin = userInfo?.data?.user_category === 99;
+  // USER FETCH
+  getLoggedUserInfo().then(response => {
+    const userInfo = response.data;
+    const isAdmin = userInfo?.user_category === 99;
     isUserAdmin.value = isAdmin;
-  }
+  });
+
+  // VEHICLE FETCH
+  axios
+    .get(
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`
+    )
+    .then(response => {
+      const vehicleData = response.data;
+      const _familyId = vehicleData.items[0].bw_family_id;
+      const _brandName = vehicleData.items[0].brand_name;
+      familyId.value = _familyId;
+      brandName.value = _brandName;
+    });
 });
 </script>
 
 <template>
   <div
-    class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:overflow-auto"
+    class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
     <Filters
       class="md:min-w-[1300px]"
@@ -50,7 +55,7 @@ onMounted(async () => {
         class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"
       >
         <Gallery
-          class="!min-w-[400px]"
+          class="md:!min-w-[400px]"
           :familyId="familyId"
           :key="_"
           v-for="_ in new Array(3)"

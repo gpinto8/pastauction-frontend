@@ -40,7 +40,7 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
   </div>
   <!-- MOBILE -->
   <ExpansionSection
-    class="mobile-accordion block md:hidden font-bold text-lg !p-0 !m-0"
+    class="block md:hidden font-bold text-lg !p-0 !m-0"
     titleClass="bg-[#DEE2E6]"
     panelClass="bg-[#DEE2E6] text-black !p-0 !m-0"
     :forceOpen="mobileOpen"
@@ -50,7 +50,7 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
       <div class="flex gap-2 w-full items-center">
         <div v-if="mobileOpen === 1" class="text-lg">Description</div>
         <div
-          class="hidden sm:flex w-full flex-col cursor-pointer pointer-events-auto z-10"
+          class="flex  w-full flex-col cursor-pointer pointer-events-auto z-10"
         >
           <img
             v-if="mobileOpen === 0"
