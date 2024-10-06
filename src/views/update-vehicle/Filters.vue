@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
 const props = defineProps<{
+  class: string;
   familyId: number;
   brandName: string;
 }>();
@@ -21,7 +22,7 @@ onMounted(async () => {
 
   for await (const column of fetchColumns) {
     const filterData = await axios.get(
-      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${column.key}/?search=brand_name:${props.brandName}&page=1&size=100`
+      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${column.key}/?search=brand_name:${props.brandName}&page=1&size=50`
     );
 
     const filterValues = filterData.data.items.map(
@@ -41,6 +42,7 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 <template>
   <div
     class="w-full h-fit bg-[#212529] text-white flex justify-between px-6 py-5 sm:!pb-0 gap-8 rounded-md"
+    :class="class"
   >
     <button
       class="hidden md:flex justify-center items-baseline gap-2 w-fit h-fit py-2 px-6 border border-solid !border-[#DEE2E6] rounded-md bg-[#212529] text-white"

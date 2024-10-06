@@ -37,25 +37,36 @@ onMounted(async () => {
 
 <template>
   <div
-    class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto"
+    class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:overflow-auto"
   >
     <Filters
+      class="md:min-w-[1300px]"
       v-if="familyId && brandName"
       :familyId="familyId"
       :brandName="brandName"
     />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
-        class="flex flex-col md:flex-row justify-between gap-6 overflow-auto h-full pb-3"
+        class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"
       >
-        <Gallery :familyId="familyId" :key="_" v-for="_ in new Array(3)" />
+        <Gallery
+          class="!min-w-[400px]"
+          :familyId="familyId"
+          :key="_"
+          v-for="_ in new Array(3)"
+        />
       </div>
-      <div class="flex flex-col md:flex-row gap-4 w-full md:justify-between">
-        <BeforeSuggested class="md:!w-1/3" />
-        <MainPicture class="md:!w-1/3" />
-        <SelectionInputs class="md:!w-1/3" :isUserAdmin="isUserAdmin" />
+      <div
+        class="flex flex-col md:flex-row gap-4 w-full md:justify-between md:min-w-[1300px]"
+      >
+        <BeforeSuggested class="w-full md:!min-w-[400px] md:w-[400px]" />
+        <MainPicture class="w-full md:!min-w-[400px] md:w-[400px]" />
+        <SelectionInputs
+          class="w-full md:!min-w-[400px] md:w-[400px]"
+          :isUserAdmin="isUserAdmin"
+        />
       </div>
     </div>
-    <AdminReview v-if="isUserAdmin" />
+    <AdminReview class="md:min-w-[1300px] mt-6 md:mt-0" v-if="isUserAdmin" />
   </div>
 </template>

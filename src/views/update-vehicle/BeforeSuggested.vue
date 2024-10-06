@@ -1,6 +1,18 @@
 <script setup lang="ts">
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+
+defineProps<{
+  class: string;
+}>();
+
+onMounted(async () => {
+  const response = await axios.get(
+    'https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:39763'
+  );
+  console.log(response);
+});
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 
@@ -9,8 +21,8 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
 <template>
   <!-- DESKTOP -->
-  <div class="hidden md:flex inputs gap-4">
-    <div class="p-3 bg-[#DEE2E6] w-fit h-fit">
+  <div class="hidden md:flex inputs gap-4" :class="class">
+    <div class="p-3 bg-[#DEE2E6] w-fit h-fit md:w-2/3">
       <div class="title p-2">Before</div>
       <div class="flex flex-col">
         <div class="flex" :key="_" v-for="_ in new Array(10)">
@@ -19,7 +31,7 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
         </div>
       </div>
     </div>
-    <div class="p-3 !bg-[#DEE2E6] w-fit h-fit">
+    <div class="p-3 !bg-[#DEE2E6] w-fit h-fit md:w-1/3">
       <div class="title p-2">Suggested</div>
       <div class="flex flex-col w-full" :key="_" v-for="_ in new Array(10)">
         <div class="badge w-full value">911</div>

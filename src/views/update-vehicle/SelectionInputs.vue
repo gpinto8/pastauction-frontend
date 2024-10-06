@@ -47,7 +47,7 @@ const handleAttributeSelection = (index: number) => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full gap-6">
+  <div class="flex flex-col w-full gap-6" :class="class">
     <div>
       <div class="mb-3 font-semibold text-lg">Body change</div>
       <div class="flex gap-2 flex-wrap">

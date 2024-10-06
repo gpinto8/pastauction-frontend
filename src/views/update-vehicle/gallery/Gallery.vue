@@ -6,6 +6,7 @@ import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
   familyId: number;
+  class: string;
 }>();
 
 const images = ref<string[]>([]);
@@ -62,7 +63,7 @@ const handlePageChanged = async (page: number) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 w-full">
+  <div class="flex flex-col gap-4 w-full" :class="class">
     <div class="block md:hidden">
       <GalleryMobile
         :images="images"
@@ -73,7 +74,7 @@ const handlePageChanged = async (page: number) => {
         @onPageChanged="handlePageChanged"
       />
     </div>
-    <div class="hidden md:flex h-full">
+    <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
         :images="images"
         :currentPage="currentPage"
