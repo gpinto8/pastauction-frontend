@@ -52,6 +52,7 @@ const garage = ref<Garage>({
 });
 const countries = ref<any>([]);
 const photoPreview = ref();
+const photoUpload = ref();
 const rules = {
   name: { required },
 };
@@ -73,7 +74,7 @@ async function postForm() {
 
   if (photo.value) {
     await generalStore
-      .uploadMedia('garage_set', res.id, photo.value)
+      .uploadMedia('garage_set', res.data.id, photo.value)
       .then(res => {
         console.log('response upload media', res);
       })
@@ -91,7 +92,6 @@ async function loadGarage() {
 
     if (res.photo) {
       await generalStore.loadMedia(res.photo).then(res => {
-        console.log({ res });
         // photo.value = res;
         photoPreview.value = res;
       });
@@ -129,7 +129,9 @@ const file2Base64 = (file: File): Promise<string> => {
 };
 
 const uploadImage = (e: any) => {
-  photo.value = e.target.files[0];
+  photo.value = e.target.files[0]
+  console.log()
+  // photo.value = e.target.files[0];
   file2Base64(e.target.files[0]).then(res => {
     console.log(res);
     garage.value.photo = res;
@@ -180,6 +182,7 @@ const uploadImage = (e: any) => {
               <v-avatar size="120">
                 <img
                   :src="photoPreview"
+
                   alt="Garage Image"
                   class="rounded-full w-[120px] h-[120px] object-cover"
                 />

@@ -18,6 +18,7 @@ export type Vehicle = {
   exterior_color_id: number
   interior_color_id: number
   variant: string
+
   type_vehicle: string
   year: number
   doors: string
@@ -90,7 +91,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
   async function create (item: CreateVehiclePayload) {
     console.log('create item', item)
     loading.value = true
-    const { data } = await httpPost('garage_vehicle/create', item).finally(() => loading.value = false)
+    const { data } = await httpPost('garage_vehicle/create/', item).finally(() => loading.value = false)
 
     return data
   }
@@ -106,7 +107,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
     return 'id' in item ? update(item) : create(item)
   }
 
-  async function filter(tablename?: string, columnName?: string, search?: unknown, withId: boolean = false) {
+  async function filter(tablename?: string, columnName?: string, search?: unknown, withId: boolean = false, addSomething:string = '') {
     const query: Record<string, any> = {}
     if (search) {
       columnName += `_like:${search}`
@@ -115,7 +116,7 @@ export const useVehicleStore = defineStore('vehicle', () => {
       query['with_id'] = true
     }
     const qs = buildQS({ search: query })
-    const { data } = await httpGet(`filter/${tablename}/${columnName}/?page=1&size=50&${qs}`)
+    const { data } = await httpGet(`filter/${tablename}/${columnName}/?page=1&size=50&${qs}` + addSomething)
     return data
   }
 

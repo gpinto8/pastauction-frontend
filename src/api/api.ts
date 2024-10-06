@@ -12,7 +12,7 @@ export const httpUpload = (url: string, file: FormData) => {
 export const httpPut = (url: string, item: any) => axios.put(url, item);
 export const httpPatch = (url: string, item: any) => axios.patch(url, item);
 
-export const httpGet = (url: string) => axios.get(url);
+export const httpGet = (url: string, config = {}) => axios.get(url, config);
 export const httpDelete = (url: string) => axios.delete(url);
 
 export const getHtml = (url: string) => {
