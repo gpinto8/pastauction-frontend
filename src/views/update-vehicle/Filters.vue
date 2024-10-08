@@ -2,27 +2,41 @@
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
+import type { SelectedFiltersProps } from './UpdateVehicle.vue';
+
+export type FilterLabelProps =
+  | 'Brand'
+  | 'Family'
+  | 'Model'
+  | 'Start Year'
+  | 'End Year';
+
+type FilterMapProps = { label: FilterLabelProps; value: string[] }[];
 
 const props = defineProps<{
   class: string;
   familyId: number;
   brandName: string;
+  modelValue?: SelectedFiltersProps;
 }>();
 
-const filtersMap = ref<{ label: string; value: string[] }[]>();
+const filtersMap = ref<FilterMapProps>();
+
+const mobileOpen = ref(1); // 0 - open | 1 - close
+const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
 onMounted(async () => {
-  const fetchColumns = [
-    { key: 'brand_name', name: 'Brand' },
-    { key: 'bw_family_name', name: 'Family' },
-    { key: 'bw_model_name', name: 'Model' },
-    { key: 'bw_model_year_begin', name: 'Year' },
-    { key: 'bw_model_year_end', name: 'Year' },
+  const fetchColumns: { key: string; label: FilterLabelProps }[] = [
+    { key: 'brand_name', label: 'Brand' },
+    { key: 'bw_family_name', label: 'Family' },
+    { key: 'bw_model_name', label: 'Model' },
+    { key: 'bw_model_year_begin', label: 'Start Year' },
+    { key: 'bw_model_year_end', label: 'End Year' },
   ];
 
   for await (const column of fetchColumns) {
     const filterData = await axios.get(
-      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${column.key}/?search=brand_name:${props.brandName}&page=1&size=50`
+      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${column.key}/?search=brand_name:${props.brandName}&bw_family_id:${props.familyId}&page=1&size=50`
     );
 
     const filterValues = filterData.data.items.map(
@@ -30,13 +44,10 @@ onMounted(async () => {
     );
     filtersMap.value = [
       ...(filtersMap.value || []),
-      { label: column.name, value: filterValues },
+      { label: column.label, value: filterValues },
     ];
   }
 });
-
-const mobileOpen = ref(1); // 0 - open | 1 - close
-const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 </script>
 
 <template>
@@ -57,12 +68,14 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
     </button>
     <div class="w-full flex gap-2 flex-wrap">
       <v-autocomplete
+        v-if="filtersMap"
         v-for="filter in filtersMap"
         class="hidden sm:block w-fit min-w-[100px]"
         :label="filter.label"
         variant="outlined"
         :items="filter.value"
         density="compact"
+        @update:modelValue="modelValue && (modelValue[filter.label] = $event)"
       />
       <!-- MOBILE -->
       <ExpansionSection

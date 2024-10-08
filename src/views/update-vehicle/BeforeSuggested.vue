@@ -1,22 +1,45 @@
 <script setup lang="ts">
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import { computed, ref } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 defineProps<{
   class: string;
 }>();
 
-onMounted(async () => {
-  const response = await axios.get(
-    'https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:39763'
-  );
-  console.log(response);
+const mobileOpen = ref(1); // 0 - open | 1 - close
+const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
+
+const updateVehicleStore = updateVehicle();
+
+const beforeData = computed(() => {
+  const data = updateVehicleStore.parametersResponseData?.items;
+  if (!data) return;
+
+  return [
+    { label: 'Family', value: data[0].bw_family_id },
+    { label: 'Model', value: data[0].bw_model_name },
+    { label: 'Stage', value: data[0].vehicle_stage },
+    { label: 'Series', value: data[0].vehicle_series },
+    { label: 'Year', value: data[0].vehicle_year },
+    { label: 'Chasis', value: data[0].chassis },
+    { label: 'Body', value: data[0].body_shapes },
+    { label: 'Color', value: data[1].color_main_name },
+    { label: 'Attribute', value: '???' },
+  ];
 });
 
-const mobileOpen = ref(1); // 0 - open | 1 - close
-
-const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
+const suggestedData = ref([
+  { label: 'Family', value: '' },
+  { label: 'Model', value: '' },
+  { label: 'Stage', value: '' },
+  { label: 'Series', value: '' },
+  { label: 'Year', value: '', disabled: true },
+  { label: 'Chasis', value: '', disabled: true },
+  { label: 'Body', value: '' },
+  { label: 'Color', value: '' },
+  { label: 'Attribute', value: '???' },
+]);
 </script>
 
 <template>
@@ -25,16 +48,25 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
     <div class="p-3 bg-[#DEE2E6] w-fit h-fit md:w-2/3">
       <div class="title p-2">Before</div>
       <div class="flex flex-col">
-        <div class="flex" :key="_" v-for="_ in new Array(10)">
-          <div class="bg-white w-2/5 badge key">Family</div>
-          <div class="bg-white w-3/5 badge value">911</div>
+        <div class="flex" :key="i" v-for="(data, i) in beforeData">
+          <div class="bg-white w-2/5 badge key">{{ data.label }}</div>
+          <div class="bg-white w-3/5 badge value">{{ data.value }}</div>
         </div>
       </div>
     </div>
     <div class="p-3 !bg-[#DEE2E6] w-fit h-fit md:w-1/3">
       <div class="title p-2">Suggested</div>
-      <div class="flex flex-col w-full" :key="_" v-for="_ in new Array(10)">
-        <div class="badge w-full value">911</div>
+      <div
+        class="flex flex-col w-full"
+        :key="i"
+        v-for="(data, i) in suggestedData"
+      >
+        <input
+          class="bg-white border p-1 border-[#CED4DA] border-solid h-[33.5px]"
+          density="compact"
+          :v-model="data.value"
+          :disabled="data?.disabled"
+        />
       </div>
     </div>
   </div>
@@ -50,7 +82,7 @@ const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
       <div class="flex gap-2 w-full items-center">
         <div v-if="mobileOpen === 1" class="text-lg">Description</div>
         <div
-          class="flex  w-full flex-col cursor-pointer pointer-events-auto z-10"
+          class="flex w-full flex-col cursor-pointer pointer-events-auto z-10"
         >
           <img
             v-if="mobileOpen === 0"

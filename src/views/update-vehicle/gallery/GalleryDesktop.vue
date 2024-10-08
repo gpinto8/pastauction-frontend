@@ -2,28 +2,51 @@
 import ImageryGrid from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import Pagination from './Pagination.vue';
+import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
+import { ref } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
-defineProps<{
+const props = defineProps<{
   images: string[];
   currentPage: number;
   imagesPerPage: number;
   totalPages: number;
   totalImages: number;
+  modelValue?: SelectedFiltersProps;
 }>();
-const emit = defineEmits(['onPageChanged']);
+
+const emit = defineEmits(['onPageChanged', 'getResponseData']);
+
+const responseData = ref<any>();
+const updateVehicleStore = updateVehicle();
 
 const handlePageChanged = (page: number) => {
   emit('onPageChanged', page);
 };
 
 const handleSelect = () => {
-  console.log('Select');
+  if (
+    props.modelValue?.Brand &&
+    props.modelValue?.Family &&
+    props.modelValue?.Model &&
+    props.modelValue?.['Start Year'] &&
+    props.modelValue?.['End Year']
+  ) {
+    updateVehicleStore.parametersResponseData = responseData;
+  }
 };
+
+defineExpose({
+  responseData: responseData,
+});
 </script>
 
 <template>
   <div class="h-full">
-    <Parameters />
+    <Parameters
+      :filterData="modelValue"
+      @getResponseData="responseData = $event"
+    />
     <ImageryGrid
       :images="images"
       columnCombination="5x80"

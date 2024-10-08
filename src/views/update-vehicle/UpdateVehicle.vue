@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Gallery from './gallery/Gallery.vue';
-import Filters from './Filters.vue';
+import Filters, { type FilterLabelProps } from './Filters.vue';
 import BeforeSuggested from './BeforeSuggested.vue';
 import MainPicture from './MainPicture.vue';
 import SelectionInputs from './SelectionInputs.vue';
@@ -10,12 +10,24 @@ import { useAuthStore } from '@/store/auth';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
+export type SelectedFiltersProps = {
+  [key in FilterLabelProps]: string | number;
+};
+
 const { getLoggedUserInfo } = useAuthStore();
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
 const isUserAdmin = ref(false);
 const familyId = ref(0);
 const brandName = ref('');
+
+const selectedFilters = ref<SelectedFiltersProps>({
+  Brand: '',
+  Family: '',
+  Model: '',
+  'Start Year': '',
+  'End Year': '',
+});
 
 onMounted(async () => {
   // USER FETCH
@@ -49,16 +61,18 @@ onMounted(async () => {
       v-if="familyId && brandName"
       :familyId="familyId"
       :brandName="brandName"
+      :modelValue="selectedFilters"
     />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
         class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"
       >
         <Gallery
+          v-for="_ in new Array(3)"
           class="md:!min-w-[400px]"
+          :modelValue="selectedFilters"
           :familyId="familyId"
           :key="_"
-          v-for="_ in new Array(3)"
         />
       </div>
       <div

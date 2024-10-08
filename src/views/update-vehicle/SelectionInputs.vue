@@ -1,23 +1,40 @@
 <script lang="tsx" setup>
-import { ref } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
+import { computed, ref } from 'vue';
 
 defineProps<{
   isUserAdmin: boolean;
 }>();
 
-const selectedBodies = ref<number[]>();
+const selectedBodies = ref<string[]>();
 const selectedColors = ref<string[]>();
-const selectedAttributes = ref<number[]>();
+const selectedAttributes = ref<string[]>();
 
-const handleBodySelection = (index: number) => {
+const updateVehicleStore = updateVehicle();
+
+const bodyData = computed(() => {
+  const data = updateVehicleStore.parametersResponseData?.items;
+  if (!data) return;
+
+  return data[0].body_categories.split(',').filter(Boolean);
+});
+
+const attributeData = computed(() => {
+  const data = updateVehicleStore.parametersResponseData?.items;
+  if (!data) return;
+
+  return data[0].body_types.split(',').filter(Boolean);
+});
+
+const handleBodySelection = (body: string) => {
   // If its already selected, remove it
-  if (selectedBodies.value?.includes(index)) {
-    const filteredBody = selectedBodies.value?.filter(i => i !== index);
+  if (selectedBodies.value?.includes(body)) {
+    const filteredBody = selectedBodies.value?.filter(value => value !== body);
     selectedBodies.value = filteredBody;
     return;
   }
 
-  const newBodyChange = [...(selectedBodies.value || []), index];
+  const newBodyChange = [...(selectedBodies.value || []), body];
   selectedBodies.value = newBodyChange;
 };
 
@@ -33,15 +50,17 @@ const handleColorSelection = (color: string) => {
   selectedColors.value = newBodyChange;
 };
 
-const handleAttributeSelection = (index: number) => {
+const handleAttributeSelection = (attribute: string) => {
   // If its already selected, remove it
-  if (selectedAttributes.value?.includes(index)) {
-    const filteredBody = selectedAttributes.value?.filter(i => i !== index);
+  if (selectedAttributes.value?.includes(attribute)) {
+    const filteredBody = selectedAttributes.value?.filter(
+      value => value !== attribute
+    );
     selectedAttributes.value = filteredBody;
     return;
   }
 
-  const newBodyChange = [...(selectedAttributes.value || []), index];
+  const newBodyChange = [...(selectedAttributes.value || []), attribute];
   selectedAttributes.value = newBodyChange;
 };
 </script>
@@ -53,14 +72,14 @@ const handleAttributeSelection = (index: number) => {
       <div class="flex gap-2 flex-wrap">
         <button
           class="p-2 text-sm w-fit rounded-md border-2 border-solid border-[#212529] text-[#212529] bg-white"
-          :class="{
-            '!bg-[#212529] text-white': selectedBodies?.includes(i),
-          }"
+          v-for="(data, i) in bodyData"
           :key="i"
-          v-for="i in [1, 2, 3, 4, 5]"
-          @click="() => handleBodySelection(i)"
+          :class="{
+            '!bg-[#212529] text-white': selectedBodies?.includes(data),
+          }"
+          @click="() => handleBodySelection(data)"
         >
-          Sport
+          {{ data }}
         </button>
       </div>
     </div>
@@ -98,12 +117,12 @@ const handleAttributeSelection = (index: number) => {
           class="w-full p-2 text-sm sm:w-fit rounded-md border-2 border-solid border-[#212529] text-[#212529] bg-white"
           :key="i"
           :class="{
-            '!bg-[#212529] text-white': selectedAttributes?.includes(i),
+            '!bg-[#212529] text-white': selectedAttributes?.includes(data),
           }"
-          v-for="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-          @click="() => handleAttributeSelection(i)"
+          v-for="(data, i) in attributeData"
+          @click="() => handleAttributeSelection(data)"
         >
-          Sport
+          {{ data }}
         </button>
       </div>
     </div>

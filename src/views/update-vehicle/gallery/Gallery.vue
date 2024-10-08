@@ -2,24 +2,32 @@
 import axios from 'axios';
 import GalleryDesktop from './GalleryDesktop.vue';
 import GalleryMobile from './GalleryMobile.vue';
-import { onMounted, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 
 const props = defineProps<{
-  familyId: number;
   class: string;
+  modelValue?: SelectedFiltersProps;
 }>();
+
+defineEmits(['getResponseData']);
 
 const images = ref<string[]>([]);
 const currentPage = ref(1);
 const imagesPerPage = 30;
 const totalPages = ref(0);
 const totalImages = ref(0);
+const responseData = ref<any>();
+const desktopGalleryRef = ref();
+const familyId = computed(
+  () => desktopGalleryRef?.value?.responseData?.items?.[0]?.bw_family_id
+);
 
-const getImages = async (page: number) => {
+const getImages = async (familyId: number, page: number) => {
   const pageSizeParam = `page=${page}&size=${imagesPerPage * 2}`; // Fetch twice the amount of images per page so we can filter out the ones without a photo
 
   const familyData = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_model/id/?search=family_id:${props.familyId}&${pageSizeParam}`
+    `https://pastauction.com/api/v1/filter/bidwatcher_model/id/?search=family_id:${familyId}&${pageSizeParam}`
   );
   const familyIds = familyData.data.items.map((item: any) => item.id);
   const totalPages = familyData.data.pages;
@@ -46,20 +54,27 @@ const getImages = async (page: number) => {
   };
 };
 
-onMounted(async () => {
-  const imagesArray = await getImages(1);
-  if (imagesArray) {
-    images.value = imagesArray.data;
-    totalPages.value = imagesArray.totalPages;
-    totalImages.value = imagesArray.totalImages;
+watch(
+  () => familyId.value,
+  async () => {
+    const imageData = await getImages(familyId.value, 1);
+    if (imageData) {
+      images.value = imageData.data;
+      totalPages.value = imageData.totalPages;
+      totalImages.value = imageData.totalImages;
+    }
   }
-});
+);
 
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
-  const imagesArray = await getImages(page);
+  const imagesArray = await getImages(familyId.value, page);
   if (imagesArray) images.value = imagesArray.data;
 };
+
+defineExpose({
+  responseData: responseData,
+});
 </script>
 
 <template>
@@ -76,12 +91,15 @@ const handlePageChanged = async (page: number) => {
     </div>
     <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
+        ref="desktopGalleryRef"
         :images="images"
         :currentPage="currentPage"
         :imagesPerPage="imagesPerPage"
         :totalPages="totalPages"
         :totalImages="totalImages"
+        :modelValue="modelValue"
         @onPageChanged="handlePageChanged"
+        @getResponseData="responseData = $event"
       />
     </div>
   </div>

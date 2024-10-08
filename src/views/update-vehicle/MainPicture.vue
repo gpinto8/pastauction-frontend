@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
+import { computed, ref } from 'vue';
 
 defineProps<{
   class: string;
 }>();
 
-const image = ref(
-  'https://images.squarespace-cdn.com/content/v1/5e10bdc20efb8f0d169f85f9/09943d85-b8c7-4d64-af31-1a27d1b76698/arrow.png'
-);
+const updateVehicleStore = updateVehicle();
+
+const image = computed(() => {
+  const data = updateVehicleStore.parametersResponseData?.items;
+  if (!data) return;
+
+  return `https://pastauction.com/api/v1/photo/${data[0].photo_path}`;
+});
 </script>
 
 <template>
@@ -24,7 +30,7 @@ const image = ref(
         alt=""
         width="400"
         height="400"
-        class="bg-red-500 rounded-md w-full"
+        class="rounded-md w-full"
       />
       <p class="text-[#212529] text-base">2000 Porsche Carrera 4S black</p>
     </div>
