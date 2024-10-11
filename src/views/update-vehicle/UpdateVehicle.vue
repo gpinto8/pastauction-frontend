@@ -21,6 +21,7 @@ const isUserAdmin = ref(false);
 const familyId = ref(0);
 const brandName = ref('');
 const photoPath = ref('');
+const vehicleData = ref('');
 
 const selectedFilters = ref<SelectedFiltersProps>({
   Brand: '',
@@ -44,15 +45,13 @@ onMounted(async () => {
       `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`
     )
     .then(response => {
-      const vehicleData = response.data;
+      const _vehicleData = response.data?.items[0];
+      console.log({ vehicleData });
+      vehicleData.value = _vehicleData;
 
-      const _familyId = vehicleData.items[0].bw_family_id;
-      const _brandName = vehicleData.items[0].brand_name;
-      const _photoPath = vehicleData.items[0].photo_path;
-
-      familyId.value = _familyId;
-      brandName.value = _brandName;
-      photoPath.value = _photoPath;
+      familyId.value = _vehicleData.bw_family_id;
+      brandName.value = _vehicleData.brand_name;
+      photoPath.value = _vehicleData.photo_path;
     });
 });
 </script>
@@ -83,11 +82,13 @@ onMounted(async () => {
       <div
         class="flex flex-col md:flex-row gap-4 w-full md:justify-between md:min-w-[1300px]"
       >
-        <BeforeSuggested class="w-full md:!min-w-[400px] md:w-[400px]" />
+        <BeforeSuggested
+          class="w-full md:!min-w-[400px] md:w-[400px]"
+          :vehicleData="vehicleData"
+        />
         <MainPicture
           class="w-full md:!min-w-[400px] md:w-[400px]"
-          :photoPath="photoPath"
-          :brandName="brandName"
+          :vehicleData="vehicleData"
         />
         <SelectionInputs
           class="w-full md:!min-w-[400px] md:w-[400px]"
