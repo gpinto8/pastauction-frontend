@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { updateVehicle } from '@/store/vehicle/update-vehicle';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   class: string;
+  brandName: string;
+  photoPath: string;
 }>();
 
-const updateVehicleStore = updateVehicle();
-
-const image = computed(() => {
-  const data = updateVehicleStore.parametersResponseData?.items;
-  if (!data) return;
-
-  return `https://pastauction.com/api/v1/photo/${data[0].photo_path}`;
-});
+const image = computed(
+  () => `https://pastauction.com/api/v1/photo/${props.photoPath}`
+);
 </script>
 
 <template>
@@ -32,7 +28,9 @@ const image = computed(() => {
         height="400"
         class="rounded-md w-full"
       />
-      <p class="text-[#212529] text-base">2000 Porsche Carrera 4S black</p>
+      <p v-if="props.brandName" class="text-[#212529] text-base">
+        {{ props.brandName }}
+      </p>
     </div>
   </div>
 </template>
