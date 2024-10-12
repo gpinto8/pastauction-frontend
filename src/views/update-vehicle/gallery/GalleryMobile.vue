@@ -21,9 +21,7 @@ const mobileOpen = ref(1); // 0 - open | 1 - close
 
 watch(
   () => selected,
-  value => {
-    console.log({ selected: value });
-  }
+  value => {}
 );
 
 const handleOpenMobile = () => {

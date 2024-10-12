@@ -46,7 +46,6 @@ onMounted(async () => {
     )
     .then(response => {
       const _vehicleData = response.data?.items[0];
-      console.log({ vehicleData });
       vehicleData.value = _vehicleData;
 
       familyId.value = _vehicleData.bw_family_id;
@@ -60,13 +59,7 @@ onMounted(async () => {
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <Filters
-      class="md:min-w-[1300px]"
-      v-if="familyId && brandName"
-      :familyId="familyId"
-      :brandName="brandName"
-      :modelValue="selectedFilters"
-    />
+    <Filters class="md:min-w-[1300px]" :modelValue="selectedFilters" />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
         class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"

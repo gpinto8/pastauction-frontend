@@ -27,8 +27,6 @@ type FiltersDataProps = {
 
 defineProps<{
   class: string;
-  familyId: number;
-  brandName: string;
   modelValue?: SelectedFiltersProps;
 }>();
 

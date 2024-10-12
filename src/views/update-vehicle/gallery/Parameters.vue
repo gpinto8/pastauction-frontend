@@ -20,7 +20,6 @@ const mobileOpen = ref(1); // 0 - open | 1 - close
 const responseData = ref();
 
 const handleOpenMobile = () => {
-  console.log({ mobileOpen: mobileOpen.value });
   mobileOpen.value = mobileOpen.value === 0 ? 1 : 0;
 };
 
