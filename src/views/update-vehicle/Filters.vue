@@ -161,6 +161,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
         variant="outlined"
         :items="getBrandName()?.values"
         density="compact"
+        :modelValue="modelValue?.Brand as string"
         @update:modelValue="
           modelValue && (modelValue[getBrandName()?.label!] = $event)
         "
@@ -174,6 +175,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
         variant="outlined"
         :items="getFamilyName()?.values"
         density="compact"
+        :modelValue="modelValue?.Family as string"
         @update:modelValue="
           modelValue && (modelValue[getFamilyName()?.label!] = $event)
         "
@@ -187,6 +189,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
         variant="outlined"
         :items="getModelName()?.values"
         density="compact"
+        :modelValue="modelValue?.Model as string"
         @update:modelValue="
           modelValue && (modelValue[getModelName()?.label!] = $event)
         "
@@ -200,6 +203,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
         variant="outlined"
         :items="getStartYear()?.values"
         density="compact"
+        :modelValue="modelValue?.['Start Year'] as string"
         @update:modelValue="
           modelValue && (modelValue[getStartYear()?.label!] = $event)
         "
@@ -213,6 +217,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
         variant="outlined"
         :items="getEndYear()?.values"
         density="compact"
+        :modelValue="modelValue?.['End Year'] as string"
         @update:modelValue="
           modelValue && (modelValue[getEndYear()?.label!] = $event)
         "

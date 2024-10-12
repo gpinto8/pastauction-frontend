@@ -18,9 +18,6 @@ const { getLoggedUserInfo } = useAuthStore();
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
 const isUserAdmin = ref(false);
-const familyId = ref(0);
-const brandName = ref('');
-const photoPath = ref('');
 const vehicleData = ref('');
 
 const selectedFilters = ref<SelectedFiltersProps>({
@@ -46,11 +43,17 @@ onMounted(async () => {
     )
     .then(response => {
       const _vehicleData = response.data?.items[0];
-      vehicleData.value = _vehicleData;
 
-      familyId.value = _vehicleData.bw_family_id;
-      brandName.value = _vehicleData.brand_name;
-      photoPath.value = _vehicleData.photo_path;
+      if (_vehicleData) {
+        vehicleData.value = _vehicleData;
+        selectedFilters.value = {
+          Brand: _vehicleData.brand_name,
+          Family: _vehicleData.bw_family_name,
+          Model: _vehicleData.bw_model_name,
+          'Start Year': _vehicleData.bw_model_year_begin,
+          'End Year': _vehicleData.bw_model_year_end,
+        };
+      }
     });
 });
 </script>
@@ -59,37 +62,30 @@ onMounted(async () => {
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <!-- <Filters class="md:min-w-[1300px]" :modelValue="selectedFilters" /> -->
+    <Filters class="md:min-w-[1300px]" :modelValue="selectedFilters" />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
         class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"
       >
         <!-- PREVIOUS SERIE -->
-        <Gallery
-          class="md:!min-w-[400px]"
-          :modelValue="selectedFilters"
-          :familyId="familyId"
-          :vehicleData="vehicleData"
-        />
+        <div class="md:!min-w-[400px]">
+          <Gallery :vehicleData="vehicleData" />
+        </div>
+
         <!-- CURRENT SERIE -->
-        <Gallery
-          class="md:!min-w-[400px]"
-          :modelValue="selectedFilters"
-          :familyId="familyId"
-          :vehicleData="vehicleData"
-        />
+        <div class="md:!min-w-[400px]">
+          <Gallery :modelValue="selectedFilters" :vehicleData="vehicleData" />
+        </div>
+
         <!-- NEXT SERIE -->
-        <Gallery
-          class="md:!min-w-[400px]"
-          :modelValue="selectedFilters"
-          :familyId="familyId"
-          :vehicleData="vehicleData"
-        />
+        <div class="md:!min-w-[400px]">
+          <Gallery :vehicleData="vehicleData" />
+        </div>
       </div>
       <div
         class="flex flex-col md:flex-row gap-4 w-full md:justify-between md:min-w-[1300px]"
       >
-        <!-- <BeforeSuggested
+        <BeforeSuggested
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :vehicleData="vehicleData"
         />
@@ -100,9 +96,9 @@ onMounted(async () => {
         <SelectionInputs
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :isUserAdmin="isUserAdmin"
-        /> -->
+        />
       </div>
     </div>
-    <!-- <AdminReview class="md:min-w-[1300px] mt-6 md:mt-0" v-if="isUserAdmin" /> -->
+    <AdminReview class="md:min-w-[1300px] mt-6 md:mt-0" v-if="isUserAdmin" />
   </div>
 </template>

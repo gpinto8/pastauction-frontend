@@ -7,7 +7,7 @@ import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 import type { ImagesGridProps } from './ImageryGrid.vue';
 
 const props = defineProps<{
-  class: string;
+  class?: string;
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
 }>();
