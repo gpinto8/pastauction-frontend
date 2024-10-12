@@ -2,12 +2,12 @@
 import { ref, watch } from 'vue';
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
 import UiCheckbox from '@/components/ui/ui-checkbox.vue';
-import ImageryGrid from './ImageryGrid.vue';
+import ImageryGrid, { type ImagesGridProps } from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import PaginationSlider from './PaginationSlider.vue';
 
 const props = defineProps<{
-  images: string[];
+  images: ImagesGridProps;
   currentPage: number;
   imagesPerPage: number;
   totalPages: number;

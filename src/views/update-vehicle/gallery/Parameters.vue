@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { ref, watch } from 'vue';
-import axios from 'axios';
+import { computed, ref } from 'vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
-
-type ParametersDataProps = {
-  label: 'Model' | 'Stage' | 'Series' | 'From' | 'To';
-  value: string;
-}[];
 
 const props = defineProps<{
   modelValue?: any;
   filterData?: SelectedFiltersProps;
+  vehicleData?: any;
 }>();
 
 const emit = defineEmits(['update:modelValue', 'getResponseData']);
@@ -23,52 +18,20 @@ const handleOpenMobile = () => {
   mobileOpen.value = mobileOpen.value === 0 ? 1 : 0;
 };
 
-const parametersData = ref<ParametersDataProps>([
-  { label: 'Model', value: '' },
-  { label: 'Stage', value: '' },
-  { label: 'Series', value: '' },
-  { label: 'From', value: '' },
-  { label: 'To', value: '' },
-]);
+const parametersData = computed(() => {
+  const data = props.vehicleData;
+  if (!data) return;
 
-defineExpose({
-  responseData,
+  return [
+    { label: 'Model', value: data.bw_model_name },
+    { label: 'Stage', value: data.vehicle_stage },
+    { label: 'Series', value: data.vehicle_series },
+    { label: 'From', value: data.vehicle_year },
+    { label: 'To', value: data.vehicle_year },
+  ];
 });
 
-watch(
-  () => [
-    props.filterData?.['Brand'],
-    props.filterData?.['Family'],
-    props.filterData?.['Model'],
-    props.filterData?.['Start Year'],
-    props.filterData?.['End Year'],
-  ],
-  newSelectedFilters => {
-    const [brand, family, model, startYear, endYear] = newSelectedFilters || [];
-    if (brand && family && model && startYear && endYear) {
-      axios
-        .get(
-          `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=brand_name:${brand}&bw_family_name:${family}&bw_model_name:${model}&bw_model_year_begin:${startYear}&bw_model_year_end:${endYear}&page=1&size=50`
-        )
-        .then(response => {
-          const data = response.data;
-          if (!data?.items?.length) return;
-
-          responseData.value = data;
-          emit('getResponseData', data);
-
-          const [startData, endData] = data?.items || {};
-          parametersData.value = [
-            { label: 'Model', value: startData?.bw_model_name },
-            { label: 'Stage', value: startData?.vehicle_stage },
-            { label: 'Series', value: startData?.vehicle_series },
-            { label: 'From', value: startData?.vehicle_year },
-            { label: 'To', value: endData?.vehicle_year },
-          ];
-        });
-    }
-  }
-);
+defineExpose({ responseData });
 </script>
 
 <template>
@@ -89,7 +52,7 @@ watch(
       <div
         class="bg-white w-full rounded-sm border border-solid text-white md:!text-black !bg-[#FFFFFF1A] sm:border-[#CED4DA] font-normal p-2 sm:p-1"
       >
-        <div class="flex justify-between gap-1 w-full">
+        <div class="flex justify-between gap-1 w-max">
           {{ parameter.value }}
           <img
             class="block sm:hidden"
@@ -115,14 +78,14 @@ watch(
         <div
           class="bg-white w-full h-fit rounded-sm border border-solid text-white md:!text-black !bg-[#FFFFFF1A] sm:border-[#CED4DA] sm:font-semibold p-2 sm:p-1"
         >
-          {{ parametersData[0].label }}
+          {{ parametersData?.[0].label }}
         </div>
         <div
           class="bg-white w-full rounded-sm border border-solid text-white md:!text-black !bg-[#FFFFFF1A] sm:border-[#CED4DA] font-normal p-2 sm:p-1"
         >
           <div class="flex justify-between gap-1 w-full">
             993 - IV
-            {{ parametersData[0].label }}
+            {{ parametersData?.[0].label }}
             <img
               @click="handleOpenMobile"
               class="block sm:hidden pointer-events-auto cursor-pointer"
@@ -140,7 +103,7 @@ watch(
         >
           <div
             :key="i"
-            v-for="(parameter, i) in parametersData.slice(
+            v-for="(parameter, i) in parametersData?.slice(
               1,
               parametersData.length
             )"

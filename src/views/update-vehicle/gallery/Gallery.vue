@@ -4,24 +4,25 @@ import GalleryDesktop from './GalleryDesktop.vue';
 import GalleryMobile from './GalleryMobile.vue';
 import { computed, ref, watch } from 'vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
+import type { ImagesGridProps } from './ImageryGrid.vue';
 
 const props = defineProps<{
   class: string;
   modelValue?: SelectedFiltersProps;
+  vehicleData?: any;
 }>();
 
 defineEmits(['getResponseData']);
 
-const images = ref<string[]>([]);
+const images = ref<ImagesGridProps>([]);
 const currentPage = ref(1);
 const imagesPerPage = 30;
 const totalPages = ref(0);
 const totalImages = ref(0);
 const responseData = ref<any>();
 const desktopGalleryRef = ref();
-const familyId = computed(
-  () => desktopGalleryRef?.value?.responseData?.items?.[0]?.bw_family_id
-);
+
+const familyId = computed(() => props.vehicleData?.bw_family_id);
 
 const getImages = async (familyId: number, page: number) => {
   const pageSizeParam = `page=${page}&size=${imagesPerPage * 2}`; // Fetch twice the amount of images per page so we can filter out the ones without a photo
@@ -40,9 +41,7 @@ const getImages = async (familyId: number, page: number) => {
         `https://pastauction.com/api/v1/filter/bidwatcher_photo/logo_test/?search=id_vehicle:${id}`
       );
       const photoId = photoData.data?.items?.[0]?.logo_test;
-      if (photoId) {
-        return `https://pastauction.com/api/v1/photo/${photoId}`;
-      }
+      if (photoId) return `https://pastauction.com/api/v1/photo/${photoId}`;
     } catch (error) {}
   };
   const requests = familyIds.map((id: string) => fetchData(id) || '');
@@ -59,7 +58,7 @@ watch(
   async () => {
     const imageData = await getImages(familyId.value, 1);
     if (imageData) {
-      images.value = imageData.data;
+      images.value = imageData.data.map(path => ({ path }));
       totalPages.value = imageData.totalPages;
       totalImages.value = imageData.totalImages;
     }
@@ -69,7 +68,7 @@ watch(
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
   const imagesArray = await getImages(familyId.value, page);
-  if (imagesArray) images.value = imagesArray.data;
+  if (imagesArray) images.value = imagesArray.data.map(path => ({ path }));
 };
 
 defineExpose({
@@ -92,6 +91,7 @@ defineExpose({
     <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
         ref="desktopGalleryRef"
+        :vehicleData="vehicleData"
         :images="images"
         :currentPage="currentPage"
         :imagesPerPage="imagesPerPage"

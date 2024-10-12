@@ -1,4 +1,6 @@
 <script lang="tsx" setup>
+export type ImagesGridProps = { path: string; metadata?: any }[];
+
 type ColumnCombinations =
   | '7x60'
   | '5x80'
@@ -9,7 +11,7 @@ type ColumnCombinations =
   | '3x80';
 
 const props = defineProps<{
-  images: { path: string; metadata?: any }[];
+  images: ImagesGridProps;
   classContainer?: string;
   columnCombination: ColumnCombinations; // It gotta be MAX_ROWS x SIZE
   onImageClick?: (metadata?: any) => void;

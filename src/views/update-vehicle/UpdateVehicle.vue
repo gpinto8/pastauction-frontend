@@ -59,23 +59,37 @@ onMounted(async () => {
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <Filters class="md:min-w-[1300px]" :modelValue="selectedFilters" />
+    <!-- <Filters class="md:min-w-[1300px]" :modelValue="selectedFilters" /> -->
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
         class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"
       >
+        <!-- PREVIOUS SERIE -->
         <Gallery
-          v-for="_ in new Array(3)"
           class="md:!min-w-[400px]"
           :modelValue="selectedFilters"
           :familyId="familyId"
-          :key="_"
+          :vehicleData="vehicleData"
+        />
+        <!-- CURRENT SERIE -->
+        <Gallery
+          class="md:!min-w-[400px]"
+          :modelValue="selectedFilters"
+          :familyId="familyId"
+          :vehicleData="vehicleData"
+        />
+        <!-- NEXT SERIE -->
+        <Gallery
+          class="md:!min-w-[400px]"
+          :modelValue="selectedFilters"
+          :familyId="familyId"
+          :vehicleData="vehicleData"
         />
       </div>
       <div
         class="flex flex-col md:flex-row gap-4 w-full md:justify-between md:min-w-[1300px]"
       >
-        <BeforeSuggested
+        <!-- <BeforeSuggested
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :vehicleData="vehicleData"
         />
@@ -86,9 +100,9 @@ onMounted(async () => {
         <SelectionInputs
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :isUserAdmin="isUserAdmin"
-        />
+        /> -->
       </div>
     </div>
-    <AdminReview class="md:min-w-[1300px] mt-6 md:mt-0" v-if="isUserAdmin" />
+    <!-- <AdminReview class="md:min-w-[1300px] mt-6 md:mt-0" v-if="isUserAdmin" /> -->
   </div>
 </template>

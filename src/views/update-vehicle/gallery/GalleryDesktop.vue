@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ImageryGrid from './ImageryGrid.vue';
+import ImageryGrid, { type ImagesGridProps } from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import Pagination from './Pagination.vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
@@ -7,12 +7,13 @@ import { ref } from 'vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
-  images: string[];
+  images: ImagesGridProps;
   currentPage: number;
   imagesPerPage: number;
   totalPages: number;
   totalImages: number;
   modelValue?: SelectedFiltersProps;
+  vehicleData?: any;
 }>();
 
 const emit = defineEmits(['onPageChanged', 'getResponseData']);
@@ -44,6 +45,7 @@ defineExpose({
 <template>
   <div class="h-full">
     <Parameters
+      :vehicleData="vehicleData"
       :filterData="modelValue"
       @getResponseData="responseData = $event"
     />
