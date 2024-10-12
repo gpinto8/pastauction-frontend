@@ -153,10 +153,11 @@ const getEndYear = () => getFilterData('bw_model_year_end');
       Previous
     </button>
     <div class="w-full flex gap-2 flex-wrap">
+      <!-- DESKTOP -->
       <!-- BRAND NAME -->
       <v-autocomplete
         v-if="getBrandName()?.values?.length"
-        class="hidden sm:block w-fit min-w-[100px]"
+        class="hidden sm:block w-fit !min-w-[180px]"
         :label="getBrandName()?.label"
         variant="outlined"
         :items="getBrandName()?.values"
@@ -170,7 +171,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
       <!-- FAMILY NAME -->
       <v-autocomplete
         v-if="getFamilyName()?.values?.length"
-        class="hidden sm:block w-fit min-w-[100px]"
+        class="hidden sm:block w-fit !min-w-[180px]"
         :label="getFamilyName()?.label"
         variant="outlined"
         :items="getFamilyName()?.values"
@@ -184,7 +185,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
       <!-- MODEL NAME -->
       <v-autocomplete
         v-if="getModelName()?.values?.length"
-        class="hidden sm:block w-fit min-w-[100px]"
+        class="hidden sm:block w-fit !min-w-[180px]"
         :label="getModelName()?.label"
         variant="outlined"
         :items="getModelName()?.values"
@@ -198,7 +199,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
       <!-- START YEAR -->
       <v-autocomplete
         v-if="getStartYear()?.values?.length"
-        class="hidden sm:block w-fit min-w-[100px]"
+        class="hidden sm:block w-fit !min-w-[180px]"
         :label="getStartYear()?.label"
         variant="outlined"
         :items="getStartYear()?.values"
@@ -212,7 +213,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
       <!-- END YEAR -->
       <v-autocomplete
         v-if="getEndYear()?.values?.length"
-        class="hidden sm:block w-fit min-w-[100px]"
+        class="hidden sm:block w-fit !min-w-[180px]"
         :label="getEndYear()?.label"
         variant="outlined"
         :items="getEndYear()?.values"
@@ -245,15 +246,77 @@ const getEndYear = () => getFilterData('bw_model_year_end');
           </div>
         </template>
         <template #default>
-          <div class="w-full flex flex-col">
-            <!-- <v-autocomplete
-              v-for="filter in filtersMap"
+          <div class="w-full flex flex-col mt-4">
+            <!-- BRAND NAME -->
+            <v-autocomplete
+              v-if="getBrandName()?.values?.length"
               class="w-full"
-              :label="filter.label"
+              :label="getBrandName()?.label"
               variant="outlined"
-              :items="filter.value"
+              :items="getBrandName()?.values"
               density="compact"
-            /> -->
+              :modelValue="modelValue?.Brand as string"
+              @update:modelValue="
+                modelValue && (modelValue[getBrandName()?.label!] = $event)
+              "
+              @update:search="term => handleSearch(getBrandName()?.key!, term)"
+            />
+            <!-- FAMILY NAME -->
+            <v-autocomplete
+              v-if="getFamilyName()?.values?.length"
+              class="w-full"
+              :label="getFamilyName()?.label"
+              variant="outlined"
+              :items="getFamilyName()?.values"
+              density="compact"
+              :modelValue="modelValue?.Family as string"
+              @update:modelValue="
+                modelValue && (modelValue[getFamilyName()?.label!] = $event)
+              "
+              @update:search="term => handleSearch(getFamilyName()?.key!, term)"
+            />
+            <!-- MODEL NAME -->
+            <v-autocomplete
+              v-if="getModelName()?.values?.length"
+              class="w-full"
+              :label="getModelName()?.label"
+              variant="outlined"
+              :items="getModelName()?.values"
+              density="compact"
+              :modelValue="modelValue?.Model as string"
+              @update:modelValue="
+                modelValue && (modelValue[getModelName()?.label!] = $event)
+              "
+              @update:search="term => handleSearch(getModelName()?.key!, term)"
+            />
+            <!-- START YEAR -->
+            <v-autocomplete
+              v-if="getStartYear()?.values?.length"
+              class="w-full"
+              :label="getStartYear()?.label"
+              variant="outlined"
+              :items="getStartYear()?.values"
+              density="compact"
+              :modelValue="modelValue?.['Start Year'] as string"
+              @update:modelValue="
+                modelValue && (modelValue[getStartYear()?.label!] = $event)
+              "
+              @update:search="term => handleSearch(getStartYear()?.key!, term)"
+            />
+            <!-- END YEAR -->
+            <v-autocomplete
+              v-if="getEndYear()?.values?.length"
+              class="w-full"
+              :label="getEndYear()?.label"
+              variant="outlined"
+              :items="getEndYear()?.values"
+              density="compact"
+              :modelValue="modelValue?.['End Year'] as string"
+              @update:modelValue="
+                modelValue && (modelValue[getEndYear()?.label!] = $event)
+              "
+              @update:search="term => handleSearch(getEndYear()?.key!, term)"
+            />
           </div>
         </template>
       </ExpansionSection>
