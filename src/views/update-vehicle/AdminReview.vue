@@ -99,18 +99,41 @@ const goForward = async () => {
         </div>
         <ImageryGrid
           v-if="imagePaths?.length"
+          class="flex sm:hidden"
           :images="
-            new Array(breakpointCellSize).fill(undefined).map((_, i) => ({
+            new Array(2).fill(undefined).map((_, i) => ({
               path: imagePaths?.[i]?.path!,
               metadata: imagePaths?.[i]?.id!,
             }))
           "
-          :columnCombination="imageCellSize as any"
+          columnCombination="2x80"
           classContainer="flex border-0"
-          :style="{
-            width: `${80 * breakpointCellSize}px`,
-            gridTemplateColumns: `repeat(${imageCellSize},80px)`,
-          }"
+          :onImageClick="handleImageClick"
+        />
+        <ImageryGrid
+          v-if="imagePaths?.length"
+          class="hidden sm:flex md:hidden"
+          :images="
+            new Array(5).fill(undefined).map((_, i) => ({
+              path: imagePaths?.[i]?.path!,
+              metadata: imagePaths?.[i]?.id!,
+            }))
+          "
+          columnCombination="5x80"
+          classContainer="flex border-0"
+          :onImageClick="handleImageClick"
+        />
+        <ImageryGrid
+          v-if="imagePaths?.length"
+          class="hidden md:flex"
+          :images="
+            new Array(15).fill(undefined).map((_, i) => ({
+              path: imagePaths?.[i]?.path!,
+              metadata: imagePaths?.[i]?.id!,
+            }))
+          "
+          columnCombination="15x80"
+          classContainer="flex border-0"
           :onImageClick="handleImageClick"
         />
         <div
