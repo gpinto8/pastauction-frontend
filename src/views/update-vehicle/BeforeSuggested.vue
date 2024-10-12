@@ -64,8 +64,8 @@ const suggestedData = ref([
         <input
           class="bg-white border p-1 border-[#CED4DA] border-solid h-[33.67px]"
           density="compact"
-          :v-model="data.value"
           :disabled="data?.disabled"
+          v-model="data.value"
         />
       </div>
     </div>
@@ -110,16 +110,29 @@ const suggestedData = ref([
         <div class="bg-[#DEE2E6] w-full">
           <div class="title p-2">Before</div>
           <div class="flex flex-col">
-            <div class="flex" :key="_" v-for="_ in new Array(10)">
-              <div class="bg-white w-2/5 sm:w-2/5 badge key">Family</div>
-              <div class="bg-white w-3/5 sm:w-3/5 badge value">911</div>
+            <div class="flex" :key="i" v-for="(data, i) in beforeData">
+              <div class="bg-white w-2/5 sm:w-2/5 badge key">
+                {{ data.label }}
+              </div>
+              <div class="bg-white w-3/5 sm:w-3/5 badge value">
+                {{ data.value }}
+              </div>
             </div>
           </div>
         </div>
         <div class="bg-[#DEE2E6] w-full">
           <div class="title p-2">Suggested</div>
-          <div class="flex flex-col w-full" :key="_" v-for="_ in new Array(10)">
-            <div class="badge w-full value">911</div>
+          <div
+            class="flex flex-col w-full"
+            :key="i"
+            v-for="(data, i) in suggestedData"
+          >
+            <input
+              class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-[33.67px]"
+              density="compact"
+              :disabled="data?.disabled"
+              v-model="data.value"
+            />
           </div>
         </div>
       </div>
