@@ -9,9 +9,10 @@ type ColumnCombinations =
   | '3x80';
 
 const props = defineProps<{
-  images: (string | undefined)[];
+  images: { path: string; metadata?: any }[];
   classContainer?: string;
   columnCombination: ColumnCombinations; // It gotta be MAX_ROWS x SIZE
+  onImageClick?: (metadata?: any) => void;
 }>();
 
 // We create a static map of tailwind classes since we can't dynamically generate them (as per: https://tailwindcss.com/docs/content-configuration#dynamic-class-names)
@@ -33,12 +34,14 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
     <img
       v-for="(image, i) in images"
       :key="i"
-      :src="image"
-      alt="gallery image"
+      :src="image.path"
+      alt=""
       :width="size"
       :height="size"
       class="block border-2 border-solid border-black"
+      :class="{ 'cursor-pointer': image.path && onImageClick }"
       :style="{ height: `${size}px`, width: `${size}px` }"
+      @click="() => image.path && onImageClick?.(image.metadata)"
     />
   </div>
 </template>
