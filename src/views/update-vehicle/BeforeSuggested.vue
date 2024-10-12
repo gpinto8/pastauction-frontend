@@ -47,8 +47,10 @@ const suggestedData = ref([
       <div class="title p-2">Before</div>
       <div class="flex flex-col">
         <div class="flex" :key="i" v-for="(data, i) in beforeData">
-          <div class="bg-white w-2/5 badge key">{{ data.label }}</div>
-          <div class="bg-white w-3/5 badge value">{{ data.value }}</div>
+          <div class="bg-white !w-2/5 badge key">{{ data.label }}</div>
+          <div class="bg-white !w-3/5 badge value overflow-hidden">
+            {{ data.value }}
+          </div>
         </div>
       </div>
     </div>
