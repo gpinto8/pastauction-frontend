@@ -7,9 +7,9 @@ const props = defineProps<{
 }>();
 
 const image = computed(
-  () => `https://pastauction.com/api/v1/photo/${props.vehicleData.photo_path}`
+  () => `https://pastauction.com/api/v1/photo/${props.vehicleData?.photo_path}`
 );
-const brandName = computed(() => props.vehicleData.brand_name);
+const brandName = computed(() => props.vehicleData?.brand_name);
 </script>
 
 <template>

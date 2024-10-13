@@ -30,6 +30,8 @@ defineProps<{
   modelValue?: SelectedFiltersProps;
 }>();
 
+defineEmits(['on-previous', 'on-next']);
+
 const filtersData = ref<FiltersDataProps[]>([
   { key: 'brand_name', label: 'Brand', defaultValues: [], values: [] },
   {
@@ -143,6 +145,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
   >
     <button
       class="hidden md:flex justify-center items-baseline gap-2 w-fit h-fit py-2 px-6 border border-solid !border-[#DEE2E6] rounded-md bg-[#212529] text-white"
+      @click="$emit('on-previous', $event)"
     >
       <img
         src="@/assets/svg/arrow-left.svg"
@@ -323,6 +326,7 @@ const getEndYear = () => getFilterData('bw_model_year_end');
     </div>
     <button
       class="hidden md:flex justify-center items-baseline gap-2 w-fit h-fit py-2 px-6 border border-solid !border-[#DEE2E6] rounded-md bg-[#212529] text-white"
+      @click="$emit('on-next', $event)"
     >
       <img
         src="@/assets/svg/arrow-right.svg"

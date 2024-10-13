@@ -9,6 +9,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
+import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 
 export type SelectedFiltersProps = {
   [key in FilterLabelProps]: string | number;
@@ -18,7 +19,13 @@ const { getLoggedUserInfo } = useAuthStore();
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
 const isUserAdmin = ref(false);
-const vehicleData = ref('');
+const familyId = ref<number>();
+
+const modelSeries = ref('');
+
+const previousVehicleData = ref();
+const vehicleData = ref();
+const nextVehicleData = ref();
 
 const selectedFilters = ref<SelectedFiltersProps>({
   Brand: '',
@@ -27,6 +34,44 @@ const selectedFilters = ref<SelectedFiltersProps>({
   'Start Year': '',
   'End Year': '',
 });
+
+const getVehicleData = async (familyId: number, modelSeries: string) => {
+  const currentModelData = await axios
+    .get(
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:${familyId},bw_model_series:${modelSeries}`
+    )
+    .then(response => response.data?.items?.[0])
+    .catch(error => {});
+
+  if (currentModelData) return currentModelData;
+};
+
+const setAllVehicleData = async (
+  familyId: number,
+  modelSeries: string,
+  avoidCurrent?: boolean
+) => {
+  if (!familyId || !modelSeries) return;
+
+  // CURRENT
+  if (!avoidCurrent) {
+    getVehicleData(familyId, modelSeries).then(
+      data => (vehicleData.value = data || null)
+    );
+  }
+
+  // PREVIOUS
+  const previousModelSeries = numberToRoman(romanToNumber(modelSeries) - 1);
+  getVehicleData(familyId, previousModelSeries).then(
+    data => (previousVehicleData.value = data || null)
+  );
+
+  // NEXT
+  const nextModelSeries = numberToRoman(romanToNumber(modelSeries) + 1);
+  getVehicleData(familyId, nextModelSeries).then(
+    data => (nextVehicleData.value = data || null)
+  );
+};
 
 onMounted(async () => {
   // USER FETCH
@@ -43,33 +88,62 @@ onMounted(async () => {
     )
     .then(response => {
       const _vehicleData = response.data?.items[0];
+      if (!_vehicleData) return;
 
-      if (_vehicleData) {
-        vehicleData.value = _vehicleData;
-        selectedFilters.value = {
-          Brand: _vehicleData.brand_name,
-          Family: _vehicleData.bw_family_name,
-          Model: _vehicleData.bw_model_name,
-          'Start Year': _vehicleData.bw_model_year_begin,
-          'End Year': _vehicleData.bw_model_year_end,
-        };
-      }
+      vehicleData.value = _vehicleData;
+      selectedFilters.value = {
+        Brand: _vehicleData.brand_name,
+        Family: _vehicleData.bw_family_name,
+        Model: _vehicleData.bw_model_name,
+        'Start Year': _vehicleData.bw_model_year_begin,
+        'End Year': _vehicleData.bw_model_year_end,
+      };
+
+      const _familyId = _vehicleData?.bw_family_id;
+      const _modelSeries = _vehicleData?.bw_model_series;
+      familyId.value = _familyId;
+      modelSeries.value = _modelSeries;
+
+      setAllVehicleData(_familyId, _modelSeries, true);
     });
 });
+
+const handleFilterPrevious = () => {
+  if (modelSeries.value === 'II') return; // Because the current one can only be this "II" since there's no previous of "I" ofc ..
+
+  modelSeries.value = numberToRoman(romanToNumber(modelSeries.value) - 1);
+
+  if (familyId.value && modelSeries.value) {
+    setAllVehicleData(familyId.value, modelSeries.value);
+  }
+};
+
+const handleFilterNext = () => {
+  modelSeries.value = numberToRoman(romanToNumber(modelSeries.value) + 1);
+
+  if (familyId.value && modelSeries.value) {
+    setAllVehicleData(familyId.value, modelSeries.value);
+  }
+};
 </script>
 
 <template>
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <Filters class="md:min-w-[1300px]" :modelValue="selectedFilters" />
+    <Filters
+      class="md:min-w-[1300px]"
+      :modelValue="selectedFilters"
+      @onPrevious="handleFilterPrevious"
+      @onNext="handleFilterNext"
+    />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
         class="flex flex-col md:flex-row justify-between gap-6 h-full pb-3 md:min-w-[1300px]"
       >
         <!-- PREVIOUS SERIE -->
         <div class="md:!min-w-[400px]">
-          <Gallery :vehicleData="vehicleData" />
+          <Gallery :vehicleData="previousVehicleData" />
         </div>
 
         <!-- CURRENT SERIE -->
@@ -79,7 +153,7 @@ onMounted(async () => {
 
         <!-- NEXT SERIE -->
         <div class="md:!min-w-[400px]">
-          <Gallery :vehicleData="vehicleData" />
+          <Gallery :vehicleData="nextVehicleData" />
         </div>
       </div>
       <div
