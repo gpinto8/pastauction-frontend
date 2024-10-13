@@ -86,7 +86,7 @@ const handlePageChanged = async (page: number) => {
     </div>
     <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
-        :images="images"
+        :images="images.slice(0, 24)"
         :vehicleData="vehicleData"
         :currentPage="currentPage"
         :imagesPerPage="imagesPerPage"
