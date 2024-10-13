@@ -4,6 +4,7 @@ export type ImagesGridProps = { path: string; metadata?: any }[];
 type ColumnCombinations =
   | '7x60'
   | '4x80'
+  | '4x100'
   | '5x80'
   | '15x80'
   | '2x80'
@@ -25,6 +26,7 @@ const gridMap: { [key in ColumnCombinations]: string } = {
   '2x80': 'grid-cols-[repeat(2,80px)]',
   '5x80': 'grid-cols-[repeat(5,80px)]',
   '4x80': 'grid-cols-[repeat(4,80px)]',
+  '4x100': 'grid-cols-[repeat(4,100px)]',
   '6x80': 'grid-cols-[repeat(6,80px)]',
   '15x80': 'grid-cols-[repeat(15,80px)]',
   '5x54': 'grid-cols-[repeat(5,54px)]',
@@ -42,7 +44,7 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
       :src="image.path"
       alt=""
       :width="size"
-      :height="size"
+      :height="!autoHeight ? size : 0"
       class="block border-2 border-solid border-black"
       :class="{ 'cursor-pointer': image.path && onImageClick }"
       :style="{ height: autoHeight ? 'auto' : `${size}px`, width: `${size}px` }"

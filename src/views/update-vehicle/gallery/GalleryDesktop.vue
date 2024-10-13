@@ -43,7 +43,7 @@ const handleSelect = () => {
     <Parameters :vehicleData="vehicleData" />
     <ImageryGrid
       :images="images"
-      columnCombination="4x80"
+      columnCombination="4x100"
       classContainer="mt-6 mb-4 h-[480px] justify-center items-center bg-[#212529]"
       autoHeight
     />

@@ -11,13 +11,13 @@ const handleOpenMobile = () => {
 
 const parametersData = computed(() => {
   const data = props.vehicleData;
-  if (!data) return;
+
   return [
-    { label: 'Model', value: data.bw_model_name },
-    { label: 'Stage', value: data.vehicle_stage },
-    { label: 'Series', value: data.vehicle_series },
-    { label: 'From', value: data.bw_model_year_begin },
-    { label: 'To', value: data.bw_model_year_end },
+    { label: 'Model', value: data?.bw_model_name || '' },
+    { label: 'Stage', value: data?.vehicle_stage || '' },
+    { label: 'Series', value: data?.vehicle_series || '' },
+    { label: 'From', value: data?.bw_model_year_begin || '' },
+    { label: 'To', value: data?.bw_model_year_end || '' },
   ];
 });
 </script>
@@ -40,7 +40,7 @@ const parametersData = computed(() => {
       <div
         class="bg-white w-full rounded-sm border border-solid text-white md:!text-black !bg-[#FFFFFF1A] sm:border-[#CED4DA] font-normal p-2 sm:p-1"
       >
-        <div class="flex justify-between gap-1 w-max">
+        <div class="flex justify-between gap-1 w-max h-[24px]">
           {{ parameter.value }}
           <img
             class="block sm:hidden"
