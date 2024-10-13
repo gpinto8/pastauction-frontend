@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import ImageryGrid, { type ImagesGridProps } from './ImageryGrid.vue';
+import ImageryGrid, {
+  type ImageGrid,
+  type ImagesGridProps,
+} from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import Pagination from './Pagination.vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
@@ -14,6 +17,7 @@ const props = defineProps<{
   totalImages: number;
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
+  handleImageClick?: (image: ImageGrid) => void;
 }>();
 
 const emit = defineEmits(['onPageChanged']);
@@ -46,6 +50,7 @@ const handleSelect = () => {
       columnCombination="4x100"
       classContainer="mt-6 mb-4 h-[480px] justify-center items-center bg-[#212529]"
       autoHeight
+      @imageClick="handleImageClick"
     />
     <div class="flex justify-between gap-2">
       <Pagination

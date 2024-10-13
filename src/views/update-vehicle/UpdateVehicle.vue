@@ -109,7 +109,11 @@ onMounted(async () => {
 });
 
 const handleFilterPrevious = () => {
-  if (modelSeries.value === 'II') return; // Because the current one can only be this "II" since there's no previous of "I" ofc ..
+  if (
+    modelSeries.value === 'I' ||
+    modelSeries.value === 'II' // Because the current one can only be this "II" since there's no previous of "I" ofc ..
+  )
+    return;
 
   modelSeries.value = numberToRoman(romanToNumber(modelSeries.value) - 1);
 
@@ -119,6 +123,8 @@ const handleFilterPrevious = () => {
 };
 
 const handleFilterNext = () => {
+  if (modelSeries.value === 'I') return;
+
   modelSeries.value = numberToRoman(romanToNumber(modelSeries.value) + 1);
 
   if (familyId.value && modelSeries.value) {
@@ -143,17 +149,24 @@ const handleFilterNext = () => {
       >
         <!-- PREVIOUS SERIE -->
         <div class="md:!min-w-[400px]">
-          <Gallery :vehicleData="previousVehicleData" />
+          <Gallery
+            :isUserAdmin="isUserAdmin"
+            :vehicleData="previousVehicleData"
+          />
         </div>
 
         <!-- CURRENT SERIE -->
         <div class="md:!min-w-[400px]">
-          <Gallery :modelValue="selectedFilters" :vehicleData="vehicleData" />
+          <Gallery
+            :isUserAdmin="isUserAdmin"
+            :modelValue="selectedFilters"
+            :vehicleData="vehicleData"
+          />
         </div>
 
         <!-- NEXT SERIE -->
         <div class="md:!min-w-[400px]">
-          <Gallery :vehicleData="nextVehicleData" />
+          <Gallery :isUserAdmin="isUserAdmin" :vehicleData="nextVehicleData" />
         </div>
       </div>
       <div

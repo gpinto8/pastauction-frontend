@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
   class: string;
   vehicleData: any;
 }>();
 
-const image = computed(
-  () => `https://pastauction.com/api/v1/photo/${props.vehicleData?.photo_path}`
-);
+const updateVehicleStore = updateVehicle();
+
+const image = computed(() => {
+  if (updateVehicleStore?.mainPicturePath)
+    return updateVehicleStore?.mainPicturePath;
+  return `https://pastauction.com/api/v1/photo/${props.vehicleData?.photo_path}`;
+});
+
 const brandName = computed(() => props.vehicleData?.brand_name);
 </script>
 

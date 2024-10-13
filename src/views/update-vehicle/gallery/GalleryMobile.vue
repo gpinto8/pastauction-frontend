@@ -2,12 +2,15 @@
 import { ref, watch } from 'vue';
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
 import UiCheckbox from '@/components/ui/ui-checkbox.vue';
-import ImageryGrid, { type ImagesGridProps } from './ImageryGrid.vue';
+import ImageryGrid, {
+  type ImageGrid,
+  type ImagesGridProps,
+} from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import PaginationSlider from './PaginationSlider.vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 
-const props = defineProps<{
+defineProps<{
   images: ImagesGridProps;
   currentPage: number;
   imagesPerPage: number;
@@ -15,6 +18,7 @@ const props = defineProps<{
   totalImages: number;
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
+  handleImageClick?: (image: ImageGrid) => void;
 }>();
 
 const emit = defineEmits(['onPageChanged']);
@@ -96,12 +100,14 @@ const handleSelected = (event: any) => {
             :images="images.filter(Boolean).slice(0, 7)"
             columnCombination="7x60"
             class="hidden sm:flex justify-between items-center h-[60px]"
+            @imageClick="handleImageClick"
           />
           <ImageryGrid
             v-if="mobileOpen"
             :images="images.filter(Boolean).slice(0, 5)"
             columnCombination="5x54"
             class="flex sm:hidden justify-between items-center h-[54px]"
+            @imageClick="handleImageClick"
           />
           <Parameters v-else :vehicleData="vehicleData" />
         </div>
@@ -138,6 +144,7 @@ const handleSelected = (event: any) => {
             :images="images"
             columnCombination="5x80"
             classContainer="w-fit my-0 mx-auto"
+            @imageClick="handleImageClick"
           />
           <PaginationSlider
             :currentPage="currentPage"
@@ -153,6 +160,7 @@ const handleSelected = (event: any) => {
             :images="images"
             columnCombination="3x80"
             classContainer="w-fit my-0 mx-auto"
+            @imageClick="handleImageClick"
           />
           <PaginationSlider
             :currentPage="currentPage"

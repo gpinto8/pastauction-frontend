@@ -4,12 +4,14 @@ import GalleryDesktop from './GalleryDesktop.vue';
 import GalleryMobile from './GalleryMobile.vue';
 import { computed, ref, watch } from 'vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
-import type { ImagesGridProps } from './ImageryGrid.vue';
+import type { ImageGrid, ImagesGridProps } from './ImageryGrid.vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
   class?: string;
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
+  isUserAdmin?: boolean;
 }>();
 
 defineEmits(['getResponseData']);
@@ -19,6 +21,7 @@ const currentPage = ref(1);
 const imagesPerPage = 30;
 const totalPages = ref(0);
 const totalImages = ref(0);
+const updateVehicleStore = updateVehicle();
 
 const familyId = computed(() => props.vehicleData?.bw_family_id);
 
@@ -68,6 +71,11 @@ const handlePageChanged = async (page: number) => {
   const imagesArray = await getImages(familyId.value, page);
   if (imagesArray) images.value = imagesArray.data.map(path => ({ path }));
 };
+
+const handleImageClick = (image: ImageGrid) => {
+  const path = image?.path;
+  if (path) updateVehicleStore.mainPicturePath = path;
+};
 </script>
 
 <template>
@@ -82,6 +90,7 @@ const handlePageChanged = async (page: number) => {
         :totalImages="totalImages"
         :modelValue="modelValue"
         @onPageChanged="handlePageChanged"
+        :handleImageClick="props.isUserAdmin ? handleImageClick : undefined"
       />
     </div>
     <div class="hidden md:flex h-full flex-col w-fit">
@@ -94,6 +103,7 @@ const handlePageChanged = async (page: number) => {
         :totalImages="totalImages"
         :modelValue="modelValue"
         @onPageChanged="handlePageChanged"
+        :handleImageClick="props.isUserAdmin ? handleImageClick : undefined"
       />
     </div>
   </div>

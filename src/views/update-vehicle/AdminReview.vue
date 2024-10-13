@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios';
-import ImageryGrid from './gallery/ImageryGrid.vue';
+import ImageryGrid, { type ImageGrid } from './gallery/ImageryGrid.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useBreakpoint } from '@/utils/functions/useBreakpoint';
 
@@ -17,8 +17,6 @@ const breakpointCellSize = computed(() => {
   if (breakpoint.value === 'md') return 5;
   return 15;
 });
-
-const imageCellSize = computed(() => `${breakpointCellSize.value}x80`);
 
 const getImagePaths = async (page: number) => {
   const response = await axios.get(
@@ -43,8 +41,9 @@ onMounted(async () => {
   imagePaths.value = _imagePaths;
 });
 
-const handleImageClick = (id: number) => {
-  location.replace(`/vehicle_update/${id}`);
+const handleImageClick = (image: ImageGrid) => {
+  const id = image.metadata?.id;
+  if (id) location.replace(`/vehicle_update/${id}`);
 };
 
 const goBack = async () => {

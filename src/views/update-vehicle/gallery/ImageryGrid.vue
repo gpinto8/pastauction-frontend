@@ -1,5 +1,6 @@
 <script lang="tsx" setup>
-export type ImagesGridProps = { path: string; metadata?: any }[];
+export type ImageGrid = { path: string; metadata?: any };
+export type ImagesGridProps = ImageGrid[];
 
 type ColumnCombinations =
   | '7x60'
@@ -16,7 +17,7 @@ const props = defineProps<{
   images: ImagesGridProps;
   classContainer?: string;
   columnCombination: ColumnCombinations; // It gotta be MAX_ROWS x SIZE
-  onImageClick?: (metadata?: any) => void;
+  onImageClick?: (image: ImageGrid) => void;
   autoHeight?: boolean;
 }>();
 
@@ -48,7 +49,7 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
       class="block border-2 border-solid border-black"
       :class="{ 'cursor-pointer': image.path && onImageClick }"
       :style="{ height: autoHeight ? 'auto' : `${size}px`, width: `${size}px` }"
-      @click="() => image.path && onImageClick?.(image.metadata)"
+      @click="() => image.path && onImageClick?.(image)"
     />
   </div>
 </template>
