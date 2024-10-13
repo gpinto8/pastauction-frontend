@@ -5,6 +5,7 @@ import UiCheckbox from '@/components/ui/ui-checkbox.vue';
 import ImageryGrid, { type ImagesGridProps } from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import PaginationSlider from './PaginationSlider.vue';
+import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 
 const props = defineProps<{
   images: ImagesGridProps;
@@ -12,6 +13,8 @@ const props = defineProps<{
   imagesPerPage: number;
   totalPages: number;
   totalImages: number;
+  modelValue?: SelectedFiltersProps;
+  vehicleData?: any;
 }>();
 
 const emit = defineEmits(['onPageChanged']);
@@ -100,7 +103,7 @@ const handleSelected = (event: any) => {
             columnCombination="5x54"
             class="flex sm:hidden justify-between items-center h-[54px]"
           />
-          <Parameters v-else />
+          <Parameters v-else :vehicleData="vehicleData" />
         </div>
         <div
           class="hidden sm:flex z-10 pointer-events-auto justify-end"
@@ -156,7 +159,7 @@ const handleSelected = (event: any) => {
             :totalPages="totalPages"
             :totalImages="totalImages"
             @onPageChanged="handlePageChanged"
-            classContainer="p-auto w-[240px] mt-4 mb-0 mx-auto"
+            classContainer="p-auto !w-[240px] mt-4 mb-0 mx-auto"
           />
         </div>
       </div>

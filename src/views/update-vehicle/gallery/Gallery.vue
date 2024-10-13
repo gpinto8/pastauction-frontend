@@ -19,8 +19,6 @@ const currentPage = ref(1);
 const imagesPerPage = 30;
 const totalPages = ref(0);
 const totalImages = ref(0);
-const responseData = ref<any>();
-const desktopGalleryRef = ref();
 
 const familyId = computed(() => props.vehicleData?.bw_family_id);
 
@@ -70,10 +68,6 @@ const handlePageChanged = async (page: number) => {
   const imagesArray = await getImages(familyId.value, page);
   if (imagesArray) images.value = imagesArray.data.map(path => ({ path }));
 };
-
-defineExpose({
-  responseData: responseData,
-});
 </script>
 
 <template>
@@ -81,25 +75,25 @@ defineExpose({
     <div class="block md:hidden">
       <GalleryMobile
         :images="images"
-        :currentPage="currentPage"
-        :imagesPerPage="imagesPerPage"
-        :totalPages="totalPages"
-        :totalImages="totalImages"
-        @onPageChanged="handlePageChanged"
-      />
-    </div>
-    <div class="hidden md:flex h-full flex-col w-fit">
-      <GalleryDesktop
-        ref="desktopGalleryRef"
         :vehicleData="vehicleData"
-        :images="images"
         :currentPage="currentPage"
         :imagesPerPage="imagesPerPage"
         :totalPages="totalPages"
         :totalImages="totalImages"
         :modelValue="modelValue"
         @onPageChanged="handlePageChanged"
-        @getResponseData="responseData = $event"
+      />
+    </div>
+    <div class="hidden md:flex h-full flex-col w-fit">
+      <GalleryDesktop
+        :images="images"
+        :vehicleData="vehicleData"
+        :currentPage="currentPage"
+        :imagesPerPage="imagesPerPage"
+        :totalPages="totalPages"
+        :totalImages="totalImages"
+        :modelValue="modelValue"
+        @onPageChanged="handlePageChanged"
       />
     </div>
   </div>

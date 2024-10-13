@@ -16,7 +16,7 @@ const props = defineProps<{
   vehicleData?: any;
 }>();
 
-const emit = defineEmits(['onPageChanged', 'getResponseData']);
+const emit = defineEmits(['onPageChanged']);
 
 const responseData = ref<any>();
 const updateVehicleStore = updateVehicle();
@@ -36,19 +36,11 @@ const handleSelect = () => {
     updateVehicleStore.parametersResponseData = responseData;
   }
 };
-
-defineExpose({
-  responseData: responseData,
-});
 </script>
 
 <template>
   <div class="h-full">
-    <Parameters
-      :vehicleData="vehicleData"
-      :filterData="modelValue"
-      @getResponseData="responseData = $event"
-    />
+    <Parameters :vehicleData="vehicleData" />
     <ImageryGrid
       :images="images"
       columnCombination="5x80"

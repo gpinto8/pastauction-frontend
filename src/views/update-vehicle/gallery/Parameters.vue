@@ -1,19 +1,10 @@
 <script setup lang="ts">
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
 import { computed, ref } from 'vue';
-import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 
-const props = defineProps<{
-  modelValue?: any;
-  filterData?: SelectedFiltersProps;
-  vehicleData?: any;
-}>();
-
-const emit = defineEmits(['update:modelValue', 'getResponseData']);
+const props = defineProps<{ vehicleData?: any }>();
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
-const responseData = ref();
-
 const handleOpenMobile = () => {
   mobileOpen.value = mobileOpen.value === 0 ? 1 : 0;
 };
@@ -21,17 +12,14 @@ const handleOpenMobile = () => {
 const parametersData = computed(() => {
   const data = props.vehicleData;
   if (!data) return;
-
   return [
     { label: 'Model', value: data.bw_model_name },
     { label: 'Stage', value: data.vehicle_stage },
     { label: 'Series', value: data.vehicle_series },
-    { label: 'From', value: data.vehicle_year },
-    { label: 'To', value: data.vehicle_year },
+    { label: 'From', value: data.bw_model_year_begin },
+    { label: 'To', value: data.bw_model_year_end },
   ];
 });
-
-defineExpose({ responseData });
 </script>
 
 <template>
@@ -84,8 +72,7 @@ defineExpose({ responseData });
           class="bg-white w-full rounded-sm border border-solid text-white md:!text-black !bg-[#FFFFFF1A] sm:border-[#CED4DA] font-normal p-2 sm:p-1"
         >
           <div class="flex justify-between gap-1 w-full">
-            993 - IV
-            {{ parametersData?.[0].label }}
+            {{ parametersData?.[0].value }}
             <img
               @click="handleOpenMobile"
               class="block sm:hidden pointer-events-auto cursor-pointer"
@@ -114,7 +101,6 @@ defineExpose({ responseData });
             >
               {{ parameter.label }}
             </div>
-
             <div
               class="bg-white w-full rounded-sm border border-solid text-white md:!text-black !bg-[#FFFFFF1A] sm:border-[#CED4DA] font-normal p-2 sm:p-1"
             >
