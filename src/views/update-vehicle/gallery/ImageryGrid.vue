@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-export type ImageGrid = { path: string; metadata?: any };
+export type ImageGrid = { id: number; path: string; metadata?: any };
 export type ImagesGridProps = ImageGrid[];
 
 type ColumnCombinations =

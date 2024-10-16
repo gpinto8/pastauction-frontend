@@ -12,22 +12,57 @@ const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 const updateVehicleStore = updateVehicle();
 
-const beforeData = computed(() => {
-  const data = props.vehicleData;
-  if (!data) return;
+const beforeData = ref([
+  { label: 'Family', value: '' },
+  { label: 'Model', value: '' },
+  { label: 'Stage', value: '' },
+  { label: 'Series', value: '' },
+  { label: 'Year', value: '' },
+  { label: 'Chasis', value: '' },
+  { label: 'Body', value: '' },
+  { label: 'Color', value: '' },
+  { label: 'Attribute', value: '' },
+]);
 
-  return [
-    { label: 'Family', value: data?.bw_family_id },
-    { label: 'Model', value: data?.bw_model_name },
-    { label: 'Stage', value: data?.vehicle_stage },
-    { label: 'Series', value: data?.vehicle_series },
-    { label: 'Year', value: data?.vehicle_year },
-    { label: 'Chasis', value: data?.chassis },
-    { label: 'Body', value: data?.body_shapes },
-    { label: 'Color', value: data?.color_main_name },
-    { label: 'Attribute', value: data?.body_types },
-  ];
-});
+watch(
+  () => props.vehicleData,
+  () => {
+    const data = props.vehicleData;
+    if (!data) return;
+
+    beforeData.value = [
+      { label: 'Family', value: data?.bw_family_id },
+      { label: 'Model', value: data?.bw_model_name },
+      { label: 'Stage', value: data?.vehicle_stage },
+      { label: 'Series', value: data?.vehicle_series },
+      { label: 'Year', value: data?.vehicle_year },
+      { label: 'Chasis', value: data?.chassis },
+      { label: 'Body', value: data?.body_shapes },
+      { label: 'Color', value: data?.color_main_name },
+      { label: 'Attribute', value: data?.body_types },
+    ];
+  }
+);
+
+watch(
+  () => updateVehicleStore.selectedImageVehicleData,
+  () => {
+    const data = updateVehicleStore.selectedImageVehicleData;
+    if (!data) return;
+
+    beforeData.value = [
+      { label: 'Family', value: data?.bw_family_id },
+      { label: 'Model', value: data?.bw_model_name },
+      { label: 'Stage', value: data?.vehicle_stage },
+      { label: 'Series', value: data?.vehicle_series },
+      { label: 'Year', value: data?.vehicle_year },
+      { label: 'Chasis', value: data?.chassis },
+      { label: 'Body', value: data?.body_shapes },
+      { label: 'Color', value: data?.color_main_name },
+      { label: 'Attribute', value: data?.body_types },
+    ];
+  }
+);
 
 const suggestedData = ref([
   { label: 'Family', value: '' },

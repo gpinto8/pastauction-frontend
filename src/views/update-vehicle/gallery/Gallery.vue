@@ -42,7 +42,9 @@ const getImages = async (familyId: number, page: number) => {
         `https://pastauction.com/api/v1/filter/bidwatcher_photo/logo_test/?search=id_vehicle:${id}`
       );
       const photoId = photoData.data?.items?.[0]?.logo_test;
-      if (photoId) return `https://pastauction.com/api/v1/photo/${photoId}`;
+      if (photoId) {
+        return { id, path: `https://pastauction.com/api/v1/photo/${photoId}` };
+      }
     } catch (error) {}
   };
   const requests = familyIds.map((id: string) => fetchData(id) || '');
@@ -59,7 +61,7 @@ watch(
   async () => {
     const imageData = await getImages(familyId.value, 1);
     if (imageData) {
-      images.value = imageData.data.map(path => ({ path }));
+      images.value = imageData.data;
       totalPages.value = imageData.totalPages;
       totalImages.value = imageData.totalImages;
     }
@@ -69,12 +71,15 @@ watch(
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
   const imagesArray = await getImages(familyId.value, page);
-  if (imagesArray) images.value = imagesArray.data.map(path => ({ path }));
+  if (imagesArray) images.value = imagesArray.data;
 };
 
-const handleImageClick = (image: ImageGrid) => {
-  const path = image?.path;
-  if (path) updateVehicleStore.mainPicturePath = path;
+const handleImageClick = async (image: ImageGrid) => {
+  const imageData = await axios.get(
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${image.id}`
+  );
+  const data = imageData.data?.items?.[0];
+  if (data) updateVehicleStore.selectedImageVehicleData = data;
 };
 </script>
 

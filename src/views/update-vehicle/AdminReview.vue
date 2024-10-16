@@ -101,6 +101,7 @@ const goForward = async () => {
           class="flex sm:hidden"
           :images="
             new Array(2).fill(undefined).map((_, i) => ({
+              id: imagePaths?.[i]?.id!,
               path: imagePaths?.[i]?.path!,
               metadata: imagePaths?.[i]?.id!,
             }))
@@ -114,6 +115,7 @@ const goForward = async () => {
           class="hidden sm:flex md:hidden"
           :images="
             new Array(5).fill(undefined).map((_, i) => ({
+              id: imagePaths?.[i]?.id!,
               path: imagePaths?.[i]?.path!,
               metadata: imagePaths?.[i]?.id!,
             }))
@@ -127,6 +129,7 @@ const goForward = async () => {
           class="hidden md:flex"
           :images="
             new Array(15).fill(undefined).map((_, i) => ({
+              id: imagePaths?.[i]?.id!,
               path: imagePaths?.[i]?.path!,
               metadata: imagePaths?.[i]?.id!,
             }))

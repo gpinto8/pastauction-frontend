@@ -10,12 +10,18 @@ const props = defineProps<{
 const updateVehicleStore = updateVehicle();
 
 const image = computed(() => {
-  if (updateVehicleStore?.mainPicturePath)
-    return updateVehicleStore?.mainPicturePath;
-  return `https://pastauction.com/api/v1/photo/${props.vehicleData?.photo_path}`;
+  const path =
+    updateVehicleStore.selectedImageVehicleData?.photo_path ||
+    props.vehicleData?.photo_path;
+  if (path) return `https://pastauction.com/api/v1/photo/${path}`;
 });
 
-const brandName = computed(() => props.vehicleData?.brand_name);
+const brandName = computed(() => {
+  const name =
+    updateVehicleStore.selectedImageVehicleData?.brand_name ||
+    props.vehicleData?.brand_name;
+  if (name) return name;
+});
 </script>
 
 <template>
