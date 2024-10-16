@@ -4,7 +4,7 @@ export const updateVehicle = defineStore('updateVehicle', {
   state: () => {
     return {
       mainPicturePath: '',
-      parametersResponseData: {} as any,
+      selectedVehicleData: {} as any,
     };
   },
 });

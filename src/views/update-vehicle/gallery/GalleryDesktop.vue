@@ -6,7 +6,6 @@ import ImageryGrid, {
 import Parameters from './Parameters.vue';
 import Pagination from './Pagination.vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
-import { ref } from 'vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
@@ -22,7 +21,6 @@ const props = defineProps<{
 
 const emit = defineEmits(['onPageChanged']);
 
-const responseData = ref<any>();
 const updateVehicleStore = updateVehicle();
 
 const handlePageChanged = (page: number) => {
@@ -30,14 +28,8 @@ const handlePageChanged = (page: number) => {
 };
 
 const handleSelect = () => {
-  if (
-    props.modelValue?.Brand &&
-    props.modelValue?.Family &&
-    props.modelValue?.Model &&
-    props.modelValue?.['Start Year'] &&
-    props.modelValue?.['End Year']
-  ) {
-    updateVehicleStore.parametersResponseData = responseData;
+  if (props.vehicleData) {
+    updateVehicleStore.selectedVehicleData = props.vehicleData;
   }
 };
 </script>

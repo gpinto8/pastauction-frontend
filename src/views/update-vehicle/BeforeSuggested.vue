@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { computed, ref } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
   class: string;
@@ -9,21 +10,22 @@ const props = defineProps<{
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
+const updateVehicleStore = updateVehicle();
 
 const beforeData = computed(() => {
   const data = props.vehicleData;
   if (!data) return;
 
   return [
-    { label: 'Family', value: data.bw_family_id },
-    { label: 'Model', value: data.bw_model_name },
-    { label: 'Stage', value: data.vehicle_stage },
-    { label: 'Series', value: data.vehicle_series },
-    { label: 'Year', value: data.vehicle_year },
-    { label: 'Chasis', value: data.chassis },
-    { label: 'Body', value: data.body_shapes },
-    { label: 'Color', value: data.color_main_name },
-    { label: 'Attribute', value: data.body_types },
+    { label: 'Family', value: data?.bw_family_id },
+    { label: 'Model', value: data?.bw_model_name },
+    { label: 'Stage', value: data?.vehicle_stage },
+    { label: 'Series', value: data?.vehicle_series },
+    { label: 'Year', value: data?.vehicle_year },
+    { label: 'Chasis', value: data?.chassis },
+    { label: 'Body', value: data?.body_shapes },
+    { label: 'Color', value: data?.color_main_name },
+    { label: 'Attribute', value: data?.body_types },
   ];
 });
 
@@ -38,6 +40,26 @@ const suggestedData = ref([
   { label: 'Color', value: '' },
   { label: 'Attribute', value: '' },
 ]);
+
+watch(
+  () => updateVehicleStore.selectedVehicleData,
+  () => {
+    const data = updateVehicleStore.selectedVehicleData;
+    if (!data) return;
+
+    suggestedData.value = [
+      { label: 'Family', value: data?.bw_family_id || '' },
+      { label: 'Model', value: data?.bw_model_name || '' },
+      { label: 'Stage', value: data?.vehicle_stage || '' },
+      { label: 'Series', value: data?.vehicle_series || '' },
+      { label: 'Year', value: '', disabled: true },
+      { label: 'Chasis', value: '', disabled: true },
+      { label: 'Body', value: data?.body_shapes || '' },
+      { label: 'Color', value: data?.color_main_name || '' },
+      { label: 'Attribute', value: data?.body_types || '' },
+    ];
+  }
+);
 </script>
 
 <template>
