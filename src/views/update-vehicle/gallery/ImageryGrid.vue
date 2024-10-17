@@ -39,17 +39,22 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
 
 <template>
   <div :class="[gridClass, {[classContainer as any]: classContainer}]">
-    <img
-      v-for="(image, i) in images"
-      :key="i"
-      :src="image.path"
-      alt=""
-      :width="size"
-      :height="!autoHeight ? size : 0"
-      class="block border-2 border-solid border-black"
-      :class="{ 'cursor-pointer': image.path && onImageClick }"
-      :style="{ height: autoHeight ? 'auto' : `${size}px`, width: `${size}px` }"
-      @click="() => image.path && onImageClick?.(image)"
-    />
+    <div v-for="(image, i) in images" :key="i" class="cursor-pointer">
+      <img
+        :src="image.path"
+        alt=""
+        :width="size"
+        :height="!autoHeight ? size : 0"
+        class="block border-2 border-solid border-black"
+        :style="{
+          height: autoHeight ? 'auto' : `${size}px`,
+          width: `${size}px`,
+        }"
+        @click="() => image.path && onImageClick?.(image)"
+      />
+      <v-tooltip activator="parent" location="top" :open-delay="1000">
+        <img :src="image.path" alt="" :width="300" :height="300" />
+      </v-tooltip>
+    </div>
   </div>
 </template>
