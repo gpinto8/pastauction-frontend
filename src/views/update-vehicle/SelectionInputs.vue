@@ -199,7 +199,7 @@ const handleAttributeSelection = (attribute: string) => {
       <!-- BODY DATA -->
       <div class="mb-4 flex gap-2 flex-wrap">
         <button
-          class="p-2 text-sm w-fit rounded-md border-2 border-solid border-[#212529] text-[#212529] bg-white"
+          class="p-2 text-sm w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
           v-for="(data, i) in bodyData"
           :key="i"
           :class="{
@@ -214,7 +214,7 @@ const handleAttributeSelection = (attribute: string) => {
       <div class="flex gap-2 flex-wrap">
         <button
           v-if="bodySubData"
-          class="p-2 text-sm w-fit rounded-md border-2 border-solid border-[#212529] text-[#212529] bg-white"
+          class="p-2 text-sm w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
           v-for="(data, i) in Object.values(bodySubData)?.[0]"
           :key="data"
           :class="{
@@ -242,7 +242,7 @@ const handleAttributeSelection = (attribute: string) => {
           <div class="flex gap-1 flex-wrap w-full">
             <div
               v-for="color in colorData"
-              class="h-8 w-8 border rounded bg-grey-100 p-1 cursor-pointer"
+              class="h-8 w-8 border-[2px] border-solid border-grey-100 cursor-pointer"
               :class="{
                 '!border !border-solid !border-[#212529]':
                   selectedColor && selectedColor.name === color.name,
@@ -268,7 +268,7 @@ const handleAttributeSelection = (attribute: string) => {
           <div class="flex gap-1 flex-wrap w-full">
             <div
               v-for="color in colorSubData"
-              class="h-8 w-8 border rounded bg-grey-100 p-1 cursor-pointer"
+              class="h-8 w-8 border-[2px] border-solid border-grey-100 cursor-pointer"
               :class="{
                 '!border !border-solid !border-[#212529]':
                   selectedSubColors?.some(_color => _color.name === color.name),
@@ -292,7 +292,7 @@ const handleAttributeSelection = (attribute: string) => {
       <div class="mb-3 font-semibold text-lg">Attribute changes</div>
       <div class="grid grid-cols-2 sm:flex gap-2 sm:flex-wrap">
         <button
-          class="w-full p-2 text-sm sm:w-fit rounded-md border-2 border-solid border-[#212529] text-[#212529] bg-white"
+          class="w-full p-2 text-sm sm:w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
           :key="i"
           :class="{
             '!bg-[#212529] text-white': selectedAttributes?.includes(data),
