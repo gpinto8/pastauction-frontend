@@ -53,7 +53,7 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
         @click="() => image.path && onImageClick?.(image)"
       />
       <v-tooltip activator="parent" location="top" :open-delay="1000">
-        <img :src="image.path" alt="" :width="300" :height="300" />
+        <img :src="image.path" alt="" :width="640" :height="480" />
       </v-tooltip>
     </div>
   </div>
