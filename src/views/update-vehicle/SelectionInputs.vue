@@ -141,9 +141,7 @@ const handleColorSelection = async (color: ColorProps) => {
   }
 
   const _colorSubData: ColorProps[] = await getSubColorData(color.id);
-  colorSubData.value = _colorSubData.filter(
-    _color => _color.name !== color.name
-  );
+  colorSubData.value = _colorSubData;
 
   selectedColor.value = color;
   selectedSubColors.value = [];
@@ -230,6 +228,7 @@ const handleAttributeSelection = (attribute: string) => {
     <div class="flex flex-col">
       <div class="mb-3 font-semibold text-lg">Colours changes</div>
       <div class="flex flex-col gap-2">
+        <!-- COLOR DATA -->
         <div class="flex gap-4 items-center flex-col sm:flex-row">
           <div class="font-semibold text-base w-full sm:w-fit">Main:</div>
           <div class="flex gap-1 flex-wrap w-full">
@@ -242,14 +241,17 @@ const handleAttributeSelection = (attribute: string) => {
               }"
               @click="() => handleColorSelection(color)"
             >
-              <div
-                class="h-full"
-                :style="{ backgroundColor: color.hex_code }"
-              ></div>
+              <div class="h-full" :style="{ backgroundColor: color.hex_code }">
+                <v-tooltip
+                  activator="parent"
+                  location="top"
+                  :text="color.name"
+                />
+              </div>
             </div>
           </div>
         </div>
-        <!-- SUB COLOR -->
+        <!-- SUB COLOR DATA -->
         <div
           v-if="colorSubData?.length && selectedColor"
           class="flex gap-4 items-center flex-col sm:flex-row"
@@ -265,10 +267,13 @@ const handleAttributeSelection = (attribute: string) => {
               }"
               @click="() => handleSubColorSelection(color)"
             >
-              <div
-                class="h-full"
-                :style="{ backgroundColor: color.hex_code }"
-              ></div>
+              <div class="h-full" :style="{ backgroundColor: color.hex_code }">
+                <v-tooltip
+                  activator="parent"
+                  location="top"
+                  :text="color.name"
+                />
+              </div>
             </div>
           </div>
         </div>
