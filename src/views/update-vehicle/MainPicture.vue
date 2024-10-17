@@ -16,11 +16,11 @@ const image = computed(() => {
   if (path) return `https://pastauction.com/api/v1/photo/${path}`;
 });
 
-const brandName = computed(() => {
-  const name =
-    updateVehicleStore.selectedImageVehicleData?.brand_name ||
-    props.vehicleData?.brand_name;
-  if (name) return name;
+const description = computed(() => {
+  const desc =
+    updateVehicleStore.selectedImageVehicleData?.vehicle_original_descr ||
+    props.vehicleData?.vehicle_original_descr;
+  if (desc) return desc;
 });
 </script>
 
@@ -37,7 +37,9 @@ const brandName = computed(() => {
         height="400"
         class="rounded-md w-full"
       />
-      <p v-if="brandName" class="text-[#212529] text-base">{{ brandName }}</p>
+      <p v-if="description" class="text-[#212529] text-base">
+        {{ description }}
+      </p>
     </div>
   </div>
 </template>
