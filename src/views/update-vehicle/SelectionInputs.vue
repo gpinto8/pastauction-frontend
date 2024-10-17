@@ -42,12 +42,20 @@ const getSubColorData = async (id: number) => {
 
 onMounted(async () => {
   // BODY DATA
-  const _bodyData = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_body/category/`
+  const _bodyData1 = await axios.get(
+    `https://pastauction.com/api/v1/filter/bidwatcher_body/type/`
   );
-  bodyData.value = _bodyData.data.items
-    ?.map((item: any) => item.category)
-    .filter((item: any) => item !== 'Attribbute' && item !== 'Attribute');
+  const _bodyData2 = await axios.get(
+    `https://pastauction.com/api/v1/filter/bidwatcher_brand/category_vehicle/`
+  );
+
+  const mergedBodyData = [
+    ...(_bodyData1?.data?.items || []).map((item: any) => item?.type),
+    ...(_bodyData2?.data?.items || []).map(
+      (item: any) => item?.category_vehicle
+    ),
+  ].filter(Boolean);
+  bodyData.value = mergedBodyData;
 
   // COLOR DATA
   const _colorData = await axios.get(
