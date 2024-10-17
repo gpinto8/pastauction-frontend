@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
 import UiCheckbox from '@/components/ui/ui-checkbox.vue';
 import ImageryGrid, {
@@ -9,8 +9,10 @@ import ImageryGrid, {
 import Parameters from './Parameters.vue';
 import PaginationSlider from './PaginationSlider.vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
-defineProps<{
+const props = defineProps<{
+  id: number;
   images: ImagesGridProps;
   currentPage: number;
   imagesPerPage: number;
@@ -19,17 +21,13 @@ defineProps<{
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
   handleImageClick?: (image: ImageGrid) => void;
+  gallerySelected: number;
 }>();
 
-const emit = defineEmits(['onPageChanged']);
+const emit = defineEmits(['onPageChanged', 'onSelected']);
 
-const selected = ref(false);
 const mobileOpen = ref(1); // 0 - open | 1 - close
-
-watch(
-  () => selected,
-  value => {}
-);
+const updateVehicleStore = updateVehicle();
 
 const handleOpenMobile = () => {
   mobileOpen.value = mobileOpen.value === 0 ? 1 : 0;
@@ -40,8 +38,11 @@ const handlePageChanged = (page: number) => {
 };
 
 const handleSelected = (event: any) => {
-  selected.value = event;
+  updateVehicleStore.selectedVehicleData = props.vehicleData;
+  emit('onSelected', props.id);
 };
+
+const isSelected = computed(() => props.id === props.gallerySelected);
 </script>
 
 <template>
@@ -64,6 +65,7 @@ const handleSelected = (event: any) => {
             <UiCheckbox
               @onSelected="handleSelected"
               class="z-10 pointer-events-auto"
+              v-model="isSelected"
             />
             <p>Select</p>
           </div>

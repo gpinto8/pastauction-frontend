@@ -26,6 +26,7 @@ const modelSeries = ref('');
 const previousVehicleData = ref();
 const vehicleData = ref();
 const nextVehicleData = ref();
+const gallerySelected = ref(0); // --> 1 - previous | 2 - current | 3 - next
 
 const selectedFilters = ref<SelectedFiltersProps>({
   Brand: '',
@@ -150,23 +151,35 @@ const handleFilterNext = () => {
         <!-- PREVIOUS SERIE -->
         <div class="md:!min-w-[400px]">
           <Gallery
+            :id="1"
             :isUserAdmin="isUserAdmin"
             :vehicleData="previousVehicleData"
+            :gallerySelected="gallerySelected"
+            @onSelected="gallerySelected = $event"
           />
         </div>
 
         <!-- CURRENT SERIE -->
         <div class="md:!min-w-[400px]">
           <Gallery
+            :id="2"
             :isUserAdmin="isUserAdmin"
-            :modelValue="selectedFilters"
             :vehicleData="vehicleData"
+            :gallerySelected="gallerySelected"
+            :modelValue="selectedFilters"
+            @onSelected="gallerySelected = $event"
           />
         </div>
 
         <!-- NEXT SERIE -->
         <div class="md:!min-w-[400px]">
-          <Gallery :isUserAdmin="isUserAdmin" :vehicleData="nextVehicleData" />
+          <Gallery
+            :id="3"
+            :isUserAdmin="isUserAdmin"
+            :vehicleData="nextVehicleData"
+            :gallerySelected="gallerySelected"
+            @onSelected="gallerySelected = $event"
+          />
         </div>
       </div>
       <div

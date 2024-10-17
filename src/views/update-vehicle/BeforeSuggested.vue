@@ -119,7 +119,7 @@ watch(
         v-for="(data, i) in suggestedData"
       >
         <input
-          class="bg-white border p-1 border-[#CED4DA] border-solid h-[33.67px]"
+          class="bg-white border p-1 border-[#CED4DA] border-solid h-[33.67px] badge value"
           density="compact"
           :disabled="data?.disabled"
           v-model="data.value"
@@ -185,7 +185,7 @@ watch(
             v-for="(data, i) in suggestedData"
           >
             <input
-              class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-[33.67px]"
+              class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-[33.67px] badge value"
               density="compact"
               :disabled="data?.disabled"
               v-model="data.value"

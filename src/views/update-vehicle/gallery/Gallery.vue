@@ -8,13 +8,15 @@ import type { ImageGrid, ImagesGridProps } from './ImageryGrid.vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
+  id: number;
   class?: string;
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
   isUserAdmin?: boolean;
+  gallerySelected: number;
 }>();
 
-defineEmits(['getResponseData']);
+defineEmits(['getResponseData', 'onSelected']);
 
 const images = ref<ImagesGridProps>([]);
 const currentPage = ref(1);
@@ -87,6 +89,7 @@ const handleImageClick = async (image: ImageGrid) => {
   <div class="flex flex-col gap-4 w-full" :class="class">
     <div class="block md:hidden">
       <GalleryMobile
+        :id="id"
         :images="images"
         :vehicleData="vehicleData"
         :currentPage="currentPage"
@@ -94,12 +97,15 @@ const handleImageClick = async (image: ImageGrid) => {
         :totalPages="totalPages"
         :totalImages="totalImages"
         :modelValue="modelValue"
-        @onPageChanged="handlePageChanged"
         :handleImageClick="props.isUserAdmin ? handleImageClick : undefined"
+        :gallerySelected="gallerySelected"
+        @onPageChanged="handlePageChanged"
+        @onSelected="$emit('onSelected', $event)"
       />
     </div>
     <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
+        :id="id"
         :images="images.slice(0, 24)"
         :vehicleData="vehicleData"
         :currentPage="currentPage"
@@ -107,8 +113,10 @@ const handleImageClick = async (image: ImageGrid) => {
         :totalPages="totalPages"
         :totalImages="totalImages"
         :modelValue="modelValue"
-        @onPageChanged="handlePageChanged"
         :handleImageClick="props.isUserAdmin ? handleImageClick : undefined"
+        :gallerySelected="gallerySelected"
+        @onPageChanged="handlePageChanged"
+        @onSelected="$emit('onSelected', $event)"
       />
     </div>
   </div>

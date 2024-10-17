@@ -7,8 +7,10 @@ import Parameters from './Parameters.vue';
 import Pagination from './Pagination.vue';
 import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
+import { computed } from 'vue';
 
 const props = defineProps<{
+  id: number;
   images: ImagesGridProps;
   currentPage: number;
   imagesPerPage: number;
@@ -17,9 +19,10 @@ const props = defineProps<{
   modelValue?: SelectedFiltersProps;
   vehicleData?: any;
   handleImageClick?: (image: ImageGrid) => void;
+  gallerySelected: number;
 }>();
 
-const emit = defineEmits(['onPageChanged']);
+const emit = defineEmits(['onPageChanged', 'onSelected']);
 
 const updateVehicleStore = updateVehicle();
 
@@ -30,8 +33,11 @@ const handlePageChanged = (page: number) => {
 const handleSelect = () => {
   if (props.vehicleData) {
     updateVehicleStore.selectedVehicleData = props.vehicleData;
+    emit('onSelected', props.id);
   }
 };
+
+const isSelected = computed(() => props.id === props.gallerySelected);
 </script>
 
 <template>
@@ -52,7 +58,8 @@ const handleSelect = () => {
         @onPageChanged="handlePageChanged"
       />
       <v-btn
-        class="w-fit text-white bg-[#212529] rounded-md font-normal grid place-content-center text-sm text-none text-center"
+        class="w-fit text-[#212529] bg-white rounded-md font-normal grid place-content-center text-sm text-none text-center"
+        :class="{ '!bg-[#212529] !text-white': isSelected }"
         @click="handleSelect"
       >
         Select
