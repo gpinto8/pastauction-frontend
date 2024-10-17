@@ -9,6 +9,11 @@ type ColorProps = {
   id_family: number;
 };
 
+type AttributeDataExtraProps = {
+  name: string;
+  shortName: string;
+};
+
 defineProps<{
   isUserAdmin: boolean;
 }>();
@@ -23,7 +28,8 @@ const colorSubData = ref<ColorProps[]>();
 const selectedColor = ref<ColorProps>();
 const selectedSubColor = ref<ColorProps>();
 
-const attributeData = ref();
+const attributeData = ref<string[]>();
+const attributeDataExtra = ref<AttributeDataExtraProps[]>();
 const selectedAttributes = ref<string[]>();
 
 const getShapeData = async (category: string) => {
@@ -65,7 +71,16 @@ onMounted(async () => {
 
   // ATTRIBUTE DATA
   const _attributeData = await getShapeData('Attribute');
-  attributeData.value = _attributeData;
+  const _attributeDataExtra: AttributeDataExtraProps[] = [
+    { name: '(RHD) Hand Drive', shortName: 'RHD' },
+    { name: '(CEN) Hand Drive', shortName: 'CEN' },
+    { name: '(LHD) Hand Drive', shortName: 'LHD' },
+  ];
+
+  attributeData.value = _attributeData.filter(
+    (item: any) => !_attributeDataExtra.some(data => data.name === item)
+  );
+  attributeDataExtra.value = _attributeDataExtra;
 });
 
 const handleBodySelection = async (body: string) => {
@@ -283,17 +298,41 @@ const handleAttributeSelection = (attribute: string) => {
     <div>
       <div class="mb-3 font-semibold text-lg">Attribute changes</div>
       <div class="grid grid-cols-2 sm:flex gap-2 sm:flex-wrap">
-        <button
-          class="w-full p-2 text-sm sm:w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
-          :key="i"
-          :class="{
-            '!bg-[#212529] text-white': selectedAttributes?.includes(data),
-          }"
-          v-for="(data, i) in attributeData"
-          @click="() => handleAttributeSelection(data)"
-        >
-          {{ data }}
-        </button>
+        <div class="flex flex-wrap gap-2">
+          <button
+            class="w-full p-2 text-sm sm:w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
+            :key="i"
+            :class="{
+              '!bg-[#212529] text-white': selectedAttributes?.includes(data),
+            }"
+            v-for="(data, i) in attributeData"
+            @click="() => handleAttributeSelection(data)"
+          >
+            {{ data }}
+          </button>
+        </div>
+        <div class="flex gap-2 items-center">
+          <img
+            src="@/assets/svg/brochure-folded.svg"
+            alt="brochure-folded"
+            width="20"
+            height="20"
+          />
+          <button
+            class="w-full p-2 text-sm sm:w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
+            :key="i"
+            :class="{
+              '!bg-[#212529] text-white': selectedAttributes?.includes(
+                data.name
+              ),
+            }"
+            v-for="(data, i) in attributeDataExtra"
+            @click="() => handleAttributeSelection(data.name)"
+          >
+            {{ data.shortName }}
+            <v-tooltip activator="parent" location="top" :text="data.name" />
+          </button>
+        </div>
       </div>
     </div>
     <v-btn
