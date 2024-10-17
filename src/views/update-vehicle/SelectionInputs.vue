@@ -21,7 +21,7 @@ const selectedSubBodies = ref<{ [key: string]: string[] }[]>();
 const colorData = ref<ColorProps[]>();
 const colorSubData = ref<ColorProps[]>();
 const selectedColor = ref<ColorProps>();
-const selectedSubColors = ref<ColorProps[]>();
+const selectedSubColor = ref<ColorProps>();
 
 const attributeData = ref();
 const selectedAttributes = ref<string[]>();
@@ -144,7 +144,7 @@ const handleColorSelection = async (color: ColorProps) => {
   if (selectedColor.value?.name === color.name) {
     selectedColor.value = undefined;
     colorSubData.value = undefined;
-    selectedSubColors.value = [];
+    selectedSubColor.value = undefined;
     return;
   }
 
@@ -152,28 +152,17 @@ const handleColorSelection = async (color: ColorProps) => {
   colorSubData.value = _colorSubData;
 
   selectedColor.value = color;
-  selectedSubColors.value = [];
+  selectedSubColor.value = undefined;
 };
 
 const handleSubColorSelection = async (color: ColorProps) => {
   // If it already exists, remove it
-  if (
-    selectedSubColors.value &&
-    selectedSubColors.value?.find(_color => _color.name === color.name)
-  ) {
-    const filteredSelectedSubColors = selectedSubColors.value.filter(
-      item => item.name !== color.name
-    );
-    selectedSubColors.value = filteredSelectedSubColors;
+  if (selectedSubColor.value === color) {
+    selectedSubColor.value = undefined;
     return;
   }
 
-  const mergedSelectedSubColors = [
-    ...(selectedSubColors.value ? selectedSubColors.value : []),
-    color,
-  ];
-
-  selectedSubColors.value = mergedSelectedSubColors;
+  selectedSubColor.value = color;
 };
 
 const handleAttributeSelection = (attribute: string) => {
@@ -265,13 +254,13 @@ const handleAttributeSelection = (attribute: string) => {
           class="flex gap-4 items-center flex-col sm:flex-row"
         >
           <div class="font-semibold text-base w-full sm:w-fit">Nuance:</div>
-          <div class="flex gap-1 flex-wrap w-full">
+          <div class="flex gap-1 flex-wrap w-fit">
             <div
               v-for="color in colorSubData"
               class="h-8 w-8 border-[2px] border-solid border-grey-100 cursor-pointer"
               :class="{
                 '!border !border-solid !border-[#212529]':
-                  selectedSubColors?.some(_color => _color.name === color.name),
+                  selectedSubColor?.name === color.name,
               }"
               @click="() => handleSubColorSelection(color)"
             >
@@ -282,6 +271,9 @@ const handleAttributeSelection = (attribute: string) => {
                   :text="color.name"
                 />
               </div>
+            </div>
+            <div class="flex justify-center items-center">
+              {{ selectedSubColor?.name }}
             </div>
           </div>
         </div>
