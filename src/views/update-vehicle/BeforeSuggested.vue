@@ -102,8 +102,8 @@ watch(
   <div class="hidden md:flex inputs gap-4" :class="class">
     <div class="p-3 bg-[#DEE2E6] w-fit h-fit md:w-2/3">
       <div class="title p-2">Before</div>
-      <div class="flex flex-col">
-        <div class="flex" :key="i" v-for="(data, i) in beforeData">
+      <div class="flex flex-col h-fit">
+        <div class="flex h-9" :key="i" v-for="(data, i) in beforeData">
           <div class="bg-white !w-2/5 badge key">{{ data.label }}</div>
           <div class="bg-white !w-3/5 badge value overflow-hidden">
             {{ data.value }}
@@ -114,12 +114,12 @@ watch(
     <div class="p-3 !bg-[#DEE2E6] w-fit h-fit md:w-1/3">
       <div class="title p-2">Suggested</div>
       <div
-        class="flex flex-col w-full"
+        class="flex flex-col w-full h-fit"
         :key="i"
         v-for="(data, i) in suggestedData"
       >
         <input
-          class="bg-white border p-1 border-[#CED4DA] border-solid h-[33.67px] badge value"
+          class="bg-white border p-1 border-[#CED4DA] border-solid h-9 badge value"
           density="compact"
           :disabled="data?.disabled"
           v-model="data.value"
@@ -164,10 +164,10 @@ watch(
     </template>
     <template #default>
       <div class="flex flex-col sm:flex-row inputs gap-8 w-full !p-0 !m-0">
-        <div class="bg-[#DEE2E6] w-full">
+        <div class="bg-[#DEE2E6] w-full h-fit">
           <div class="title p-2">Before</div>
-          <div class="flex flex-col">
-            <div class="flex" :key="i" v-for="(data, i) in beforeData">
+          <div class="flex flex-col h-fit">
+            <div class="flex h-9" :key="i" v-for="(data, i) in beforeData">
               <div class="bg-white w-2/5 sm:w-2/5 badge key">
                 {{ data.label }}
               </div>
@@ -177,15 +177,15 @@ watch(
             </div>
           </div>
         </div>
-        <div class="bg-[#DEE2E6] w-full">
+        <div class="bg-[#DEE2E6] w-full h-fit">
           <div class="title p-2">Suggested</div>
           <div
-            class="flex flex-col w-full"
+            class="flex flex-col w-full h-fit"
             :key="i"
             v-for="(data, i) in suggestedData"
           >
             <input
-              class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-[33.67px] badge value"
+              class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-9 badge value"
               density="compact"
               :disabled="data?.disabled"
               v-model="data.value"
