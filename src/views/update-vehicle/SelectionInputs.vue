@@ -269,7 +269,7 @@ const handleAttributeSelection = (attribute: string) => {
           class="flex gap-4 items-center flex-col sm:flex-row"
         >
           <div class="font-semibold text-base w-full sm:w-fit">Nuance:</div>
-          <div class="flex gap-1 flex-wrap w-fit">
+          <div class="flex gap-1 flex-wrap w-full md:w-fit">
             <div
               v-for="color in colorSubData"
               class="h-8 w-8 border-[2px] border-solid border-grey-100 cursor-pointer"
@@ -297,10 +297,10 @@ const handleAttributeSelection = (attribute: string) => {
     <!-- ATTRIBUTE -->
     <div>
       <div class="mb-3 font-semibold text-lg">Attribute changes</div>
-      <div class="grid grid-cols-2 sm:flex gap-2 sm:flex-wrap">
+      <div class="flex gap-2 flex-wrap">
         <div class="flex flex-wrap gap-2">
           <button
-            class="w-full p-2 text-sm sm:w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
+            class="w-fit p-2 text-sm rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
             :key="i"
             :class="{
               '!bg-[#212529] text-white': selectedAttributes?.includes(data),
@@ -311,7 +311,7 @@ const handleAttributeSelection = (attribute: string) => {
             {{ data }}
           </button>
         </div>
-        <div class="flex gap-2 items-center">
+        <div class="flex gap-2 flex-wrap">
           <img
             src="@/assets/svg/brochure-folded.svg"
             alt="brochure-folded"
@@ -319,7 +319,7 @@ const handleAttributeSelection = (attribute: string) => {
             height="20"
           />
           <button
-            class="w-full p-2 text-sm sm:w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
+            class="w-fit p-2 text-sm rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
             :key="i"
             :class="{
               '!bg-[#212529] text-white': selectedAttributes?.includes(
