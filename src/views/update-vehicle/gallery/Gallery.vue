@@ -26,42 +26,28 @@ const totalImages = ref(0);
 const updateVehicleStore = updateVehicle();
 
 const familyId = computed(() => props.vehicleData?.bw_family_id);
+const modelId = computed(() => props.vehicleData?.bw_model_id);
 
-const getImages = async (familyId: number, page: number) => {
-  const pageSizeParam = `page=${page}&size=${imagesPerPage * 2}`; // Fetch twice the amount of images per page so we can filter out the ones without a photo
-
+const getImages = async (page: number) => {
   const familyData = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_model/id/?search=family_id:${familyId}&${pageSizeParam}`
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId.value}&page=${page}&size=30`
   );
-  const familyIds = familyData.data.items.map((item: any) => item.id);
   const totalPages = familyData.data.pages;
   const totalImages = familyData.data.total;
-  if (!familyIds.length) return;
+  const data = familyData.data.items;
 
-  const fetchData = async (id: string) => {
-    try {
-      const photoData = await axios.get(
-        `https://pastauction.com/api/v1/filter/bidwatcher_photo/logo_test/?search=id_vehicle:${id}`
-      );
-      const photoId = photoData.data?.items?.[0]?.logo_test;
-      if (photoId) {
-        return { id, path: `https://pastauction.com/api/v1/photo/${photoId}` };
-      }
-    } catch (error) {}
-  };
-  const requests = familyIds.map((id: string) => fetchData(id) || '');
+  const newData = data.map((item: any) => ({
+    id: item.vehicle_id,
+    path: `https://pastauction.com/api/v1/photo/${item.photo_path}`,
+  }));
 
-  return {
-    data: (await Promise.all(requests)).filter(Boolean).slice(0, imagesPerPage), // Here we filter out the empty strings and slice the array to the desired length
-    totalPages,
-    totalImages,
-  };
+  return { data: newData, totalPages, totalImages };
 };
 
 watch(
   () => familyId.value,
   async () => {
-    const imageData = await getImages(familyId.value, 1);
+    const imageData = await getImages(1);
     if (imageData) {
       images.value = imageData.data;
       totalPages.value = imageData.totalPages;
@@ -72,7 +58,7 @@ watch(
 
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
-  const imagesArray = await getImages(familyId.value, page);
+  const imagesArray = await getImages(page);
   if (imagesArray) images.value = imagesArray.data;
 };
 
