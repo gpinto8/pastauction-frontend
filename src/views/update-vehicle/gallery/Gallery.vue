@@ -38,7 +38,9 @@ const getImages = async (page: number) => {
 
   const newData = data.map((item: any) => ({
     id: item.vehicle_id,
-    path: `https://pastauction.com/api/v1/photo/${item.photo_path}`,
+    path: item?.photo_path
+      ? `https://pastauction.com/api/v1/photo/${item.photo_path}`
+      : '',
   }));
 
   return { data: newData, totalPages, totalImages };

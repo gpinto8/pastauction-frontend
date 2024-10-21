@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Gallery from './gallery/Gallery.vue';
-import Filters, { type FilterLabelProps } from './Filters.vue';
+import Filters, { type FilterKeyProps } from './Filters.vue';
 import BeforeSuggested from './BeforeSuggested.vue';
 import MainPicture from './MainPicture.vue';
 import SelectionInputs from './SelectionInputs.vue';
@@ -12,7 +12,7 @@ import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 
 export type SelectedFiltersProps = {
-  [key in FilterLabelProps]: string | number;
+  [key in FilterKeyProps]: string | number;
 };
 
 const { getLoggedUserInfo } = useAuthStore();
@@ -29,11 +29,11 @@ const nextVehicleData = ref();
 const gallerySelected = ref(0); // --> 1 - previous | 2 - current | 3 - next
 
 const selectedFilters = ref<SelectedFiltersProps>({
-  Brand: '',
-  Family: '',
-  Model: '',
-  'Start Year': '',
-  'End Year': '',
+  brand_name: '',
+  bw_family_name: '',
+  bw_model_name: '',
+  bw_model_year_begin: '',
+  bw_model_year_end: '',
 });
 
 const getVehicleData = async (familyId: number, modelSeries: string) => {
@@ -93,11 +93,11 @@ onMounted(async () => {
 
       vehicleData.value = _vehicleData;
       selectedFilters.value = {
-        Brand: _vehicleData.brand_name,
-        Family: _vehicleData.bw_family_name,
-        Model: _vehicleData.bw_model_name,
-        'Start Year': _vehicleData.bw_model_year_begin,
-        'End Year': _vehicleData.bw_model_year_end,
+        brand_name: _vehicleData.brand_name,
+        bw_family_name: _vehicleData.bw_family_name,
+        bw_model_name: _vehicleData.bw_model_name,
+        bw_model_year_begin: _vehicleData.bw_model_year_begin,
+        bw_model_year_end: _vehicleData.bw_model_year_end,
       };
 
       const _familyId = _vehicleData?.bw_family_id;
