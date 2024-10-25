@@ -10,9 +10,10 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "onSelected"]);
 
 const updateInput = ($event: any) => {
+  emit("onSelected", $event.target.checked);
   emit("update:modelValue", $event.target.checked);
 };
 </script>

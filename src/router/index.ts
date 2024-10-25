@@ -89,6 +89,15 @@ const router = createRouter({
           ],
         },
         {
+          path: '/vehicle_update/:id',
+          name: 'Vehicle Update',
+          component: async () =>
+            await import(
+              /* webpackChunkName: "VehicleDetail" */ '@/views/update-vehicle/UpdateVehicle.vue'
+            ),
+          meta: { authentication: true },
+        },
+        {
           path: '/garage/detail/:garageId/vehicle/:id/edit',
           redirect: to => {
             return `/garage/detail/${to.params.garageId}/vehicle/${to.params.id}/edit/overview`

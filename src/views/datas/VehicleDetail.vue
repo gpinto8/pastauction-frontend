@@ -362,7 +362,10 @@
             </tbody>
           </v-table>
         </v-card>
-        <v-btn class="!bg-primary text-white w-full !rounded mt-4 normal-case">
+        <v-btn
+          class="!bg-primary text-white w-full !rounded mt-4 normal-case"
+          @click="handleReportError"
+        >
           Report error
         </v-btn>
       </div>
@@ -399,5 +402,7 @@ const items = ref([
   },
 ]);
 
-console.log(id);
+const handleReportError = () => {
+  if (id) router.push({ path: `/vehicle_update/${id}` });
+};
 </script>
