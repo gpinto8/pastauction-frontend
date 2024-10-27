@@ -129,7 +129,7 @@ watch(
         ? `search=${dynamicParams}&`
         : '';
 
-      const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${data.key}/?${dynamicParamsString}page=1&size=50`;
+      const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${data.key}/?${dynamicParamsString}page=1&size=50`;
       const response = await axios.get(url);
 
       const values = response.data.items.map((item: any) => item[data.key]);
@@ -138,7 +138,7 @@ watch(
   }
 );
 
-function debounce<T extends (...args: any[]) => void>(func: T, timeout = 1000) {
+function debounce<T extends (...args: any[]) => void>(func: T, timeout = 10) {
   let timer: any;
   return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
     clearTimeout(timer);
@@ -160,7 +160,7 @@ const handleSearchFocus = async (key: string, isFocused: boolean) => {
     const dynamicParams = getDynamicParams(key, true);
     const dynamicParamsString = dynamicParams ? `search=${dynamicParams}&` : '';
 
-    const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${key}/?${dynamicParamsString}page=1&size=50`;
+    const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?${dynamicParamsString}page=1&size=50`;
     const response = await axios.get(url);
 
     const values = response.data.items.map((item: any) => item[key]);
@@ -175,7 +175,7 @@ const handleSearch = debounce(async (key: FilterKeyProps, term: string) => {
     const dynamicParamsString = dynamicParams ? `,${dynamicParams}` : '';
 
     const response = await axios.get(
-      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update/${key}/?search=${key}_like:${term}${dynamicParamsString}&page=1&size=50`
+      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?search=${key}_like:${term}${dynamicParamsString}&page=1&size=50`
     );
 
     const values = response.data.items.map((item: any) => item?.[key]);
