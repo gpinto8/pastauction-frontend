@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
+type BodyDataProps = { label: string; mode: 'type' | 'category_vehicle' };
+
 type ColorProps = {
   id: number;
   name: string;
@@ -18,7 +20,7 @@ defineProps<{
   isUserAdmin: boolean;
 }>();
 
-const bodyData = ref();
+const bodyData = ref<BodyDataProps[]>();
 const bodySubData = ref();
 const selectedBodies = ref<string[]>();
 const selectedSubBodies = ref<{ [key: string]: string[] }[]>();
@@ -32,9 +34,13 @@ const attributeData = ref<string[]>();
 const attributeDataExtra = ref<AttributeDataExtraProps[]>();
 const selectedAttributes = ref<string[]>();
 
-const getShapeData = async (category: string) => {
+const getShapeData = async (
+  value: string,
+  bodyMode?: BodyDataProps['mode']
+) => {
+  const searchMode = bodyMode || 'category';
   const shapeData = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_body/shape/?search=category:${category}`
+    `https://pastauction.com/api/v1/filter/bidwatcher_body/shape/?search=${searchMode}:${value}`
   );
   return shapeData.data.items?.map((item: any) => item.shape);
 };
@@ -55,12 +61,18 @@ onMounted(async () => {
     `https://pastauction.com/api/v1/filter/bidwatcher_brand/category_vehicle/`
   );
 
-  const mergedBodyData = [
-    ...(_bodyData1?.data?.items || []).map((item: any) => item?.type),
-    ...(_bodyData2?.data?.items || []).map(
-      (item: any) => item?.category_vehicle
-    ),
-  ].filter(Boolean);
+  const mergedBodyData: BodyDataProps[] = [
+    ...(_bodyData1?.data?.items || []).map((item: any) => ({
+      label: item?.type,
+      mode: 'type',
+    })),
+    ...(_bodyData2?.data?.items || []).map((item: any) => ({
+      label: item?.category_vehicle,
+      mode: 'category_vehicle',
+    })),
+  ]
+    .filter(item => item.label !== '' && item.label !== 'Attribute')
+    .filter(Boolean);
   bodyData.value = mergedBodyData;
 
   // COLOR DATA
@@ -83,30 +95,32 @@ onMounted(async () => {
   attributeDataExtra.value = _attributeDataExtra;
 });
 
-const handleBodySelection = async (body: string) => {
+const handleBodySelection = async (body: BodyDataProps) => {
   // If its already selected, remove it
-  if (body && selectedBodies.value?.includes(body)) {
-    const filteredBody = selectedBodies.value?.filter(value => value !== body);
+  if (body.label && selectedBodies.value?.includes(body.label)) {
+    const filteredBody = selectedBodies.value?.filter(
+      value => value !== body.label
+    );
     selectedBodies.value = filteredBody;
     // Take the sub data from the latest selected body
     if (selectedBodies.value.length === 0) {
       bodySubData.value = undefined;
     } else {
-      bodySubData.value[body] = await getShapeData(
+      bodySubData.value[body.label] = await getShapeData(
         selectedBodies.value[selectedBodies.value.length - 1]
       );
     }
     if (selectedSubBodies.value)
       selectedSubBodies.value = selectedSubBodies.value?.filter(
-        item => Object.keys(item)[0] !== body
+        item => Object.keys(item)[0] !== body.label
       );
     return;
   }
 
-  const bodyShapeData = await getShapeData(body);
-  bodySubData.value = { [body]: bodyShapeData };
+  const bodyShapeData = await getShapeData(body.label, body.mode);
+  bodySubData.value = { [body.label]: bodyShapeData };
 
-  const newBodyChange = [...(selectedBodies.value || []), body];
+  const newBodyChange = [...(selectedBodies.value || []), body.label];
   selectedBodies.value = newBodyChange;
 };
 
@@ -207,11 +221,11 @@ const handleAttributeSelection = (attribute: string) => {
           v-for="(data, i) in bodyData"
           :key="i"
           :class="{
-            '!bg-[#212529] text-white': selectedBodies?.includes(data),
+            '!bg-[#212529] text-white': selectedBodies?.includes(data.label),
           }"
           @click="() => handleBodySelection(data)"
         >
-          {{ data }}
+          {{ data.label }}
         </button>
       </div>
       <!-- SUB BODY DATA -->
