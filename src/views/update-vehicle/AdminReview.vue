@@ -28,9 +28,10 @@ const getImagePaths = async (page: number) => {
       const path = item.photo_path;
       const id = item.vehicle_id;
 
-      if (path) {
-        return { id, path: `https://pastauction.com/api/v1/photo/${path}` };
-      }
+      return {
+        id,
+        path: path ? `https://pastauction.com/api/v1/photo/${path}` : '',
+      };
     })
     .filter(Boolean);
   return images;
@@ -42,7 +43,7 @@ onMounted(async () => {
 });
 
 const handleImageClick = (image: ImageGrid) => {
-  const id = image.metadata?.id;
+  const id = image.id;
   if (id) location.replace(`/vehicle_update/${id}`);
 };
 

@@ -11,9 +11,7 @@ import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 
-export type SelectedFiltersProps = {
-  [key in FilterKeyProps]: string | number;
-};
+export type SelectedFiltersProps = { [key in FilterKeyProps]: string | number };
 
 const { getLoggedUserInfo } = useAuthStore();
 const router = useRouter();
@@ -24,8 +22,9 @@ const familyId = ref<number>();
 const modelSeries = ref('');
 
 const previousVehicleData = ref();
-const vehicleData = ref();
+const middleVehicleData = ref();
 const nextVehicleData = ref();
+const selectedVehicleData = ref();
 const gallerySelected = ref(0); // --> 1 - previous | 2 - current | 3 - next
 
 const selectedFilters = ref<SelectedFiltersProps>({
@@ -57,7 +56,7 @@ const setAllVehicleData = async (
   // CURRENT
   if (!avoidCurrent) {
     getVehicleData(familyId, modelSeries).then(
-      data => (vehicleData.value = data || null)
+      data => (middleVehicleData.value = data || null)
     );
   }
 
@@ -91,7 +90,9 @@ onMounted(async () => {
       const _vehicleData = response.data?.items[0];
       if (!_vehicleData) return;
 
-      vehicleData.value = _vehicleData;
+      selectedVehicleData.value = _vehicleData;
+      middleVehicleData.value = _vehicleData;
+
       selectedFilters.value = {
         brand_name: _vehicleData.brand_name,
         bw_family_name: _vehicleData.bw_family_name,
@@ -164,7 +165,7 @@ const handleFilterNext = () => {
           <Gallery
             :id="2"
             :isUserAdmin="isUserAdmin"
-            :vehicleData="vehicleData"
+            :vehicleData="middleVehicleData"
             :gallerySelected="gallerySelected"
             :modelValue="selectedFilters"
             @onSelected="gallerySelected = $event"
@@ -187,11 +188,11 @@ const handleFilterNext = () => {
       >
         <BeforeSuggested
           class="w-full md:!min-w-[400px] md:w-[400px]"
-          :vehicleData="vehicleData"
+          :vehicleData="selectedVehicleData"
         />
         <MainPicture
           class="w-full md:!min-w-[400px] md:w-[400px]"
-          :vehicleData="vehicleData"
+          :vehicleData="selectedVehicleData"
         />
         <SelectionInputs
           class="w-full md:!min-w-[400px] md:w-[400px]"

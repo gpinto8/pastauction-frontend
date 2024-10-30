@@ -64,25 +64,13 @@ watch(
   }
 );
 
-const suggestedData = ref([
-  { label: 'Family', value: '' },
-  { label: 'Model', value: '' },
-  { label: 'Stage', value: '' },
-  { label: 'Series', value: '' },
-  { label: 'Year', value: '', disabled: true },
-  { label: 'Chasis', value: '', disabled: true },
-  { label: 'Body', value: '' },
-  { label: 'Color', value: '' },
-  { label: 'Attribute', value: '' },
-]);
-
 watch(
   () => updateVehicleStore.selectedVehicleData,
   () => {
     const data = updateVehicleStore.selectedVehicleData;
     if (!data) return;
 
-    suggestedData.value = [
+    updateVehicleStore.suggestedData = [
       { label: 'Family', value: data?.bw_family_id || '' },
       { label: 'Model', value: data?.bw_model_name || '' },
       { label: 'Stage', value: data?.vehicle_stage || '' },
@@ -116,7 +104,7 @@ watch(
       <div
         class="flex flex-col w-full h-fit"
         :key="i"
-        v-for="(data, i) in suggestedData"
+        v-for="(data, i) in updateVehicleStore.suggestedData"
       >
         <input
           class="bg-white border p-1 border-[#CED4DA] border-solid h-9 badge value"
@@ -182,7 +170,7 @@ watch(
           <div
             class="flex flex-col w-full h-fit"
             :key="i"
-            v-for="(data, i) in suggestedData"
+            v-for="(data, i) in updateVehicleStore.suggestedData"
           >
             <input
               class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-9 badge value"

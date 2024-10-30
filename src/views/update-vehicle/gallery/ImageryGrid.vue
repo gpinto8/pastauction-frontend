@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-export type ImageGrid = { id: number; path: string; metadata?: any };
+export type ImageGrid = { id: number; path?: string; metadata?: any };
 export type ImagesGridProps = ImageGrid[];
 
 type ColumnCombinations =
@@ -39,9 +39,13 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
 
 <template>
   <div :class="[gridClass, {[classContainer as any]: classContainer}]">
-    <div v-for="(image, i) in images" :key="i" class="cursor-pointer">
+    <div
+      v-for="(image, i) in images"
+      :key="i"
+      :class="{ 'cursor-pointer': image.id }"
+    >
       <img
-        :src="image.path"
+        :src="image?.path"
         alt=""
         :width="size"
         :height="!autoHeight ? size : 0"
@@ -50,7 +54,7 @@ const gridClass = `grid ${gridMap[props.columnCombination]} border-2 border-soli
           height: autoHeight ? 'auto' : `${size}px`,
           width: `${size}px`,
         }"
-        @click="() => image.path && onImageClick?.(image)"
+        @click="() => image.id && onImageClick?.(image)"
       />
       <v-tooltip activator="parent" location="top" :open-delay="1000">
         <img :src="image.path" alt="" :width="640" :height="480" />
