@@ -11,7 +11,6 @@ import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 
-// test
 export type SelectedFiltersProps = { [key in FilterKeyProps]: string | number };
 
 const { getLoggedUserInfo } = useAuthStore();
