@@ -214,8 +214,8 @@ const submitReview = async () => {
   }
 
   // BODY CHANGES
-  const bodies = selectedBodies.value?.join(',');
-  if (bodies) data.body_categories = bodies;
+  // const bodies = selectedBodies.value?.join(',');
+  // if (bodies) data.body_categories = bodies;
 
   const subBodies = selectedSubBodies.value
     ?.map(body => Object.values(body))

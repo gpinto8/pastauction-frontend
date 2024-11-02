@@ -41,5 +41,13 @@ const description = computed(() => {
         {{ description }}
       </p>
     </div>
+    <div class="flex border-[2px] border-solid border-black rounded-sm w-full">
+      <input
+        type="text"
+        class="w-full rounded-sm p-2"
+        placeholder="Add further information"
+        v-model="updateVehicleStore.notesInput"
+      />
+    </div>
   </div>
 </template>

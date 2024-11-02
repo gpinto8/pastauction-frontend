@@ -156,10 +156,10 @@ const suggestedData = computed(() => {
           <div class="title p-2">Before</div>
           <div class="flex flex-col h-fit">
             <div class="flex h-9" :key="i" v-for="(data, i) in beforeData">
-              <div class="bg-white w-2/5 sm:w-2/5 badge key">
+              <div class="bg-white !w-2/5 sm:w-2/5 badge key">
                 {{ data.label }}
               </div>
-              <div class="scrollable bg-white w-3/5 sm:w-3/5 badge value">
+              <div class="scrollable bg-white !w-3/5 sm:w-3/5 badge value">
                 {{ data.value }}
               </div>
             </div>

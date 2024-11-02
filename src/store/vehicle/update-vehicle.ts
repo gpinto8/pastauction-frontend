@@ -9,6 +9,7 @@ export const updateVehicle = defineStore('updateVehicle', {
       selectedColor: { id: 0, name: '' },
       selectedAttribute: [] as string[],
       selectedSubBodies: [] as string[],
+      notesInput: '',
       suggestedData: [
         { label: 'Family', value: '' },
         { label: 'Model', value: '' },
