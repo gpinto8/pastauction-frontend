@@ -25,12 +25,11 @@ const totalPages = ref(0);
 const totalImages = ref(0);
 const updateVehicleStore = updateVehicle();
 
-const familyId = computed(() => props.vehicleData?.bw_family_id);
 const modelId = computed(() => props.vehicleData?.bw_model_id);
 
-const getImages = async (page: number) => {
+const getImages = async (modelId: number, page: number) => {
   const familyData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId.value}&page=${page}&size=30`
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId}&page=${page}&size=30`
   );
   const totalPages = familyData.data.pages;
   const totalImages = familyData.data.total;
@@ -47,9 +46,9 @@ const getImages = async (page: number) => {
 };
 
 watch(
-  () => familyId.value,
+  () => modelId.value,
   async () => {
-    const imageData = await getImages(1);
+    const imageData = await getImages(modelId.value, 1);
     if (imageData) {
       images.value = imageData.data;
       totalPages.value = imageData.totalPages;
@@ -60,7 +59,7 @@ watch(
 
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
-  const imagesArray = await getImages(page);
+  const imagesArray = await getImages(modelId.value, page);
   if (imagesArray) images.value = imagesArray.data;
 };
 
