@@ -24,9 +24,9 @@ defineProps<{
 const updateVehicleStore = updateVehicle();
 
 const bodyData = ref<BodyDataProps[]>();
-const bodySubData = ref();
-const selectedBodies = ref<string[]>();
-const selectedSubBodies = ref<{ [key: string]: string[] }[]>();
+const bodySubData = ref<string[]>();
+const selectedBody = ref<string>();
+const selectedSubBodies = ref<string[]>();
 
 const colorData = ref<ColorProps[]>();
 const colorSubData = ref<ColorProps[]>();
@@ -99,79 +99,40 @@ onMounted(async () => {
 });
 
 const handleBodySelection = async (body: BodyDataProps) => {
+  selectedSubBodies.value = undefined;
+  updateVehicleStore.selectedSubBodies = [];
+
   // If its already selected, remove it
-  if (body.label && selectedBodies.value?.includes(body.label)) {
-    const filteredBody = selectedBodies.value?.filter(
-      value => value !== body.label
-    );
-    selectedBodies.value = filteredBody;
-    // Take the sub data from the latest selected body
-    if (selectedBodies.value.length === 0) {
-      bodySubData.value = undefined;
-    } else {
-      bodySubData.value[body.label] = await getShapeData(
-        selectedBodies.value[selectedBodies.value.length - 1]
-      );
-    }
-    if (selectedSubBodies.value)
-      selectedSubBodies.value = selectedSubBodies.value?.filter(
-        item => Object.keys(item)[0] !== body.label
-      );
+  if (selectedBody.value === body.label) {
+    selectedBody.value = '';
+    bodySubData.value = undefined;
     return;
   }
 
-  const bodyShapeData = await getShapeData(body.label, body.mode);
-  bodySubData.value = { [body.label]: bodyShapeData };
-
-  const newBodyChange = [...(selectedBodies.value || []), body.label];
-  selectedBodies.value = newBodyChange;
+  const shapeData = await getShapeData(body.label, body.mode);
+  bodySubData.value = shapeData;
+  selectedBody.value = body.label;
 };
 
-const handleSubBodySelection = async (key: string, value: string) => {
+const handleSubBodySelection = async (value: string) => {
   // If it already exists, remove it
-  if (
-    selectedSubBodies.value?.length &&
-    selectedSubBodies.value?.some(item =>
-      Object.values(item)?.[0]?.some(item => item === value)
-    )
-  ) {
-    const filteredSubBody = selectedSubBodies.value
-      .map(item => {
-        return {
-          [Object.keys(item)[0]]: Object.values(item)[0].filter(
-            _value => _value !== value
-          ),
-        };
-      })
-      .filter(item => Object.values(item)?.[0]?.length);
-
-    selectedSubBodies.value = filteredSubBody as any;
+  if (selectedSubBodies.value?.includes(value)) {
+    const filteredBody = selectedSubBodies.value?.filter(
+      _value => _value !== value
+    );
+    selectedSubBodies.value = filteredBody;
+    updateVehicleStore.selectedSubBodies = filteredBody;
     return;
   }
 
-  const mergedSelectedSubBodies = [
-    ...(selectedSubBodies.value ? selectedSubBodies.value : []),
-    { [key]: value },
-  ];
-
-  const grouped = mergedSelectedSubBodies.reduce((acc: any, obj: any) => {
-    const key = Object.keys(obj)[0];
-    const value = obj[key];
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(value);
-    return acc;
-  }, {});
-
-  const newGrouped = Object.entries(grouped).map(([key, value]) => {
-    const newValue: any = Array.isArray(value) ? value.flat(Infinity) : value;
-    if (newValue.length === 0) return;
-    return { [key]: newValue };
-  });
-
-  selectedSubBodies.value = newGrouped as any;
+  const mergedData = [...(selectedSubBodies.value || []), value];
+  selectedSubBodies.value = mergedData;
+  updateVehicleStore.selectedSubBodies = mergedData;
 };
 
 const handleColorSelection = async (color: ColorProps) => {
+  updateVehicleStore.selectedColor = { id: 0, name: '' };
+
   // If it already exists, remove it
   if (selectedColor.value?.name === color.name) {
     selectedColor.value = undefined;
@@ -191,10 +152,12 @@ const handleSubColorSelection = async (color: ColorProps) => {
   // If it already exists, remove it
   if (selectedSubColor.value === color) {
     selectedSubColor.value = undefined;
+    updateVehicleStore.selectedColor = { id: 0, name: '' };
     return;
   }
 
   selectedSubColor.value = color;
+  updateVehicleStore.selectedColor = { id: color.id, name: color.name };
 };
 
 const handleAttributeSelection = (attribute: string) => {
@@ -204,11 +167,13 @@ const handleAttributeSelection = (attribute: string) => {
       value => value !== attribute
     );
     selectedAttributes.value = filteredBody;
+    updateVehicleStore.selectedAttribute = filteredBody;
     return;
   }
 
   const newBodyChange = [...(selectedAttributes.value || []), attribute];
   selectedAttributes.value = newBodyChange;
+  updateVehicleStore.selectedAttribute = newBodyChange;
 };
 
 const submitReview = async () => {
@@ -398,7 +363,7 @@ const submitReview = async () => {
           v-for="(data, i) in bodyData"
           :key="i"
           :class="{
-            '!bg-[#212529] text-white': selectedBodies?.includes(data.label),
+            '!bg-[#212529] text-white': selectedBody === data.label,
           }"
           @click="() => handleBodySelection(data)"
         >
@@ -410,18 +375,12 @@ const submitReview = async () => {
         <button
           v-if="bodySubData"
           class="p-2 text-sm w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
-          v-for="(data, i) in Object.values(bodySubData)?.[0]"
+          v-for="(data, i) in bodySubData"
           :key="data"
           :class="{
-            '!bg-[#212529] text-white':
-              selectedSubBodies &&
-              selectedSubBodies.some(subBody =>
-                Object.values(subBody)?.[0].includes(data)
-              ),
+            '!bg-[#212529] text-white': selectedSubBodies?.includes(data),
           }"
-          @click="
-            () => handleSubBodySelection(Object.keys(bodySubData)?.[0], data)
-          "
+          @click="() => handleSubBodySelection(data)"
         >
           {{ data }}
         </button>

@@ -64,25 +64,24 @@ watch(
   }
 );
 
-watch(
-  () => updateVehicleStore.selectedVehicleData,
-  () => {
-    const data = updateVehicleStore.selectedVehicleData;
-    if (!data) return;
+const suggestedData = computed(() => {
+  const vehicleData = updateVehicleStore.selectedVehicleData;
+  const color = updateVehicleStore.selectedColor?.name;
+  const attributes = updateVehicleStore.selectedAttribute?.join(',');
+  const bodies = updateVehicleStore.selectedSubBodies?.join(',');
 
-    updateVehicleStore.suggestedData = [
-      { label: 'Family', value: data?.bw_family_id || '' },
-      { label: 'Model', value: data?.bw_model_name || '' },
-      { label: 'Stage', value: data?.vehicle_stage || '' },
-      { label: 'Series', value: data?.vehicle_series || '' },
-      { label: 'Year', value: '', disabled: true },
-      { label: 'Chasis', value: '', disabled: true },
-      { label: 'Body', value: data?.body_shapes || '' },
-      { label: 'Color', value: data?.color_main_name || '' },
-      { label: 'Attribute', value: data?.body_types || '' },
-    ];
-  }
-);
+  return (updateVehicleStore.suggestedData = [
+    { label: 'Family', value: vehicleData?.bw_family_id || '' },
+    { label: 'Model', value: vehicleData?.bw_model_name || '' },
+    { label: 'Stage', value: vehicleData?.vehicle_stage || '' },
+    { label: 'Series', value: vehicleData?.vehicle_series || '' },
+    { label: 'Year', value: '', disabled: true },
+    { label: 'Chasis', value: '', disabled: true },
+    { label: 'Body', value: bodies || '' },
+    { label: 'Color', value: color || '' },
+    { label: 'Attribute', value: attributes || '' },
+  ]);
+});
 </script>
 
 <template>
@@ -93,7 +92,7 @@ watch(
       <div class="flex flex-col h-fit">
         <div class="flex h-9" :key="i" v-for="(data, i) in beforeData">
           <div class="bg-white !w-2/5 badge key">{{ data.label }}</div>
-          <div class="bg-white !w-3/5 badge value overflow-hidden">
+          <div class="scrollable bg-white !w-3/5 badge value overflow-hidden">
             {{ data.value }}
           </div>
         </div>
@@ -102,16 +101,17 @@ watch(
     <div class="p-3 !bg-[#DEE2E6] w-fit h-fit md:w-1/3">
       <div class="title p-2">Suggested</div>
       <div
-        class="flex flex-col w-full h-fit"
+        v-for="(data, i) in suggestedData"
         :key="i"
-        v-for="(data, i) in updateVehicleStore.suggestedData"
+        class="scrollable flex flex-col w-full h-fit"
       >
-        <input
+        <div
           class="bg-white border p-1 border-[#CED4DA] border-solid h-9 badge value"
           density="compact"
-          :disabled="data?.disabled"
-          v-model="data.value"
-        />
+          :class="{ '!bg-gray-200 !w-full': data?.disabled }"
+        >
+          {{ data.value }}
+        </div>
       </div>
     </div>
   </div>
@@ -159,7 +159,7 @@ watch(
               <div class="bg-white w-2/5 sm:w-2/5 badge key">
                 {{ data.label }}
               </div>
-              <div class="bg-white w-3/5 sm:w-3/5 badge value">
+              <div class="scrollable bg-white w-3/5 sm:w-3/5 badge value">
                 {{ data.value }}
               </div>
             </div>
@@ -168,16 +168,17 @@ watch(
         <div class="bg-[#DEE2E6] w-full h-fit">
           <div class="title p-2">Suggested</div>
           <div
-            class="flex flex-col w-full h-fit"
+            v-for="(data, i) in suggestedData"
             :key="i"
-            v-for="(data, i) in updateVehicleStore.suggestedData"
+            class="scrollable flex flex-col w-full h-fit"
           >
-            <input
-              class="bg-white border p-1 font-normal border-[#CED4DA] border-solid h-9 badge value"
+            <div
+              class="bg-white border p-1 border-[#CED4DA] border-solid h-9 badge value"
+              :class="{ '!bg-gray-200 !w-full': data?.disabled }"
               density="compact"
-              :disabled="data?.disabled"
-              v-model="data.value"
-            />
+            >
+              {{ data.value }}
+            </div>
           </div>
         </div>
       </div>
@@ -190,6 +191,21 @@ watch(
   font-family: Inter;
 }
 
+::-webkit-scrollbar {
+  height: 0px;
+}
+
+.scrollable {
+  height: 36px !important;
+  background-color: white !important;
+  overflow-x: scroll !important;
+  border: 1px solid #ced4da !important;
+
+  * {
+    border: none !important;
+  }
+}
+
 .badge {
   font-family: Inter;
   font-size: 14px;
@@ -199,7 +215,7 @@ watch(
   border: 1px solid #ced4da;
   padding: 5px 9px;
   background: white;
-  width: 100%;
+  width: max-content;
 }
 
 .inputs {

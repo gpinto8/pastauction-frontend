@@ -6,6 +6,9 @@ export const updateVehicle = defineStore('updateVehicle', {
       mainPicturePath: '',
       selectedVehicleData: {} as any, // When clicking on the gallery's "Select" button (or the checkbox on mobile)
       selectedImageVehicleData: {} as any, // When clicking on the gallery's image (only the admin)
+      selectedColor: { id: 0, name: '' },
+      selectedAttribute: [] as string[],
+      selectedSubBodies: [] as string[],
       suggestedData: [
         { label: 'Family', value: '' },
         { label: 'Model', value: '' },
