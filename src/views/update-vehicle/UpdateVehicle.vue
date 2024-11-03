@@ -7,7 +7,7 @@ import SelectionInputs from './SelectionInputs.vue';
 import AdminReview from './AdminReview.vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 
@@ -133,6 +133,38 @@ const handleFilterNext = () => {
     setAllVehicleData(familyId.value, modelSeries.value);
   }
 };
+
+watch(
+  () => [
+    selectedFilters.value?.brand_name,
+    selectedFilters.value?.bw_family_name,
+    selectedFilters.value?.bw_model_name,
+  ],
+  async () => {
+    const { brand_name, bw_family_name, bw_model_name } =
+      selectedFilters.value || {};
+
+    if (brand_name && bw_family_name && bw_model_name) {
+      const params = [
+        brand_name ? `brand_name_like:${brand_name}` : '',
+        bw_family_name ? `bw_family_name_like:${bw_family_name}` : '',
+        bw_model_name ? `bw_model_name_like:${bw_model_name}` : '',
+      ].join(',');
+      const data = await axios.get(
+        `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
+      );
+
+      const _familyId = data?.data?.items?.[0]?.bw_family_id;
+      const _modelSeries = data?.data?.items?.[0]?.bw_model_series;
+
+      if (_familyId && _modelSeries) {
+        familyId.value = _familyId;
+        modelSeries.value = _modelSeries;
+        setAllVehicleData(_familyId, _modelSeries);
+      }
+    }
+  }
+);
 </script>
 
 <template>

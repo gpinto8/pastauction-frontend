@@ -48,6 +48,13 @@ const getImages = async (modelId: number, page: number) => {
 watch(
   () => modelId.value,
   async () => {
+    if (!modelId.value) {
+      images.value = [];
+      totalPages.value = 0;
+      totalImages.value = 0;
+      return;
+    }
+
     const imageData = await getImages(modelId.value, 1);
     if (imageData) {
       images.value = imageData.data;
