@@ -149,6 +149,9 @@ function debounce<T extends (...args: any[]) => void>(func: T, timeout = 10) {
 }
 
 const handleSearchFocus = async (key: string, isFocused: boolean) => {
+  // @ts-ignore
+  if (isFocused && key && props.modelValue) props.modelValue[key] = null; // When the user clicks on the input, it should reset the value
+
   const isKeyValueEmpty: boolean = !(props.modelValue as any)?.[key]!;
   const hasAnyValue =
     props.modelValue &&
