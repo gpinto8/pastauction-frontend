@@ -1,18 +1,15 @@
-import {
-  createRouter,
-  createWebHistory,
-} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-import HomeView from '@/views/HomeView.vue'
-import LoginView from '@/views/auth/LoginView.vue'
-import LocateView from '@/views/locate/LocateView.vue'
-import LocateRoadmapsView from '@/views/locate/LocateRoadmapsView.vue'
-import SignupView from '@/views/auth/SignupView.vue'
-import ForgotPassword from '@/views/auth/ForgotPassword.vue'
+import HomeView from '@/views/HomeView.vue';
+import LoginView from '@/views/auth/LoginView.vue';
+import LocateView from '@/views/locate/LocateView.vue';
+import LocateRoadmapsView from '@/views/locate/LocateRoadmapsView.vue';
+import SignupView from '@/views/auth/SignupView.vue';
+import ForgotPassword from '@/views/auth/ForgotPassword.vue';
 
-import { authGuard } from './utils/guards'
-import { scrollBehaviour } from './utils/scrollBehaviours'
-import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue'
+import { authGuard } from './utils/guards';
+import { scrollBehaviour } from './utils/scrollBehaviours';
+import LocateRoadmapDetailView from '@/views/locate/LocateRoadmapDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +27,7 @@ const router = createRouter({
         {
           path: '/home',
           name: 'Home',
-          component: HomeView
+          component: HomeView,
         },
         {
           path: '/garage',
@@ -39,7 +36,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Garage" */ '@/views/garage/GarageView.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/detail',
@@ -48,7 +45,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageDetail" */ '@/views/garage/GarageDetail.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/create_garage',
@@ -57,7 +54,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "NewGarage" */ '@/views/garage/NewGarageView.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/detail/:id',
@@ -84,7 +81,7 @@ const router = createRouter({
                 await import(
                   /* webpackChunkName: "NewGarage" */ '@/views/garage/NewGarageView.vue'
                 ),
-              meta: { authentication: true }
+              meta: { authentication: true },
             },
           ],
         },
@@ -98,9 +95,18 @@ const router = createRouter({
           meta: { authentication: true },
         },
         {
+          path: '/test',
+          name: 'Test',
+          component: async () =>
+            await import(
+              /* webpackChunkName: "VehicleDetail" */ '@/views/color-update/ColorUpdate.vue'
+            ),
+          meta: { authentication: true },
+        },
+        {
           path: '/garage/detail/:garageId/vehicle/:id/edit',
           redirect: to => {
-            return `/garage/detail/${to.params.garageId}/vehicle/${to.params.id}/edit/overview`
+            return `/garage/detail/${to.params.garageId}/vehicle/${to.params.id}/edit/overview`;
           },
           name: 'Vehicle Detail',
           component: async () =>
@@ -108,46 +114,61 @@ const router = createRouter({
               /* webpackChunkName: "VehicleDetail" */ '@/views/vehicle/EditVehicleLayout.vue'
             ),
           meta: { authentication: true },
-          children: [{
-            path: 'overview',
-            name: 'Add vehicles',
-            component: async () =>
-              await import(
+          children: [
+            {
+              path: 'overview',
+              name: 'Add vehicles',
+              component: async () =>
+                await import(
                   /* webpackChunkName: "VehicleOverview" */ '@/views/vehicle/Overview.vue'
-              ),
-            meta: { authentication: true, subtitle: 'Fill in the following data to add your vehicle to the garage' }
-          },
-          {
-            // details
-            path: 'details',
-            name: 'Details',
-            component: async () =>
-              await import(
-                    /* webpackChunkName: "VehicleDetails" */ '@/views/vehicle/Details.vue'
-              ),
-            meta: { authentication: true, subtitle: 'These additional specs will help us provide the most accurate comps.' }
-          },
-          {
-            // photos
-            path: 'photos',
-            name: 'Add Photos',
-            component: async () =>
-              await import(
-                      /* webpackChunkName: "VehiclePhotos" */ '@/views/vehicle/Photos.vue'
-              ),
-            meta: { authentication: true, subtitle: 'Add a photo of your vehicle and your documents' }
-          },
-          {
-            // photos
-            path: 'submit',
-            name: 'Your Vehicle',
-            component: async () =>
-              await import(
-                      /* webpackChunkName: "VehiclePhotos" */ '@/views/vehicle/Submit.vue'
-              ),
-            meta: { authentication: true, subtitle: 'Information about your vehicle.' }
-          },
-          ]
+                ),
+              meta: {
+                authentication: true,
+                subtitle:
+                  'Fill in the following data to add your vehicle to the garage',
+              },
+            },
+            {
+              // details
+              path: 'details',
+              name: 'Details',
+              component: async () =>
+                await import(
+                  /* webpackChunkName: "VehicleDetails" */ '@/views/vehicle/Details.vue'
+                ),
+              meta: {
+                authentication: true,
+                subtitle:
+                  'These additional specs will help us provide the most accurate comps.',
+              },
+            },
+            {
+              // photos
+              path: 'photos',
+              name: 'Add Photos',
+              component: async () =>
+                await import(
+                  /* webpackChunkName: "VehiclePhotos" */ '@/views/vehicle/Photos.vue'
+                ),
+              meta: {
+                authentication: true,
+                subtitle: 'Add a photo of your vehicle and your documents',
+              },
+            },
+            {
+              // photos
+              path: 'submit',
+              name: 'Your Vehicle',
+              component: async () =>
+                await import(
+                  /* webpackChunkName: "VehiclePhotos" */ '@/views/vehicle/Submit.vue'
+                ),
+              meta: {
+                authentication: true,
+                subtitle: 'Information about your vehicle.',
+              },
+            },
+          ],
         },
         {
           path: '/garage/detail/view',
@@ -156,7 +177,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "GarageViewPage" */ '@/views/garage/tables/GarageViewPage.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/detail/social-media-rumors',
@@ -165,7 +186,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "SocialMediaRumors" */ '@/views/garage/tables/SocialMediaRumors.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/detail/social-media-rumors-detail',
@@ -174,7 +195,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "SocialMediaRumorsDetail" */ '@/views/garage/tables/SocialMediaRumorsDetail.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/detail/auction-alert',
@@ -183,7 +204,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "AuctionAlert" */ '@/views/garage/tables/AuctionAlert.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/garage/detail/auction-alert-detail/:id',
@@ -192,7 +213,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "AuctionAlertDetail" */ '@/views/garage/tables/AuctionAlertDetail.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/wallet',
@@ -209,7 +230,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "Datas" */ '@/views/datas/index.vue'
             ),
-          meta: { authentication: true }
+          meta: { authentication: true },
         },
         {
           path: '/datas/vehicle/detail/:id',
@@ -218,8 +239,7 @@ const router = createRouter({
             await import(
               /* webpackChunkName: "VehicleDetail" */ '@/views/datas/VehicleDetail.vue'
             ),
-          meta: { authentication: true }
-
+          meta: { authentication: true },
         },
         // {
         //   path: '/charts',
@@ -259,7 +279,7 @@ const router = createRouter({
           name: 'Locate',
           component: async () =>
             await import(
-						/* webpackChunkName: "Login" */ '@/views/layout/LocateLayout.vue'
+              /* webpackChunkName: "Login" */ '@/views/layout/LocateLayout.vue'
             ),
           children: [
             {
@@ -273,10 +293,10 @@ const router = createRouter({
               component: LocateRoadmapsView,
             },
             {
-              path: "/locate/roadmap-detail",
+              path: '/locate/roadmap-detail',
               name: 'Locate  ',
               component: LocateRoadmapDetailView,
-            }
+            },
           ],
         },
         {
@@ -294,7 +314,7 @@ const router = createRouter({
               name: 'EntityProfile',
               component: async () =>
                 await import(
-                    /* webpackChunkName: "Profile" */ '@/views/entity/profile/Profile'
+                  /* webpackChunkName: "Profile" */ '@/views/entity/profile/Profile'
                 ),
             },
             {
@@ -302,7 +322,7 @@ const router = createRouter({
               name: 'EntityAdministration',
               component: async () =>
                 await import(
-                    /* webpackChunkName: "Administration" */ '@/views/entity/Administration'
+                  /* webpackChunkName: "Administration" */ '@/views/entity/Administration'
                 ),
             },
             {
@@ -310,9 +330,8 @@ const router = createRouter({
               name: 'EntityServices',
               component: async () =>
                 await import(
-                    /* webpackChunkName: "Services" */ '@/views/entity/services/Services'
+                  /* webpackChunkName: "Services" */ '@/views/entity/services/Services'
                 ),
-
             },
             {
               path: '/entity/events',
@@ -320,7 +339,7 @@ const router = createRouter({
               redirect: { name: 'EntityEventsAll' },
               component: async () =>
                 await import(
-                    /* webpackChunkName: "EntityEvents" */ '@/views/layout/EntityEventsLayout.vue'
+                  /* webpackChunkName: "EntityEvents" */ '@/views/layout/EntityEventsLayout.vue'
                 ),
               children: [
                 {
@@ -328,7 +347,7 @@ const router = createRouter({
                   name: 'EntityEventsAll',
                   component: async () =>
                     await import(
-                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/all/EventsAll.vue'
+                      /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/all/EventsAll.vue'
                     ),
                 },
                 {
@@ -336,7 +355,7 @@ const router = createRouter({
                   name: 'EntityEventsNew',
                   component: async () =>
                     await import(
-                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/new/EventsNew.vue'
+                      /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/new/EventsNew.vue'
                     ),
                 },
                 {
@@ -345,20 +364,20 @@ const router = createRouter({
                   props: true,
                   component: async () =>
                     await import(
-                          /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/event/EventsEvent.vue'
+                      /* webpackChunkName: "EntityEvents" */ '@/views/entity/events/event/EventsEvent.vue'
                     ),
                 },
-              ]
+              ],
             },
             {
               path: '/entity/requests',
               name: 'EntityRequests',
               component: async () =>
                 await import(
-                    /* webpackChunkName: "Requests" */ '@/views/entity/Requests'
+                  /* webpackChunkName: "Requests" */ '@/views/entity/Requests'
                 ),
             },
-          ]
+          ],
         },
       ],
     },
@@ -396,8 +415,8 @@ const router = createRouter({
       ],
     },
   ],
-})
+});
 
-router.beforeEach(authGuard)
+router.beforeEach(authGuard);
 
-export default router
+export default router;
