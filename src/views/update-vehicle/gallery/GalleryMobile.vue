@@ -22,6 +22,7 @@ const props = defineProps<{
   vehicleData?: any;
   handleImageClick?: (image: ImageGrid) => void;
   gallerySelected: number;
+  noImageText?: string;
 }>();
 
 const emit = defineEmits(['onPageChanged', 'onSelected']);
@@ -103,6 +104,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             columnCombination="7x60"
             class="hidden sm:flex justify-between items-center h-[60px]"
             @imageClick="handleImageClick"
+            :noImageText="noImageText"
           />
           <ImageryGrid
             v-if="mobileOpen"
@@ -110,6 +112,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             columnCombination="5x54"
             class="flex sm:hidden justify-between items-center h-[54px]"
             @imageClick="handleImageClick"
+            :noImageText="noImageText"
           />
           <Parameters v-else :vehicleData="vehicleData" />
         </div>
@@ -147,6 +150,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             columnCombination="5x80"
             classContainer="w-fit my-0 mx-auto"
             @imageClick="handleImageClick"
+            :noImageText="noImageText"
           />
           <PaginationSlider
             :currentPage="currentPage"
@@ -163,6 +167,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             columnCombination="3x80"
             classContainer="w-fit my-0 mx-auto"
             @imageClick="handleImageClick"
+            :noImageText="noImageText"
           />
           <PaginationSlider
             :currentPage="currentPage"

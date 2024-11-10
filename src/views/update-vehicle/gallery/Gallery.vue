@@ -14,6 +14,7 @@ const props = defineProps<{
   vehicleData?: any;
   isUserAdmin?: boolean;
   gallerySelected: number;
+  noImageText?: string;
 }>();
 
 defineEmits(['getResponseData', 'onSelected']);
@@ -95,7 +96,8 @@ const handleImageClick = async (image: ImageGrid) => {
         :gallerySelected="gallerySelected"
         @onPageChanged="handlePageChanged"
         @onSelected="$emit('onSelected', $event)"
-      />
+        :noImageText="noImageText"
+        />
     </div>
     <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
@@ -111,6 +113,7 @@ const handleImageClick = async (image: ImageGrid) => {
         :gallerySelected="gallerySelected"
         @onPageChanged="handlePageChanged"
         @onSelected="$emit('onSelected', $event)"
+        :noImageText="noImageText"
       />
     </div>
   </div>

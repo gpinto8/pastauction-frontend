@@ -20,6 +20,7 @@ const props = defineProps<{
   vehicleData?: any;
   handleImageClick?: (image: ImageGrid) => void;
   gallerySelected: number;
+  noImageText?: string;
 }>();
 
 const emit = defineEmits(['onPageChanged', 'onSelected']);
@@ -46,9 +47,10 @@ const isSelected = computed(() => props.id === props.gallerySelected);
     <ImageryGrid
       :images="images"
       columnCombination="4x100"
-      classContainer="mt-6 mb-4 h-[480px] justify-center items-center bg-[#212529]"
+      classContainer="mt-6 mb-4 h-[480px] justify-center items-center"
       autoHeight
       @imageClick="handleImageClick"
+      :noImageText="noImageText"
     />
     <div class="flex justify-between gap-2">
       <Pagination

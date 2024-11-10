@@ -26,6 +26,7 @@ const props = defineProps<{
   autoHeight?: boolean;
   activateSelection?: boolean;
   resetSelection?: boolean;
+  noImageText?: string;
 }>();
 
 const selectedImages = ref<number[]>([]);
@@ -68,10 +69,14 @@ const handleClick = (image: ImageGrid, index: number) => {
 
 <template>
   <div
-    class="!w-fit"
-    :class="[gridClass, {[classContainer as any]: classContainer}]"
+    class="!w-fit bg-[#212529]"
+    :class="[gridClass,
+      {[classContainer as any]: classContainer,  
+      'bg-[#212529B2]': noImageText && !images?.length }
+    ]"
   >
     <div
+      v-if="images?.length"
       v-for="(image, i) in images"
       :key="i"
       :class="{ 'cursor-pointer': image.id }"
@@ -92,6 +97,14 @@ const handleClick = (image: ImageGrid, index: number) => {
       <v-tooltip activator="parent" location="top" :open-delay="1000">
         <img :src="image.path" alt="" :width="640" :height="480" />
       </v-tooltip>
+    </div>
+    <div
+      v-else-if="noImageText"
+      class="flex justify-center items-center w-max h-full"
+    >
+      <div class="w-[80%] text-center">
+        {{ noImageText }}
+      </div>
     </div>
   </div>
 </template>

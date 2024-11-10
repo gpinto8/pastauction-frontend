@@ -189,6 +189,7 @@ watch(
             :vehicleData="previousVehicleData"
             :gallerySelected="gallerySelected"
             @onSelected="gallerySelected = $event"
+            noImageText="No earlier models available from the displayed period."
           />
         </div>
 
@@ -212,6 +213,7 @@ watch(
             :vehicleData="nextVehicleData"
             :gallerySelected="gallerySelected"
             @onSelected="gallerySelected = $event"
+            noImageText="No later models available from the displayed period."
           />
         </div>
       </div>
