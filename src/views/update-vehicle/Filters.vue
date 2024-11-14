@@ -4,19 +4,13 @@ import { ref, watch } from 'vue';
 import axios from 'axios';
 import type { SelectedFiltersProps } from './UpdateVehicle.vue';
 
-export type FilterLabelProps =
-  | 'Brand'
-  | 'Family'
-  | 'Model'
-  | 'Start Year'
-  | 'End Year';
+export type FilterLabelProps = 'Brand' | 'Family' | 'Model' | 'Aging';
 
 export type FilterKeyProps =
   | 'brand_name'
   | 'bw_family_name'
   | 'bw_model_name'
-  | 'bw_model_year_begin'
-  | 'bw_model_year_end';
+  | 'age_name';
 
 type FiltersDataProps = {
   key: FilterKeyProps;
@@ -56,16 +50,11 @@ const filtersData = ref<FiltersDataProps[]>([
     isRelated: true,
   },
   {
-    key: 'bw_model_year_begin',
-    label: 'Start Year',
+    key: 'age_name',
+    label: 'Aging',
     defaultValues: [],
     values: [],
-  },
-  {
-    key: 'bw_model_year_end',
-    label: 'End Year',
-    defaultValues: [],
-    values: [],
+    isRelated: true,
   },
 ]);
 
@@ -96,9 +85,6 @@ const getDynamicParams = (key: string, addLike?: boolean) => {
   }
 
   const {
-    bw_model_name,
-    bw_model_year_begin,
-    bw_model_year_end,
     ...newModelValue // Excluding the 2 keys that dont have to be filtered related to the others
   } = props.modelValue || {};
 
@@ -195,8 +181,7 @@ const getFilterData = (key: FilterKeyProps) => {
 const getBrandName = () => getFilterData('brand_name');
 const getFamilyName = () => getFilterData('bw_family_name');
 const getModelName = () => getFilterData('bw_model_name');
-const getStartYear = () => getFilterData('bw_model_year_begin');
-const getEndYear = () => getFilterData('bw_model_year_end');
+const getAgingName = () => getFilterData('age_name');
 </script>
 
 <template>
@@ -263,35 +248,20 @@ const getEndYear = () => getFilterData('bw_model_year_end');
         @update:search="term => handleSearch(getModelName()?.key!, term)"
         @update:focused="handleSearchFocus(getModelName()?.key!, $event)"
       />
-      <!-- START YEAR -->
+      <!-- AGING NAME -->
       <v-autocomplete
-        v-if="getStartYear()?.defaultValues?.length"
+        v-if="getAgingName()?.defaultValues?.length"
         class="hidden sm:block w-fit !min-w-[180px]"
-        :label="getStartYear()?.label"
+        :label="getAgingName()?.label"
         variant="outlined"
-        :items="getStartYear()?.values"
+        :items="getAgingName()?.values"
         density="compact"
-        :modelValue="modelValue?.bw_model_year_begin as string"
+        :modelValue="modelValue?.age_name as string"
         @update:modelValue="
-          modelValue && (modelValue[getStartYear()?.key!] = $event || '')
+          modelValue && (modelValue[getAgingName()?.key!] = $event || '')
         "
-        @update:search="term => handleSearch(getStartYear()?.key!, term)"
-        @update:focused="handleSearchFocus(getStartYear()?.key!, $event)"
-      />
-      <!-- END YEAR -->
-      <v-autocomplete
-        v-if="getEndYear()?.defaultValues?.length"
-        class="hidden sm:block w-fit !min-w-[180px]"
-        :label="getEndYear()?.label"
-        variant="outlined"
-        :items="getEndYear()?.values"
-        density="compact"
-        :modelValue="modelValue?.bw_model_year_end as string"
-        @update:modelValue="
-          modelValue && (modelValue[getEndYear()?.key!] = $event || '')
-        "
-        @update:search="term => handleSearch(getEndYear()?.key!, term)"
-        @update:focused="handleSearchFocus(getEndYear()?.key!, $event)"
+        @update:search="term => handleSearch(getAgingName()?.key!, term)"
+        @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
       />
       <!-- MOBILE -->
       <ExpansionSection
@@ -361,35 +331,20 @@ const getEndYear = () => getFilterData('bw_model_year_end');
               @update:search="term => handleSearch(getModelName()?.key!, term)"
               @update:focused="handleSearchFocus(getModelName()?.key!, $event)"
             />
-            <!-- START YEAR -->
+            <!-- AGING NAME -->
             <v-autocomplete
-              v-if="getStartYear()?.defaultValues?.length"
+              v-if="getAgingName()?.defaultValues?.length"
               class="w-full"
-              :label="getStartYear()?.label"
+              :label="getAgingName()?.label"
               variant="outlined"
-              :items="getStartYear()?.values"
+              :items="getAgingName()?.values"
               density="compact"
-              :modelValue="modelValue?.bw_model_year_begin as string"
+              :modelValue="modelValue?.age_name as string"
               @update:modelValue="
-                modelValue && (modelValue[getStartYear()?.key!] = $event || '')
+                modelValue && (modelValue[getAgingName()?.key!] = $event || '')
               "
-              @update:search="term => handleSearch(getStartYear()?.key!, term)"
-              @update:focused="handleSearchFocus(getStartYear()?.key!, $event)"
-            />
-            <!-- END YEAR -->
-            <v-autocomplete
-              v-if="getEndYear()?.defaultValues?.length"
-              class="w-full"
-              :label="getEndYear()?.label"
-              variant="outlined"
-              :items="getEndYear()?.values"
-              density="compact"
-              :modelValue="modelValue?.bw_model_year_end as string"
-              @update:modelValue="
-                modelValue && (modelValue[getEndYear()?.key!] = $event || '')
-              "
-              @update:search="term => handleSearch(getEndYear()?.key!, term)"
-              @update:focused="handleSearchFocus(getEndYear()?.key!, $event)"
+              @update:search="term => handleSearch(getAgingName()?.key!, term)"
+              @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
             />
           </div>
         </template>
