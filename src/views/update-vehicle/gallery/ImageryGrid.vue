@@ -72,7 +72,7 @@ const handleClick = (image: ImageGrid, index: number) => {
     class="!w-fit bg-[#212529]"
     :class="[gridClass,
       {[classContainer as any]: classContainer,  
-      'bg-[#212529B2]': noImageText && !images?.length }
+      '!bg-[#212529B2]': noImageText  }
     ]"
   >
     <div
@@ -87,7 +87,7 @@ const handleClick = (image: ImageGrid, index: number) => {
         :width="size"
         :height="!autoHeight ? size : 0"
         class="block border-2 border-solid border-black"
-        :class="{ 'border-4 border-[#0D6EFD]': selectedImages.includes(i) }"
+        :class="{ 'border-4 !border-[#0D6EFD]': selectedImages.includes(i) }"
         :style="{
           height: autoHeight ? 'auto' : `${size}px`,
           width: `${size}px`,
@@ -102,7 +102,7 @@ const handleClick = (image: ImageGrid, index: number) => {
       v-else-if="noImageText"
       class="flex justify-center items-center w-max h-full"
     >
-      <div class="w-[80%] text-center">
+      <div class="w-[80%] text-center text-white">
         {{ noImageText }}
       </div>
     </div>
