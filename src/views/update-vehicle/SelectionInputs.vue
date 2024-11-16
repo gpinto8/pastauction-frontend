@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 type BodyDataProps = { label: string; mode: 'type' | 'category_vehicle' };
 
@@ -55,20 +55,12 @@ const getSubColorData = async (id: number) => {
   return subColorData.data.items?.map((item: any) => item);
 };
 
-onMounted(async () => {
-  // BODY DATA
-  const _bodyData1 = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_body/type/`
-  );
+const updateBodyData = async (bodyType: string) => {
   const _bodyData2 = await axios.get(
-    `https://pastauction.com/api/v1/filter/bidwatcher_brand/category_vehicle/`
+    `https://pastauction.com/api/v1/filter/bidwatcher_brand/category_vehicle/?search=type:${bodyType}`
   );
 
   const mergedBodyData: BodyDataProps[] = [
-    ...(_bodyData1?.data?.items || []).map((item: any) => ({
-      label: item?.type,
-      mode: 'type',
-    })),
     ...(_bodyData2?.data?.items || []).map((item: any) => ({
       label: item?.category_vehicle,
       mode: 'category_vehicle',
@@ -76,8 +68,29 @@ onMounted(async () => {
   ]
     .filter(item => item.label !== '' && item.label !== 'Attribute')
     .filter(Boolean);
-  bodyData.value = mergedBodyData;
 
+  bodyData.value = mergedBodyData;
+};
+
+// BODY DATA
+watch(
+  () => updateVehicleStore.selectedVehicleData,
+  () => {
+    const bodyType = updateVehicleStore.selectedVehicleData?.body_types;
+    updateBodyData(bodyType);
+  }
+);
+
+// BODY DATA
+watch(
+  () => updateVehicleStore.currentVehicleData,
+  () => {
+    const bodyType = updateVehicleStore.currentVehicleData?.body_types;
+    updateBodyData(bodyType);
+  }
+);
+
+onMounted(async () => {
   // COLOR DATA
   const _colorData = await axios.get(
     `https://pastauction.com/api/v1/bidwatcher_colorfamily/`

@@ -7,12 +7,14 @@ import SelectionInputs from './SelectionInputs.vue';
 import AdminReview from './AdminReview.vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 export type SelectedFiltersProps = { [key in FilterKeyProps]: string | number };
 
+const updateVehicleStore = updateVehicle();
 const { getLoggedUserInfo } = useAuthStore();
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
@@ -31,8 +33,7 @@ const selectedFilters = ref<SelectedFiltersProps>({
   brand_name: '',
   bw_family_name: '',
   bw_model_name: '',
-  bw_model_year_begin: '',
-  bw_model_year_end: '',
+  age_name: '',
 });
 
 const getVehicleData = async (familyId: number, modelSeries: string) => {
@@ -90,6 +91,7 @@ onMounted(async () => {
       const _vehicleData = response.data?.items[0];
       if (!_vehicleData) return;
 
+      updateVehicleStore.currentVehicleData = _vehicleData;
       selectedVehicleData.value = _vehicleData;
       middleVehicleData.value = _vehicleData;
 
@@ -97,8 +99,7 @@ onMounted(async () => {
         brand_name: _vehicleData.brand_name,
         bw_family_name: _vehicleData.bw_family_name,
         bw_model_name: _vehicleData.bw_model_name,
-        bw_model_year_begin: _vehicleData.bw_model_year_begin,
-        bw_model_year_end: _vehicleData.bw_model_year_end,
+        age_name: _vehicleData.vehicle_age_name,
       };
 
       const _familyId = _vehicleData?.bw_family_id;
