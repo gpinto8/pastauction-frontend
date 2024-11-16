@@ -146,7 +146,7 @@ const handleSearchFocus = async (key: string, isFocused: boolean) => {
     });
 
   if (isFocused && isKeyValueEmpty && hasAnyValue) {
-    const dynamicParams = getDynamicParams(key, true);
+    const dynamicParams = getDynamicParams(key);
     const dynamicParamsString = dynamicParams ? `search=${dynamicParams}&` : '';
 
     const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?${dynamicParamsString}page=1&size=50`;
