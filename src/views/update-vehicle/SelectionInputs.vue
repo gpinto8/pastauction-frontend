@@ -2,15 +2,9 @@
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
+import ColorMainNuance, { type ColorProps } from './ColorMainNuance.vue';
 
 type BodyDataProps = { label: string; mode: 'type' | 'category_vehicle' };
-
-type ColorProps = {
-  id: number;
-  name: string;
-  hex_code: string;
-  id_family: number;
-};
 
 type AttributeDataExtraProps = {
   name: string;
@@ -28,11 +22,6 @@ const bodySubData = ref<string[]>();
 const selectedBody = ref<string>();
 const selectedSubBodies = ref<string[]>();
 
-const colorData = ref<ColorProps[]>();
-const colorSubData = ref<ColorProps[]>();
-const selectedColor = ref<ColorProps>();
-const selectedSubColor = ref<ColorProps>();
-
 const attributeData = ref<string[]>();
 const attributeDataExtra = ref<AttributeDataExtraProps[]>();
 const selectedAttributes = ref<string[]>();
@@ -46,13 +35,6 @@ const getShapeData = async (
     `https://pastauction.com/api/v1/filter/bidwatcher_body/shape/?search=${searchMode}:${value}`
   );
   return shapeData.data.items?.map((item: any) => item.shape);
-};
-
-const getSubColorData = async (id: number) => {
-  const subColorData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_color/?search=id_family:${id}`
-  );
-  return subColorData.data.items?.map((item: any) => item);
 };
 
 const updateBodyData = async (bodyType: string) => {
@@ -91,12 +73,6 @@ watch(
 );
 
 onMounted(async () => {
-  // COLOR DATA
-  const _colorData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_colorfamily/`
-  );
-  colorData.value = _colorData.data.items?.map((item: any) => item);
-
   // ATTRIBUTE DATA
   const _attributeData = await getShapeData('Attribute');
   const _attributeDataExtra: AttributeDataExtraProps[] = [
@@ -143,36 +119,6 @@ const handleSubBodySelection = async (value: string) => {
   updateVehicleStore.selectedSubBodies = mergedData;
 };
 
-const handleColorSelection = async (color: ColorProps) => {
-  updateVehicleStore.selectedColor = { id: 0, name: '' };
-
-  // If it already exists, remove it
-  if (selectedColor.value?.name === color.name) {
-    selectedColor.value = undefined;
-    colorSubData.value = undefined;
-    selectedSubColor.value = undefined;
-    return;
-  }
-
-  const _colorSubData: ColorProps[] = await getSubColorData(color.id);
-  colorSubData.value = _colorSubData;
-
-  selectedColor.value = color;
-  selectedSubColor.value = undefined;
-};
-
-const handleSubColorSelection = async (color: ColorProps) => {
-  // If it already exists, remove it
-  if (selectedSubColor.value === color) {
-    selectedSubColor.value = undefined;
-    updateVehicleStore.selectedColor = { id: 0, name: '' };
-    return;
-  }
-
-  selectedSubColor.value = color;
-  updateVehicleStore.selectedColor = { id: color.id, name: color.name };
-};
-
 const handleAttributeSelection = (attribute: string) => {
   // If its already selected, remove it
   if (selectedAttributes.value?.includes(attribute)) {
@@ -187,6 +133,10 @@ const handleAttributeSelection = (attribute: string) => {
   const newBodyChange = [...(selectedAttributes.value || []), attribute];
   selectedAttributes.value = newBodyChange;
   updateVehicleStore.selectedAttribute = newBodyChange;
+};
+
+const handleColorChange = (color?: ColorProps) => {
+  if (color) updateVehicleStore.selectedColor = color;
 };
 
 const submitReview = async () => {
@@ -237,7 +187,7 @@ const submitReview = async () => {
   if (subBodies) data.body_shapes = subBodies;
 
   // COLOR
-  const colorId = selectedColor.value?.id;
+  const colorId = 'selectedColor.value?.id';
   if (colorId) data.color_main_id = colorId;
 
   // ATTRIBUTE CHANGES
@@ -400,63 +350,10 @@ const submitReview = async () => {
       </div>
     </div>
     <!-- COLOR -->
-    <div class="flex flex-col">
-      <div class="mb-3 font-semibold text-lg">Colours changes</div>
-      <div class="flex flex-col gap-2">
-        <!-- COLOR DATA -->
-        <div class="flex gap-4 items-center flex-col sm:flex-row">
-          <div class="font-semibold text-base w-full sm:w-fit">Main:</div>
-          <div class="flex gap-1 flex-wrap w-full">
-            <div
-              v-for="color in colorData"
-              class="h-8 w-8 border-[2px] border-solid border-grey-100 cursor-pointer"
-              :class="{
-                '!border !border-solid !border-[#212529]':
-                  selectedColor && selectedColor.name === color.name,
-              }"
-              @click="() => handleColorSelection(color)"
-            >
-              <div class="h-full" :style="{ backgroundColor: color.hex_code }">
-                <v-tooltip
-                  activator="parent"
-                  location="top"
-                  :text="color.name"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- SUB COLOR DATA -->
-        <div
-          v-if="colorSubData?.length && selectedColor"
-          class="flex gap-4 items-center flex-col sm:flex-row"
-        >
-          <div class="font-semibold text-base w-full sm:w-fit">Nuance:</div>
-          <div class="flex gap-1 flex-wrap w-full md:w-fit">
-            <div
-              v-for="color in colorSubData"
-              class="h-8 w-8 border-[2px] border-solid border-grey-100 cursor-pointer"
-              :class="{
-                '!border !border-solid !border-[#212529]':
-                  selectedSubColor?.name === color.name,
-              }"
-              @click="() => handleSubColorSelection(color)"
-            >
-              <div class="h-full" :style="{ backgroundColor: color.hex_code }">
-                <v-tooltip
-                  activator="parent"
-                  location="top"
-                  :text="color.name"
-                />
-              </div>
-            </div>
-            <div class="flex justify-center items-center">
-              {{ selectedSubColor?.name }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ColorMainNuance
+      title="Colours changes"
+      @onSelectedSubColor="handleColorChange"
+    />
     <!-- ATTRIBUTE -->
     <div>
       <div class="mb-3 font-semibold text-lg">Attribute changes</div>
