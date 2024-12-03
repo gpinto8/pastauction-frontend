@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 
-defineProps<{ title: string }>();
+defineProps<{ title: string; classTitle?: string }>();
 const emit = defineEmits<{
   (e: 'onSelectedSubColor', value: ColorProps | undefined): void;
 }>();
@@ -73,7 +73,9 @@ const handleSubColorSelection = async (color: ColorProps) => {
 
 <template>
   <div class="flex flex-col">
-    <div class="mb-3 font-semibold text-lg">{{ title }}</div>
+    <div class="mb-3 font-semibold text-lg" :class="[classTitle]">
+      {{ title }}
+    </div>
     <div class="flex flex-col gap-2">
       <!-- COLOR DATA -->
       <div class="flex gap-4 items-center flex-col sm:flex-row">

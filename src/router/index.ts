@@ -96,7 +96,7 @@ const router = createRouter({
         },
         {
           path: '/test',
-          name: 'Test',
+          name: 'Color Update',
           component: async () =>
             await import(
               /* webpackChunkName: "VehicleDetail" */ '@/views/color-update/ColorUpdate.vue'

@@ -7,10 +7,16 @@ const props = defineProps<{
   forceOpen?: number; // 0 - open | 1 - close
   disabled?: boolean;
 }>();
+
+defineEmits(['clickTitle']);
 </script>
 
 <template>
-  <v-expansion-panels v-model="props.forceOpen" :disabled="disabled">
+  <v-expansion-panels
+    v-model="props.forceOpen"
+    :disabled="disabled"
+    @click="$emit('clickTitle')"
+  >
     <v-expansion-panel :class="panelClass">
       <v-expansion-panel-title
         expand-icon="mdi-plus"

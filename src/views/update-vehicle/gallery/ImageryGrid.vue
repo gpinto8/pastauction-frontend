@@ -9,6 +9,7 @@ type ColumnCombinations =
   | '4x80'
   | '4x100'
   | '5x80'
+  | '16x80'
   | '15x80'
   | '15xauto'
   | '2x80'
@@ -16,6 +17,10 @@ type ColumnCombinations =
   | '5x54'
   | '8xauto'
   | '8x152'
+  | '7x80'
+  | '3x70'
+  | '3x152'
+  | '2x152'
   | '3x80';
 
 const props = defineProps<{
@@ -45,10 +50,15 @@ const gridMap: { [key in ColumnCombinations]: string } = {
   '4x100': 'grid-cols-[repeat(4,100px)]',
   '6x80': 'grid-cols-[repeat(6,80px)]',
   '15x80': 'grid-cols-[repeat(15,80px)]',
+  '16x80': 'grid-cols-[repeat(16,80px)]',
   '15xauto': 'grid-cols-[repeat(15,auto)]',
   '5x54': 'grid-cols-[repeat(5,54px)]',
   '8xauto': 'grid-cols-[repeat(8,auto)]',
   '8x152': 'grid-cols-[repeat(8,152px)]',
+  '7x80': 'grid-cols-[repeat(7,80px)]',
+  '3x70': 'grid-cols-[repeat(3,70px)]',
+  '3x152': 'grid-cols-[repeat(3,152px)]',
+  '2x152': 'grid-cols-[repeat(2,152px)]',
   '3x80': 'grid-cols-[repeat(3,80px)]',
 };
 const size = +props.columnCombination.split('x')[1];

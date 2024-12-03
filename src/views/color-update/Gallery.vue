@@ -18,33 +18,112 @@ const handleImageClick = (image: any) => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center items-center gap-4">
-    <ImageryGrid
-      v-if="colorUpdateStore.galleryMode === 'single'"
-      :images="
-        new Array(75).fill({
-          id: 1,
-          path: image,
-        })
-      "
-      columnCombination="15x80"
-      :onImageClick="handleImageClick"
-      :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-      :resetSelection="colorUpdateStore.selectionMode === 'single'"
-    />
-    <ImageryGrid
-      v-else
-      :images="
-        new Array(24).fill({
-          id: 1,
-          path: image,
-        })
-      "
-      columnCombination="8x152"
-      :onImageClick="handleImageClick"
-      :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-      :resetSelection="colorUpdateStore.selectionMode === 'single'"
-    />
+  <div
+    class="flex flex-col justify-center items-center gap-4 md:min-w-[1300px]"
+  >
+    <!-- DESKTOP -->
+    <template class="hidden md:block bg-[#212529]">
+      <!-- DESKTOP SINGLE -->
+      <ImageryGrid
+        v-if="colorUpdateStore.galleryMode === 'single'"
+        :images="
+          new Array(80).fill({
+            id: 1,
+            path: image,
+          })
+        "
+        class="w-full border-[8px] !border-[#212529] rounded-[4px]"
+        columnCombination="16x80"
+        :onImageClick="handleImageClick"
+        :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
+        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+      />
+      <!-- DESKTOP MULTIPLE -->
+      <ImageryGrid
+        v-else
+        :images="
+          new Array(24).fill({
+            id: 1,
+            path: image,
+          })
+        "
+        class="w-full border-[8px] !border-[#212529] rounded-[4px] justify-around"
+        columnCombination="8x152"
+        :onImageClick="handleImageClick"
+        :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
+        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+      />
+    </template>
+
+    <!-- TABLET -->
+    <template class="hidden sm:block md:hidden">
+      <!-- TABLET SINGLE -->
+      <ImageryGrid
+        v-if="colorUpdateStore.galleryMode === 'single'"
+        :images="
+          new Array(35).fill({
+            id: 1,
+            path: image,
+          })
+        "
+        class="border-[8px] !border-[#212529] rounded-[4px]"
+        columnCombination="7x80"
+        :onImageClick="handleImageClick"
+        :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
+        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+      />
+      <!-- TABLET MULTIPLE -->
+      <ImageryGrid
+        v-else
+        :images="
+          new Array(12).fill({
+            id: 1,
+            path: image,
+          })
+        "
+        class="border-[8px] !border-[#212529] rounded-[4px] !w-full justify-around"
+        columnCombination="3x152"
+        :onImageClick="handleImageClick"
+        :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
+        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+      />
+    </template>
+
+    <!-- MOBILE -->
+    <template class="block sm:hidden">
+      <!-- MOBILE SINGLE -->
+      <ImageryGrid
+        v-if="colorUpdateStore.galleryMode === 'single'"
+        :images="
+          new Array(12).fill({
+            id: 1,
+            path: image,
+          })
+        "
+        class="border-[8px] !border-[#212529] rounded-[4px]"
+        columnCombination="3x80"
+        :onImageClick="handleImageClick"
+        :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
+        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+      />
+      <!-- MOBILE MULTIPLE -->
+      <ImageryGrid
+        v-else
+        :images="
+          new Array(8).fill({
+            id: 1,
+            path: image,
+          })
+        "
+        class="border-[8px] !border-[#212529] rounded-[4px] !w-full justify-around"
+        columnCombination="2x152"
+        :onImageClick="handleImageClick"
+        :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
+        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+      />
+    </template>
+
+    <!-- PAGINATION -->
     <Pagination
       :currentPage="currentPage"
       :totalPages="100"
