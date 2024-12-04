@@ -38,12 +38,12 @@ const getShapeData = async (
 };
 
 const updateBodyData = async (bodyType: string) => {
-  const _bodyData2 = await axios.get(
+  const _bodyData = await axios.get(
     `https://pastauction.com/api/v1/filter/bidwatcher_brand/category_vehicle/?search=type:${bodyType}`
   );
 
   const mergedBodyData: BodyDataProps[] = [
-    ...(_bodyData2?.data?.items || []).map((item: any) => ({
+    ...(_bodyData?.data?.items || []).map((item: any) => ({
       label: item?.category_vehicle,
       mode: 'category_vehicle',
     })),
@@ -98,7 +98,7 @@ const handleBodySelection = async (body: BodyDataProps) => {
     return;
   }
 
-  const shapeData = await getShapeData(body.label, body.mode);
+  const shapeData = await getShapeData(body.label, 'type');
   bodySubData.value = shapeData;
   selectedBody.value = body.label;
 };
