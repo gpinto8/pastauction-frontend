@@ -63,15 +63,19 @@ const setAllVehicleData = async (
 
   // PREVIOUS
   const previousModelSeries = numberToRoman(romanToNumber(modelSeries) - 1);
-  getVehicleData(familyId, previousModelSeries).then(
-    data => (previousVehicleData.value = data || null)
-  );
+  if (previousModelSeries) {
+    getVehicleData(familyId, previousModelSeries).then(
+      data => (previousVehicleData.value = data || null)
+    );
+  }
 
   // NEXT
   const nextModelSeries = numberToRoman(romanToNumber(modelSeries) + 1);
-  getVehicleData(familyId, nextModelSeries).then(
-    data => (nextVehicleData.value = data || null)
-  );
+  if (nextModelSeries) {
+    getVehicleData(familyId, nextModelSeries).then(
+      data => (nextVehicleData.value = data || null)
+    );
+  }
 };
 
 onMounted(async () => {
@@ -140,16 +144,18 @@ watch(
     selectedFilters.value?.brand_name,
     selectedFilters.value?.bw_family_name,
     selectedFilters.value?.bw_model_name,
+    selectedFilters.value?.age_name,
   ],
   async () => {
-    const { brand_name, bw_family_name, bw_model_name } =
+    const { brand_name, bw_family_name, bw_model_name, age_name } =
       selectedFilters.value || {};
 
-    if (brand_name && bw_family_name && bw_model_name) {
+    if (brand_name && bw_family_name && bw_model_name && age_name) {
       const params = [
-        brand_name ? `brand_name_like:${brand_name}` : '',
-        bw_family_name ? `bw_family_name_like:${bw_family_name}` : '',
-        bw_model_name ? `bw_model_name_like:${bw_model_name}` : '',
+        brand_name ? `brand_name:${brand_name}` : '',
+        bw_family_name ? `bw_family_name:${bw_family_name}` : '',
+        bw_model_name ? `bw_model_name:${bw_model_name}` : '',
+        age_name ? `age_name:${age_name}` : '',
       ].join(',');
       const data = await axios.get(
         `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
