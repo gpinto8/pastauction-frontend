@@ -29,19 +29,24 @@ const updateVehicleStore = updateVehicle();
 const modelId = computed(() => props.vehicleData?.bw_model_id);
 
 const getImages = async (modelId: number, page: number) => {
+  const size = 30;
   const familyData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId}&page=${page}&size=30`
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId}&page=${page}&size=${size}`
   );
   const totalPages = familyData.data.pages;
   const totalImages = familyData.data.total;
   const data = familyData.data.items;
 
-  const newData = data.map((item: any) => ({
-    id: item.vehicle_id,
-    path: item?.photo_path
-      ? `https://pastauction.com/api/v1/photo/${item.photo_path}`
-      : '',
-  }));
+  const newData = data
+    .map((item: any) => {
+      const path = item?.photo_path;
+      if (path)
+        return {
+          id: item.vehicle_id,
+          path: `https://pastauction.com/api/v1/photo/${path}`,
+        };
+    })
+    .filter(Boolean);
 
   return { data: newData, totalPages, totalImages };
 };
@@ -97,7 +102,7 @@ const handleImageClick = async (image: ImageGrid) => {
         @onPageChanged="handlePageChanged"
         @onSelected="$emit('onSelected', $event)"
         :noImageText="noImageText"
-        />
+      />
     </div>
     <div class="hidden md:flex h-full flex-col w-fit">
       <GalleryDesktop
