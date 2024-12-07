@@ -64,17 +64,19 @@ const setAllVehicleData = async (
   // PREVIOUS
   const previousModelSeries = numberToRoman(romanToNumber(modelSeries) - 1);
   if (previousModelSeries) {
-    getVehicleData(familyId, previousModelSeries).then(
-      data => (previousVehicleData.value = data || null)
-    );
+    getVehicleData(
+      +(middleVehicleData.value?.vehicle_version + familyId),
+      previousModelSeries
+    ).then(data => (previousVehicleData.value = data || null));
   }
 
   // NEXT
   const nextModelSeries = numberToRoman(romanToNumber(modelSeries) + 1);
   if (nextModelSeries) {
-    getVehicleData(familyId, nextModelSeries).then(
-      data => (nextVehicleData.value = data || null)
-    );
+    getVehicleData(
+      +(middleVehicleData.value?.vehicle_version + familyId),
+      nextModelSeries
+    ).then(data => (nextVehicleData.value = data || null));
   }
 };
 
