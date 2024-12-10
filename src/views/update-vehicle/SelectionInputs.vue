@@ -320,7 +320,7 @@ const submitReview = async () => {
     <div class="flex flex-col">
       <div class="mb-3 font-semibold text-lg">Body change</div>
       <!-- BODY DATA -->
-      <div class="mb-4 flex gap-2 flex-wrap">
+      <div class="mb-4 flex gap-2 flex-wrap md:w-max">
         <button
           class="p-2 text-sm w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
           v-for="(data, i) in bodyData"
