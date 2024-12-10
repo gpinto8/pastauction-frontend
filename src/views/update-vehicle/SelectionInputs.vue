@@ -140,61 +140,76 @@ const handleColorChange = (color?: ColorProps) => {
 };
 
 const submitReview = async () => {
-  const data: any = {};
+  // const data: any = {};
 
   // MAIN PICTURE
-  const path = updateVehicleStore.mainPicturePath;
-  if (path) data.photo_path = path;
+  // const path = updateVehicleStore.mainPicturePath;
+  // if (path) data.photo_path = path;
 
   // SUGGESTED DATA
-  const suggestedData = updateVehicleStore.suggestedData;
-  if (suggestedData) {
-    const family = suggestedData?.find(item => item.label === 'Family');
-    const model = suggestedData?.find(item => item.label === 'Model');
-    const stage = suggestedData?.find(item => item.label === 'Stage');
-    const series = suggestedData?.find(item => item.label === 'Series');
-    // const body = suggestedData?.find(item => item.label === 'Body');
-    // const color = suggestedData?.find(item => item.label === 'Color');
-    // const attribute = suggestedData?.find(item => item.label === 'Attribute');
+  // const suggestedData = updateVehicleStore.suggestedData;
+  // if (suggestedData) {
+  // const family = suggestedData?.find(item => item.label === 'Family');
+  // const model = suggestedData?.find(item => item.label === 'Model');
+  // const stage = suggestedData?.find(item => item.label === 'Stage');
+  // const series = suggestedData?.find(item => item.label === 'Series');
+  // const body = suggestedData?.find(item => item.label === 'Body');
+  // const color = suggestedData?.find(item => item.label === 'Color');
+  // const attribute = suggestedData?.find(item => item.label === 'Attribute');
 
-    // { label: 'Family', value: data?.bw_family_id },
-    //   { label: 'Model', value: data?.bw_model_name },
-    //   { label: 'Stage', value: data?.vehicle_stage },
-    //   { label: 'Series', value: data?.vehicle_series },
-    //   { label: 'Year', value: data?.vehicle_year },
-    //   { label: 'Chasis', value: data?.chassis },
-    //   { label: 'Body', value: data?.body_shapes },
-    //   { label: 'Color', value: data?.color_main_name },
-    //   { label: 'Attribute', value: data?.body_types },
+  // { label: 'Family', value: data?.bw_family_id },
+  //   { label: 'Model', value: data?.bw_model_name },
+  //   { label: 'Stage', value: data?.vehicle_stage },
+  //   { label: 'Series', value: data?.vehicle_series },
+  //   { label: 'Year', value: data?.vehicle_year },
+  //   { label: 'Chasis', value: data?.chassis },
+  //   { label: 'Body', value: data?.body_shapes },
+  //   { label: 'Color', value: data?.color_main_name },
+  //   { label: 'Attribute', value: data?.body_types },
 
-    if (family) data.bw_family_id = family.value;
-    if (model) data.bw_model_name = model.value;
-    if (stage) data.vehicle_stage = stage.value;
-    if (series) data.vehicle_series = series.value;
-    // if (body) data.body_shapes = body.value;
-    // if (color) data.color_main_name = color.value;
-    // if (attribute) data.id_key = attribute.value;
-  }
+  // if (family) data.bw_family_id = family.value;
+  // if (model) data.bw_model_name = model.value;
+  // if (stage) data.vehicle_stage = stage.value;
+  // if (series) data.vehicle_series = series.value;
+  // if (body) data.body_shapes = body.value;
+  // if (color) data.color_main_name = color.value;
+  // if (attribute) data.id_key = attribute.value;
+  // }
 
   // BODY CHANGES
   // const bodies = selectedBodies.value?.join(',');
   // if (bodies) data.body_categories = bodies;
 
-  const subBodies = selectedSubBodies.value
-    ?.map(body => Object.values(body))
-    .flat(Infinity)
-    .join(',');
-  if (subBodies) data.body_shapes = subBodies;
+  // const subBodies = selectedSubBodies.value
+  //   ?.map(body => Object.values(body))
+  //   .flat(Infinity)
+  //   .join(',');
+  // if (subBodies) data.body_shapes = subBodies;
 
-  // COLOR
-  const colorId = 'selectedColor.value?.id';
-  if (colorId) data.color_main_id = colorId;
+  // // COLOR
+  // const colorId = 'selectedColor.value?.id';
+  // if (colorId) data.color_main_id = colorId;
 
-  // ATTRIBUTE CHANGES
-  const attributes = selectedAttributes.value?.join(',');
-  if (attributes) data.body_types = attributes;
+  // // ATTRIBUTE CHANGES
+  // const attributes = selectedAttributes.value?.join(',');
+  // if (attributes) data.body_types = attributes;
 
-  console.log({ data });
+  // console.log({ data });
+
+  // test
+
+  console.log({
+    updateVehicleStore,
+    selectedColor: updateVehicleStore?.selectedColor,
+  });
+
+  const vehicleId = updateVehicleStore?.currentVehicleData?.vehicle_id;
+  const bodyId = [0];
+  const colorMainId = updateVehicleStore?.selectedColor?.id;
+  const modelId = updateVehicleStore?.selectedVehicleData?.bw_model_id;
+  const notesInput = updateVehicleStore?.notesInput;
+
+  console.log({ vehicleId, notesInput, modelId });
 
   const authToken = window.localStorage.getItem('past_token');
   const config = {
@@ -205,9 +220,27 @@ const submitReview = async () => {
       'Content-Type': 'application/json',
     },
     data: {
-      vehicle_id: 34920,
-      color_main_id: 60,
-      body_types: 'asdfasdf',
+      // vehicle_id: Optional[int] = 636672
+      // body_id: Optional[List]=[1,2,3] #Hai id body o mi devi passare il nome come stringa?
+      // color_main_id: Optional[int]
+      // id_model: Optional[int] = 36247
+      // note: Optional[str]
+
+      // vehicle_id: 636672,
+      // body_id: [1, 2, 3],
+      // color_main_id: 0,
+      // id_model: 36247,
+      // note: 'string',
+
+      vehicle_id: vehicleId,
+      body_id: bodyId,
+      color_main_id: colorMainId,
+      id_model: modelId,
+      note: notesInput,
+
+      // vehicle_id: 34920,
+      // color_main_id: 60,
+      // body_types: 'asdfasdf',
       // ...data,
       // vehicle_id: 9999,
       // id_age: 9999,
@@ -240,15 +273,15 @@ const submitReview = async () => {
     // },
   };
 
-  console.log({ config: data });
+  console.log({ config });
 
-  // await axios(config)
-  //   .then(response => {
-  //     console.log({ data: response.data });
-  //   })
-  //   .catch(error => {
-  //     console.error(error);
-  //   });
+  await axios(config)
+    .then(response => {
+      console.log({ data: response.data });
+    })
+    .catch(error => {
+      console.error(error);
+    });
 
   // const data = await axios.post(
   //   `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/create/`,
