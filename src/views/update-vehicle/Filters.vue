@@ -23,6 +23,7 @@ type FiltersDataProps = {
 const props = defineProps<{
   class: string;
   modelValue?: SelectedFiltersProps;
+  applyFilters?: () => void;
 }>();
 
 defineEmits(['onPrevious', 'onNext']);
@@ -182,6 +183,8 @@ const getBrandName = () => getFilterData('brand_name');
 const getFamilyName = () => getFilterData('bw_family_name');
 const getModelName = () => getFilterData('bw_model_name');
 const getAgingName = () => getFilterData('age_name');
+
+const handleGo = () => props?.applyFilters?.();
 </script>
 
 <template>
@@ -263,6 +266,14 @@ const getAgingName = () => getFilterData('age_name');
         @update:search="term => handleSearch(getAgingName()?.key!, term)"
         @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
       />
+      <!-- GO BUTTON -->
+      <v-btn
+        class="hidden sm:grid items-center mt-1 text-[#212529] bg-white rounded-md font-normal place-content-center text-sm text-none text-center"
+        @click="handleGo"
+      >
+        Go
+      </v-btn>
+
       <!-- MOBILE -->
       <ExpansionSection
         titleClass="p-0 bg-white"
@@ -346,6 +357,13 @@ const getAgingName = () => getFilterData('age_name');
               @update:search="term => handleSearch(getAgingName()?.key!, term)"
               @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
             />
+            <!-- GO BUTTON -->
+            <v-btn
+              class="w-1/3 text-white bg-[#212529] rounded-md font-normal grid place-content-center text-sm text-none text-center"
+              @click="handleGo"
+            >
+              Go
+            </v-btn>
           </div>
         </template>
       </ExpansionSection>

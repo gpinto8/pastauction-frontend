@@ -141,39 +141,33 @@ const handleFilterNext = () => {
   }
 };
 
-watch(
-  () => [
-    selectedFilters.value?.brand_name,
-    selectedFilters.value?.bw_family_name,
-    selectedFilters.value?.bw_model_name,
-    selectedFilters.value?.age_name,
-  ],
-  async () => {
-    const { brand_name, bw_family_name, bw_model_name, age_name } =
-      selectedFilters.value || {};
+const applyFilters = async () => {
+  const { brand_name, bw_family_name, bw_model_name, age_name } =
+    selectedFilters.value || {};
 
-    if (brand_name && bw_family_name && bw_model_name && age_name) {
-      const params = [
-        brand_name ? `brand_name:${brand_name}` : '',
-        bw_family_name ? `bw_family_name:${bw_family_name}` : '',
-        bw_model_name ? `bw_model_name:${bw_model_name}` : '',
-        age_name ? `age_name:${age_name}` : '',
-      ].join(',');
-      const data = await axios.get(
-        `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
-      );
+  if (brand_name && bw_family_name && bw_model_name) {
+    const params = [
+      brand_name ? `brand_name:${brand_name}` : '',
+      bw_family_name ? `bw_family_name:${bw_family_name}` : '',
+      bw_model_name ? `bw_model_name:${bw_model_name}` : '',
+      age_name ? `age_name:${age_name}` : '',
+    ]
+      .filter(Boolean)
+      .join(',');
+    const data = await axios.get(
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
+    );
 
-      const _familyId = data?.data?.items?.[0]?.bw_family_id;
-      const _modelSeries = data?.data?.items?.[0]?.bw_model_series;
+    const _familyId = data?.data?.items?.[0]?.bw_family_id;
+    const _modelSeries = data?.data?.items?.[0]?.bw_model_series;
 
-      if (_familyId && _modelSeries) {
-        familyId.value = _familyId;
-        modelSeries.value = _modelSeries;
-        setAllVehicleData(_familyId, _modelSeries);
-      }
+    if (_familyId && _modelSeries) {
+      familyId.value = _familyId;
+      modelSeries.value = _modelSeries;
+      setAllVehicleData(_familyId, _modelSeries);
     }
   }
-);
+};
 </script>
 
 <template>
@@ -185,6 +179,7 @@ watch(
       :modelValue="selectedFilters"
       @onPrevious="handleFilterPrevious"
       @onNext="handleFilterNext"
+      :applyFilters="applyFilters"
     />
     <div class="flex flex-col gap-7 justify-between w-full mt-6">
       <div
