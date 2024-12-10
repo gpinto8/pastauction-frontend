@@ -125,7 +125,7 @@ watch(
   }
 );
 
-function debounce<T extends (...args: any[]) => void>(func: T, timeout = 10) {
+function debounce<T extends (...args: any[]) => void>(func: T, timeout = 500) {
   let timer: any;
   return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
     clearTimeout(timer);
@@ -140,13 +140,13 @@ const handleSearchFocus = async (key: string, isFocused: boolean) => {
   if (isFocused && key && props.modelValue) props.modelValue[key] = null; // When the user clicks on the input, it should reset the value
 
   const isKeyValueEmpty: boolean = !(props.modelValue as any)?.[key]!;
-  const hasAnyValue =
-    props.modelValue &&
-    Object.values(props.modelValue).some(item => {
-      return item;
-    });
+  // const hasAnyValue =
+  //   props.modelValue &&
+  //   Object.values(props.modelValue).some(item => {
+  //     return item;
+  //   });
 
-  if (isFocused && isKeyValueEmpty && hasAnyValue) {
+  if (isFocused && isKeyValueEmpty) {
     const dynamicParams = getDynamicParams(key);
     const dynamicParamsString = dynamicParams ? `search=${dynamicParams}&` : '';
 
