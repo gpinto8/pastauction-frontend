@@ -4,6 +4,8 @@ type Modes = 'single' | 'multiple';
 type State = {
   galleryMode: Modes;
   selectionMode: Modes;
+  selectingHexColor: boolean;
+  selectedHexColor: string;
 };
 
 export const colorUpdate = defineStore('colorUpdate', {
@@ -11,6 +13,8 @@ export const colorUpdate = defineStore('colorUpdate', {
     return {
       galleryMode: 'single',
       selectionMode: 'single',
+      selectingHexColor: false,
+      selectedHexColor: '',
     };
   },
 });

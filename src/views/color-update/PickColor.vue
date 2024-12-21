@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { colorUpdate } from '@/store/color-update';
+import { ref, watch } from 'vue';
+
+const colorUpdateStore = colorUpdate();
 
 const pickColors = ref(
   [
@@ -8,6 +11,18 @@ const pickColors = ref(
     { key: 'Top color', value: 'BLUE' },
   ].map((data: any) => ({ ...data, key: data.key + ':' }))
 );
+
+watch(
+  () => colorUpdateStore.selectingHexColor,
+  () => {
+    const cursor = colorUpdateStore.selectingHexColor ? 'crosshair' : '';
+    document.body.style.cursor = cursor;
+  }
+);
+
+const handlePickColor = () => {
+  colorUpdateStore.selectingHexColor = !colorUpdateStore.selectingHexColor;
+};
 </script>
 
 <template>
@@ -22,13 +37,24 @@ const pickColors = ref(
           :class="{
             '!border !border-solid !border-[#212529]': true,
           }"
+          @click="handlePickColor"
         >
-          <div class="h-full" :style="{ backgroundColor: '#1708FF' }">
-            <v-tooltip activator="parent" location="top" text="Blue" />
+          <div
+            class="h-full"
+            :style="{
+              backgroundColor: colorUpdateStore.selectedHexColor || '#000',
+            }"
+          >
+            <v-tooltip
+              v-if="colorUpdateStore.selectedHexColor"
+              activator="parent"
+              location="top"
+              :text="colorUpdateStore.selectedHexColor"
+            />
           </div>
         </div>
         <span class="text-[#212529] text-sm flex justify-center items-center">
-          #1708FF
+          {{ colorUpdateStore.selectedHexColor || '#000' }}
         </span>
       </div>
     </div>
