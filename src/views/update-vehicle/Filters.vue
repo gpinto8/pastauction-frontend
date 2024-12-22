@@ -161,11 +161,12 @@ const handleSearchFocus = async (key: string, isFocused: boolean) => {
 const handleSearch = debounce(async (key: FilterKeyProps, term: string) => {
   if (term) {
     // The filters have to be related to each other, thats why we need to pass the previous selected filters values to the current one BUT the current one, ofc
-    const dynamicParams = getDynamicParams(key, true);
+    const dynamicParams = getDynamicParams(key);
     const dynamicParamsString = dynamicParams ? `,${dynamicParams}` : '';
+    const keyword = key === 'brand_name' ? 'like' : 'left';
 
     const response = await axios.get(
-      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?search=${key}_like:${term}${dynamicParamsString}&page=1&size=50`
+      `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?search=${key}_${keyword}:${term}${dynamicParamsString}&page=1&size=50`
     );
 
     const values = response.data.items.map((item: any) => item?.[key]);
