@@ -7,7 +7,7 @@ import SelectionInputs from './SelectionInputs.vue';
 import AdminReview from './AdminReview.vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';

@@ -141,16 +141,16 @@ const handleColorChange = (color?: ColorProps) => {
 
 const submitReview = async () => {
   const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
-  const bodyId = updateVehicleStore.selectedSubBodies;
+  const subBodies = updateVehicleStore.selectedSubBodies;
   const colorMainId = updateVehicleStore.selectedColor?.id;
   const modelId = updateVehicleStore.selectedVehicleData?.bw_model_id;
   const notesInput = updateVehicleStore.notesInput; // This one is optional
 
-  if (!vehicleId || !bodyId || !colorMainId || !modelId) return;
+  if (!vehicleId || !subBodies || !colorMainId || !modelId) return;
 
   const data = {
     vehicle_id: vehicleId,
-    body_id: bodyId,
+    body_id: subBodies,
     color_main_id: colorMainId,
     id_model: modelId,
     note: notesInput,
