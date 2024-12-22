@@ -92,6 +92,7 @@ const handleClick = (image: ImageGrid, index: number) => {
       :class="{ 'cursor-pointer': image.id }"
     >
       <img
+        v-if="image?.path"
         :src="image?.path"
         alt=""
         :width="size"
@@ -104,6 +105,18 @@ const handleClick = (image: ImageGrid, index: number) => {
         }"
         @click="() => image.id && handleClick(image, i)"
       />
+      <div
+        v-else
+        class="text-white grid place-content-center border-2 border-solid border-black"
+        :class="{ 'border-4 !border-[#0D6EFD]': selectedImages.includes(i) }"
+        :style="{
+          height: autoHeight ? 'auto' : `${size}px`,
+          width: `${size}px`,
+        }"
+        @click="() => image.id && handleClick(image, i)"
+      >
+        {{ image?.id }}
+      </div>
       <v-tooltip activator="parent" location="top" :open-delay="1000">
         <img :src="image.path" alt="" :width="640" :height="480" />
       </v-tooltip>
