@@ -154,7 +154,7 @@ const handleSearchFocus = async (key: string, isFocused: boolean) => {
     const response = await axios.get(url);
 
     const values = response.data.items.map((item: any) => item[key]);
-    updateFilterData(key, values);
+    updateFilterData(key, values, true);
   }
 };
 
