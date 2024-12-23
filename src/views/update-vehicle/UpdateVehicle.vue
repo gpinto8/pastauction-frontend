@@ -61,22 +61,25 @@ const setAllVehicleData = async (
     );
   }
 
+  const vehicleVersion = middleVehicleData.value?.vehicle_version;
+  const vehicleVersionFamilyId = +(vehicleVersion
+    ? vehicleVersion + familyId
+    : familyId);
+
   // PREVIOUS
   const previousModelSeries = numberToRoman(romanToNumber(modelSeries) - 1);
   if (previousModelSeries) {
-    getVehicleData(
-      +(middleVehicleData.value?.vehicle_version + familyId),
-      previousModelSeries
-    ).then(data => (previousVehicleData.value = data || null));
+    getVehicleData(vehicleVersionFamilyId, previousModelSeries).then(
+      data => (previousVehicleData.value = data || null)
+    );
   }
 
   // NEXT
   const nextModelSeries = numberToRoman(romanToNumber(modelSeries) + 1);
   if (nextModelSeries) {
-    getVehicleData(
-      +(middleVehicleData.value?.vehicle_version + familyId),
-      nextModelSeries
-    ).then(data => (nextVehicleData.value = data || null));
+    getVehicleData(vehicleVersionFamilyId, nextModelSeries).then(
+      data => (nextVehicleData.value = data || null)
+    );
   }
 };
 
@@ -157,6 +160,10 @@ const applyFilters = async () => {
     const data = await axios.get(
       `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
     );
+
+    previousVehicleData.value = undefined;
+    middleVehicleData.value = undefined;
+    nextVehicleData.value = undefined;
 
     const _familyId = data?.data?.items?.[0]?.bw_family_id;
     const _modelSeries = data?.data?.items?.[0]?.bw_model_series;
