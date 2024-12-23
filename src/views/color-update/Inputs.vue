@@ -13,6 +13,10 @@ type ColorProps = {
   id_family: number;
 };
 
+defineProps<{
+  vehicleData: any;
+}>();
+
 const colorUpdateStore = colorUpdate();
 
 const image =
@@ -79,7 +83,11 @@ const handleSelection = (e: any) => {
     :class="{ 'justify-center': isMultipleGallery }"
   >
     <!-- VEHICLE SPECIFICATION -->
-    <VehicleSpecification v-if="!isMultipleGallery" class="hidden md:block" />
+    <VehicleSpecification
+      v-if="!isMultipleGallery"
+      class="hidden md:block"
+      :vehicleData="vehicleData"
+    />
 
     <!-- PICK COLOR FROM IMAGE -->
     <PickColor v-if="!isMultipleGallery" class="flex md:hidden" />
@@ -110,6 +118,10 @@ const handleSelection = (e: any) => {
     </div>
 
     <!-- VEHICLE SPECIFICATION -->
-    <VehicleSpecification v-if="!isMultipleGallery" class="block md:hidden" />
+    <VehicleSpecification
+      v-if="!isMultipleGallery"
+      class="block md:hidden"
+      :vehicleData="vehicleData"
+    />
   </div>
 </template>

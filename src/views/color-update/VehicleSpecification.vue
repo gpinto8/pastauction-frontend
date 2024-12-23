@@ -1,22 +1,26 @@
 <script lang="ts" setup>
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+
+const props = defineProps<{
+  vehicleData: any;
+}>();
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
-const vehicleSpecifications = ref(
+const vehicleSpecifications = computed(() =>
   [
-    { key: 'Family', value: 991 },
-    { key: 'Model', value: '911-V' },
-    { key: 'Stage', value: 'V' },
-    { key: 'Series', value: '996' },
-    { key: 'Year', value: '200' },
-    { key: 'Chassis', value: 'WPOCA2994XS6FDASFASDF' },
-    { key: 'Body', value: 'Coupè' },
-    { key: 'Main', value: 'BLUE' },
-    { key: 'Secondary', value: 'BLUE' },
-    { key: 'Top/Roof', value: 'BLUE' },
+    { key: 'Family', value: props.vehicleData?.bw_family_id },
+    { key: 'Model', value: props.vehicleData?.bw_model_id },
+    { key: 'Stage', value: props.vehicleData?.vehicle_stage },
+    { key: 'Series', value: props.vehicleData?.vehicle_series },
+    { key: 'Year', value: props.vehicleData?.bw_model_year_begin },
+    { key: 'Chassis', value: props.vehicleData?.chassis },
+    { key: 'Body', value: props.vehicleData?.body_shapes },
+    { key: 'Main', value: props.vehicleData?.color_main_name },
+    { key: 'Secondary', value: props.vehicleData?.color_sec_name },
+    { key: 'Top/Roof', value: props.vehicleData?.color_roof_name },
   ].map((data: any) => ({ ...data, key: data.key + ':' }))
 );
 </script>

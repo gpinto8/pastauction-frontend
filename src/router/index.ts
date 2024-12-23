@@ -95,7 +95,7 @@ const router = createRouter({
           meta: { authentication: true },
         },
         {
-          path: '/test',
+          path: '/color_update/:id',
           name: 'Color Update',
           component: async () =>
             await import(

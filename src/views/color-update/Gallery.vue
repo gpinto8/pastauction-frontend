@@ -1,16 +1,103 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import ImageryGrid from '../update-vehicle/gallery/ImageryGrid.vue';
 import Pagination from '../update-vehicle/gallery/Pagination.vue';
 import { colorUpdate } from '@/store/color-update';
+import axios from 'axios';
+import { useBreakpoint } from '@/utils/functions/useBreakpoint';
+
+const props = defineProps<{
+  vehicleData: any;
+}>();
 
 const colorUpdateStore = colorUpdate();
 const currentPage = ref(1);
+const images = ref();
+const totalPages = ref();
+const totalImages = ref();
+const { device } = useBreakpoint();
 
-const image =
-  'https://pastauction.com/api/v1/photo/gAAAAABm8Rztu3cVcqgPWxxZNFss3B-a3fQV5lpM7-SxYAfVJdF_oNKOx_e2LQ7d_KSL0YYI8VYWPN4fQcHr27wjXFibZiMkIL9j0k9x2yD0ANhaFG6_BYEi7BZBshs2IG2OtFWNoNOiO3YuS8SzMhez_i3dWd_4LkFlzX27rIZnLDr7Bs6Q1RHfjOAP8b_gJUnMQJL6Be9Ptmy6EiC-5jg7k-AJq4Nqrg==';
+const modelId = computed(() => props.vehicleData?.bw_model_id);
 
-const handlePageChanged = () => {};
+const imagesQuantity = computed(() => {
+  let quantity = 0;
+
+  if (colorUpdateStore.galleryMode === 'single') {
+    if (device.value === 'mobile') quantity = 12;
+    if (device.value === 'tablet') quantity = 35;
+    if (device.value === 'desktop') quantity = 80;
+  } else {
+    if (device.value === 'mobile') quantity = 8;
+    if (device.value === 'tablet') quantity = 12;
+    if (device.value === 'desktop') quantity = 24;
+  }
+
+  return quantity;
+});
+
+const slicedImages = computed(() => images.value?.slice(0, imagesQuantity.value));
+
+const getImages = async (modelId: number, page: number) => {
+  const size = imagesQuantity.value + 20;
+  const familyData = await axios.get(
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId}&page=${page}&size=${size}`
+  );
+  const totalPages = familyData.data.pages;
+  const totalImages = familyData.data.total;
+  const data = familyData.data.items;
+
+  const newData = data
+    .map((item: any) => {
+      const path = item?.photo_path;
+      if (path)
+        return {
+          id: item.vehicle_id,
+          path: `https://pastauction.com/api/v1/photo/${path}`,
+        };
+    })
+    .filter(Boolean);
+
+  return { data: newData, totalPages, totalImages };
+};
+
+watch(
+  () => modelId.value,
+  async () => {
+    if (!modelId.value) {
+      images.value = [];
+      totalPages.value = 0;
+      totalImages.value = 0;
+      return;
+    }
+
+    const imageData = await getImages(modelId.value, 1);
+    if (imageData) {
+      images.value = imageData.data;
+      totalPages.value = imageData.totalPages;
+      totalImages.value = imageData.totalImages;
+    }
+  }
+);
+
+watch(
+  () => [modelId.value, device.value],
+  async () => {
+    if (!modelId.value || !device.value) return;
+
+    const imageData = await getImages(modelId.value, currentPage.value);
+    if (imageData) {
+      images.value = imageData.data;
+      totalPages.value = imageData.totalPages;
+      totalImages.value = imageData.totalImages;
+    }
+  }
+);
+
+const handlePageChanged = async (page: number) => {
+  currentPage.value = page;
+  const imagesArray = await getImages(modelId.value, page);
+  if (imagesArray) images.value = imagesArray.data;
+};
 
 const handleImageClick = (image: any) => {
   console.log(image);
@@ -26,12 +113,7 @@ const handleImageClick = (image: any) => {
       <!-- DESKTOP SINGLE -->
       <ImageryGrid
         v-if="colorUpdateStore.galleryMode === 'single'"
-        :images="
-          new Array(80).fill({
-            id: 1,
-            path: image,
-          })
-        "
+        :images="slicedImages"
         class="w-full border-[8px] !border-[#212529] rounded-[4px]"
         columnCombination="16x80"
         :onImageClick="handleImageClick"
@@ -41,12 +123,7 @@ const handleImageClick = (image: any) => {
       <!-- DESKTOP MULTIPLE -->
       <ImageryGrid
         v-else
-        :images="
-          new Array(24).fill({
-            id: 1,
-            path: image,
-          })
-        "
+        :images="slicedImages"
         class="w-full border-[8px] !border-[#212529] rounded-[4px] justify-around"
         columnCombination="8x152"
         :onImageClick="handleImageClick"
@@ -60,12 +137,7 @@ const handleImageClick = (image: any) => {
       <!-- TABLET SINGLE -->
       <ImageryGrid
         v-if="colorUpdateStore.galleryMode === 'single'"
-        :images="
-          new Array(35).fill({
-            id: 1,
-            path: image,
-          })
-        "
+        :images="slicedImages"
         class="border-[8px] !border-[#212529] rounded-[4px]"
         columnCombination="7x80"
         :onImageClick="handleImageClick"
@@ -75,12 +147,7 @@ const handleImageClick = (image: any) => {
       <!-- TABLET MULTIPLE -->
       <ImageryGrid
         v-else
-        :images="
-          new Array(12).fill({
-            id: 1,
-            path: image,
-          })
-        "
+        :images="slicedImages"
         class="border-[8px] !border-[#212529] rounded-[4px] !w-full justify-around"
         columnCombination="3x152"
         :onImageClick="handleImageClick"
@@ -94,12 +161,7 @@ const handleImageClick = (image: any) => {
       <!-- MOBILE SINGLE -->
       <ImageryGrid
         v-if="colorUpdateStore.galleryMode === 'single'"
-        :images="
-          new Array(12).fill({
-            id: 1,
-            path: image,
-          })
-        "
+        :images="slicedImages"
         class="border-[8px] !border-[#212529] rounded-[4px]"
         columnCombination="3x80"
         :onImageClick="handleImageClick"
@@ -109,12 +171,7 @@ const handleImageClick = (image: any) => {
       <!-- MOBILE MULTIPLE -->
       <ImageryGrid
         v-else
-        :images="
-          new Array(8).fill({
-            id: 1,
-            path: image,
-          })
-        "
+        :images="slicedImages"
         class="border-[8px] !border-[#212529] rounded-[4px] !w-full justify-around"
         columnCombination="2x152"
         :onImageClick="handleImageClick"
@@ -126,8 +183,8 @@ const handleImageClick = (image: any) => {
     <!-- PAGINATION -->
     <Pagination
       :currentPage="currentPage"
-      :totalPages="100"
-      :totalImages="100"
+      :totalPages="totalPages"
+      :totalImages="totalImages"
       @onPageChanged="handlePageChanged"
     />
   </div>
