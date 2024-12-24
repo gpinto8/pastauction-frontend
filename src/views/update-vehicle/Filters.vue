@@ -62,6 +62,24 @@ const filtersData = ref<FiltersDataProps[]>([
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
+const resetFilterData = (key: FilterKeyProps) => {
+  const keySiblingsMap: { [key in FilterKeyProps]: (FilterKeyProps | '')[] } = {
+    brand_name: ['bw_family_name', 'bw_model_name', 'age_name'],
+    bw_family_name: ['bw_model_name', 'age_name'],
+    bw_model_name: ['age_name'],
+    age_name: [''],
+  };
+
+  if (key) {
+    const siblings = keySiblingsMap[key];
+    siblings.forEach(siblingKey => {
+      if (siblingKey && props.modelValue) {
+        props.modelValue[siblingKey] = null!; // Do not use '' since the UI won't update for some reason
+      }
+    });
+  }
+};
+
 const updateFilterData = (
   key?: string,
   values?: FiltersDataProps['values'],
@@ -80,7 +98,7 @@ const updateFilterData = (
   }
 };
 
-const getDynamicParams = (key: string, addLike?: boolean) => {
+const getDynamicParams = (key: FilterKeyProps, addLike?: boolean) => {
   if (!filtersData.value.find(item => item?.key === key)?.isRelated) {
     return;
   }
@@ -135,9 +153,11 @@ function debounce<T extends (...args: any[]) => void>(func: T, timeout = 500) {
   };
 }
 
-const handleSearchFocus = async (key: string, isFocused: boolean) => {
+const handleSearchFocus = async (key: FilterKeyProps, isFocused: boolean) => {
   // @ts-ignore
   if (isFocused && key && props.modelValue) props.modelValue[key] = null; // When the user clicks on the input, it should reset the value
+
+  resetFilterData(key); // Resetting the key's next siblings
 
   const isKeyValueEmpty: boolean = !(props.modelValue as any)?.[key]!;
   // const hasAnyValue =
