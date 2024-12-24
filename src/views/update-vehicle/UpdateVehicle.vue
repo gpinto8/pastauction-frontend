@@ -47,6 +47,12 @@ const getVehicleData = async (familyId: number, modelSeries: string) => {
   if (currentModelData) return currentModelData;
 };
 
+const resetVehicleData = () => {
+  previousVehicleData.value = undefined;
+  middleVehicleData.value = undefined;
+  nextVehicleData.value = undefined;
+};
+
 const setAllVehicleData = async (
   familyId: number,
   modelSeries: string,
@@ -135,8 +141,6 @@ const handleFilterPrevious = () => {
 };
 
 const handleFilterNext = () => {
-  if (modelSeries.value === 'I') return;
-
   modelSeries.value = numberToRoman(romanToNumber(modelSeries.value) + 1);
 
   if (familyId.value && modelSeries.value) {
@@ -161,9 +165,7 @@ const applyFilters = async () => {
       `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
     );
 
-    previousVehicleData.value = undefined;
-    middleVehicleData.value = undefined;
-    nextVehicleData.value = undefined;
+    resetVehicleData();
 
     const _familyId = data?.data?.items?.[0]?.bw_family_id;
     const _modelSeries = data?.data?.items?.[0]?.bw_model_series;
