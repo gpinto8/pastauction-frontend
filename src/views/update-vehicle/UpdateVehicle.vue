@@ -22,9 +22,10 @@ const isUserAdmin = ref(false);
 const familyId = ref<number>();
 
 const modelSeries = ref('');
+const filterModelNameDetail = ref('');
 
 const previousVehicleData = ref();
-const middleVehicleData = ref();
+const middleVehicleData = ref(); // "vehicleData"
 const nextVehicleData = ref();
 const selectedVehicleData = ref();
 const gallerySelected = ref(0); // --> 1 - previous | 2 - current | 3 - next
@@ -36,10 +37,18 @@ const selectedFilters = ref<SelectedFiltersProps>({
   age_name: '',
 });
 
-const getVehicleData = async (familyId: number, modelSeries: string) => {
+const getVehicleData = async (
+  familyId: number,
+  modelSeries: string,
+  modelNameDetail?: string
+) => {
+  const newModelNameDetail = modelNameDetail
+    ? `,bw_model_model_name_detail:${modelNameDetail}`
+    : '';
+
   const currentModelData = await axios
     .get(
-      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:${familyId},bw_model_series:${modelSeries}`
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:${familyId},bw_model_series:${modelSeries}${newModelNameDetail}`
     )
     .then(response => response.data?.items?.[0])
     .catch(error => {});
@@ -62,12 +71,13 @@ const setAllVehicleData = async (
 
   // CURRENT
   if (!avoidCurrent) {
-    getVehicleData(familyId, modelSeries).then(
+    getVehicleData(familyId, modelSeries, filterModelNameDetail.value).then(
       data => (middleVehicleData.value = data || null)
     );
   }
 
-  const vehicleVersion = middleVehicleData.value?.vehicle_version;
+  const vehicleVersion =
+    !filterModelNameDetail.value && middleVehicleData.value?.vehicle_version;
   const vehicleVersionFamilyId = +(vehicleVersion
     ? vehicleVersion + familyId
     : familyId);
@@ -75,17 +85,21 @@ const setAllVehicleData = async (
   // PREVIOUS
   const previousModelSeries = numberToRoman(romanToNumber(modelSeries) - 1);
   if (previousModelSeries) {
-    getVehicleData(vehicleVersionFamilyId, previousModelSeries).then(
-      data => (previousVehicleData.value = data || null)
-    );
+    getVehicleData(
+      vehicleVersionFamilyId,
+      previousModelSeries,
+      filterModelNameDetail.value
+    ).then(data => (previousVehicleData.value = data || null));
   }
 
   // NEXT
   const nextModelSeries = numberToRoman(romanToNumber(modelSeries) + 1);
   if (nextModelSeries) {
-    getVehicleData(vehicleVersionFamilyId, nextModelSeries).then(
-      data => (nextVehicleData.value = data || null)
-    );
+    getVehicleData(
+      vehicleVersionFamilyId,
+      nextModelSeries,
+      filterModelNameDetail.value
+    ).then(data => (nextVehicleData.value = data || null));
   }
 };
 
@@ -164,16 +178,21 @@ const applyFilters = async () => {
     const data = await axios.get(
       `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
     );
+    const dataItem = data?.data?.items?.[0];
 
     resetVehicleData();
 
-    const _familyId = data?.data?.items?.[0]?.bw_family_id;
-    const _modelSeries = data?.data?.items?.[0]?.bw_model_series;
+    middleVehicleData.value = dataItem;
+    filterModelNameDetail.value = dataItem?.bw_model_model_name_detail;
+
+    const _familyId = dataItem?.bw_family_id;
+    const _modelSeries = dataItem?.bw_model_series;
 
     if (_familyId && _modelSeries) {
       familyId.value = _familyId;
       modelSeries.value = _modelSeries;
-      setAllVehicleData(_familyId, _modelSeries);
+
+      setAllVehicleData(_familyId, _modelSeries, true);
     }
   }
 };
