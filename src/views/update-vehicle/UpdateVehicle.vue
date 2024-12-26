@@ -144,19 +144,23 @@ watch(
 
     setAllVehicleData(_familyId, _modelSeries, true);
 
-    // vehicle_id: vehicleId,
-    // body_id: subBodies,
-    // color_main_id: colorMainId,
-    // id_model: modelId,
-    // note: notesInput,
-
     // UPDATE USER MODIFICATIONS
     if (isUserAdmin.value) {
+      // VEHICLE ID & MODEL ID
+      const bvuVehicleId = _vehicleData?.bvu_vehicle_id;
+      const bvuModelId = _vehicleData?.bvu_id_model;
+
+      const url = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${bvuVehicleId},bw_model_id:${bvuModelId}`; // This is for users
+      const response = await axios.get(url);
+      const data = response.data?.items[0];
+
+      updateVehicleStore.selectedVehicleData = data;
+
       // COLOR MAIN ID
-      const subColorId = _vehicleData?.bvu_color_main_id;
-      if (subColorId) {
+      const bvuColorMainId = _vehicleData?.bvu_color_main_id;
+      if (bvuColorMainId) {
         const subColorResponse = await axios.get(
-          `https://pastauction.com/api/v1/bidwatcher_color/?search=id:${subColorId}`
+          `https://pastauction.com/api/v1/bidwatcher_color/?search=id:${bvuColorMainId}`
         );
         const subColorData = subColorResponse.data.items?.map(
           (item: any) => item
