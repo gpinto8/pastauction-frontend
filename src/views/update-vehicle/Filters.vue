@@ -21,7 +21,7 @@ type FiltersDataProps = {
 };
 
 const props = defineProps<{
-  class: string;
+  class?: string;
   modelValue?: SelectedFiltersProps;
   applyFilters?: () => void;
 }>();
@@ -125,7 +125,7 @@ const getDynamicParams = (key: FilterKeyProps, addLike?: boolean) => {
 watch(
   () => props.modelValue,
   async () => {
-    if (Object.values(props.modelValue || {}).some(item => !item)) return;
+    // if (Object.values(props.modelValue || {}).some(item => !item)) return;
 
     for await (const data of filtersData.value) {
       // The filters have to be related to each other, thats why we need to pass the previous selected filters values to the current one BUT the current one, ofc
@@ -140,7 +140,8 @@ watch(
       const values = response.data.items.map((item: any) => item[data.key]);
       updateFilterData(data.key, values, true);
     }
-  }
+  },
+  { immediate: true }
 );
 
 function debounce<T extends (...args: any[]) => void>(func: T, timeout = 500) {
