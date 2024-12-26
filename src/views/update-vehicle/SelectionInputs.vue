@@ -136,13 +136,13 @@ const handleAttributeSelection = (attribute: string) => {
 };
 
 const handleColorChange = (color?: ColorProps) => {
-  if (color) updateVehicleStore.selectedColor = color;
+  if (color) updateVehicleStore.selectedSubColor = color;
 };
 
 const submitReview = async () => {
   const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
   const subBodies = updateVehicleStore.selectedSubBodies;
-  const colorMainId = updateVehicleStore.selectedColor?.id;
+  const colorMainId = updateVehicleStore.selectedSubColor?.id;
   const modelId = updateVehicleStore.selectedVehicleData?.bw_model_id;
   const notesInput = updateVehicleStore.notesInput; // This one is optional
 

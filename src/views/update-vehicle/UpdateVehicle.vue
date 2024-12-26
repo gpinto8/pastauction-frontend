@@ -7,18 +7,21 @@ import SelectionInputs from './SelectionInputs.vue';
 import AdminReview from './AdminReview.vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
-import { onMounted, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
+import { type ColorProps } from './ColorMainNuance.vue';
 
 export type SelectedFiltersProps = { [key in FilterKeyProps]: string | number };
 
 const updateVehicleStore = updateVehicle();
-const { getLoggedUserInfo } = useAuthStore();
+const auth = useAuthStore();
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
-const isUserAdmin = ref(false);
+const isUserAdmin = computed(
+  () => auth.detail?.data?.user_category === 99 || undefined
+);
 const familyId = ref<number>();
 
 const modelSeries = ref('');
@@ -103,42 +106,72 @@ const setAllVehicleData = async (
   }
 };
 
-onMounted(async () => {
-  // USER FETCH
-  getLoggedUserInfo().then(response => {
-    const userInfo = response.data;
-    const isAdmin = userInfo?.user_category === 99;
-    isUserAdmin.value = isAdmin;
-  });
+watch(
+  () => isUserAdmin.value,
+  async () => {
+    if (isUserAdmin.value === undefined) return;
 
-  // VEHICLE FETCH
-  axios
-    .get(
-      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`
-    )
-    .then(response => {
-      const _vehicleData = response.data?.items[0];
-      if (!_vehicleData) return;
+    const url = isUserAdmin.value
+      ? `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/query?search=vehicle_id:${vehicleId}`
+      : `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`;
 
-      updateVehicleStore.currentVehicleData = _vehicleData;
-      selectedVehicleData.value = _vehicleData;
-      middleVehicleData.value = _vehicleData;
+    // COMMON VEHICLE DATA UPDATE
+    const response = await axios.get(url);
+    const _vehicleData = response.data?.items[0];
+    if (!_vehicleData) return;
 
-      selectedFilters.value = {
-        brand_name: _vehicleData.brand_name,
-        bw_family_name: _vehicleData.bw_family_name,
-        bw_model_name: _vehicleData.bw_model_name,
-        age_name: _vehicleData.vehicle_age_name,
-      };
+    updateVehicleStore.currentVehicleData = _vehicleData;
+    selectedVehicleData.value = _vehicleData;
+    middleVehicleData.value = _vehicleData;
 
-      const _familyId = _vehicleData?.bw_family_id;
-      const _modelSeries = _vehicleData?.bw_model_series;
-      familyId.value = _familyId;
-      modelSeries.value = _modelSeries;
+    selectedFilters.value = {
+      brand_name: _vehicleData.brand_name,
+      bw_family_name: _vehicleData.bw_family_name,
+      bw_model_name: _vehicleData.bw_model_name,
+      age_name: _vehicleData.vehicle_age_name,
+    };
 
-      setAllVehicleData(_familyId, _modelSeries, true);
-    });
-});
+    const _familyId = _vehicleData?.bw_family_id;
+    const _modelSeries = _vehicleData?.bw_model_series;
+    familyId.value = _familyId;
+    modelSeries.value = _modelSeries;
+
+    setAllVehicleData(_familyId, _modelSeries, true);
+
+    // vehicle_id: vehicleId,
+    // body_id: subBodies,
+    // color_main_id: colorMainId,
+    // id_model: modelId,
+    // note: notesInput,
+
+    // UPDATE USER MODIFICATIONS
+    if (isUserAdmin.value) {
+      // COLOR MAIN ID
+      const subColorId = _vehicleData?.bvu_color_main_id;
+      if (subColorId) {
+        const subColorResponse = await axios.get(
+          `https://pastauction.com/api/v1/bidwatcher_color/?search=id:${subColorId}`
+        );
+        const subColorData = subColorResponse.data.items?.map(
+          (item: any) => item
+        )?.[0] as ColorProps;
+        updateVehicleStore.selectedSubColor = subColorData;
+
+        const colorFamilyId = subColorData.id_family;
+        const colorResponse = await axios.get(
+          `https://pastauction.com/api/v1/bidwatcher_color/?search=id_family:${colorFamilyId}`
+        );
+        const colorData = colorResponse.data.items
+          ?.map((item: any) => item)
+          ?.find(
+            (item: ColorProps) =>
+              item.id !== item.id_family && item.id !== subColorData.id
+          );
+        updateVehicleStore.selectedColor = colorData;
+      }
+    }
+  }
+);
 
 const handleFilterPrevious = () => {
   if (
@@ -261,6 +294,7 @@ const applyFilters = async () => {
           :vehicleData="selectedVehicleData"
         />
         <SelectionInputs
+          v-if="isUserAdmin"
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :isUserAdmin="isUserAdmin"
         />

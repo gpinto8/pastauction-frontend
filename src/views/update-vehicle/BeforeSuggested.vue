@@ -66,7 +66,7 @@ watch(
 
 const suggestedData = computed(() => {
   const vehicleData = updateVehicleStore.selectedVehicleData;
-  const color = updateVehicleStore.selectedColor?.name;
+  const color = updateVehicleStore.selectedSubColor?.name;
   const attributes = updateVehicleStore.selectedAttribute?.join(',');
   const bodies = updateVehicleStore.selectedSubBodies?.join(',');
 

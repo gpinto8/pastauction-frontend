@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 defineProps<{ title: string; classTitle?: string }>();
+
 const emit = defineEmits<{
   (e: 'onSelectedSubColor', value: ColorProps | undefined): void;
 }>();
@@ -13,6 +15,8 @@ export type ColorProps = {
   hex_code: string;
   id_family: number;
 };
+
+const updateVehicleStore = updateVehicle();
 
 const colorData = ref<ColorProps[]>();
 const colorSubData = ref<ColorProps[]>();
@@ -26,6 +30,22 @@ onMounted(async () => {
   );
   colorData.value = _colorData.data.items?.map((item: any) => item);
 });
+
+watch(
+  () => updateVehicleStore.selectedColor,
+  () => {
+    const color = updateVehicleStore.selectedColor;
+    handleColorSelection({ ...color, id: color.id_family }, true);
+  }
+);
+
+watch(
+  () => updateVehicleStore.selectedSubColor,
+  () => {
+    const color = updateVehicleStore.selectedSubColor;
+    handleSubColorSelection(color);
+  }
+);
 
 watch(
   () => selectedSubColor.value,
@@ -42,7 +62,10 @@ const getSubColorData = async (id: number) => {
   return subColorData.data.items?.map((item: any) => item);
 };
 
-const handleColorSelection = async (color: ColorProps) => {
+const handleColorSelection = async (
+  color: ColorProps,
+  avoidResettingSubColor?: boolean
+) => {
   emit('onSelectedSubColor', undefined);
 
   // If it already exists, remove it
@@ -57,7 +80,7 @@ const handleColorSelection = async (color: ColorProps) => {
   colorSubData.value = _colorSubData;
 
   selectedColor.value = color;
-  selectedSubColor.value = undefined;
+  if (!avoidResettingSubColor) selectedSubColor.value = undefined;
 };
 
 const handleSubColorSelection = async (color: ColorProps) => {
