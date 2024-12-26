@@ -111,14 +111,20 @@ watch(
   async () => {
     if (isUserAdmin.value === undefined) return;
 
-    const url = isUserAdmin.value
-      ? `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/query?search=vehicle_id:${vehicleId}`
-      : `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`;
+    const adminUrl = `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/query?search=vehicle_id:${vehicleId}`; // This is for admin's so we get the user's changes
+    const userUrl = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`; // This is for users
+    const url = isUserAdmin.value ? adminUrl : userUrl;
 
     // COMMON VEHICLE DATA UPDATE
     const response = await axios.get(url);
-    const _vehicleData = response.data?.items[0];
-    if (!_vehicleData) return;
+    let _vehicleData = response.data?.items[0];
+
+    // The thing is that if we dont have any user's changes, then we gotta use the normal api for users .. because the API won't respond will any data and the page will be blank
+    if (!_vehicleData) {
+      const response = await axios.get(userUrl); // So here we just re-do the fetch with the user's url
+      _vehicleData = response.data?.items[0];
+      if (!_vehicleData) return; // And if we don't have any data then we really dont have anything so just return ..
+    }
 
     updateVehicleStore.currentVehicleData = _vehicleData;
     selectedVehicleData.value = _vehicleData;
