@@ -3,6 +3,7 @@ import axios from 'axios';
 import ImageryGrid, { type ImageGrid } from './gallery/ImageryGrid.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useBreakpoint } from '@/utils/functions/useBreakpoint';
+import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 defineProps<{
   class: string;
@@ -11,6 +12,7 @@ defineProps<{
 const imagePaths = ref<{ id: number; path: string }[]>();
 const currentPage = ref(1);
 const { breakpoint } = useBreakpoint();
+const updateVehicleStore = updateVehicle();
 
 const breakpointCellSize = computed(() => {
   if (breakpoint.value === 'sm') return 2;
@@ -59,6 +61,42 @@ const goForward = async () => {
   const _imagePaths = await getImagePaths(currentPage.value);
   imagePaths.value = _imagePaths;
 };
+
+const handleAccept = async () => {
+  const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
+  const subBodies = updateVehicleStore.selectedSubBodies;
+  const colorMainId = updateVehicleStore.selectedSubColor?.id;
+  const modelId = updateVehicleStore.selectedVehicleData?.bw_model_id;
+  const notesInput = updateVehicleStore.notesInput; // This one is optional
+
+  if (!vehicleId || !subBodies || !colorMainId || !modelId) return;
+
+  const data = {
+    vehicle_id: vehicleId,
+    body_id: subBodies,
+    color_main_id: colorMainId,
+    id_model: modelId,
+    note: notesInput,
+  };
+
+  const authToken = window.localStorage.getItem('past_token');
+  const config = {
+    method: 'patch',
+    url: 'https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/update',
+    headers: {
+      Authorization: 'Bearer ' + authToken,
+      'Content-Type': 'application/json',
+    },
+    data,
+  };
+
+  await axios(config).then(() => {
+    setTimeout(() => {
+      alert('The vehicle has been updated successfully!');
+      window.history.back();
+    }, 500);
+  });
+};
 </script>
 
 <template>
@@ -75,6 +113,7 @@ const goForward = async () => {
         </v-btn>
         <v-btn
           class="block w-full sm:w-[160px] text-white bg-[#212529] rounded-md text-base p-2 text-none text-center md:grid md:place-content-center"
+          @click="handleAccept"
         >
           Accept
         </v-btn>
