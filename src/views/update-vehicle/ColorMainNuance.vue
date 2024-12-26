@@ -35,7 +35,7 @@ watch(
   () => updateVehicleStore.selectedColor,
   () => {
     const color = updateVehicleStore.selectedColor;
-    handleColorSelection({ ...color, id: color.id_family }, true);
+    if (color) handleColorSelection({ ...color, id: color.id_family }, true);
   }
 );
 
@@ -43,7 +43,7 @@ watch(
   () => updateVehicleStore.selectedSubColor,
   () => {
     const color = updateVehicleStore.selectedSubColor;
-    selectedSubColor.value = color;
+    if (color) selectedSubColor.value = color;
   }
 );
 

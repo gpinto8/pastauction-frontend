@@ -89,18 +89,14 @@ const router = createRouter({
           path: '/vehicle_update/:id',
           name: 'Vehicle Update',
           component: async () =>
-            await import(
-              /* webpackChunkName: "VehicleDetail" */ '@/views/update-vehicle/UpdateVehicle.vue'
-            ),
+            await import('@/views/update-vehicle/UpdateVehicle.vue'),
           meta: { authentication: true },
         },
         {
           path: '/color_update/:id',
           name: 'Color Update',
           component: async () =>
-            await import(
-              /* webpackChunkName: "VehicleDetail" */ '@/views/color-update/ColorUpdate.vue'
-            ),
+            await import('@/views/color-update/ColorUpdate.vue'),
           meta: { authentication: true },
         },
         {
