@@ -43,7 +43,7 @@ watch(
   () => updateVehicleStore.selectedSubColor,
   () => {
     const color = updateVehicleStore.selectedSubColor;
-    handleSubColorSelection(color);
+    selectedSubColor.value = color;
   }
 );
 
