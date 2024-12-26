@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import axios from 'axios';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import ColorMainNuance from '../update-vehicle/ColorMainNuance.vue';
 import VehicleSpecification from './VehicleSpecification.vue';
 import PickColor from './PickColor.vue';
@@ -13,14 +13,17 @@ type ColorProps = {
   id_family: number;
 };
 
-defineProps<{
+const props = defineProps<{
   vehicleData: any;
 }>();
 
 const colorUpdateStore = colorUpdate();
 
-const image =
-  'https://pastauction.com/api/v1/photo/gAAAAABm8Rztu3cVcqgPWxxZNFss3B-a3fQV5lpM7-SxYAfVJdF_oNKOx_e2LQ7d_KSL0YYI8VYWPN4fQcHr27wjXFibZiMkIL9j0k9x2yD0ANhaFG6_BYEi7BZBshs2IG2OtFWNoNOiO3YuS8SzMhez_i3dWd_4LkFlzX27rIZnLDr7Bs6Q1RHfjOAP8b_gJUnMQJL6Be9Ptmy6EiC-5jg7k-AJq4Nqrg==';
+const image = computed(() => {
+  const path = props.vehicleData?.photo_path;
+  if (path) return `https://pastauction.com/api/v1/photo/${path}`;
+  else return '';
+});
 const colorData = ref<any>([]);
 
 const isMultipleGallery = computed(
@@ -28,7 +31,6 @@ const isMultipleGallery = computed(
 );
 
 onMounted(async () => {
-  console.log('mounted');
   // COLOR DATA
   const _colorData = await axios.get(
     `https://pastauction.com/api/v1/bidwatcher_colorfamily/`
@@ -44,16 +46,20 @@ const ctx = computed(
   () => imageCanvas.value && imageCanvas.value.getContext('2d')
 );
 
-onMounted(() => {
-  const img = new Image();
-  img.crossOrigin = 'Anonymous'; // Enable CORS if the image is from another domain
-  img.onload = () => {
-    if (imageCanvas.value?.width) imageCanvas.value.width = img.width;
-    if (imageCanvas.value?.height) imageCanvas.value.height = img.height;
-    ctx.value.drawImage(img, 0, 0);
-  };
-  img.src = image;
-});
+watch(
+  () => image.value,
+  () => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Enable CORS if the image is from another domain
+    img.onload = () => {
+      if (imageCanvas.value?.width) imageCanvas.value.width = img.width;
+      if (imageCanvas.value?.height) imageCanvas.value.height = img.height;
+      ctx.value.drawImage(img, 0, 0);
+    };
+    img.src = image.value;
+  },
+  { immediate: true }
+);
 
 const handleSelection = (e: any) => {
   if (!colorUpdateStore.selectingHexColor) return;
@@ -90,7 +96,11 @@ const handleSelection = (e: any) => {
     />
 
     <!-- PICK COLOR FROM IMAGE -->
-    <PickColor v-if="!isMultipleGallery" class="flex md:hidden" />
+    <PickColor
+      v-if="!isMultipleGallery"
+      class="flex md:hidden"
+      :vehicleData="vehicleData"
+    />
 
     <!-- MAIN PICTURE -->
     <div v-if="!isMultipleGallery" class="md:w-fit bg-[#DEE2E6] rounded-lg">
@@ -114,7 +124,7 @@ const handleSelection = (e: any) => {
       </div>
 
       <!-- PICK COLOR FROM IMAGE -->
-      <PickColor class="hidden md:flex" />
+      <PickColor class="hidden md:flex" :vehicleData="vehicleData" />
     </div>
 
     <!-- VEHICLE SPECIFICATION -->

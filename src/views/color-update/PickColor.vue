@@ -2,13 +2,17 @@
 import { colorUpdate } from '@/store/color-update';
 import { ref, watch } from 'vue';
 
+const props = defineProps<{
+  vehicleData: any;
+}>();
+
 const colorUpdateStore = colorUpdate();
 
 const pickColors = ref(
   [
-    { key: 'Main color', value: 'BLUE' },
-    { key: 'Bicolor', value: 'BLUE' },
-    { key: 'Top color', value: 'BLUE' },
+    { key: 'Main color', value: props.vehicleData?.color_main_name },
+    { key: 'Bicolor', value: props.vehicleData?.color_sec_name },
+    { key: 'Top color', value: props.vehicleData?.color_roof_name },
   ].map((data: any) => ({ ...data, key: data.key + ':' }))
 );
 
