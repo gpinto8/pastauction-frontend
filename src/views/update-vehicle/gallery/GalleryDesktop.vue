@@ -5,7 +5,6 @@ import ImageryGrid, {
 } from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import Pagination from './Pagination.vue';
-import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 import { computed } from 'vue';
 
@@ -16,7 +15,6 @@ const props = defineProps<{
   imagesPerPage: number;
   totalPages: number;
   totalImages: number;
-  modelValue?: SelectedFiltersProps;
   vehicleData?: any;
   handleImageClick?: (image: ImageGrid) => void;
   gallerySelected: number;

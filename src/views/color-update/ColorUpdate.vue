@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import Filters from './Filters.vue';
+import ColorUpdateFilters from './ColorUpdateFilters.vue';
 import Gallery from './Gallery.vue';
 import Inputs from './Inputs.vue';
 import axios from 'axios';
@@ -28,7 +28,7 @@ onMounted(async () => {
   <div
     class="flex flex-col gap-6 md:max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <Filters class="md:!w-[1300px]" />
+    <ColorUpdateFilters class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <Gallery class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <Inputs class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <div class="flex w-full justify-end mt-2">

@@ -15,7 +15,7 @@ const parametersData = computed(() => {
   return [
     { label: 'Model', value: data?.bw_model_name || '' },
     { label: 'Stage', value: data?.vehicle_stage || '' },
-    { label: 'Series', value: data?.vehicle_series || '' },
+    { label: 'Series', value: data?.bw_model_series || '' },
     { label: 'From', value: data?.bw_model_year_begin || '' },
     { label: 'To', value: data?.bw_model_year_end || '' },
   ];

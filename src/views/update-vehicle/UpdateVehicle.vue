@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import Gallery from './gallery/Gallery.vue';
-import Filters, { type FilterKeyProps } from './Filters.vue';
 import BeforeSuggested from './BeforeSuggested.vue';
 import MainPicture from './MainPicture.vue';
 import SelectionInputs from './SelectionInputs.vue';
@@ -12,8 +11,8 @@ import axios from 'axios';
 import { numberToRoman, romanToNumber } from '@/utils/formatters/romanToNumber';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 import { type ColorProps } from './ColorMainNuance.vue';
-
-export type SelectedFiltersProps = { [key in FilterKeyProps]: string | number };
+import VehicleUpdateFilters from './VehicleUpdateFilters.vue';
+import type { FiltersGoValues } from '@/components/common/Filters.vue';
 
 const updateVehicleStore = updateVehicle();
 const auth = useAuthStore();
@@ -32,13 +31,6 @@ const middleVehicleData = ref(); // "vehicleData"
 const nextVehicleData = ref();
 const selectedVehicleData = ref();
 const gallerySelected = ref(0); // --> 1 - previous | 2 - current | 3 - next
-
-const selectedFilters = ref<SelectedFiltersProps>({
-  brand_name: '',
-  bw_family_name: '',
-  bw_model_name: '',
-  age_name: '',
-});
 
 const getVehicleData = async (
   familyId: number,
@@ -130,13 +122,6 @@ watch(
     selectedVehicleData.value = _vehicleData;
     middleVehicleData.value = _vehicleData;
 
-    selectedFilters.value = {
-      brand_name: _vehicleData.brand_name,
-      bw_family_name: _vehicleData.bw_family_name,
-      bw_model_name: _vehicleData.bw_model_name,
-      age_name: _vehicleData.vehicle_age_name,
-    };
-
     const _familyId = _vehicleData?.bw_family_id;
     const _modelSeries = _vehicleData?.bw_model_series;
     familyId.value = _familyId;
@@ -205,16 +190,19 @@ const handleFilterNext = () => {
   }
 };
 
-const applyFilters = async () => {
-  const { brand_name, bw_family_name, bw_model_name, age_name } =
-    selectedFilters.value || {};
+const applyFilters = async (data: FiltersGoValues) => {
+  const getValue = (key: string) => data.find(data => data.key === key)?.value;
+  const brandName = getValue('brand_name');
+  const familyName = getValue('bw_family_name');
+  const modelName = getValue('bw_model_name');
+  const ageName = getValue('age_name'); // This is optional
 
-  if (brand_name && bw_family_name && bw_model_name) {
+  if (brandName && familyName && modelName) {
     const params = [
-      brand_name ? `brand_name:${brand_name}` : '',
-      bw_family_name ? `bw_family_name:${bw_family_name}` : '',
-      bw_model_name ? `bw_model_name:${bw_model_name}` : '',
-      age_name ? `age_name:${age_name}` : '',
+      brandName ? `brand_name:${brandName}` : '',
+      familyName ? `bw_family_name:${familyName}` : '',
+      modelName ? `bw_model_name:${modelName}` : '',
+      ageName ? `age_name:${ageName}` : '',
     ]
       .filter(Boolean)
       .join(',');
@@ -245,9 +233,8 @@ const applyFilters = async () => {
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <Filters
-      class="md:min-w-[1300px]"
-      :modelValue="selectedFilters"
+    <VehicleUpdateFilters
+      :vehicleData="middleVehicleData"
       @onPrevious="handleFilterPrevious"
       @onNext="handleFilterNext"
       :applyFilters="applyFilters"
@@ -275,7 +262,6 @@ const applyFilters = async () => {
             :isUserAdmin="isUserAdmin"
             :vehicleData="middleVehicleData"
             :gallerySelected="gallerySelected"
-            :modelValue="selectedFilters"
             @onSelected="gallerySelected = $event"
           />
         </div>
