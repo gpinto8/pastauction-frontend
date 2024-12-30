@@ -6,7 +6,10 @@ import Filters, {
   type FiltersModelValue,
 } from '@/components/common/Filters.vue';
 
-const props = defineProps<{ vehicleData: any }>();
+const props = defineProps<{
+  vehicleData: any;
+  applyFilters?: (data: FiltersGoValues) => void;
+}>();
 
 const colorUpdateStore = colorUpdate();
 
@@ -42,10 +45,6 @@ const filterModelValue = computed<FiltersModelValue>(() => [
     isRelated: false,
   },
 ]);
-
-const applyFilters = async (data: FiltersGoValues) => {
-  console.log({ data });
-};
 </script>
 
 <template>

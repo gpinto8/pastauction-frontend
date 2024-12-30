@@ -5,6 +5,10 @@ import Gallery from './Gallery.vue';
 import Inputs from './Inputs.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import {
+  type FilterAvailableKeys,
+  type FiltersGoValues,
+} from '@/components/common/Filters.vue';
 
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
@@ -22,13 +26,46 @@ onMounted(async () => {
       vehicleData.value = _vehicleData;
     });
 });
+
+const applyFilters = async (data: FiltersGoValues) => {
+  const getValue = (key: FilterAvailableKeys) =>
+    data.find(data => data.key === key)?.value;
+  const brandName = getValue('brand_name');
+  const familyName = getValue('bw_family_name');
+  const modelName = getValue('bw_model_name');
+  const colorMainName = getValue('color_main_name'); // This is optional
+  const colorSecName = getValue('color_sec_name'); // This is optional
+
+  if (brandName && familyName && modelName) {
+    const params = [
+      brandName ? `brand_name:${brandName}` : '',
+      familyName ? `bw_family_name:${familyName}` : '',
+      modelName ? `bw_model_name:${modelName}` : '',
+      colorMainName ? `color_main_name:${colorMainName}` : '',
+      colorSecName ? `color_sec_name:${colorSecName}` : '',
+    ]
+      .filter(Boolean)
+      .join(',');
+
+    const data = await axios.get(
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
+    );
+    const dataItem = data?.data?.items?.[0];
+
+    if (dataItem) vehicleData.value = dataItem;
+  }
+};
 </script>
 
 <template>
   <div
     class="flex flex-col gap-6 md:max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <ColorUpdateFilters class="md:!w-[1300px]" :vehicleData="vehicleData" />
+    <ColorUpdateFilters
+      class="md:!w-[1300px]"
+      :vehicleData="vehicleData"
+      :applyFilters="applyFilters"
+    />
     <Gallery class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <Inputs class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <div class="flex w-full justify-end mt-2">
