@@ -122,7 +122,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
     </div>
 
     <!-- COLOR SELECTIONS -->
-    <div class="flex flex-col md:w-[435px] gap-4 w-full">
+    <div class="flex flex-col md:min-w-[280px] md:w-fit gap-4 w-full">
       <!-- SELECT COLOR FROM LIBRARY -->
       <div class="bg-[#DEE2E6] p-4 h-full w-full rounded-lg">
         <ColorMainNuance
