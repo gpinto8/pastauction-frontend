@@ -20,9 +20,14 @@ const props = defineProps<{
 const colorUpdateStore = colorUpdate();
 
 const image = computed(() => {
-  const path = props.vehicleData?.photo_path;
-  if (path) return `https://pastauction.com/api/v1/photo/${path}`;
-  else return '';
+  const selectedWholePath = colorUpdateStore.selectedGalleryImageWholePath;
+  if (selectedWholePath) {
+    return selectedWholePath;
+  } else {
+    const path = props.vehicleData?.photo_path;
+    if (path) return `https://pastauction.com/api/v1/photo/${path}`;
+    else return '';
+  }
 });
 const colorData = ref<any>([]);
 

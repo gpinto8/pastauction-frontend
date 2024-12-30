@@ -35,7 +35,9 @@ const imagesQuantity = computed(() => {
   return quantity;
 });
 
-const slicedImages = computed(() => images.value?.slice(0, imagesQuantity.value));
+const slicedImages = computed(() =>
+  images.value?.slice(0, imagesQuantity.value)
+);
 
 const getImages = async (modelId: number, page: number) => {
   const size = imagesQuantity.value + 20;
@@ -100,7 +102,8 @@ const handlePageChanged = async (page: number) => {
 };
 
 const handleImageClick = (image: any) => {
-  console.log(image);
+  const wholePath = image?.path;
+  if (wholePath) colorUpdateStore.selectedGalleryImageWholePath = wholePath;
 };
 </script>
 

@@ -6,6 +6,7 @@ type State = {
   selectionMode: Modes;
   selectingHexColor: boolean;
   selectedHexColor: string;
+  selectedGalleryImageWholePath: string;
 };
 
 export const colorUpdate = defineStore('colorUpdate', {
@@ -15,6 +16,7 @@ export const colorUpdate = defineStore('colorUpdate', {
       selectionMode: 'single',
       selectingHexColor: false,
       selectedHexColor: '',
+      selectedGalleryImageWholePath: '', // When clicking on the gallery's image (only the admin)
     };
   },
 });
