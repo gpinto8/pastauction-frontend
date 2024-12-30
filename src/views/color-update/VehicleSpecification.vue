@@ -28,7 +28,7 @@ const vehicleSpecifications = computed(() =>
 <template>
   <div>
     <div
-      class="hidden md:flex flex-col gap-4 p-4 md:w-[338px] bg-[#DEE2E6] rounded-lg w-full"
+      class="hidden md:flex flex-col gap-6 p-4 md:min-w-[280px] md:w-fit bg-[#DEE2E6] rounded-lg w-full h-full"
     >
       <div class="font-bold text-xl w-full">Vehicle Specification</div>
       <div class="flex flex-col gap-2">

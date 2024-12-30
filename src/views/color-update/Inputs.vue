@@ -43,9 +43,6 @@ onMounted(async () => {
   colorData.value = _colorData.data.items?.map((item: any) => item);
 });
 
-const handleSubColorSelection = (color?: ColorProps) => {
-  console.log('sub color selected', color);
-};
 const imageCanvas = ref();
 const ctx = computed(
   () => imageCanvas.value && imageCanvas.value.getContext('2d')
@@ -57,8 +54,8 @@ watch(
     const img = new Image();
     img.crossOrigin = 'Anonymous'; // Enable CORS if the image is from another domain
     img.onload = () => {
-      if (imageCanvas.value?.width) imageCanvas.value.width = img.width;
-      if (imageCanvas.value?.height) imageCanvas.value.height = img.height;
+      if (img?.width) imageCanvas.value.width = img.width;
+      if (img?.height) imageCanvas.value.height = img.height;
       ctx.value.drawImage(img, 0, 0);
     };
     img.src = image.value;
@@ -86,6 +83,10 @@ const handleSelection = (e: any) => {
   colorUpdateStore.selectedHexColor = hexColor;
   colorUpdateStore.selectingHexColor = false;
 };
+
+const handleSubColorSelection = (color?: ColorProps) => {
+  console.log('sub color selected', color);
+};
 </script>
 
 <template>
@@ -108,12 +109,15 @@ const handleSelection = (e: any) => {
     />
 
     <!-- MAIN PICTURE -->
-    <div v-if="!isMultipleGallery" class="md:w-fit bg-[#DEE2E6] rounded-lg">
+    <div
+      v-if="!isMultipleGallery"
+      class="md:w-[-webkit-fill-available] flex justify-center items-center px-6 bg-[#DEE2E6] rounded-lg"
+    >
       <canvas
         ref="imageCanvas"
         alt="main-image"
         @click="handleSelection"
-        class="w-full md:!w-[466px] md:!h-[398px] rounded-lg"
+        class="rounded-lg"
       ></canvas>
     </div>
 
