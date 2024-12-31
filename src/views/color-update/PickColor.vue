@@ -34,6 +34,9 @@ const handlePickColor = () => {
     <div class="font-bold text-xl">Pick color from image</div>
     <div
       class="flex justify-center w-full bg-[#E9ECEF] rounded border border-[#CED4DA]"
+      :class="{
+        '!border-[#0000ff] !border-[2px]': colorUpdateStore.selectingHexColor,
+      }"
     >
       <div class="flex gap-2 p-1">
         <div
@@ -53,7 +56,11 @@ const handlePickColor = () => {
               v-if="colorUpdateStore.selectedHexColor"
               activator="parent"
               location="top"
-              :text="colorUpdateStore.selectedHexColor"
+              :text="
+                colorUpdateStore.selectingHexColor
+                  ? 'Deactivate color picker'
+                  : 'Activate color picker'
+              "
             />
           </div>
         </div>
