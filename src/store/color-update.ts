@@ -7,6 +7,12 @@ type State = {
   selectingHexColor: boolean;
   selectedHexColor: string;
   selectedGalleryImageWholePath: string;
+  selectedPickColors: {
+    key: 'color_main_name' | 'color_sec_name' | 'color_roof_name';
+    label: string;
+    value: string;
+    selected: boolean;
+  }[];
 };
 
 export const colorUpdate = defineStore('colorUpdate', {
@@ -16,7 +22,27 @@ export const colorUpdate = defineStore('colorUpdate', {
       selectionMode: 'single',
       selectingHexColor: false,
       selectedHexColor: '',
-      selectedGalleryImageWholePath: '', // When clicking on the gallery's image (only the admin)
+      selectedGalleryImageWholePath: '', // When clicking on the gallery's image (only the admin),
+      selectedPickColors: [
+        {
+          key: 'color_main_name',
+          label: 'Main color:',
+          value: '',
+          selected: true,
+        },
+        {
+          key: 'color_sec_name',
+          label: 'Bicolor:',
+          value: '',
+          selected: true,
+        },
+        {
+          key: 'color_roof_name',
+          label: 'Top color:',
+          value: '',
+          selected: true,
+        },
+      ],
     };
   },
 });
