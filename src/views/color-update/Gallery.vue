@@ -122,6 +122,7 @@ const handleImageClick = (image: any) => {
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        showTooltipId
       />
       <!-- DESKTOP MULTIPLE -->
       <ImageryGrid
@@ -132,6 +133,7 @@ const handleImageClick = (image: any) => {
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        showTooltipId
       />
     </template>
 
@@ -146,6 +148,7 @@ const handleImageClick = (image: any) => {
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        showTooltipId
       />
       <!-- TABLET MULTIPLE -->
       <ImageryGrid
@@ -156,6 +159,7 @@ const handleImageClick = (image: any) => {
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        showTooltipId
       />
     </template>
 
@@ -170,6 +174,7 @@ const handleImageClick = (image: any) => {
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        showTooltipId
       />
       <!-- MOBILE MULTIPLE -->
       <ImageryGrid
@@ -180,6 +185,7 @@ const handleImageClick = (image: any) => {
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        showTooltipId
       />
     </template>
 

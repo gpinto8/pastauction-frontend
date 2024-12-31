@@ -32,6 +32,7 @@ const props = defineProps<{
   activateSelection?: boolean;
   resetSelection?: boolean;
   noImageText?: string;
+  showTooltipId?: boolean;
 }>();
 
 const selectedImages = ref<number[]>([]);
@@ -119,6 +120,13 @@ const handleClick = (image: ImageGrid, index: number) => {
       </div>
       <v-tooltip activator="parent" location="top" :open-delay="1000">
         <img :src="image.path" alt="" :width="640" :height="480" />
+        <div v-if="showTooltipId" class="text-right w-full mb-3 ml-1">
+          <span
+            class="bg-black text-white p-2 mb-4 rounded-lg border-[2px] border-white"
+          >
+            ID: {{ image.id }}
+          </span>
+        </div>
       </v-tooltip>
     </div>
     <div
