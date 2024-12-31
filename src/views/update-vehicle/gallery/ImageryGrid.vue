@@ -9,7 +9,7 @@ type ColumnCombinations =
   | '4x80'
   | '4x100'
   | '5x80'
-  | '16x80'
+  | '11x110'
   | '15x80'
   | '15xauto'
   | '2x80'
@@ -33,6 +33,7 @@ const props = defineProps<{
   resetSelection?: boolean;
   noImageText?: string;
   showTooltipId?: boolean;
+  fixedHeight?: number;
 }>();
 
 const selectedImages = ref<number[]>([]);
@@ -51,7 +52,7 @@ const gridMap: { [key in ColumnCombinations]: string } = {
   '4x100': 'grid-cols-[repeat(4,100px)]',
   '6x80': 'grid-cols-[repeat(6,80px)]',
   '15x80': 'grid-cols-[repeat(15,80px)]',
-  '16x80': 'grid-cols-[repeat(16,80px)]',
+  '11x110': 'grid-cols-[repeat(11,110px)]',
   '15xauto': 'grid-cols-[repeat(15,auto)]',
   '5x54': 'grid-cols-[repeat(5,54px)]',
   '8xauto': 'grid-cols-[repeat(8,auto)]',
@@ -101,7 +102,11 @@ const handleClick = (image: ImageGrid, index: number) => {
         class="block border-2 border-solid border-black"
         :class="{ 'border-4 !border-[#0D6EFD]': selectedImages.includes(i) }"
         :style="{
-          height: autoHeight ? 'auto' : `${size}px`,
+          height: fixedHeight
+            ? `${fixedHeight}px`
+            : autoHeight
+              ? 'auto'
+              : `${size}px`,
           width: `${size}px`,
         }"
         @click="() => image.id && handleClick(image, i)"

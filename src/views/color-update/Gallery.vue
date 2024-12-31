@@ -25,7 +25,7 @@ const imagesQuantity = computed(() => {
   if (colorUpdateStore.galleryMode === 'single') {
     if (device.value === 'mobile') quantity = 12;
     if (device.value === 'tablet') quantity = 35;
-    if (device.value === 'desktop') quantity = 80;
+    if (device.value === 'desktop') quantity = 44;
   } else {
     if (device.value === 'mobile') quantity = 8;
     if (device.value === 'tablet') quantity = 12;
@@ -118,11 +118,12 @@ const handleImageClick = (image: any) => {
         v-if="colorUpdateStore.galleryMode === 'single'"
         :images="slicedImages"
         class="w-full border-[8px] !border-[#212529] rounded-[4px]"
-        columnCombination="16x80"
+        columnCombination="11x110"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="colorUpdateStore.selectionMode === 'single'"
         showTooltipId
+        :fixedHeight="83"
       />
       <!-- DESKTOP MULTIPLE -->
       <ImageryGrid
