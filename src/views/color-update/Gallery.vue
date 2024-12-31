@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import ImageryGrid from '../update-vehicle/gallery/ImageryGrid.vue';
+import ImageryGrid, {
+  type ImageGrid,
+  type ImagesGridProps,
+} from '../update-vehicle/gallery/ImageryGrid.vue';
 import Pagination from '../update-vehicle/gallery/Pagination.vue';
 import { colorUpdate } from '@/store/color-update';
 import axios from 'axios';
@@ -15,9 +18,15 @@ const currentPage = ref(1);
 const images = ref();
 const totalPages = ref();
 const totalImages = ref();
+const resetSelection = ref(false); // For the "Reset" button
+const selectedImages = ref<ImagesGridProps>(); // The "multiple" mode selected images
 const { device } = useBreakpoint();
 
 const modelId = computed(() => props.vehicleData?.bw_model_id);
+
+const computedResetSelection = computed(
+  () => colorUpdateStore.selectionMode === 'single' || resetSelection.value
+);
 
 const imagesQuantity = computed(() => {
   let quantity = 0;
@@ -95,16 +104,23 @@ watch(
   }
 );
 
+watch(
+  () => selectedImages.value,
+  () => !selectedImages.value?.length && (resetSelection.value = false)
+);
+
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
   const imagesArray = await getImages(modelId.value, page);
   if (imagesArray) images.value = imagesArray.data;
 };
 
-const handleImageClick = (image: any) => {
+const handleImageClick = (image: ImageGrid) => {
   const wholePath = image?.path;
   if (wholePath) colorUpdateStore.selectedGalleryImageWholePath = wholePath;
 };
+
+const resetMultipleSelection = () => (resetSelection.value = true);
 </script>
 
 <template>
@@ -121,8 +137,9 @@ const handleImageClick = (image: any) => {
         columnCombination="11x110"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        :resetSelection="computedResetSelection"
         showTooltipId
+        :getSelectedImages="images => (selectedImages = images)"
         :fixedHeight="83"
       />
       <!-- DESKTOP MULTIPLE -->
@@ -133,8 +150,9 @@ const handleImageClick = (image: any) => {
         columnCombination="8x152"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        :resetSelection="computedResetSelection"
         showTooltipId
+        :getSelectedImages="images => (selectedImages = images)"
       />
     </template>
 
@@ -148,8 +166,9 @@ const handleImageClick = (image: any) => {
         columnCombination="7x80"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        :resetSelection="computedResetSelection"
         showTooltipId
+        :getSelectedImages="images => (selectedImages = images)"
       />
       <!-- TABLET MULTIPLE -->
       <ImageryGrid
@@ -159,8 +178,9 @@ const handleImageClick = (image: any) => {
         columnCombination="3x152"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        :resetSelection="computedResetSelection"
         showTooltipId
+        :getSelectedImages="images => (selectedImages = images)"
       />
     </template>
 
@@ -174,8 +194,9 @@ const handleImageClick = (image: any) => {
         columnCombination="3x80"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        :resetSelection="computedResetSelection"
         showTooltipId
+        :getSelectedImages="images => (selectedImages = images)"
       />
       <!-- MOBILE MULTIPLE -->
       <ImageryGrid
@@ -185,17 +206,27 @@ const handleImageClick = (image: any) => {
         columnCombination="2x152"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
-        :resetSelection="colorUpdateStore.selectionMode === 'single'"
+        :resetSelection="computedResetSelection"
         showTooltipId
+        :getSelectedImages="images => (selectedImages = images)"
       />
     </template>
 
     <!-- PAGINATION -->
-    <Pagination
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      :totalImages="totalImages"
-      @onPageChanged="handlePageChanged"
-    />
+    <div class="flex gap-4">
+      <Pagination
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        :totalImages="totalImages"
+        @onPageChanged="handlePageChanged"
+      />
+      <v-btn
+        v-if="colorUpdateStore.selectionMode === 'multiple'"
+        class="bg-black text-white py-2 text-[14px]"
+        @click="resetMultipleSelection"
+      >
+        Reset
+      </v-btn>
+    </div>
   </div>
 </template>

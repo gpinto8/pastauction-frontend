@@ -54,9 +54,11 @@ watch(
     const img = new Image();
     img.crossOrigin = 'Anonymous'; // Enable CORS if the image is from another domain
     img.onload = () => {
-      if (img?.width) imageCanvas.value.width = img.width;
-      if (img?.height) imageCanvas.value.height = img.height;
-      ctx.value.drawImage(img, 0, 0);
+      if (img?.width && imageCanvas.value?.width)
+        imageCanvas.value.width = img.width;
+      if (img?.height && imageCanvas.value?.height)
+        imageCanvas.value.height = img.height;
+      ctx.value?.drawImage?.(img, 0, 0);
     };
     img.src = image.value;
   },

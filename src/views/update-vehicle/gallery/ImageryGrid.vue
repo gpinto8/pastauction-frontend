@@ -34,13 +34,19 @@ const props = defineProps<{
   noImageText?: string;
   showTooltipId?: boolean;
   fixedHeight?: number;
+  getSelectedImages?: (images: ImagesGridProps) => void;
 }>();
 
-const selectedImages = ref<number[]>([]);
+const selectedImages = ref<ImagesGridProps>([]);
 
 watch(
   () => props.resetSelection,
   () => (selectedImages.value = [])
+);
+
+watch(
+  () => selectedImages.value,
+  () => props.getSelectedImages?.(selectedImages.value)
 );
 
 // We create a static map of tailwind classes since we can't dynamically generate them (as per: https://tailwindcss.com/docs/content-configuration#dynamic-class-names)
@@ -70,11 +76,18 @@ const handleClick = (image: ImageGrid, index: number) => {
   props.onImageClick?.(image);
 
   if (props.activateSelection) {
-    if (selectedImages.value.includes(index)) {
-      selectedImages.value = selectedImages.value.filter(i => i !== index);
-      return;
+    if (selectedImages.value?.some(item => item?.id === image.id)) {
+      const filteredArray = selectedImages.value?.filter(
+        item => item.id !== image.id
+      );
+      selectedImages.value = filteredArray;
+    } else {
+      const mergedData = [
+        ...(selectedImages.value?.filter(item => item?.id !== image?.id) || []),
+        image,
+      ];
+      selectedImages.value = mergedData;
     }
-    selectedImages.value = [...(selectedImages.value || []), index];
   }
 };
 </script>
@@ -100,7 +113,11 @@ const handleClick = (image: ImageGrid, index: number) => {
         :width="size"
         :height="!autoHeight ? size : 0"
         class="block border-2 border-solid border-black"
-        :class="{ 'border-4 !border-[#0D6EFD]': selectedImages.includes(i) }"
+        :class="{
+          'border-4 !border-[#0D6EFD]': selectedImages.some(
+            item => item?.id === image.id
+          ),
+        }"
         :style="{
           height: fixedHeight
             ? `${fixedHeight}px`
@@ -114,7 +131,11 @@ const handleClick = (image: ImageGrid, index: number) => {
       <div
         v-else
         class="text-white grid place-content-center border-2 border-solid border-black"
-        :class="{ 'border-4 !border-[#0D6EFD]': selectedImages.includes(i) }"
+        :class="{
+          'border-4 !border-[#0D6EFD]': selectedImages.some(
+            item => item?.id === image.id
+          ),
+        }"
         :style="{
           height: autoHeight ? 'auto' : `${size}px`,
           width: `${size}px`,
