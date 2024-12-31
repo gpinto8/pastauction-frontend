@@ -38,10 +38,14 @@ const filterModelValue = computed<FiltersModelValue>(() => [
     isRelated: false,
   },
 ]);
+
+const vehicleUpdateFilterUrl =
+  'https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter';
 </script>
 
 <template>
   <Filters
+    :fetchUrl="vehicleUpdateFilterUrl"
     class="md:min-w-[1300px] md:!h-[86px]"
     classInput="!min-w-[180px]"
     :modelValue="filterModelValue"

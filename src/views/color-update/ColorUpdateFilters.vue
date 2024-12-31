@@ -45,6 +45,9 @@ const filterModelValue = computed<FiltersModelValue>(() => [
     isRelated: false,
   },
 ]);
+
+const colorUpdateFilterUrl =
+  'https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color';
 </script>
 
 <template>
@@ -53,6 +56,7 @@ const filterModelValue = computed<FiltersModelValue>(() => [
   >
     <!-- FILTERS -->
     <Filters
+      :fetchUrl="colorUpdateFilterUrl"
       class="!w-full md:!w-[75%] !p-0 md:!px-6 md:!py-5 md:!pb-0"
       classInput="!min-w-[180px] md:!min-w-0 md:!w-[160px] md:!flex-grow-0"
       hideMoveButtons

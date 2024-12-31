@@ -32,6 +32,7 @@ export type FiltersGoValues = {
 }[];
 
 const props = defineProps<{
+  fetchUrl: string; // e.g "https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter" (yes, with "https" and without the ending "/")
   class?: string;
   modelValue?: FiltersModelValue;
   applyFilters?: (data: FiltersGoValues) => void;
@@ -124,7 +125,7 @@ watch(
         : '';
 
       try {
-        const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${data.key}/?${dynamicParamsString}page=1&size=50`;
+        const url = `${props.fetchUrl}/${data.key}/?${dynamicParamsString}page=1&size=50`;
         const response = await axios.get(url);
         const values = response.data.items.map((item: any) => item[data.key]);
         updateFilterData(data.key, values, true);
@@ -196,7 +197,7 @@ const handleSearchFocus = async (
     const dynamicParamsString = dynamicParams ? `search=${dynamicParams}&` : '';
 
     try {
-      const url = `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?${dynamicParamsString}page=1&size=50`;
+      const url = `${props.fetchUrl}/${key}/?${dynamicParamsString}page=1&size=50`;
       const response = await axios.get(url);
       const values = response.data.items.map((item: any) => item[key]);
       updateFilterData(key, values, true);
@@ -214,7 +215,7 @@ const handleSearch = debounce(
 
       try {
         const response = await axios.get(
-          `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter/${key}/?search=${key}_${keyword}:${term}${dynamicParamsString}&page=1&size=50`
+          `${props.fetchUrl}/${key}/?search=${key}_${keyword}:${term}${dynamicParamsString}&page=1&size=50`
         );
         const values = response.data.items.map((item: any) => item?.[key]);
         updateFilterData(key, values);
