@@ -11,6 +11,7 @@ import { useBreakpoint } from '@/utils/functions/useBreakpoint';
 
 const props = defineProps<{
   vehicleData: any;
+  resetGallery?: boolean;
 }>();
 
 const colorUpdateStore = colorUpdate();
@@ -109,6 +110,11 @@ watch(
   () => !selectedImages.value?.length && (resetSelection.value = false)
 );
 
+watch(
+  () => props.resetGallery,
+  () => props.resetGallery && (images.value = [])
+);
+
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
   const imagesArray = await getImages(modelId.value, page);
@@ -133,7 +139,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
       <ImageryGrid
         v-if="colorUpdateStore.galleryMode === 'single'"
         :images="slicedImages"
-        class="w-full border-[8px] !border-[#212529] rounded-[4px]"
+        class="w-full border-[8px] !border-[#212529] rounded-[4px] h-[348px]"
         columnCombination="11x110"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"

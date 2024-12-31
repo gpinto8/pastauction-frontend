@@ -13,6 +13,7 @@ import {
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
 const vehicleData = ref();
+const resetGallery = ref(false);
 
 onMounted(async () => {
   axios
@@ -33,26 +34,37 @@ const applyFilters = async (data: FiltersGoValues) => {
   const brandName = getValue('brand_name');
   const familyName = getValue('bw_family_name');
   const modelName = getValue('bw_model_name');
-  const colorMainName = getValue('color_main_name'); // This is optional
-  const colorSecName = getValue('color_sec_name'); // This is optional
+  const colorFamilyName = getValue('colorfamily_name');
+  const colorMainName = getValue('color_main_name');
 
-  if (brandName && familyName && modelName) {
+  if (
+    brandName &&
+    familyName &&
+    modelName &&
+    colorFamilyName &&
+    colorMainName
+  ) {
     const params = [
       brandName ? `brand_name:${brandName}` : '',
       familyName ? `bw_family_name:${familyName}` : '',
       modelName ? `bw_model_name:${modelName}` : '',
+      colorFamilyName ? `colorfamily_name:${colorFamilyName}` : '',
       colorMainName ? `color_main_name:${colorMainName}` : '',
-      colorSecName ? `color_sec_name:${colorSecName}` : '',
     ]
       .filter(Boolean)
       .join(',');
+
+    resetGallery.value = true;
 
     const data = await axios.get(
       `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
     );
     const dataItem = data?.data?.items?.[0];
 
-    if (dataItem) vehicleData.value = dataItem;
+    if (dataItem) {
+      vehicleData.value = dataItem;
+      resetGallery.value = false;
+    }
   }
 };
 </script>
@@ -66,7 +78,11 @@ const applyFilters = async (data: FiltersGoValues) => {
       :vehicleData="vehicleData"
       :applyFilters="applyFilters"
     />
-    <Gallery class="md:!w-[1300px]" :vehicleData="vehicleData" />
+    <Gallery
+      class="md:!w-[1300px]"
+      :vehicleData="vehicleData"
+      :resetGallery="resetGallery"
+    />
     <Inputs class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <div class="flex w-full justify-end mt-2">
       <button class="bg-black p-2 text-sm rounded-md text-white h-8 w-40">

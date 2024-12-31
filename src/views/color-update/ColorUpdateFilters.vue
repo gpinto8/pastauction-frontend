@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { colorUpdate } from '@/store/color-update';
-import { computed } from 'vue';
+import { computed, onMounted, watch, ref } from 'vue';
 import Filters, {
   type FiltersGoValues,
   type FiltersModelValue,
 } from '@/components/common/Filters.vue';
+import axios from 'axios';
 
 const props = defineProps<{
   vehicleData: any;
@@ -13,38 +14,70 @@ const props = defineProps<{
 
 const colorUpdateStore = colorUpdate();
 
-const filterModelValue = computed<FiltersModelValue>(() => [
-  {
-    key: 'brand_name',
-    label: 'Brand',
-    value: props?.vehicleData?.brand_name,
-    isRelated: true,
-  },
-  {
-    key: 'bw_family_name',
-    label: 'Family',
-    value: props?.vehicleData?.bw_family_name,
-    isRelated: true,
-  },
-  {
-    key: 'bw_model_name',
-    label: 'Model',
-    value: props?.vehicleData?.bw_model_name,
-    isRelated: true,
-  },
-  {
-    key: 'color_main_name',
-    label: 'Main color',
-    value: props?.vehicleData?.color_main_name,
-    isRelated: false,
-  },
-  {
-    key: 'color_sec_name',
-    label: 'Support color',
-    value: props?.vehicleData?.color_sec_name,
-    isRelated: false,
-  },
-]);
+const filterModelValue = ref<FiltersModelValue>();
+
+watch(
+  () => props?.vehicleData,
+  () => {
+    filterModelValue.value = [
+      {
+        key: 'brand_name',
+        label: 'Brand',
+        value: props?.vehicleData?.brand_name,
+        isRelated: true,
+      },
+      {
+        key: 'bw_family_name',
+        label: 'Family',
+        value: props?.vehicleData?.bw_family_name,
+        isRelated: true,
+      },
+      {
+        key: 'bw_model_name',
+        label: 'Model',
+        value: props?.vehicleData?.bw_model_name,
+        isRelated: true,
+      },
+      {
+        key: 'colorfamily_name',
+        label: 'Main color',
+        value: '',
+        isRelated: true,
+      },
+      {
+        key: 'color_main_name',
+        label: 'Support color',
+        value: props?.vehicleData?.color_main_name,
+        isRelated: true,
+      },
+    ];
+  }
+);
+
+watch(
+  () => props?.vehicleData,
+  async () => {
+    const colorMainName = props?.vehicleData?.color_main_name;
+    if (colorMainName) {
+      const data = await axios
+        .get(
+          `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color/colorfamily_name/?search=color_main_name:${colorMainName}`
+        )
+        .catch(e => e);
+
+      const colorFamilyName = data?.data?.items?.[0]?.colorfamily_name;
+      const colorObject = {
+        ...filterModelValue.value.find(data => data.key === 'colorfamily_name'),
+        value: colorFamilyName,
+      };
+      const filtered = filterModelValue.value.filter(
+        data => data.key !== colorObject.key
+      );
+
+      filterModelValue.value = [...filtered, colorObject];
+    }
+  }
+);
 
 const colorUpdateFilterUrl =
   'https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color';

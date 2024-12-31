@@ -8,8 +8,8 @@ export type FilterAvailableKeys =
   | 'bw_family_name'
   | 'bw_model_name'
   | 'age_name'
-  | 'color_main_name'
-  | 'color_sec_name';
+  | 'colorfamily_name'
+  | 'color_main_name';
 
 export type FiltersModelValue = {
   key: FilterAvailableKeys;
@@ -49,7 +49,7 @@ defineEmits(['onPrevious', 'onNext']);
 const keysShown = computed(() => props.modelValue?.map(data => data.key));
 
 const filtersData = ref<FiltersDataProps[]>([]);
-const valuesMap = ref<{ [key: string]: string }>({});
+const valuesMap = ref<{ [key: FilterAvailableKeys]: string }>({});
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
@@ -157,19 +157,19 @@ const resetFilterData = (key: FilterAvailableKeys) => {
       'bw_family_name',
       'bw_model_name',
       'age_name',
+      'colorfamily_name',
       'color_main_name',
-      'color_sec_name',
     ],
     bw_family_name: [
       'bw_model_name',
       'age_name',
+      'colorfamily_name',
       'color_main_name',
-      'color_sec_name',
     ],
-    bw_model_name: ['age_name', 'color_main_name', 'color_sec_name'],
-    age_name: ['color_main_name', 'color_sec_name'],
-    color_main_name: ['color_sec_name'],
-    color_sec_name: [''],
+    bw_model_name: ['age_name', 'colorfamily_name', 'color_main_name'],
+    age_name: ['colorfamily_name', 'color_main_name'],
+    colorfamily_name: ['color_main_name'],
+    color_main_name: [''],
   };
 
   if (key) {
@@ -243,8 +243,8 @@ const getBrandName = () => getFilterData('brand_name');
 const getFamilyName = () => getFilterData('bw_family_name');
 const getModelName = () => getFilterData('bw_model_name');
 const getAgingName = () => getFilterData('age_name');
+const getColorFamilyName = () => getFilterData('colorfamily_name');
 const getColorMainName = () => getFilterData('color_main_name');
-const getColorSecName = () => getFilterData('color_sec_name');
 
 const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
 </script>
@@ -335,6 +335,22 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         @update:search="term => handleSearch(getAgingName()?.key!, term)"
         @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
       />
+      <!-- COLOR FAMILY NAME -->
+      <v-autocomplete
+        v-if="keysShown?.includes('colorfamily_name')"
+        class="w-fit"
+        :class="classInput"
+        :label="getColorFamilyName()?.label"
+        variant="outlined"
+        :items="getColorFamilyName()?.values"
+        density="compact"
+        :modelValue="valuesMap[getColorFamilyName()?.key!]"
+        @update:modelValue="
+          valuesMap && (valuesMap[getColorFamilyName()?.key!] = $event || '')
+        "
+        @update:search="term => handleSearch(getColorFamilyName()?.key!, term)"
+        @update:focused="handleSearchFocus(getColorFamilyName()?.key!, $event)"
+      />
       <!-- COLOR MAIN NAME -->
       <v-autocomplete
         v-if="keysShown?.includes('color_main_name')"
@@ -350,22 +366,6 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         "
         @update:search="term => handleSearch(getColorMainName()?.key!, term)"
         @update:focused="handleSearchFocus(getColorMainName()?.key!, $event)"
-      />
-      <!-- COLOR SEC NAME -->
-      <v-autocomplete
-        v-if="keysShown?.includes('color_sec_name')"
-        class="w-fit"
-        :class="classInput"
-        :label="getColorSecName()?.label"
-        variant="outlined"
-        :items="getColorSecName()?.values"
-        density="compact"
-        :modelValue="valuesMap[getColorSecName()?.key!]"
-        @update:modelValue="
-          valuesMap && (valuesMap[getColorSecName()?.key!] = $event || '')
-        "
-        @update:search="term => handleSearch(getColorSecName()?.key!, term)"
-        @update:focused="handleSearchFocus(getColorSecName()?.key!, $event)"
       />
       <!-- GO BUTTON -->
       <v-btn
@@ -464,6 +464,27 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             @update:search="term => handleSearch(getAgingName()?.key!, term)"
             @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
           />
+          <!-- COLOR FAMILY NAME -->
+          <v-autocomplete
+            v-if="keysShown?.includes('colorfamily_name')"
+            class="block sm:hidden w-full"
+            :class="classInput"
+            :label="getColorFamilyName()?.label"
+            variant="outlined"
+            :items="getColorFamilyName()?.values"
+            density="compact"
+            :modelValue="valuesMap[getColorFamilyName()?.key!]"
+            @update:modelValue="
+              valuesMap &&
+                (valuesMap[getColorFamilyName()?.key!] = $event || '')
+            "
+            @update:search="
+              term => handleSearch(getColorFamilyName()?.key!, term)
+            "
+            @update:focused="
+              handleSearchFocus(getColorFamilyName()?.key!, $event)
+            "
+          />
           <!-- COLOR MAIN NAME -->
           <v-autocomplete
             v-if="keysShown?.includes('color_main_name')"
@@ -483,22 +504,6 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             @update:focused="
               handleSearchFocus(getColorMainName()?.key!, $event)
             "
-          />
-          <!-- COLOR SEC NAME -->
-          <v-autocomplete
-            v-if="keysShown?.includes('color_sec_name')"
-            class="block sm:hidden w-full"
-            :class="classInput"
-            :label="getColorSecName()?.label"
-            variant="outlined"
-            :items="getColorSecName()?.values"
-            density="compact"
-            :modelValue="valuesMap[getColorSecName()?.key!]"
-            @update:modelValue="
-              valuesMap && (valuesMap[getColorSecName()?.key!] = $event || '')
-            "
-            @update:search="term => handleSearch(getColorSecName()?.key!, term)"
-            @update:focused="handleSearchFocus(getColorSecName()?.key!, $event)"
           />
           <!-- GO BUTTON -->
           <v-btn
