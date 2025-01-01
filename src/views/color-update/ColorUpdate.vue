@@ -33,17 +33,11 @@ const applyFilters = async (data: FiltersGoValues) => {
     data.find(data => data.key === key)?.value;
   const brandName = getValue('brand_name');
   const familyName = getValue('bw_family_name');
-  const modelName = getValue('bw_model_name');
-  const colorFamilyName = getValue('colorfamily_name');
-  const colorMainName = getValue('color_main_name');
+  const modelName = getValue('bw_model_name'); // This is optional
+  const colorFamilyName = getValue('colorfamily_name'); // This is optional
+  const colorMainName = getValue('color_main_name'); // This is optional
 
-  if (
-    brandName &&
-    familyName &&
-    modelName &&
-    colorFamilyName &&
-    colorMainName
-  ) {
+  if (brandName && familyName) {
     const params = [
       brandName ? `brand_name:${brandName}` : '',
       familyName ? `bw_family_name:${familyName}` : '',
