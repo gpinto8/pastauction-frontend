@@ -23,31 +23,31 @@ watch(
       {
         key: 'brand_name',
         label: 'Brand',
-        value: props?.vehicleData?.brand_name,
+        value: props?.vehicleData?.brand_name || null,
         isRelated: true,
       },
       {
         key: 'bw_family_name',
         label: 'Family',
-        value: props?.vehicleData?.bw_family_name,
+        value: props?.vehicleData?.bw_family_name || null,
         isRelated: true,
       },
       {
         key: 'bw_model_name',
         label: 'Model',
-        value: props?.vehicleData?.bw_model_name,
+        value: props?.vehicleData?.bw_model_name || null,
         isRelated: true,
       },
       {
         key: 'colorfamily_name',
         label: 'Main color',
-        value: '',
+        value: null as any, // Fetched below, based on the "color_main_name"
         isRelated: true,
       },
       {
         key: 'color_main_name',
         label: 'Support color',
-        value: props?.vehicleData?.color_main_name,
+        value: props?.vehicleData?.color_main_name || null,
         isRelated: true,
       },
     ];
@@ -55,10 +55,10 @@ watch(
 );
 
 watch(
-  () => props?.vehicleData,
+  () => props?.vehicleData, // Getting the "colorfamily_name" label based on the "color_main_name"
   async () => {
     const colorMainName = props?.vehicleData?.color_main_name;
-    if (colorMainName) {
+    if (colorMainName && filterModelValue.value) {
       const data = await axios
         .get(
           `https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color/colorfamily_name/?search=color_main_name:${colorMainName}`
@@ -69,8 +69,8 @@ watch(
       const colorObject = {
         ...filterModelValue.value.find(data => data.key === 'colorfamily_name'),
         value: colorFamilyName,
-      };
-      const filtered = filterModelValue.value.filter(
+      } as FiltersModelValue[0];
+      const filtered: FiltersModelValue = filterModelValue.value.filter(
         data => data.key !== colorObject.key
       );
 

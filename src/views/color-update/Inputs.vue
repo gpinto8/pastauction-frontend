@@ -86,7 +86,7 @@ const handleSelection = (e: any) => {
 };
 
 const handleSubColorSelection = (color?: ColorProps) => {
-  console.log('sub color selected', color);
+  if (color) colorUpdateStore.selectedColorFromGallery = color;
 };
 </script>
 
@@ -103,11 +103,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
     />
 
     <!-- PICK COLOR FROM IMAGE -->
-    <PickColor
-      v-if="!isMultipleGallery"
-      class="flex md:hidden"
-      :vehicleData="vehicleData"
-    />
+    <PickColor v-if="!isMultipleGallery" class="flex md:hidden" />
 
     <!-- MAIN PICTURE -->
     <div
@@ -134,7 +130,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
       </div>
 
       <!-- PICK COLOR FROM IMAGE -->
-      <PickColor class="hidden md:flex" :vehicleData="vehicleData" />
+      <PickColor class="hidden md:flex" />
     </div>
 
     <!-- VEHICLE SPECIFICATION -->

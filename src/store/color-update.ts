@@ -1,3 +1,4 @@
+import type { ColorProps } from '@/views/update-vehicle/ColorMainNuance.vue';
 import { defineStore } from 'pinia';
 
 type Modes = 'single' | 'multiple';
@@ -13,6 +14,7 @@ type State = {
     value: string;
     selected: boolean;
   }[];
+  selectedColorFromGallery: ColorProps;
 };
 
 export const colorUpdate = defineStore('colorUpdate', {
@@ -43,6 +45,7 @@ export const colorUpdate = defineStore('colorUpdate', {
           selected: true,
         },
       ],
+      selectedColorFromGallery: { hex_code: '', id: 0, id_family: 0, name: '' },
     };
   },
 });

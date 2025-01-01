@@ -3,25 +3,7 @@ import { colorUpdate } from '@/store/color-update';
 import UiCheckbox from '@/components/ui/ui-checkbox.vue';
 import { ref, watch } from 'vue';
 
-const props = defineProps<{
-  vehicleData: any;
-}>();
-
 const colorUpdateStore = colorUpdate();
-
-watch(
-  () => props.vehicleData,
-  () => {
-    colorUpdateStore.selectedPickColors.forEach(color => {
-      const { color_main_name, color_sec_name, color_roof_name } =
-        props.vehicleData || {};
-
-      if (color.key === 'color_main_name') color.value = color_main_name;
-      if (color.key === 'color_sec_name') color.value = color_sec_name;
-      if (color.key === 'color_roof_name') color.value = color_roof_name;
-    });
-  }
-);
 
 watch(
   () => colorUpdateStore.selectingHexColor,
@@ -91,7 +73,6 @@ const handlePickColor = () => {
       <div v-for="(color, i) in colorUpdateStore.selectedPickColors">
         <div class="flex gap-2">
           <UiCheckbox
-            @onSelected="handleSelected"
             class="z-10 pointer-events-auto"
             v-model="color.selected"
           />
