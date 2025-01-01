@@ -108,7 +108,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
     <!-- MAIN PICTURE -->
     <div
       v-if="!isMultipleGallery"
-      class="md:w-[-webkit-fill-available] flex justify-center items-center px-6 bg-[#DEE2E6] rounded-lg"
+      class="md:w-[-webkit-fill-available] flex justify-center items-center !p-6 bg-[#DEE2E6] rounded-lg overflow-auto md:max-h-[500px]"
     >
       <canvas
         ref="imageCanvas"
@@ -130,7 +130,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
       </div>
 
       <!-- PICK COLOR FROM IMAGE -->
-      <PickColor class="hidden md:flex" />
+      <PickColor v-if="!isMultipleGallery" class="hidden md:flex" />
     </div>
 
     <!-- VEHICLE SPECIFICATION -->
