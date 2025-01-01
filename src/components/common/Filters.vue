@@ -49,7 +49,14 @@ defineEmits(['onPrevious', 'onNext']);
 const keysShown = computed(() => props.modelValue?.map(data => data.key));
 
 const filtersData = ref<FiltersDataProps[]>([]);
-const valuesMap = ref<{ [key: FilterAvailableKeys]: string }>({});
+const valuesMap = ref<{ [key in FilterAvailableKeys]: string }>({
+  brand_name: '',
+  bw_family_name: '',
+  bw_model_name: '',
+  age_name: '',
+  colorfamily_name: '',
+  color_main_name: '',
+});
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
