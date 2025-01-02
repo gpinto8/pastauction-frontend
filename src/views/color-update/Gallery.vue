@@ -12,6 +12,7 @@ import { useBreakpoint } from '@/utils/functions/useBreakpoint';
 const props = defineProps<{
   vehicleData: any;
   resetGallery?: boolean;
+  filterParams?: string;
 }>();
 
 const colorUpdateStore = colorUpdate();
@@ -23,7 +24,7 @@ const resetSelection = ref(false); // For the "Reset" button
 const selectedImages = ref<ImagesGridProps>(); // The "multiple" mode selected images
 const { device } = useBreakpoint();
 
-const modelId = computed(() => props.vehicleData?.bw_model_id);
+const modelName = computed(() => props.vehicleData?.bw_model_name);
 
 const computedResetSelection = computed(
   () => colorUpdateStore.selectionMode === 'single' || resetSelection.value
@@ -49,11 +50,13 @@ const slicedImages = computed(() =>
   images.value?.slice(0, imagesQuantity.value)
 );
 
-const getImages = async (modelId: number, page: number) => {
+const getImages = async (modelName: string, page: number) => {
   const size = imagesQuantity.value + 20;
+  const newParams = props.filterParams || `bw_model_name:${modelName}`;
   const familyData = await axios.get(
-    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${modelId}&page=${page}&size=${size}`
+    `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${newParams}&page=${page}&size=${size}`
   );
+
   const totalPages = familyData.data.pages;
   const totalImages = familyData.data.total;
   const data = familyData.data.items;
@@ -73,16 +76,16 @@ const getImages = async (modelId: number, page: number) => {
 };
 
 watch(
-  () => modelId.value,
+  () => modelName.value,
   async () => {
-    if (!modelId.value) {
+    if (!modelName.value) {
       images.value = [];
       totalPages.value = 0;
       totalImages.value = 0;
       return;
     }
 
-    const imageData = await getImages(modelId.value, 1);
+    const imageData = await getImages(modelName.value, 1);
     if (imageData) {
       images.value = imageData.data;
       totalPages.value = imageData.totalPages;
@@ -92,11 +95,11 @@ watch(
 );
 
 watch(
-  () => [modelId.value, device.value],
+  () => [modelName.value, device.value],
   async () => {
-    if (!modelId.value || !device.value) return;
+    if (!modelName.value || !device.value) return;
 
-    const imageData = await getImages(modelId.value, currentPage.value);
+    const imageData = await getImages(modelName.value, currentPage.value);
     if (imageData) {
       images.value = imageData.data;
       totalPages.value = imageData.totalPages;
@@ -117,7 +120,7 @@ watch(
 
 const handlePageChanged = async (page: number) => {
   currentPage.value = page;
-  const imagesArray = await getImages(modelId.value, page);
+  const imagesArray = await getImages(modelName.value, page);
   if (imagesArray) images.value = imagesArray.data;
 };
 

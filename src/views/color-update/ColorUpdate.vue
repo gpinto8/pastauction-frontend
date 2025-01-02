@@ -14,6 +14,7 @@ const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
 const vehicleData = ref();
 const resetGallery = ref(false);
+const filterParams = ref('');
 
 onMounted(async () => {
   axios
@@ -48,6 +49,7 @@ const applyFilters = async (data: FiltersGoValues) => {
       .filter(Boolean)
       .join(',');
 
+    filterParams.value = params;
     resetGallery.value = true;
 
     const data = await axios.get(
@@ -76,6 +78,7 @@ const applyFilters = async (data: FiltersGoValues) => {
       class="md:!w-[1300px]"
       :vehicleData="vehicleData"
       :resetGallery="resetGallery"
+      :filterParams="filterParams"
     />
     <Inputs class="md:!w-[1300px]" :vehicleData="vehicleData" />
     <div class="flex w-full justify-end mt-2">

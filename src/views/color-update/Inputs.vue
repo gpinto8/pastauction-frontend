@@ -108,7 +108,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
     <!-- MAIN PICTURE -->
     <div
       v-if="!isMultipleGallery"
-      class="md:w-[-webkit-fill-available] flex justify-center items-center !p-6 bg-[#DEE2E6] rounded-lg overflow-auto md:max-h-[500px]"
+      class="md:w-[-webkit-fill-available] flex justify-center items-center !p-4 bg-[#DEE2E6] rounded-lg overflow-auto md:max-h-[500px]"
     >
       <canvas
         ref="imageCanvas"
