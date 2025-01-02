@@ -14,8 +14,8 @@ const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
 const dynamicColors = ref([
+  { key: 'colorfamily_name', value: '' },
   { key: 'color_main_name', value: '' },
-  { key: 'color_sec_name', value: '' },
   { key: 'color_roof_name', value: '' },
 ]);
 
@@ -34,8 +34,8 @@ const vehicleSpecifications = computed<
     bw_model_year_begin,
     chassis,
     body_shapes,
+    colorfamily_name,
     color_main_name,
-    color_sec_name,
     color_roof_name,
   } = props.vehicleData || {};
 
@@ -51,18 +51,18 @@ const vehicleSpecifications = computed<
     { key: 'chassis', label: 'Chassis', value: chassis },
     { key: 'body_shapes', label: 'Body', value: body_shapes },
     {
-      key: 'color_main_name',
+      key: 'colorfamily_name',
       label: 'Main',
       value:
-        getDynamicColorValue('color_main_name') ||
+        getDynamicColorValue('colorfamily_name') ||
         selectedColorFromGalleryName.value ||
-        color_main_name,
+        colorfamily_name,
       colored: true,
     },
     {
-      key: 'color_sec_name',
+      key: 'color_main_name',
       label: 'Secondary',
-      value: getDynamicColorValue('color_sec_name') || color_sec_name,
+      value: getDynamicColorValue('color_main_name') || color_main_name,
       colored: true,
     },
     {
@@ -83,15 +83,18 @@ watch(
       if (selected && value) {
         const pickedHexColor = encodeURIComponent(value); // #FF0000 || value
         if (pickedHexColor) {
-          const response = await axios.get(
-            `https://pastauction.com/api/v1/filter/filter_charts_vehicles/colorfamily_name/?search=color_hex_code:${pickedHexColor}`
-          );
+          const response = await axios
+            .get(
+              `https://pastauction.com/api/v1/filter/filter_charts_vehicles/colorfamily_name/?search=color_hex_code:${pickedHexColor}`
+            )
+            .catch(e => e);
 
           const color = response?.data?.items?.[0]?.colorfamily_name;
-          if (key && color) {
+          if (color && key) {
             const dynamicColor = dynamicColors.value.find(
               color => color.key === key
             );
+
             if (dynamicColor) dynamicColor.value = color;
           }
         }

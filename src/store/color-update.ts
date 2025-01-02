@@ -9,7 +9,7 @@ type State = {
   selectedHexColor: string;
   selectedGalleryImageWholePath: string;
   selectedPickColors: {
-    key: 'color_main_name' | 'color_sec_name' | 'color_roof_name';
+    key: 'colorfamily_name' | 'color_main_name' | 'color_roof_name';
     label: string;
     value: string;
     selected: boolean;
@@ -27,13 +27,13 @@ export const colorUpdate = defineStore('colorUpdate', {
       selectedGalleryImageWholePath: '', // When clicking on the gallery's image (only the admin),
       selectedPickColors: [
         {
-          key: 'color_main_name',
+          key: 'colorfamily_name',
           label: 'Main color:',
           value: '',
           selected: true,
         },
         {
-          key: 'color_sec_name',
+          key: 'color_main_name',
           label: 'Bicolor:',
           value: '',
           selected: false,
