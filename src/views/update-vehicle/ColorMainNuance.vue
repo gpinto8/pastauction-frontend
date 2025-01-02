@@ -139,7 +139,7 @@ const handleSubColorSelection = async (color: ColorProps) => {
               <v-tooltip activator="parent" location="top" :text="color.name" />
             </div>
           </div>
-          <div class="flex justify-center items-center">
+          <div class="flex justify-center items-center !text-blue-700">
             {{ selectedSubColor?.name }}
           </div>
         </div>
