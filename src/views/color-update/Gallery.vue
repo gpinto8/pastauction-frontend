@@ -156,12 +156,13 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         v-else
         :images="slicedImages"
         class="w-full border-[8px] !border-[#212529] rounded-[4px] justify-around"
-        columnCombination="8x152"
+        columnCombination="7x175"
         :onImageClick="handleImageClick"
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
         :getSelectedImages="images => (selectedImages = images)"
+        :fixedHeight="125"
       />
     </template>
 

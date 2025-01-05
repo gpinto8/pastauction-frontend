@@ -16,7 +16,7 @@ type ColumnCombinations =
   | '6x80'
   | '5x54'
   | '8xauto'
-  | '8x152'
+  | '7x175'
   | '7x80'
   | '3x70'
   | '3x152'
@@ -62,7 +62,7 @@ const gridMap: { [key in ColumnCombinations]: string } = {
   '15xauto': 'grid-cols-[repeat(15,auto)]',
   '5x54': 'grid-cols-[repeat(5,54px)]',
   '8xauto': 'grid-cols-[repeat(8,auto)]',
-  '8x152': 'grid-cols-[repeat(8,152px)]',
+  '7x175': 'grid-cols-[repeat(7,175px)]',
   '7x80': 'grid-cols-[repeat(7,80px)]',
   '3x70': 'grid-cols-[repeat(3,70px)]',
   '3x152': 'grid-cols-[repeat(3,152px)]',
