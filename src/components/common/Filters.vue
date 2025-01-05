@@ -42,6 +42,7 @@ const props = defineProps<{
     title: string;
     iconUrl: string;
   };
+  forceSearchLikeKeyword?: boolean; // For the "color-update" page
 }>();
 
 defineEmits(['onPrevious', 'onNext']);
@@ -218,7 +219,11 @@ const handleSearch = debounce(
       // The filters have to be related to each other, thats why we need to pass the previous selected filters values to the current one BUT the current one, ofc
       const dynamicParams = getDynamicParams(key);
       const dynamicParamsString = dynamicParams ? `,${dynamicParams}` : '';
-      const keyword = key === 'brand_name' ? 'like' : 'left';
+      const keyword = props.forceSearchLikeKeyword
+        ? 'like'
+        : key === 'brand_name'
+          ? 'like'
+          : 'left';
 
       try {
         const response = await axios.get(

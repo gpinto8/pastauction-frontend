@@ -96,6 +96,7 @@ const colorUpdateFilterUrl =
         iconUrl: '/src/assets/svg/search-blue.svg',
         title: 'Search',
       }"
+      forceSearchLikeKeyword
     />
     <!-- BUTTONS: SINGLE & MULTIPLE -->
     <div class="flex gap-2 items-center md:py-6">
