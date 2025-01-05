@@ -18,7 +18,7 @@ const filterModelValue = ref<FiltersModelValue>();
 
 watch(
   () => props?.vehicleData,
-  () => {
+  async () => {
     filterModelValue.value = [
       {
         key: 'brand_name',
@@ -51,12 +51,7 @@ watch(
         isRelated: true,
       },
     ];
-  }
-);
 
-watch(
-  () => props?.vehicleData, // Getting the "colorfamily_name" label based on the "color_main_name"
-  async () => {
     const colorMainName = props?.vehicleData?.color_main_name;
     if (colorMainName && filterModelValue.value) {
       const data = await axios
