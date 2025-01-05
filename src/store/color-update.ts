@@ -13,6 +13,7 @@ type State = {
     label: string;
     value: string;
     selected: boolean;
+    clicked?: boolean; // Created to fix a problem in which, when selecting and deselecting the checkbox, the color changed .. (because the "selected" prop is inside an object and whenever we update that value, the whole object updates ..)
   }[];
   selectedColorFromGallery: ColorProps;
 };
@@ -31,18 +32,21 @@ export const colorUpdate = defineStore('colorUpdate', {
           label: 'Main color:',
           value: '',
           selected: true,
+          clicked: false,
         },
         {
           key: 'color_main_name',
           label: 'Bicolor:',
           value: '',
           selected: false,
+          clicked: false,
         },
         {
           key: 'color_roof_name',
           label: 'Top color:',
           value: '',
           selected: false,
+          clicked: false,
         },
       ],
       selectedColorFromGallery: { hex_code: '', id: 0, id_family: 0, name: '' },

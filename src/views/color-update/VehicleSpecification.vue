@@ -19,10 +19,6 @@ const dynamicColors = ref([
   { key: 'color_roof_name', value: '' },
 ]);
 
-const selectedColorFromGalleryName = computed(
-  () => colorUpdateStore.selectedColorFromGallery?.name
-);
-
 const vehicleSpecifications = computed<
   { key: string; label: string; value: string; colored?: boolean }[]
 >(() => {
@@ -53,10 +49,7 @@ const vehicleSpecifications = computed<
     {
       key: 'colorfamily_name',
       label: 'Main',
-      value:
-        getDynamicColorValue('colorfamily_name') ||
-        selectedColorFromGalleryName.value ||
-        colorfamily_name,
+      value: getDynamicColorValue('colorfamily_name') || colorfamily_name,
       colored: true,
     },
     {
@@ -74,29 +67,55 @@ const vehicleSpecifications = computed<
   ].map((data: any) => ({ ...data, label: data.label + ':' }));
 });
 
+// THIS UPDATES THE DYNAMIC COLORS FROM "Select color from gallery"
+watch(
+  () => colorUpdateStore.selectedColorFromGallery,
+  () => {
+    const { name } = colorUpdateStore.selectedColorFromGallery || {};
+
+    for (const pickColor of colorUpdateStore.selectedPickColors) {
+      const { selected, key } = pickColor || {};
+
+      if (selected) {
+        const dynamicColor = dynamicColors.value.find(
+          color => color.key === key
+        );
+        if (dynamicColor) dynamicColor.value = name;
+      }
+    }
+  }
+);
+
+// THIS UPDATES THE DYNAMIC COLORS FROM THE "Pick color from image"
 watch(
   () => colorUpdateStore.selectedPickColors,
   async () => {
     for await (const pickColor of colorUpdateStore.selectedPickColors) {
-      const { selected, value, key } = pickColor || {};
+      const { selected, value, key, clicked } = pickColor || {};
 
-      if (selected && value) {
+      if (selected && value && clicked) {
         const pickedHexColor = encodeURIComponent(value); // #FF0000 || value
         if (pickedHexColor) {
-          const response = await axios
-            .get(
-              `https://pastauction.com/api/v1/filter/filter_charts_vehicles/colorfamily_name/?search=color_hex_code:${pickedHexColor}`
-            )
-            .catch(e => e);
+          // TO REMOVE
+          const dynamicColor = dynamicColors.value.find(
+            color => color.key === key
+          );
+          if (dynamicColor) dynamicColor.value = value;
 
-          const color = response?.data?.items?.[0]?.colorfamily_name;
-          if (color && key) {
-            const dynamicColor = dynamicColors.value.find(
-              color => color.key === key
-            );
+          // TO UNCOMMENT ONCE WE GET THE API WORKING
+          // const response = await axios
+          //   .get(
+          //     `https://pastauction.com/api/v1/filter/filter_charts_vehicles/colorfamily_name/?search=color_hex_code:${pickedHexColor}`
+          //   )
+          //   .catch(e => e);
 
-            if (dynamicColor) dynamicColor.value = color;
-          }
+          // const color = response?.data?.items?.[0]?.colorfamily_name;
+          // if (color && key) {
+          //   const dynamicColor = dynamicColors.value.find(
+          //     color => color.key === key
+          //   );
+          //   if (dynamicColor) dynamicColor.value = color;
+          // }
         }
       }
     }

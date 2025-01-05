@@ -5,6 +5,8 @@ import { ref, watch } from 'vue';
 
 const colorUpdateStore = colorUpdate();
 
+const colorShown = ref(colorUpdateStore.selectedHexColor);
+
 watch(
   () => colorUpdateStore.selectingHexColor,
   () => {
@@ -19,13 +21,31 @@ watch(
     const selectedHexColor = colorUpdateStore.selectedHexColor;
 
     colorUpdateStore.selectedPickColors.forEach(color => {
-      if (color.selected) color.value = selectedHexColor;
+      if (color.selected) {
+        color.value = selectedHexColor;
+        color.clicked = true;
+
+        colorShown.value = selectedHexColor; // For the "Pick color from image"
+      }
     });
+  }
+);
+
+watch(
+  () => colorUpdateStore.selectedColorFromGallery,
+  () => {
+    const hexColor = colorUpdateStore.selectedColorFromGallery?.hex_code;
+    colorShown.value = hexColor; // For the "Select color from gallery"
   }
 );
 
 const handlePickColor = () => {
   colorUpdateStore.selectingHexColor = !colorUpdateStore.selectingHexColor;
+};
+
+const handleSelected = () => {
+  // Created to fix a problem in which, when selecting and deselecting the checkbox, the color changed .. (because the "selected" prop is inside an object and whenever we update that value, the whole object updates ..)
+  colorUpdateStore.selectedPickColors.forEach(color => (color.clicked = false));
 };
 </script>
 
@@ -49,11 +69,11 @@ const handlePickColor = () => {
           <div
             class="h-full"
             :style="{
-              backgroundColor: colorUpdateStore.selectedHexColor || '#000',
+              backgroundColor: colorShown || '#000',
             }"
           >
             <v-tooltip
-              v-if="colorUpdateStore.selectedHexColor"
+              v-if="colorShown"
               activator="parent"
               location="top"
               :text="
@@ -65,7 +85,7 @@ const handlePickColor = () => {
           </div>
         </div>
         <span class="text-[#212529] text-sm flex justify-center items-center">
-          {{ colorUpdateStore.selectedHexColor || '#000' }}
+          {{ colorShown || '#000' }}
         </span>
       </div>
     </div>
@@ -75,6 +95,7 @@ const handlePickColor = () => {
           <UiCheckbox
             class="z-10 pointer-events-auto"
             v-model="color.selected"
+            @onSelected="handleSelected"
           />
           <div
             :key="i"
