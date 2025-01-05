@@ -30,8 +30,8 @@ const vehicleSpecifications = computed<
     bw_model_year_begin,
     chassis,
     body_shapes,
-    colorfamily_name,
     color_main_name,
+    color_sec_name,
     color_roof_name,
   } = props.vehicleData || {};
 
@@ -49,13 +49,13 @@ const vehicleSpecifications = computed<
     {
       key: 'colorfamily_name',
       label: 'Main',
-      value: getDynamicColorValue('colorfamily_name') || colorfamily_name,
+      value: getDynamicColorValue('colorfamily_name') || color_main_name, // "color_main_name" is the default value for MAIN
       colored: true,
     },
     {
       key: 'color_main_name',
       label: 'Secondary',
-      value: getDynamicColorValue('color_main_name') || color_main_name,
+      value: getDynamicColorValue('color_main_name') || color_sec_name, // "color_sec_name" is the default value for the SECONDARY
       colored: true,
     },
     {
