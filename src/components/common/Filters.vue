@@ -16,6 +16,7 @@ export type FiltersModelValue = {
   value: string;
   isRelated: boolean;
   label: string;
+  disabled?: boolean;
 }[];
 
 type FiltersDataProps = {
@@ -43,9 +44,15 @@ const props = defineProps<{
     iconUrl: string;
   };
   forceSearchLikeKeyword?: boolean; // For the "color-update" page
+  colorFamilyAdditionalValues?: string[];
 }>();
 
-defineEmits(['onPrevious', 'onNext']);
+const emit = defineEmits([
+  'onPrevious',
+  'onNext',
+  'onValueUpdated',
+  'onSearchFocus',
+]);
 
 const keysShown = computed(() => props.modelValue?.map(data => data.key));
 
@@ -196,6 +203,8 @@ const handleSearchFocus = async (
 ) => {
   if (!isFocused) return;
 
+  emit('onSearchFocus');
+
   // @ts-ignore
   if (key && isFocused) resetFilterDataValue(key); // When the user clicks on the input, it should reset the value
   resetFilterData(key); // Resetting the key's next siblings
@@ -259,6 +268,13 @@ const getColorFamilyName = () => getFilterData('colorfamily_name');
 const getColorMainName = () => getFilterData('color_main_name');
 
 const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
+
+const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
+  if (value && key && valuesMap.value) {
+    valuesMap.value[key] = value;
+    emit('onValueUpdated', value);
+  }
+};
 </script>
 
 <template>
@@ -293,9 +309,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         :items="getBrandName()?.values"
         density="compact"
         :modelValue="valuesMap[getBrandName()?.key!]"
-        @update:modelValue="
-          valuesMap && (valuesMap[getBrandName()?.key!] = $event || '')
-        "
+        @update:modelValue="handleInputUpdated($event, getBrandName()?.key)"
         @update:search="term => handleSearch(getBrandName()?.key!, term)"
         @update:focused="handleSearchFocus(getBrandName()?.key!, $event)"
       />
@@ -309,9 +323,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         :items="getFamilyName()?.values"
         density="compact"
         :modelValue="valuesMap[getFamilyName()?.key!]"
-        @update:modelValue="
-          valuesMap && (valuesMap[getFamilyName()?.key!] = $event || '')
-        "
+        @update:modelValue="handleInputUpdated($event, getFamilyName()?.key)"
         @update:search="term => handleSearch(getFamilyName()?.key!, term)"
         @update:focused="handleSearchFocus(getFamilyName()?.key!, $event)"
       />
@@ -325,9 +337,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         :items="getModelName()?.values"
         density="compact"
         :modelValue="valuesMap[getModelName()?.key!]"
-        @update:modelValue="
-          valuesMap && (valuesMap[getModelName()?.key!] = $event || '')
-        "
+        @update:modelValue="handleInputUpdated($event, getModelName()?.key)"
         @update:search="term => handleSearch(getModelName()?.key!, term)"
         @update:focused="handleSearchFocus(getModelName()?.key!, $event)"
       />
@@ -341,9 +351,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         :items="getAgingName()?.values"
         density="compact"
         :modelValue="valuesMap[getAgingName()?.key!]"
-        @update:modelValue="
-          valuesMap && (valuesMap[getAgingName()?.key!] = $event || '')
-        "
+        @update:modelValue="handleInputUpdated($event, getAgingName()?.key)"
         @update:search="term => handleSearch(getAgingName()?.key!, term)"
         @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
       />
@@ -354,11 +362,15 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         :class="classInput"
         :label="getColorFamilyName()?.label"
         variant="outlined"
-        :items="getColorFamilyName()?.values"
+        :items="
+          getColorFamilyName()?.values.concat([
+            ...(colorFamilyAdditionalValues || []),
+          ])
+        "
         density="compact"
         :modelValue="valuesMap[getColorFamilyName()?.key!]"
         @update:modelValue="
-          valuesMap && (valuesMap[getColorFamilyName()?.key!] = $event || '')
+          handleInputUpdated($event, getColorFamilyName()?.key)
         "
         @update:search="term => handleSearch(getColorFamilyName()?.key!, term)"
         @update:focused="handleSearchFocus(getColorFamilyName()?.key!, $event)"
@@ -373,9 +385,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
         :items="getColorMainName()?.values"
         density="compact"
         :modelValue="valuesMap[getColorMainName()?.key!]"
-        @update:modelValue="
-          valuesMap && (valuesMap[getColorMainName()?.key!] = $event || '')
-        "
+        @update:modelValue="handleInputUpdated($event, getColorMainName()?.key)"
         @update:search="term => handleSearch(getColorMainName()?.key!, term)"
         @update:focused="handleSearchFocus(getColorMainName()?.key!, $event)"
       />
@@ -422,9 +432,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             :items="getBrandName()?.values"
             density="compact"
             :modelValue="valuesMap[getBrandName()?.key!]"
-            @update:modelValue="
-              valuesMap && (valuesMap[getBrandName()?.key!] = $event || '')
-            "
+            @update:modelValue="handleInputUpdated($event, getBrandName()?.key)"
             @update:search="term => handleSearch(getBrandName()?.key!, term)"
             @update:focused="handleSearchFocus(getBrandName()?.key!, $event)"
           />
@@ -439,7 +447,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             density="compact"
             :modelValue="valuesMap[getFamilyName()?.key!]"
             @update:modelValue="
-              valuesMap && (valuesMap[getFamilyName()?.key!] = $event || '')
+              handleInputUpdated($event, getFamilyName()?.key)
             "
             @update:search="term => handleSearch(getFamilyName()?.key!, term)"
             @update:focused="handleSearchFocus(getFamilyName()?.key!, $event)"
@@ -454,9 +462,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             :items="getModelName()?.values"
             density="compact"
             :modelValue="valuesMap[getModelName()?.key!]"
-            @update:modelValue="
-              valuesMap && (valuesMap[getModelName()?.key!] = $event || '')
-            "
+            @update:modelValue="handleInputUpdated($event, getModelName()?.key)"
             @update:search="term => handleSearch(getModelName()?.key!, term)"
             @update:focused="handleSearchFocus(getModelName()?.key!, $event)"
           />
@@ -470,9 +476,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             :items="getAgingName()?.values"
             density="compact"
             :modelValue="valuesMap[getAgingName()?.key!]"
-            @update:modelValue="
-              valuesMap && (valuesMap[getAgingName()?.key!] = $event || '')
-            "
+            @update:modelValue="handleInputUpdated($event, getAgingName()?.key)"
             @update:search="term => handleSearch(getAgingName()?.key!, term)"
             @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
           />
@@ -487,8 +491,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             density="compact"
             :modelValue="valuesMap[getColorFamilyName()?.key!]"
             @update:modelValue="
-              valuesMap &&
-                (valuesMap[getColorFamilyName()?.key!] = $event || '')
+              handleInputUpdated($event, getColorFamilyName()?.key)
             "
             @update:search="
               term => handleSearch(getColorFamilyName()?.key!, term)
@@ -508,7 +511,7 @@ const isAnyKeyAvaiable = computed(() => keysShown.value?.some(key => key));
             density="compact"
             :modelValue="valuesMap[getColorMainName()?.key!]"
             @update:modelValue="
-              valuesMap && (valuesMap[getColorMainName()?.key!] = $event || '')
+              handleInputUpdated($event, getColorMainName()?.key)
             "
             @update:search="
               term => handleSearch(getColorMainName()?.key!, term)

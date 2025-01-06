@@ -9,6 +9,9 @@ import {
   type FilterAvailableKeys,
   type FiltersGoValues,
 } from '@/components/common/Filters.vue';
+import { colorUpdate } from '@/store/color-update';
+
+const colorUpdateStore = colorUpdate();
 
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
@@ -39,21 +42,32 @@ const applyFilters = async (data: FiltersGoValues) => {
   const colorMainName = getValue('color_main_name'); // This is optional
 
   if (brandName && familyName) {
-    const params = [
+    let params = [
       brandName ? `brand_name:${brandName}` : '',
       familyName ? `bw_family_name:${familyName}` : '',
       modelName ? `bw_model_name:${modelName}` : '',
-      colorFamilyName ? `colorfamily_name:${colorFamilyName}` : '',
-      colorMainName ? `color_main_name:${colorMainName}` : '',
-    ]
-      .filter(Boolean)
-      .join(',');
+    ];
 
-    filterParams.value = params;
+    const filterMissingColorKeys = colorUpdateStore.filterMissingColorKeys;
+    if (filterMissingColorKeys?.length) {
+      const nullableValue = 0;
+      params = params.concat(
+        filterMissingColorKeys.map(item => `${item}:${nullableValue}`)
+      );
+    } else {
+      params = params.concat([
+        colorFamilyName ? `colorfamily_name:${colorFamilyName}` : '',
+        colorMainName ? `color_main_name:${colorMainName}` : '',
+      ]);
+    }
+
+    const newParams = params.filter(Boolean).join(',');
+
+    filterParams.value = newParams;
     resetGallery.value = true;
 
     const data = await axios.get(
-      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${params}`
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=${newParams}`
     );
     const dataItem = data?.data?.items?.[0];
 

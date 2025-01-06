@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { colorUpdate } from '@/store/color-update';
-import { computed, onMounted, watch, ref } from 'vue';
+import { watch, ref } from 'vue';
 import Filters, {
   type FiltersGoValues,
   type FiltersModelValue,
@@ -76,6 +76,47 @@ watch(
 
 const colorUpdateFilterUrl =
   'https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color';
+
+const colorData = {
+  id_color_bicolor: 'No bicolor',
+  id_color_body: 'No body color',
+  id_color_roof: 'No roof color',
+};
+
+const addSpace = (values: string[]) => values.map(item => ` ${item}`);
+const colorFamilyAdditionalValues = [
+  addSpace([colorData.id_color_bicolor]),
+  addSpace([colorData.id_color_body]),
+  addSpace([colorData.id_color_roof]),
+  addSpace([colorData.id_color_bicolor, colorData.id_color_body]),
+  addSpace([colorData.id_color_bicolor, colorData.id_color_roof]),
+  addSpace([colorData.id_color_body, colorData.id_color_roof]),
+  addSpace([
+    colorData.id_color_bicolor,
+    colorData.id_color_body,
+    colorData.id_color_roof,
+  ]),
+].map(item => `● ${item}`);
+
+const handleSearchFocus = () => (colorUpdateStore.filterMissingColorKeys = []);
+
+const handleValueUpdated = (value: string) => {
+  if (value) {
+    const missingColorKeys = value
+      .split(',')
+      .map(
+        inputValue =>
+          Object.entries(colorData).find(item =>
+            inputValue.includes(item[1])
+          )?.[0]
+      )
+      .filter(Boolean) as string[];
+
+    if (missingColorKeys && missingColorKeys?.length) {
+      colorUpdateStore.filterMissingColorKeys = missingColorKeys;
+    }
+  }
+};
 </script>
 
 <template>
@@ -89,14 +130,15 @@ const colorUpdateFilterUrl =
       classInput="!min-w-[180px] md:!min-w-0 md:!w-[160px] md:!flex-grow-0"
       hideMoveButtons
       :modelValue="filterModelValue"
-      @onPrevious="() => {}"
-      @onNext="() => {}"
+      @onValueUpdated="handleValueUpdated"
+      @onSearchFocus="handleSearchFocus"
       :applyFilters="applyFilters"
       :mobileAccordion="{
         iconUrl: '/src/assets/svg/search-blue.svg',
         title: 'Search',
       }"
       forceSearchLikeKeyword
+      :colorFamilyAdditionalValues="colorFamilyAdditionalValues"
     />
     <!-- BUTTONS: SINGLE & MULTIPLE -->
     <div class="flex gap-2 items-center md:py-6">
