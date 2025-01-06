@@ -16,7 +16,6 @@ export type FiltersModelValue = {
   value: string;
   isRelated: boolean;
   label: string;
-  disabled?: boolean;
 }[];
 
 type FiltersDataProps = {
@@ -45,6 +44,7 @@ const props = defineProps<{
   };
   forceSearchLikeKeyword?: boolean; // For the "color-update" page
   colorFamilyAdditionalValues?: string[];
+  disabledSupportColor?: boolean;
 }>();
 
 const emit = defineEmits([
@@ -117,19 +117,15 @@ watch(
   () => props.modelValue,
   async () => {
     if (props.modelValue) {
-      filtersData.value = props.modelValue.map(
-        ({ key, value, isRelated, label }) => {
-          valuesMap.value[key] = value;
+      filtersData.value = props.modelValue.map(data => {
+        valuesMap.value[data.key] = data.value;
 
-          return {
-            key,
-            label,
-            defaultValues: [''],
-            values: [''],
-            isRelated,
-          };
-        }
-      );
+        return {
+          ...data,
+          defaultValues: [''],
+          values: [''],
+        };
+      });
     }
 
     for await (const data of filtersData.value) {
@@ -203,7 +199,7 @@ const handleSearchFocus = async (
 ) => {
   if (!isFocused) return;
 
-  emit('onSearchFocus');
+  emit('onSearchFocus', key);
 
   // @ts-ignore
   if (key && isFocused) resetFilterDataValue(key); // When the user clicks on the input, it should reset the value
@@ -388,6 +384,7 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
         @update:modelValue="handleInputUpdated($event, getColorMainName()?.key)"
         @update:search="term => handleSearch(getColorMainName()?.key!, term)"
         @update:focused="handleSearchFocus(getColorMainName()?.key!, $event)"
+        :disabled="disabledSupportColor"
       />
       <!-- GO BUTTON -->
       <v-btn
@@ -487,7 +484,11 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
             :class="classInput"
             :label="getColorFamilyName()?.label"
             variant="outlined"
-            :items="getColorFamilyName()?.values"
+            :items="
+              getColorFamilyName()?.values.concat([
+                ...(colorFamilyAdditionalValues || []),
+              ])
+            "
             density="compact"
             :modelValue="valuesMap[getColorFamilyName()?.key!]"
             @update:modelValue="
@@ -519,6 +520,7 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
             @update:focused="
               handleSearchFocus(getColorMainName()?.key!, $event)
             "
+            :disabled="disabledSupportColor"
           />
           <!-- GO BUTTON -->
           <v-btn

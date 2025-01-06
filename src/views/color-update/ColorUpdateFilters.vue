@@ -2,10 +2,15 @@
 import { colorUpdate } from '@/store/color-update';
 import { watch, ref } from 'vue';
 import Filters, {
+  type FilterAvailableKeys,
   type FiltersGoValues,
   type FiltersModelValue,
 } from '@/components/common/Filters.vue';
 import axios from 'axios';
+
+type MakeAllOptional<T> = {
+  [K in keyof T]?: T[K];
+};
 
 const props = defineProps<{
   vehicleData: any;
@@ -13,8 +18,26 @@ const props = defineProps<{
 }>();
 
 const colorUpdateStore = colorUpdate();
+const disabledSupportColor = ref(false);
 
 const filterModelValue = ref<FiltersModelValue>();
+
+const updateFilterModelValue = (
+  key: FilterAvailableKeys,
+  data: MakeAllOptional<FiltersModelValue[0]>
+) => {
+  if (key && data && filterModelValue.value) {
+    const colorObject = {
+      ...filterModelValue.value.find(data => data.key === key),
+      ...data,
+    } as FiltersModelValue[0];
+    const filtered: FiltersModelValue = filterModelValue.value.filter(
+      data => data.key !== colorObject.key
+    );
+
+    filterModelValue.value = [...filtered, colorObject];
+  }
+};
 
 watch(
   () => props?.vehicleData,
@@ -61,15 +84,7 @@ watch(
         .catch(e => e);
 
       const colorFamilyName = data?.data?.items?.[0]?.colorfamily_name;
-      const colorObject = {
-        ...filterModelValue.value.find(data => data.key === 'colorfamily_name'),
-        value: colorFamilyName,
-      } as FiltersModelValue[0];
-      const filtered: FiltersModelValue = filterModelValue.value.filter(
-        data => data.key !== colorObject.key
-      );
-
-      filterModelValue.value = [...filtered, colorObject];
+      updateFilterModelValue('colorfamily_name', { value: colorFamilyName });
     }
   }
 );
@@ -98,7 +113,8 @@ const colorFamilyAdditionalValues = [
   ]),
 ].map(item => `● ${item}`);
 
-const handleSearchFocus = () => (colorUpdateStore.filterMissingColorKeys = []);
+const handleSearchFocus = (key: FilterAvailableKeys) =>
+  key === 'colorfamily_name' && (colorUpdateStore.filterMissingColorKeys = []);
 
 const handleValueUpdated = (value: string) => {
   if (value) {
@@ -115,6 +131,8 @@ const handleValueUpdated = (value: string) => {
     if (missingColorKeys && missingColorKeys?.length) {
       colorUpdateStore.filterMissingColorKeys = missingColorKeys;
     }
+
+    disabledSupportColor.value = !!missingColorKeys?.length;
   }
 };
 </script>
@@ -139,6 +157,7 @@ const handleValueUpdated = (value: string) => {
       }"
       forceSearchLikeKeyword
       :colorFamilyAdditionalValues="colorFamilyAdditionalValues"
+      :disabledSupportColor="disabledSupportColor"
     />
     <!-- BUTTONS: SINGLE & MULTIPLE -->
     <div class="flex gap-2 items-center md:py-6">
