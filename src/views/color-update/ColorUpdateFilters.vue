@@ -158,6 +158,7 @@ const handleValueUpdated = (value: string) => {
       forceSearchLikeKeyword
       :colorFamilyAdditionalValues="colorFamilyAdditionalValues"
       :disabledSupportColor="disabledSupportColor"
+      keepUserInputs
     />
     <!-- BUTTONS: SINGLE & MULTIPLE -->
     <div class="flex gap-2 items-center md:py-6">
