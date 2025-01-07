@@ -45,6 +45,7 @@ const props = defineProps<{
   forceSearchLikeKeyword?: boolean; // For the "color-update" page
   colorFamilyAdditionalValues?: string[];
   disabledSupportColor?: boolean;
+  keepUserInputs?: boolean;
 }>();
 
 const emit = defineEmits([
@@ -65,6 +66,8 @@ const valuesMap = ref<{ [key in FilterAvailableKeys]: string }>({
   colorfamily_name: '',
   color_main_name: '',
 });
+
+const goButtonHasBeenClicked = ref(false);
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
@@ -118,7 +121,13 @@ watch(
   async () => {
     if (props.modelValue) {
       filtersData.value = props.modelValue.map(data => {
-        valuesMap.value[data.key] = data.value;
+        if (props.keepUserInputs) {
+          if (!goButtonHasBeenClicked.value) {
+            valuesMap.value[data.key] = data.value;
+          }
+        } else {
+          valuesMap.value[data.key] = data.value;
+        }
 
         return {
           ...data,
@@ -250,7 +259,10 @@ const handleGo = () => {
     return { key, value };
   });
 
-  if (data?.length) props?.applyFilters?.(data);
+  if (data?.length) {
+    props?.applyFilters?.(data);
+    goButtonHasBeenClicked.value = true;
+  }
 };
 
 const getFilterData = (key: FilterAvailableKeys) => {
