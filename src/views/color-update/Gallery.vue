@@ -15,6 +15,8 @@ const props = defineProps<{
   filterParams?: string;
 }>();
 
+const emit = defineEmits(['onImageClick']);
+
 const colorUpdateStore = colorUpdate();
 const currentPage = ref(1);
 const images = ref();
@@ -125,6 +127,8 @@ const handlePageChanged = async (page: number) => {
 };
 
 const handleImageClick = (image: ImageGrid) => {
+  emit('onImageClick', image);
+
   const wholePath = image?.path;
   if (wholePath) colorUpdateStore.selectedGalleryImageWholePath = wholePath;
 };

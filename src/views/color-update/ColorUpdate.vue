@@ -10,12 +10,14 @@ import {
   type FiltersGoValues,
 } from '@/components/common/Filters.vue';
 import { colorUpdate } from '@/store/color-update';
+import type { ImageGrid } from '../update-vehicle/gallery/ImageryGrid.vue';
 
 const colorUpdateStore = colorUpdate();
 
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
 const vehicleData = ref();
+const selectedVehicleData = ref();
 const resetGallery = ref(false);
 const filterParams = ref('');
 
@@ -77,6 +79,17 @@ const applyFilters = async (data: FiltersGoValues) => {
     }
   }
 };
+
+const handleImageClick = async (image: ImageGrid) => {
+  const vehicleId = image.id;
+  if (vehicleId) {
+    const data = await axios.get(
+      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${image.id}`
+    );
+    const dataItem = data?.data?.items?.[0];
+    selectedVehicleData.value = dataItem;
+  }
+};
 </script>
 
 <template>
@@ -93,8 +106,9 @@ const applyFilters = async (data: FiltersGoValues) => {
       :vehicleData="vehicleData"
       :resetGallery="resetGallery"
       :filterParams="filterParams"
+      @onImageClick="handleImageClick"
     />
-    <Inputs class="md:!w-[1300px]" :vehicleData="vehicleData" />
+    <Inputs class="md:!w-[1300px]" :vehicleData="selectedVehicleData" />
     <div class="flex w-full justify-end mt-2">
       <button class="bg-black p-2 text-sm rounded-md text-white h-8 w-40">
         Save
