@@ -23,8 +23,8 @@ const vehicleSpecifications = computed<
   { key: string; label: string; value: string; colored?: boolean }[]
 >(() => {
   const {
-    bw_family_id,
-    bw_model_id,
+    bw_family_name,
+    bw_model_name,
     vehicle_stage,
     vehicle_series,
     bw_model_year_begin,
@@ -36,8 +36,8 @@ const vehicleSpecifications = computed<
   } = props.vehicleData || {};
 
   return [
-    { key: 'bw_family_id', label: 'Family', value: bw_family_id },
-    { key: 'bw_model_id', label: 'Model', value: bw_model_id },
+    { key: 'bw_family_name', label: 'Family', value: bw_family_name },
+    { key: 'bw_model_name', label: 'Model', value: bw_model_name },
     { key: 'vehicle_stage', label: 'Stage', value: vehicle_stage },
     { key: 'vehicle_series', label: 'Series', value: vehicle_series },
     { key: 'bw_model_year_begin', label: 'Year', value: bw_model_year_begin },
