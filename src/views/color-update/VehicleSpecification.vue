@@ -78,26 +78,20 @@ watch(
       if (selected && value && clicked) {
         const pickedHexColor = encodeURIComponent(value); // #FF0000 || value
         if (pickedHexColor) {
-          // TO REMOVE
-          const dynamicColor = dynamicColors.value.find(
-            color => color.key === key
-          );
-          if (dynamicColor) dynamicColor.value = value;
+          const response = await axios
+            .get(
+              `https://pastauction.com/api/v1/bidwatcher_color/convert/${pickedHexColor}`
+            )
+            .catch(e => e);
 
-          // TO UNCOMMENT ONCE WE GET THE API WORKING
-          // const response = await axios
-          //   .get(
-          //     `https://pastauction.com/api/v1/filter/filter_charts_vehicles/colorfamily_name/?search=color_hex_code:${pickedHexColor}`
-          //   )
-          //   .catch(e => e);
+          const color = response?.data;
 
-          // const color = response?.data?.items?.[0]?.colorfamily_name;
-          // if (color && key) {
-          //   const dynamicColor = dynamicColors.value.find(
-          //     color => color.key === key
-          //   );
-          //   if (dynamicColor) dynamicColor.value = color;
-          // }
+          if (color && key) {
+            const dynamicColor = dynamicColors.value.find(
+              color => color.key === key
+            );
+            if (dynamicColor) dynamicColor.value = color;
+          }
         }
       }
     }
