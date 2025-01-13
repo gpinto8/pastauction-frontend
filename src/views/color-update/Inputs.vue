@@ -54,7 +54,7 @@ watch(
         imageCanvas.value.height = img.height;
       ctx.value?.drawImage?.(img, 0, 0);
     };
-    img.src = image.value;
+    if (image.value) img.src = image.value;
   },
   { immediate: true }
 );
