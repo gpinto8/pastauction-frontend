@@ -13,12 +13,6 @@ const colorUpdateStore = colorUpdate();
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
-const dynamicColors = ref([
-  { key: 'colorfamily_name', value: '' },
-  { key: 'color_main_name', value: '' },
-  { key: 'color_roof_name', value: '' },
-]);
-
 const vehicleSpecifications = computed<
   { key: string; label: string; value: string; colored?: boolean }[]
 >(() => {
@@ -59,7 +53,7 @@ watch(
       const { selected, key } = pickColor || {};
 
       if (selected) {
-        const dynamicColor = dynamicColors.value.find(
+        const dynamicColor = colorUpdateStore.dynamicColors.find(
           color => color.key === key
         );
         if (dynamicColor) dynamicColor.value = name;
@@ -87,7 +81,7 @@ watch(
           const color = response?.data;
 
           if (color && key) {
-            const dynamicColor = dynamicColors.value.find(
+            const dynamicColor = colorUpdateStore.dynamicColors.find(
               color => color.key === key
             );
             if (dynamicColor) dynamicColor.value = color;
@@ -100,7 +94,7 @@ watch(
 );
 
 const getDynamicColorValue = (key: string) =>
-  dynamicColors.value.find(color => color.key === key)?.value;
+  colorUpdateStore.dynamicColors.find(color => color.key === key)?.value;
 </script>
 
 <template>

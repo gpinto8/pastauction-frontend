@@ -13,7 +13,7 @@ type ColorProps = {
   id_family: number;
 };
 
-const props = defineProps<{
+defineProps<{
   vehicleData: any;
 }>();
 
@@ -21,13 +21,7 @@ const colorUpdateStore = colorUpdate();
 
 const image = computed(() => {
   const selectedWholePath = colorUpdateStore.selectedGalleryImageWholePath;
-  if (selectedWholePath) {
-    return selectedWholePath;
-  } else {
-    const path = props.vehicleData?.photo_path;
-    if (path) return `https://pastauction.com/api/v1/photo/${path}`;
-    else return '';
-  }
+  if (selectedWholePath) return selectedWholePath;
 });
 const colorData = ref<any>([]);
 

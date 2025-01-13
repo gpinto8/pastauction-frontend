@@ -16,7 +16,11 @@ type State = {
     clicked?: boolean; // Created to fix a problem in which, when selecting and deselecting the checkbox, the color changed .. (because the "selected" prop is inside an object and whenever we update that value, the whole object updates ..)
   }[];
   selectedColorFromGallery: ColorProps;
-  filterMissingColorKeys: string[]
+  filterMissingColorKeys: string[];
+  dynamicColors: {
+    key: 'colorfamily_name' | 'color_main_name' | 'color_roof_name';
+    value: string;
+  }[];
 };
 
 export const colorUpdate = defineStore('colorUpdate', {
@@ -52,6 +56,11 @@ export const colorUpdate = defineStore('colorUpdate', {
       ],
       selectedColorFromGallery: { hex_code: '', id: 0, id_family: 0, name: '' },
       filterMissingColorKeys: [],
+      dynamicColors: [
+        { key: 'colorfamily_name', value: '' },
+        { key: 'color_main_name', value: '' },
+        { key: 'color_roof_name', value: '' },
+      ],
     };
   },
 });
