@@ -49,6 +49,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
       autoHeight
       @imageClick="handleImageClick"
       :noImageText="noImageText"
+      showTooltipId
     />
     <div class="flex justify-between gap-2">
       <Pagination

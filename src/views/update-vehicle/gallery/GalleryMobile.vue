@@ -103,6 +103,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             class="hidden sm:flex justify-between items-center h-[60px]"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <ImageryGrid
             v-if="mobileOpen"
@@ -111,6 +112,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             class="flex sm:hidden justify-between items-center h-[54px]"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <Parameters v-else :vehicleData="vehicleData" />
         </div>
@@ -149,6 +151,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             classContainer="w-fit my-0 mx-auto"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <PaginationSlider
             :currentPage="currentPage"
@@ -166,6 +169,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             classContainer="w-fit my-0 mx-auto"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <PaginationSlider
             :currentPage="currentPage"
