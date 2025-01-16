@@ -75,6 +75,8 @@ const handlePageChanged = async (page: number) => {
 };
 
 const handleImageClick = async (image: ImageGrid) => {
+  updateVehicleStore.selectedVehicleData = {};
+
   const imageData = await axios.get(
     `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${image.id}`
   );
