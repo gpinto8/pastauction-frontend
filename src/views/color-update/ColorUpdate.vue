@@ -92,94 +92,72 @@ const handleImageClick = async (image: ImageGrid) => {
 };
 
 const handleSave = async () => {
-  const vehicleId = selectedVehicleData.value?.vehicle_id;
-  console.log({ colorUpdateStore, vehicleId });
+  const fetchColorUpdate = async (vehicleId?: string) => {
+    if (vehicleId) {
+      const dynamicColors = colorUpdateStore.dynamicColors;
+      let colors: any = {};
 
-  if (vehicleId) {
-    const dynamicColors = colorUpdateStore.dynamicColors;
-    console.log({ dynamicColors });
+      for await (const color of dynamicColors) {
+        const { key, value } = color || {};
+        if (key && value) {
+          const response = await axios.get(
+            `https://pastauction.com/api/v1/bidwatcher_color/?search=name:${value}`
+          );
+          const colorDataId = response.data.items?.[0]?.id;
+          colors[key] = colorDataId;
+        }
+      }
 
-    let colors: any = {};
-    for await (const color of dynamicColors) {
-      const { key, value } = color || {};
-      if (key && value) {
-        console.log({ key, value });
-        const response = await axios.get(
-          `https://pastauction.com/api/v1/bidwatcher_color/?search=name:${value}`
-        );
-        const colorDataId = response.data.items?.[0]?.id;
-        console.log({ response, colorDataId });
-        colors[key] = colorDataId;
+      if (Object.keys(colors)?.length) {
+        const data = {
+          vehicle_id: vehicleId,
+          ...(colors?.colorfamily_name
+            ? { id_color_bicolor: colors?.colorfamily_name }
+            : {}),
+
+          ...(colors?.color_main_name
+            ? { id_color_body: colors?.color_main_name }
+            : {}),
+
+          ...(colors?.color_main_name
+            ? { id_color_roof: colors?.color_roof_name }
+            : {}),
+        };
+
+        const authToken = window.localStorage.getItem('past_token');
+        const config = {
+          method: 'patch',
+          url: 'https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/update',
+          headers: {
+            Authorization: 'Bearer ' + authToken,
+            'Content-Type': 'application/json',
+          },
+          data,
+        };
+
+        await axios(config).then(() => {
+          setTimeout(() => {
+            // alert('The color has been updated correctly!');
+            // window.history.back();
+          }, 500);
+        });
       }
     }
-    console.log({ colors });
+  };
 
-    if (Object.keys(colors)?.length) {
-      const data = {
-        vehicle_id: vehicleId,
+  const isMultiple = colorUpdateStore.selectionMode === 'multiple';
+  if (isMultiple) {
+    const multipleGalleryIds = colorUpdateStore.selectedMultipleImages?.map(
+      image => image?.id.toString()
+    );
 
-        ...(colors?.colorfamily_name
-          ? { id_color_bicolor: colors?.colorfamily_name }
-          : {}),
-
-        ...(colors?.color_main_name
-          ? { id_color_body: colors?.color_main_name }
-          : {}),
-
-        ...(colors?.color_main_name
-          ? { id_color_roof: colors?.color_roof_name }
-          : {}),
-      };
-
-      console.log({ data });
-
-      const authToken = window.localStorage.getItem('past_token');
-      const config = {
-        method: 'patch',
-        url: 'https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/update',
-        headers: {
-          Authorization: 'Bearer ' + authToken,
-          'Content-Type': 'application/json',
-        },
-        data,
-      };
-
-      await axios(config).then(() => {
-        setTimeout(() => {
-          // alert('The color has been updated correctly!');
-          // window.history.back();
-        }, 500);
-      });
+    if (multipleGalleryIds?.length) {
+      for await (const id of multipleGalleryIds) await fetchColorUpdate(id);
     }
+  } else {
+    const vehicleId = selectedVehicleData.value?.vehicle_id;
+    fetchColorUpdate(vehicleId);
   }
-
-  // return;
-  // const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
-
-  // const data = {
-  //   vehicle_id: 636672,
-  //   id_color_bicolor: 10,
-  //   id_color_body: 0,
-  //   id_color_roof: 0,
-  // };
-
-  // const authToken = window.localStorage.getItem('past_token');
-  // const config = {
-  //   method: 'patch',
-  //   url: 'https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/update',
-  //   headers: {
-  //     Authorization: 'Bearer ' + authToken,
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data,
-  // };
-
-  // await axios(config).then(() => {
-  //   setTimeout(() => {
-  //     alert('The color has been updated correctly!');
-  //     window.history.back();
-  //   }, 500);
-  // });
 };
 </script>
 

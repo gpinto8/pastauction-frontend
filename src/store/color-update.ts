@@ -1,4 +1,5 @@
 import type { ColorProps } from '@/views/update-vehicle/ColorMainNuance.vue';
+import type { ImagesGridProps } from '@/views/update-vehicle/gallery/ImageryGrid.vue';
 import { defineStore } from 'pinia';
 
 type Modes = 'single' | 'multiple';
@@ -21,6 +22,7 @@ type State = {
     key: 'colorfamily_name' | 'color_main_name' | 'color_roof_name';
     value: string;
   }[];
+  selectedMultipleImages: ImagesGridProps; // The "multiple" mode selected images
 };
 
 export const colorUpdate = defineStore('colorUpdate', {
@@ -61,6 +63,7 @@ export const colorUpdate = defineStore('colorUpdate', {
         { key: 'color_main_name', value: '' },
         { key: 'color_roof_name', value: '' },
       ],
+      selectedMultipleImages: [],
     };
   },
 });

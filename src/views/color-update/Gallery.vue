@@ -23,7 +23,6 @@ const images = ref();
 const totalPages = ref();
 const totalImages = ref();
 const resetSelection = ref(false); // For the "Reset" button
-const selectedImages = ref<ImagesGridProps>(); // The "multiple" mode selected images
 const { device } = useBreakpoint();
 
 const modelName = computed(() => props.vehicleData?.bw_model_name);
@@ -111,8 +110,10 @@ watch(
 );
 
 watch(
-  () => selectedImages.value,
-  () => !selectedImages.value?.length && (resetSelection.value = false)
+  () => colorUpdateStore.selectedMultipleImages,
+  () =>
+    !colorUpdateStore.selectedMultipleImages?.length &&
+    (resetSelection.value = false)
 );
 
 watch(
@@ -134,6 +135,10 @@ const handleImageClick = (image: ImageGrid) => {
 };
 
 const resetMultipleSelection = () => (resetSelection.value = true);
+
+const getSelectedImages = (images: ImagesGridProps) => {
+  if (images) colorUpdateStore.selectedMultipleImages = images;
+};
 </script>
 
 <template>
@@ -152,7 +157,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
-        :getSelectedImages="images => (selectedImages = images)"
+        :getSelectedImages="getSelectedImages"
         :fixedHeight="83"
       />
       <!-- DESKTOP MULTIPLE -->
@@ -165,7 +170,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
-        :getSelectedImages="images => (selectedImages = images)"
+        :getSelectedImages="getSelectedImages"
         :fixedHeight="125"
       />
     </template>
@@ -182,7 +187,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
-        :getSelectedImages="images => (selectedImages = images)"
+        :getSelectedImages="getSelectedImages"
       />
       <!-- TABLET MULTIPLE -->
       <ImageryGrid
@@ -194,7 +199,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
-        :getSelectedImages="images => (selectedImages = images)"
+        :getSelectedImages="getSelectedImages"
       />
     </template>
 
@@ -210,7 +215,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
-        :getSelectedImages="images => (selectedImages = images)"
+        :getSelectedImages="getSelectedImages"
       />
       <!-- MOBILE MULTIPLE -->
       <ImageryGrid
@@ -222,7 +227,7 @@ const resetMultipleSelection = () => (resetSelection.value = true);
         :activateSelection="colorUpdateStore.selectionMode === 'multiple'"
         :resetSelection="computedResetSelection"
         showTooltipId
-        :getSelectedImages="images => (selectedImages = images)"
+        :getSelectedImages="getSelectedImages"
       />
     </template>
 
