@@ -31,7 +31,7 @@ watch(
     if (!data) return;
 
     beforeData.value = [
-      { label: 'Family', value: data?.bw_family_id },
+      { label: 'Family', value: data?.bw_family_name },
       { label: 'Model', value: data?.bw_model_name },
       { label: 'Stage', value: data?.vehicle_stage },
       { label: 'Series', value: data?.vehicle_series },
@@ -51,7 +51,7 @@ watch(
     if (!data) return;
 
     beforeData.value = [
-      { label: 'Family', value: data?.bw_family_id },
+      { label: 'Family', value: data?.bw_family_name },
       { label: 'Model', value: data?.bw_model_name },
       { label: 'Stage', value: data?.vehicle_stage },
       { label: 'Series', value: data?.vehicle_series },
@@ -71,7 +71,7 @@ const suggestedData = computed(() => {
   const bodies = updateVehicleStore.selectedSubBodies?.join(',');
 
   return (updateVehicleStore.suggestedData = [
-    { label: 'Family', value: vehicleData?.bw_family_id || '' },
+    { label: 'Family', value: vehicleData?.bw_family_name || '' },
     { label: 'Model', value: vehicleData?.bw_model_name || '' },
     { label: 'Stage', value: vehicleData?.vehicle_stage || '' },
     { label: 'Series', value: vehicleData?.vehicle_series || '' },
