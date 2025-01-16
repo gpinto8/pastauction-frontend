@@ -18,9 +18,7 @@ const updateVehicleStore = updateVehicle();
 const auth = useAuthStore();
 const router = useRouter();
 const vehicleId = +router.currentRoute.value.params.id || 0;
-const isUserAdmin = computed(
-  () => auth.detail?.data?.user_category === 99 || undefined
-);
+const isUserAdmin = computed(() => !!(auth.detail?.data?.user_category === 99));
 const familyId = ref<number>();
 
 const modelSeries = ref('');
@@ -37,18 +35,20 @@ const getVehicleData = async (
   modelSeries: string,
   modelNameDetail?: string
 ) => {
-  const newModelNameDetail = modelNameDetail
-    ? `,bw_model_model_name_detail:${modelNameDetail}`
-    : '';
+  if (familyId && modelSeries) {
+    const newModelNameDetail = modelNameDetail
+      ? `,bw_model_model_name_detail:${modelNameDetail}`
+      : '';
 
-  const currentModelData = await axios
-    .get(
-      `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:${familyId},bw_model_series:${modelSeries}${newModelNameDetail}`
-    )
-    .then(response => response.data?.items?.[0])
-    .catch(error => {});
+    const currentModelData = await axios
+      .get(
+        `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_family_id:${familyId},bw_model_series:${modelSeries}${newModelNameDetail}`
+      )
+      .then(response => response.data?.items?.[0])
+      .catch(error => {});
 
-  if (currentModelData) return currentModelData;
+    if (currentModelData) return currentModelData;
+  }
 };
 
 const resetVehicleData = () => {
@@ -101,8 +101,6 @@ const setAllVehicleData = async (
 watch(
   () => isUserAdmin.value,
   async () => {
-    if (isUserAdmin.value === undefined) return;
-
     const adminUrl = `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/query?search=vehicle_id:${vehicleId}`; // This is for admin's so we get the user's changes
     const userUrl = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`; // This is for users
     const url = isUserAdmin.value ? adminUrl : userUrl;
@@ -165,7 +163,8 @@ watch(
         updateVehicleStore.selectedColor = colorData;
       }
     }
-  }
+  },
+  { immediate: true }
 );
 
 const handleFilterPrevious = () => {
