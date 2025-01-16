@@ -135,6 +135,48 @@ const handleValueUpdated = (value: string) => {
     disabledSupportColor.value = !!missingColorKeys?.length;
   }
 };
+
+watch(
+  () => colorUpdateStore.selectionMode,
+  () => {
+    // Reset values
+    colorUpdateStore.selectingHexColor = false;
+    colorUpdateStore.selectedColorFromGallery = {
+      hex_code: '',
+      id: 0,
+      id_family: 0,
+      name: '',
+    };
+    colorUpdateStore.selectedPickColors = [
+      {
+        key: 'colorfamily_name',
+        label: 'Main color:',
+        value: '',
+        selected: true,
+        clicked: false,
+      },
+      {
+        key: 'color_main_name',
+        label: 'Bicolor:',
+        value: '',
+        selected: false,
+        clicked: false,
+      },
+      {
+        key: 'color_roof_name',
+        label: 'Top color:',
+        value: '',
+        selected: false,
+        clicked: false,
+      },
+    ];
+    colorUpdateStore.dynamicColors = [
+      { key: 'colorfamily_name', value: '' },
+      { key: 'color_main_name', value: '' },
+      { key: 'color_roof_name', value: '' },
+    ];
+  }
+);
 </script>
 
 <template>

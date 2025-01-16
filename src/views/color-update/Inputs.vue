@@ -23,7 +23,9 @@ const image = computed(() => {
   const selectedWholePath = colorUpdateStore.selectedGalleryImageWholePath;
   if (selectedWholePath) return selectedWholePath;
 });
+
 const colorData = ref<any>([]);
+const resetColorValues = ref(false);
 
 const isMultipleGallery = computed(
   () => colorUpdateStore.selectionMode === 'multiple'
@@ -79,9 +81,30 @@ const handleSelection = (e: any) => {
   colorUpdateStore.selectedHexColor = hexColor;
 };
 
-const handleSubColorSelection = (color?: ColorProps) => {
-  if (color) colorUpdateStore.selectedColorFromGallery = color;
+const handleSubColorSelection = async (selectedColor?: ColorProps) => {
+  if (selectedColor) {
+    colorUpdateStore.selectedColorFromGallery = selectedColor;
+
+    const { name } = colorUpdateStore.selectedColorFromGallery || {};
+
+    for (const pickColor of colorUpdateStore.selectedPickColors) {
+      const { selected, key } = pickColor || {};
+
+      if (selected) {
+        const dynamicColor = colorUpdateStore.dynamicColors.find(
+          color => color.key === key
+        );
+
+        if (dynamicColor) dynamicColor.value = name;
+      }
+    }
+  }
 };
+
+watch(
+  () => colorUpdateStore.selectionMode,
+  () => (resetColorValues.value = !resetColorValues.value)
+);
 </script>
 
 <template>
@@ -97,7 +120,7 @@ const handleSubColorSelection = (color?: ColorProps) => {
     />
 
     <!-- PICK COLOR FROM IMAGE -->
-    <PickColor v-if="!isMultipleGallery" class="flex md:hidden" />
+    <PickColor :hidePickColor="isMultipleGallery" class="flex md:hidden" />
 
     <!-- MAIN PICTURE -->
     <div
@@ -120,11 +143,12 @@ const handleSubColorSelection = (color?: ColorProps) => {
           title="Select color from library"
           classTitle="font-bold text-xl !mb-4"
           @onSelectedSubColor="handleSubColorSelection"
+          :resetValues="resetColorValues"
         />
       </div>
 
       <!-- PICK COLOR FROM IMAGE -->
-      <PickColor v-if="!isMultipleGallery" class="hidden md:flex" />
+      <PickColor :hidePickColor="isMultipleGallery" class="hidden md:flex" />
     </div>
 
     <!-- VEHICLE SPECIFICATION -->

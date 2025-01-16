@@ -3,7 +3,11 @@ import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
-defineProps<{ title: string; classTitle?: string }>();
+const props = defineProps<{
+  title: string;
+  classTitle?: string;
+  resetValues?: boolean;
+}>();
 
 const emit = defineEmits<{
   (e: 'onSelectedSubColor', value: ColorProps | undefined): void;
@@ -52,6 +56,14 @@ watch(
   () => {
     if (selectedSubColor.value)
       emit('onSelectedSubColor', selectedSubColor.value);
+  }
+);
+
+watch(
+  () => props.resetValues,
+  () => {
+    selectedColor.value = undefined;
+    selectedSubColor.value = undefined;
   }
 );
 

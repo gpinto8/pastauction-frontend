@@ -3,6 +3,8 @@ import { colorUpdate } from '@/store/color-update';
 import UiCheckbox from '@/components/ui/ui-checkbox.vue';
 import { ref, watch } from 'vue';
 
+defineProps<{ hidePickColor?: boolean }>();
+
 const colorUpdateStore = colorUpdate();
 
 const colorShown = ref(colorUpdateStore.selectedHexColor);
@@ -47,12 +49,19 @@ const handleSelected = () => {
   // Created to fix a problem in which, when selecting and deselecting the checkbox, the color changed .. (because the "selected" prop is inside an object and whenever we update that value, the whole object updates ..)
   colorUpdateStore.selectedPickColors.forEach(color => (color.clicked = false));
 };
+
+const getDynamicValue = (key: string) => {
+  if (colorUpdateStore.selectionMode === 'multiple') {
+    return colorUpdateStore.dynamicColors.find(item => item.key === key)?.value;
+  }
+};
 </script>
 
 <template>
   <div class="bg-[#DEE2E6] h-max-1/2 p-4 flex flex-col gap-4 rounded-lg">
     <div class="font-bold text-xl">Pick color from image</div>
     <div
+      v-if="!hidePickColor"
       class="flex justify-center w-full bg-[#E9ECEF] rounded border border-[#CED4DA]"
       :class="{
         '!border-[#0000ff] !border-[2px]': colorUpdateStore.selectingHexColor,
@@ -103,14 +112,16 @@ const handleSelected = () => {
           >
             <div class="w-fit text-[#212529]">{{ color.label }}</div>
             <div
-              v-if="color.value"
+              v-if="getDynamicValue(color.key) || color.value"
               class="w-auto text-[#6C757D] flex items-center gap-2"
             >
               <div
                 class="h-3 w-3 rounded-lg border-2 border-black"
-                :style="{ backgroundColor: color.value }"
+                :style="{
+                  backgroundColor: getDynamicValue(color.key) || color.value,
+                }"
               />
-              {{ color.value }}
+              {{ getDynamicValue(color.key) || color.value }}
             </div>
           </div>
         </div>
