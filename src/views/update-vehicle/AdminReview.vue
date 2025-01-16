@@ -167,6 +167,7 @@ const goToColorUpdate = () => {
           columnCombination="2x80"
           classContainer="flex border-0"
           :onImageClick="handleImageClick"
+          showTooltipId
         />
         <ImageryGrid
           v-if="imagePaths?.length"
@@ -181,6 +182,7 @@ const goToColorUpdate = () => {
           columnCombination="5x80"
           classContainer="flex border-0"
           :onImageClick="handleImageClick"
+          showTooltipId
         />
         <ImageryGrid
           v-if="imagePaths?.length"
@@ -195,6 +197,7 @@ const goToColorUpdate = () => {
           columnCombination="15x80"
           classContainer="flex border-0"
           :onImageClick="handleImageClick"
+          showTooltipId
         />
         <div
           class="cursor-pointer grid place-content-center p-2 bg-[#212529] w-8 h-8 rounded"
