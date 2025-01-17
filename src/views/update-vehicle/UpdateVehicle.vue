@@ -383,7 +383,6 @@ const handleAcceptReview = async () => {
           :vehicleData="selectedVehicleData"
         />
         <SelectionInputs
-          v-if="isUserAdmin"
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :isUserAdmin="isUserAdmin"
         />
