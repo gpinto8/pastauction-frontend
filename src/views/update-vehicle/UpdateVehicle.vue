@@ -115,6 +115,17 @@ watch(
       _vehicleData = response.data?.items[0];
       if (!_vehicleData) return; // And if we don't have any data then we really dont have anything so just return ..
     }
+    console.log({ _vehicleData });
+
+    // TO COMPLETE
+    // If its admin, then pre-compile the user reviewed changes
+    if (isUserAdmin.value) {
+      // vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
+      // subBodies = updateVehicleStore.selectedSubBodies;
+      // colorMainId = updateVehicleStore.selectedSubColor?.id;
+      // modelId = updateVehicleStore.selectedVehicleData?.bw_model_id;
+      updateVehicleStore.notesInput = _vehicleData?.bvu_note;
+    }
 
     updateVehicleStore.currentVehicleData = _vehicleData;
     selectedVehicleData.value = _vehicleData;
@@ -226,12 +237,95 @@ const applyFilters = async (data: FiltersGoValues) => {
     }
   }
 };
+
+const sendApi = async (method: string, path: string, data?: any) => {
+  const authToken = window.localStorage.getItem('past_token');
+  const config = {
+    method,
+    url: 'https://pastauction.com/api/v1/' + path,
+    headers: {
+      Authorization: 'Bearer ' + authToken,
+      'Content-Type': 'application/json',
+    },
+    data: data || {},
+  };
+  await axios(config)
+    .then(response => {
+      console.log(path, { response, data });
+    })
+    .catch(e => e);
+};
+
+const dataInput = computed(() => ({
+  vehicle_id: vehicleId,
+  body_id: ['Buggy'],
+  color_main_id: 10,
+  color_roof_id: 10,
+  id_model: 36247,
+  note: 'SADF ASDFASDF',
+}));
+
+const handleSendReview = async () => {
+  console.log('handleSendReview');
+  await sendApi(
+    'post',
+    'bidwatcher_vehicle_user_update/create',
+    dataInput.value
+  );
+};
+
+const handleGet = async () => {
+  console.log('handleGet');
+  await sendApi(
+    'get',
+    'bidwatcher_vehicle/query?search=vehicle_id:' + vehicleId
+  );
+  await sendApi(
+    'get',
+    'bidwatcher_vehicle_user_update/query?search=vehicle_id:' + vehicleId
+  );
+};
+
+const handleAcceptReview = async () => {
+  console.log('handleAcceptReview');
+  await sendApi(
+    'patch',
+    'bidwatcher_vehicle_user_update/update',
+    dataInput.value
+  );
+};
 </script>
 
 <template>
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
+    <div class="flex flex-column gap-4 items-center justify-center">
+      <div>
+        <strong>DATA:</strong>
+        {{ dataInput }}
+      </div>
+    </div>
+    <div class="w-full flex flex-col gap-2 justify-center items-center">
+      <button
+        class="p-2 rounded-lg bg-black text-white w-fit"
+        @click="handleSendReview"
+      >
+        SEND REVIEW
+      </button>
+      <button
+        class="p-2 rounded-lg bg-black text-white w-fit"
+        @click="handleGet"
+      >
+        GET
+      </button>
+      <button
+        class="p-2 rounded-lg bg-black text-white w-fit"
+        @click="handleAcceptReview"
+      >
+        ACCEPT REVIEW
+      </button>
+    </div>
     <VehicleUpdateFilters
       :vehicleData="middleVehicleData"
       @onPrevious="handleFilterPrevious"
