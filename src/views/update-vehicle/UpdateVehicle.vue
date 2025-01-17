@@ -103,29 +103,10 @@ watch(
   async () => {
     const adminUrl = `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/query?search=vehicle_id:${vehicleId}`; // This is for admin's so we get the user's changes
     const userUrl = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${vehicleId}`; // This is for users
-    const url = isUserAdmin.value ? adminUrl : userUrl;
 
     // COMMON VEHICLE DATA UPDATE
-    const response = await axios.get(url);
+    const response = await axios.get(userUrl);
     let _vehicleData = response.data?.items[0];
-
-    // The thing is that if we dont have any user's changes, then we gotta use the normal api for users .. because the API won't respond will any data and the page will be blank
-    if (!_vehicleData) {
-      const response = await axios.get(userUrl); // So here we just re-do the fetch with the user's url
-      _vehicleData = response.data?.items[0];
-      if (!_vehicleData) return; // And if we don't have any data then we really dont have anything so just return ..
-    }
-    console.log({ _vehicleData });
-
-    // TO COMPLETE
-    // If its admin, then pre-compile the user reviewed changes
-    if (isUserAdmin.value) {
-      // vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
-      // subBodies = updateVehicleStore.selectedSubBodies;
-      // colorMainId = updateVehicleStore.selectedSubColor?.id;
-      // modelId = updateVehicleStore.selectedVehicleData?.bw_model_id;
-      updateVehicleStore.notesInput = _vehicleData?.bvu_note;
-    }
 
     updateVehicleStore.currentVehicleData = _vehicleData;
     selectedVehicleData.value = _vehicleData;
@@ -138,20 +119,24 @@ watch(
 
     setAllVehicleData(_familyId, _modelSeries, true);
 
-    // UPDATE USER MODIFICATIONS
     if (isUserAdmin.value) {
+      const response = await axios.get(adminUrl);
+      let userReviewedData = response.data?.items[0];
+      if (!userReviewedData) return;
+
       // VEHICLE ID & MODEL ID
-      const bvuVehicleId = _vehicleData?.bvu_vehicle_id;
-      const bvuModelId = _vehicleData?.bvu_id_model;
+      const bvuVehicleId = userReviewedData?.bvu_vehicle_id;
+      const bvuModelId = userReviewedData?.bvu_id_model;
+      if (bvuVehicleId && bvuModelId) {
+        const url = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${bvuVehicleId},bw_model_id:${bvuModelId}`; // This is for users
+        const vehicleResponse = await axios.get(url);
+        const data = vehicleResponse.data?.items[0];
 
-      const url = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${bvuVehicleId},bw_model_id:${bvuModelId}`; // This is for users
-      const response = await axios.get(url);
-      const data = response.data?.items[0];
-
-      updateVehicleStore.selectedVehicleData = data;
+        updateVehicleStore.selectedVehicleData = data;
+      }
 
       // COLOR MAIN ID
-      const bvuColorMainId = _vehicleData?.bvu_color_main_id;
+      const bvuColorMainId = userReviewedData?.bvu_color_main_id;
       if (bvuColorMainId) {
         const subColorResponse = await axios.get(
           `https://pastauction.com/api/v1/bidwatcher_color/?search=id:${bvuColorMainId}`
@@ -172,6 +157,12 @@ watch(
               item.id !== item.id_family && item.id !== subColorData.id
           );
         updateVehicleStore.selectedColor = colorData;
+      }
+
+      // NOTES
+      const bvuNote = userReviewedData?.bvu_note;
+      if (bvuNote) {
+        updateVehicleStore.notesInput = bvuNote;
       }
     }
   },
@@ -255,77 +246,12 @@ const sendApi = async (method: string, path: string, data?: any) => {
     })
     .catch(e => e);
 };
-
-const dataInput = computed(() => ({
-  vehicle_id: vehicleId,
-  body_id: ['Buggy'],
-  color_main_id: 10,
-  color_roof_id: 10,
-  id_model: 36247,
-  note: 'SADF ASDFASDF',
-}));
-
-const handleSendReview = async () => {
-  console.log('handleSendReview');
-  await sendApi(
-    'post',
-    'bidwatcher_vehicle_user_update/create',
-    dataInput.value
-  );
-};
-
-const handleGet = async () => {
-  console.log('handleGet');
-  await sendApi(
-    'get',
-    'bidwatcher_vehicle/query?search=vehicle_id:' + vehicleId
-  );
-  await sendApi(
-    'get',
-    'bidwatcher_vehicle_user_update/query?search=vehicle_id:' + vehicleId
-  );
-};
-
-const handleAcceptReview = async () => {
-  console.log('handleAcceptReview');
-  await sendApi(
-    'patch',
-    'bidwatcher_vehicle_user_update/update',
-    dataInput.value
-  );
-};
 </script>
 
 <template>
   <div
     class="flex flex-col justify-between gap-0 md:gap-6 max-w-[1300px] my-0 mx-auto overflow-hidden md:!overflow-auto"
   >
-    <div class="flex flex-column gap-4 items-center justify-center">
-      <div>
-        <strong>DATA:</strong>
-        {{ dataInput }}
-      </div>
-    </div>
-    <div class="w-full flex flex-col gap-2 justify-center items-center">
-      <button
-        class="p-2 rounded-lg bg-black text-white w-fit"
-        @click="handleSendReview"
-      >
-        SEND REVIEW
-      </button>
-      <button
-        class="p-2 rounded-lg bg-black text-white w-fit"
-        @click="handleGet"
-      >
-        GET
-      </button>
-      <button
-        class="p-2 rounded-lg bg-black text-white w-fit"
-        @click="handleAcceptReview"
-      >
-        ACCEPT REVIEW
-      </button>
-    </div>
     <VehicleUpdateFilters
       :vehicleData="middleVehicleData"
       @onPrevious="handleFilterPrevious"
