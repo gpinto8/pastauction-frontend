@@ -15,19 +15,19 @@ defineEmits(['onPrevious', 'onNext']);
 const filterModelValue = computed<FiltersModelValue>(() => [
   {
     key: 'brand_name',
-    label: 'Brand',
+    label: 'Brand *',
     value: props?.vehicleData?.brand_name,
     isRelated: true,
   },
   {
     key: 'bw_family_name',
-    label: 'Family',
+    label: 'Family *',
     value: props?.vehicleData?.bw_family_name,
     isRelated: true,
   },
   {
     key: 'bw_model_name',
-    label: 'Model',
+    label: 'Model *',
     value: props?.vehicleData?.bw_model_name,
     isRelated: true,
   },
