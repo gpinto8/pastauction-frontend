@@ -381,6 +381,7 @@ const handleAcceptReview = async () => {
         <MainPicture
           class="w-full md:!min-w-[400px] md:w-[400px]"
           :vehicleData="selectedVehicleData"
+          :isUserAdmin="isUserAdmin"
         />
         <SelectionInputs
           class="w-full md:!min-w-[400px] md:w-[400px]"
