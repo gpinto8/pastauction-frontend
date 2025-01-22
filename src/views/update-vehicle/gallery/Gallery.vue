@@ -3,14 +3,12 @@ import axios from 'axios';
 import GalleryDesktop from './GalleryDesktop.vue';
 import GalleryMobile from './GalleryMobile.vue';
 import { computed, ref, watch } from 'vue';
-import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 import type { ImageGrid, ImagesGridProps } from './ImageryGrid.vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
   id: number;
   class?: string;
-  modelValue?: SelectedFiltersProps;
   vehicleData?: any;
   isUserAdmin?: boolean;
   gallerySelected: number;
@@ -77,6 +75,8 @@ const handlePageChanged = async (page: number) => {
 };
 
 const handleImageClick = async (image: ImageGrid) => {
+  updateVehicleStore.selectedVehicleData = {};
+
   const imageData = await axios.get(
     `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${image.id}`
   );
@@ -96,7 +96,6 @@ const handleImageClick = async (image: ImageGrid) => {
         :imagesPerPage="imagesPerPage"
         :totalPages="totalPages"
         :totalImages="totalImages"
-        :modelValue="modelValue"
         :handleImageClick="props.isUserAdmin ? handleImageClick : undefined"
         :gallerySelected="gallerySelected"
         @onPageChanged="handlePageChanged"
@@ -113,7 +112,6 @@ const handleImageClick = async (image: ImageGrid) => {
         :imagesPerPage="imagesPerPage"
         :totalPages="totalPages"
         :totalImages="totalImages"
-        :modelValue="modelValue"
         :handleImageClick="props.isUserAdmin ? handleImageClick : undefined"
         :gallerySelected="gallerySelected"
         @onPageChanged="handlePageChanged"

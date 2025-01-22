@@ -136,80 +136,25 @@ const handleAttributeSelection = (attribute: string) => {
 };
 
 const handleColorChange = (color?: ColorProps) => {
-  if (color) updateVehicleStore.selectedColor = color;
+  if (color) updateVehicleStore.selectedSubColor = color;
 };
 
 const submitReview = async () => {
-  // const data: any = {};
+  const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
+  const subBodies = updateVehicleStore.selectedSubBodies;
+  const colorMainId = updateVehicleStore.selectedSubColor?.id;
+  const modelId = updateVehicleStore.selectedVehicleData?.bw_model_id;
+  const notesInput = updateVehicleStore.notesInput; // This one is optional
 
-  // MAIN PICTURE
-  // const path = updateVehicleStore.mainPicturePath;
-  // if (path) data.photo_path = path;
+  if (!vehicleId || !subBodies || !colorMainId || !modelId) return;
 
-  // SUGGESTED DATA
-  // const suggestedData = updateVehicleStore.suggestedData;
-  // if (suggestedData) {
-  // const family = suggestedData?.find(item => item.label === 'Family');
-  // const model = suggestedData?.find(item => item.label === 'Model');
-  // const stage = suggestedData?.find(item => item.label === 'Stage');
-  // const series = suggestedData?.find(item => item.label === 'Series');
-  // const body = suggestedData?.find(item => item.label === 'Body');
-  // const color = suggestedData?.find(item => item.label === 'Color');
-  // const attribute = suggestedData?.find(item => item.label === 'Attribute');
-
-  // { label: 'Family', value: data?.bw_family_id },
-  //   { label: 'Model', value: data?.bw_model_name },
-  //   { label: 'Stage', value: data?.vehicle_stage },
-  //   { label: 'Series', value: data?.vehicle_series },
-  //   { label: 'Year', value: data?.vehicle_year },
-  //   { label: 'Chasis', value: data?.chassis },
-  //   { label: 'Body', value: data?.body_shapes },
-  //   { label: 'Color', value: data?.color_main_name },
-  //   { label: 'Attribute', value: data?.body_types },
-
-  // if (family) data.bw_family_id = family.value;
-  // if (model) data.bw_model_name = model.value;
-  // if (stage) data.vehicle_stage = stage.value;
-  // if (series) data.vehicle_series = series.value;
-  // if (body) data.body_shapes = body.value;
-  // if (color) data.color_main_name = color.value;
-  // if (attribute) data.id_key = attribute.value;
-  // }
-
-  // BODY CHANGES
-  // const bodies = selectedBodies.value?.join(',');
-  // if (bodies) data.body_categories = bodies;
-
-  // const subBodies = selectedSubBodies.value
-  //   ?.map(body => Object.values(body))
-  //   .flat(Infinity)
-  //   .join(',');
-  // if (subBodies) data.body_shapes = subBodies;
-
-  // // COLOR
-  // const colorId = 'selectedColor.value?.id';
-  // if (colorId) data.color_main_id = colorId;
-
-  // // ATTRIBUTE CHANGES
-  // const attributes = selectedAttributes.value?.join(',');
-  // if (attributes) data.body_types = attributes;
-
-  // console.log({ data });
-
-  // test
-
-  console.log({
-    updateVehicleStore,
-    selectedColor: updateVehicleStore?.selectedColor,
-  });
-
-  const vehicleId = updateVehicleStore?.currentVehicleData?.vehicle_id;
-  const bodyId = [0];
-  const colorMainId = updateVehicleStore?.selectedColor?.id;
-  const modelId = updateVehicleStore?.selectedVehicleData?.bw_model_id;
-  const notesInput = updateVehicleStore?.notesInput;
-
-  console.log({ vehicleId, notesInput, modelId });
+  const data = {
+    vehicle_id: vehicleId,
+    body_id: subBodies,
+    color_main_id: colorMainId,
+    id_model: modelId,
+    note: notesInput,
+  };
 
   const authToken = window.localStorage.getItem('past_token');
   const config = {
@@ -219,131 +164,15 @@ const submitReview = async () => {
       Authorization: 'Bearer ' + authToken,
       'Content-Type': 'application/json',
     },
-    data: {
-      // vehicle_id: Optional[int] = 636672
-      // body_id: Optional[List]=[1,2,3] #Hai id body o mi devi passare il nome come stringa?
-      // color_main_id: Optional[int]
-      // id_model: Optional[int] = 36247
-      // note: Optional[str]
-
-      // vehicle_id: 636672,
-      // body_id: [1, 2, 3],
-      // color_main_id: 0,
-      // id_model: 36247,
-      // note: 'string',
-
-      vehicle_id: vehicleId,
-      body_id: bodyId,
-      color_main_id: colorMainId,
-      id_model: modelId,
-      note: notesInput,
-
-      // vehicle_id: 34920,
-      // color_main_id: 60,
-      // body_types: 'asdfasdf',
-      // ...data,
-      // vehicle_id: 9999,
-      // id_age: 9999,
-      // bodies_id: 9999,
-      // body_id: 9999,
-      // brand_id: 9999,
-      // color_main_id: 9999,
-      // color_roof_id: 9999,
-      // color_sec_id: 9999,
-      // update_date: '2009-09-29',
-      // family_id: 9999,
-      // id_model: 9999,
-      // note: 'BLABLABLA',
-    },
-    // data,
-    // data: {
-    //   vehicle_id: 34920,
-    //   // id_key: 900,
-    //   // id_age: 373,
-    //   // bodies_id: 2000000,
-    //   // body_id: 3,
-    //   // brand_id: 0,
-    //   // color_main_id: 0,
-    //   // color_roof_id: 0,
-    //   // color_sec_id: 0,
-    //   // update_date: '2024-10-27',
-    //   // family_id: 0,
-    //   // id_model: 36247,
-    //   // note: 'string',
-    // },
+    data,
   };
 
-  console.log({ config });
-
-  await axios(config)
-    .then(response => {
-      console.log({ data: response.data });
-    })
-    .catch(error => {
-      console.error(error);
-    });
-
-  // const data = await axios.post(
-  //   `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/create/`,
-  //   {
-  //     // vehicle_id: 636672,
-  //     // id_age: 373,
-  //     // bodies_id: 2000000,
-  //     // body_id: 3,
-  //     // brand_id: 0,
-  //     // color_main_id: 0,
-  //     // color_roof_id: 0,
-  //     // color_sec_id: 0,
-  //     // update_date: '2024-10-27',
-  //     // family_id: 0,
-  //     // id_model: 36247,
-  //     // note: 'string',
-  //     // user_id: 0,
-  //     // id_key: 0,
-  //   },
-  //   {
-  //     // data: {
-  //     //   id_key: 900,
-  //     // },
-  //   }
-  //   // null,
-  //   // {q
-  //   // bidwatcher_vehicle/?params=bidwatcher_vehicle:${123},db:${'asdf'},token:${'asdf'},user_uuid:${'db0ac65b-2460-4c95-886f-32a864414d42'}`,
-  //   // headers: {
-  //   //   authorization: 'Bearer ' + authToken.value,
-  //   //   'Content-Type': 'application/json',
-  //   // },
-  //   //   body: {
-  //   //   }
-  //   // data: {
-  //   //   bw_model_id: 0,
-  //   //   bw_family_id: 0,
-  //   //   bw_model_name: 'string',
-  //   //   bw_model_series: 'string',
-  //   //   bw_model_year_begin: 0,
-  //   //   bw_model_year_end: 0,
-  //   //   vehicle_id: 0,
-  //   //   vehicle_series: 'string',
-  //   //   vehicle_stage: 'string',
-  //   //   vehicle_version: 'string',
-  //   //   vehicle_original_descr: 'string',
-  //   //   vehicle_year: 'string',
-  //   //   brand_logo: 'string',
-  //   //   brand_name: 'string',
-  //   //   bw_family_name: 'string',
-  //   //   photo_id: 0,
-  //   //   photo_path: 'string',
-  //   // },
-  //   // }
-  // );
-  // console.log({ data });
-  // {
-  //   body: selectedBodies.value,
-  //   sub_body: selectedSubBodies.value,
-  //   color: selectedColor.value,
-  //   sub_color: selectedSubColor.value,
-  //   attribute: selectedAttributes.value,
-  // }
+  await axios(config).then(() => {
+    setTimeout(() => {
+      alert('The review has been submitted successfully!');
+      window.history.back();
+    }, 500);
+  });
 };
 </script>
 
@@ -353,7 +182,7 @@ const submitReview = async () => {
     <div class="flex flex-col">
       <div class="mb-3 font-semibold text-lg">Body change</div>
       <!-- BODY DATA -->
-      <div class="mb-4 flex gap-2 flex-wrap">
+      <div class="mb-4 flex gap-2 flex-wrap md:w-max">
         <button
           class="p-2 text-sm w-fit rounded-md border-[1px] border-solid border-[#212529] text-[#212529] bg-white"
           v-for="(data, i) in bodyData"

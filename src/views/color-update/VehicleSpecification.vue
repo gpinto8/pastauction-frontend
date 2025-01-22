@@ -1,30 +1,106 @@
 <script lang="ts" setup>
 import ExpansionSection from '@/components/entity/ExpansionSection.vue';
-import { ref } from 'vue';
+import { colorUpdate } from '@/store/color-update';
+import axios from 'axios';
+import { computed, ref, watch } from 'vue';
+
+const props = defineProps<{
+  vehicleData: any;
+}>();
+
+const colorUpdateStore = colorUpdate();
 
 const mobileOpen = ref(1); // 0 - open | 1 - close
 const handleOpen = () => (mobileOpen.value = mobileOpen.value === 0 ? 1 : 0);
 
-const vehicleSpecifications = ref(
-  [
-    { key: 'Family', value: 991 },
-    { key: 'Model', value: '911-V' },
-    { key: 'Stage', value: 'V' },
-    { key: 'Series', value: '996' },
-    { key: 'Year', value: '200' },
-    { key: 'Chassis', value: 'WPOCA2994XS6FDASFASDF' },
-    { key: 'Body', value: 'Coupè' },
-    { key: 'Main', value: 'BLUE' },
-    { key: 'Secondary', value: 'BLUE' },
-    { key: 'Top/Roof', value: 'BLUE' },
-  ].map((data: any) => ({ ...data, key: data.key + ':' }))
+const vehicleSpecifications = computed<
+  { key: string; label: string; value: string; colored?: boolean }[]
+>(() => {
+  const {
+    bw_family_name,
+    bw_model_name,
+    vehicle_stage,
+    vehicle_series,
+    bw_model_year_begin,
+    chassis,
+    body_shapes,
+    color_main_name,
+    color_sec_name,
+    color_roof_name,
+  } = props.vehicleData || {};
+
+  return [
+    { key: 'bw_family_name', label: 'Family', value: bw_family_name },
+    { key: 'bw_model_name', label: 'Model', value: bw_model_name },
+    { key: 'vehicle_stage', label: 'Stage', value: vehicle_stage },
+    { key: 'vehicle_series', label: 'Series', value: vehicle_series },
+    { key: 'bw_model_year_begin', label: 'Year', value: bw_model_year_begin },
+    { key: 'chassis', label: 'Chassis', value: chassis },
+    { key: 'body_shapes', label: 'Body', value: body_shapes },
+    { key: 'colorfamily_name', label: 'Main', value: color_main_name },
+    { key: 'color_main_name', label: 'Secondary', value: color_sec_name },
+    { key: 'color_roof_name', label: 'Top/Roof', value: color_roof_name },
+  ].map((data: any) => ({ ...data, label: data.label + ':' }));
+});
+
+// THIS UPDATES THE DYNAMIC COLORS FROM "Select color from gallery"
+watch(
+  () => colorUpdateStore.selectedColorFromGallery,
+  () => {
+    const { name } = colorUpdateStore.selectedColorFromGallery || {};
+
+    for (const pickColor of colorUpdateStore.selectedPickColors) {
+      const { selected, key } = pickColor || {};
+
+      if (selected) {
+        const dynamicColor = colorUpdateStore.dynamicColors.find(
+          color => color.key === key
+        );
+        if (dynamicColor) dynamicColor.value = name;
+      }
+    }
+  }
 );
+
+// THIS UPDATES THE DYNAMIC COLORS FROM THE "Pick color from image"
+watch(
+  () => colorUpdateStore.selectedPickColors,
+  async () => {
+    for await (const pickColor of colorUpdateStore.selectedPickColors) {
+      const { selected, value, key, clicked } = pickColor || {};
+
+      if (selected && value && clicked) {
+        const pickedHexColor = encodeURIComponent(value); // #FF0000 || value
+        if (pickedHexColor) {
+          const response = await axios
+            .get(
+              `https://pastauction.com/api/v1/bidwatcher_color/convert/${pickedHexColor}`
+            )
+            .catch(e => e);
+
+          const color = response?.data;
+
+          if (color && key) {
+            const dynamicColor = colorUpdateStore.dynamicColors.find(
+              color => color.key === key
+            );
+            if (dynamicColor) dynamicColor.value = color;
+          }
+        }
+      }
+    }
+  },
+  { deep: true }
+);
+
+const getDynamicColorValue = (key: string) =>
+  colorUpdateStore.dynamicColors.find(color => color.key === key)?.value;
 </script>
 
 <template>
   <div>
     <div
-      class="hidden md:flex flex-col gap-4 p-4 md:w-[338px] bg-[#DEE2E6] rounded-lg w-full"
+      class="hidden md:flex flex-col gap-6 p-4 md:min-w-[280px] md:w-fit bg-[#DEE2E6] rounded-lg w-full h-full"
     >
       <div class="font-bold text-xl w-full">Vehicle Specification</div>
       <div class="flex flex-col gap-2">
@@ -33,9 +109,15 @@ const vehicleSpecifications = ref(
           :key="i"
           class="flex border-b border-solid border-[#6C757D] text-base"
         >
-          <div class="w-2/5 text-[#212529]">{{ specification.key }}</div>
+          <div class="w-2/5 text-[#212529]">{{ specification.label }}</div>
           <div class="w-3/5 text-[#6C757D]">
             {{ specification.value }}
+            <span
+              v-if="getDynamicColorValue(specification.key)"
+              class="!text-blue-700"
+            >
+              ({{ getDynamicColorValue(specification.key) }})
+            </span>
           </div>
         </div>
       </div>
@@ -84,9 +166,15 @@ const vehicleSpecifications = ref(
               :key="i"
               class="flex border-b border-solid border-[#6C757D] text-base"
             >
-              <div class="w-3/6 text-[#212529]">{{ specification.key }}</div>
+              <div class="w-3/6 text-[#212529]">{{ specification.label }}</div>
               <div class="w-3/6 text-[#6C757D]">
                 {{ specification.value }}
+                <span
+                  v-if="getDynamicColorValue(specification.key)"
+                  class="!text-blue-700"
+                >
+                  ({{ getDynamicColorValue(specification.key) }})
+                </span>
               </div>
             </div>
           </div>

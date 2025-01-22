@@ -8,7 +8,6 @@ import ImageryGrid, {
 } from './ImageryGrid.vue';
 import Parameters from './Parameters.vue';
 import PaginationSlider from './PaginationSlider.vue';
-import type { SelectedFiltersProps } from '../UpdateVehicle.vue';
 import { updateVehicle } from '@/store/vehicle/update-vehicle';
 
 const props = defineProps<{
@@ -18,7 +17,6 @@ const props = defineProps<{
   imagesPerPage: number;
   totalPages: number;
   totalImages: number;
-  modelValue?: SelectedFiltersProps;
   vehicleData?: any;
   handleImageClick?: (image: ImageGrid) => void;
   gallerySelected: number;
@@ -105,6 +103,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             class="hidden sm:flex justify-between items-center h-[60px]"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <ImageryGrid
             v-if="mobileOpen"
@@ -113,6 +112,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             class="flex sm:hidden justify-between items-center h-[54px]"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <Parameters v-else :vehicleData="vehicleData" />
         </div>
@@ -151,6 +151,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             classContainer="w-fit my-0 mx-auto"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <PaginationSlider
             :currentPage="currentPage"
@@ -168,6 +169,7 @@ const isSelected = computed(() => props.id === props.gallerySelected);
             classContainer="w-fit my-0 mx-auto"
             @imageClick="handleImageClick"
             :noImageText="noImageText"
+            showTooltipId
           />
           <PaginationSlider
             :currentPage="currentPage"
