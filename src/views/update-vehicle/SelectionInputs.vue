@@ -26,6 +26,8 @@ const attributeData = ref<string[]>();
 const attributeDataExtra = ref<AttributeDataExtraProps[]>();
 const selectedAttributes = ref<string[]>();
 
+const oneTime = ref(true);
+
 const getShapeData = async (
   value: string,
   bodyMode?: BodyDataProps['mode']
@@ -76,9 +78,13 @@ watch(
   () => updateVehicleStore.selectedSubBodies,
   () => {
     const _selectedSubBodies = updateVehicleStore.selectedSubBodies;
+
     if (_selectedSubBodies?.length) {
       selectedSubBodies.value = _selectedSubBodies;
-      bodySubData.value = _selectedSubBodies;
+      if (oneTime.value) {
+        bodySubData.value = _selectedSubBodies;
+        oneTime.value = false;
+      }
     }
   }
 );
