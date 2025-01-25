@@ -43,15 +43,9 @@ const description = computed(() => {
           :src="image?.path"
           alt=""
           width="400"
-          class="rounded-md w-full"
-          :class="{ 'cursor-pointer': isUserAdmin }"
+          class="rounded-md w-full cursor-pointer"
         />
-        <v-tooltip
-          v-if="isUserAdmin"
-          activator="parent"
-          location="top"
-          :open-delay="1000"
-        >
+        <v-tooltip activator="parent" location="top" :open-delay="1000">
           <img :src="image?.path" alt="" width="800" class="rounded-md" />
           <div class="text-right w-full mb-3 ml-1">
             <span
