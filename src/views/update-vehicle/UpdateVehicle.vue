@@ -121,14 +121,14 @@ watch(
 
     if (isUserAdmin.value) {
       const response = await axios.get(adminUrl);
-      let userReviewedData = response.data?.items[0];
+      let userReviewedData = response.data?.items[0]; // Take the most recent review sent
       if (!userReviewedData) return;
 
       // VEHICLE ID & MODEL ID
       const bvuVehicleId = userReviewedData?.bvu_vehicle_id;
       const bvuModelId = userReviewedData?.bvu_id_model;
       if (bvuVehicleId && bvuModelId) {
-        const url = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=vehicle_id:${bvuVehicleId},bw_model_id:${bvuModelId}`; // This is for users
+        const url = `https://pastauction.com/api/v1/bidwatcher_vehicle/query?search=bw_model_id:${bvuModelId}`; // This is for users
         const vehicleResponse = await axios.get(url);
         const data = vehicleResponse.data?.items[0];
 
@@ -163,6 +163,12 @@ watch(
       const bvuNote = userReviewedData?.bvu_note;
       if (bvuNote) {
         updateVehicleStore.notesInput = bvuNote;
+      }
+
+      // BODY SHAPES
+      const bvuBodyShapes = userReviewedData?.body_shapes?.split(',');
+      if (bvuBodyShapes?.length) {
+        updateVehicleStore.selectedSubBodies = bvuBodyShapes;
       }
     }
   },

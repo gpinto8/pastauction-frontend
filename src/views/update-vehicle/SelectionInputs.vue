@@ -72,6 +72,17 @@ watch(
   }
 );
 
+watch(
+  () => updateVehicleStore.selectedSubBodies,
+  () => {
+    const _selectedSubBodies = updateVehicleStore.selectedSubBodies;
+    if (_selectedSubBodies?.length) {
+      selectedSubBodies.value = _selectedSubBodies;
+      bodySubData.value = _selectedSubBodies;
+    }
+  }
+);
+
 onMounted(async () => {
   // ATTRIBUTE DATA
   const _attributeData = await getShapeData('Attribute');
