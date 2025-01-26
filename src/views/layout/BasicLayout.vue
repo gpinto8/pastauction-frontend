@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useGlobal, useConfig } from '@/store';
 import {
-    computed,
-    nextTick,
-    onMounted,
-    ref,
-    watch,
-    type ComputedRef,
-    type Ref,
-    type WritableComputedRef,
+  computed,
+  nextTick,
+  onMounted,
+  ref,
+  watch,
+  type ComputedRef,
+  type Ref,
+  type WritableComputedRef,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
@@ -37,7 +37,7 @@ const route = useRoute();
 
 /** Clear store when snackbar hide */
 onMounted(() => {
-    document.title = title;
+  document.title = title;
 });
 
 const layoutContainerRef = ref<HTMLElement>();
@@ -76,6 +76,10 @@ const constrainedLayout = computed(() => {
     .with('Datas', 'Vehicle Update', 'Color Update', () => false)
     .otherwise(() => true);
 });
+
+const handleGoBack = () => {
+  window.history.back();
+};
 </script>
 
 <template>
@@ -121,7 +125,15 @@ const constrainedLayout = computed(() => {
             />
 
             <!-- current name of the page -->
-            <h1 class="font-bold text-[40px] md:pl-6">
+            <h1 class="font-bold text-[40px] md:pl-6 flex gap-4">
+              <img
+                v-if="route.meta?.showGoBackButton"
+                src="@/assets/icons/arrow_left.svg"
+                width="40"
+                height="40"
+                class="cursor-pointer"
+                @click="handleGoBack"
+              />
               {{ route.name }}
             </h1>
 
@@ -170,9 +182,9 @@ const constrainedLayout = computed(() => {
     </div>
   </div>
 
-    <teleport to="head">
-        <link rel="icon" :href="logo" type="image/svg+xml" />
-    </teleport>
+  <teleport to="head">
+    <link rel="icon" :href="logo" type="image/svg+xml" />
+  </teleport>
 </template>
 
 <style lang="scss">

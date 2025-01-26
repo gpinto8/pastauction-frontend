@@ -90,7 +90,7 @@ const router = createRouter({
           name: 'Vehicle Update',
           component: async () =>
             await import('@/views/update-vehicle/UpdateVehicle.vue'),
-          meta: { authentication: true },
+          meta: { authentication: true, showGoBackButton: true },
         },
         {
           path: '/color_update/:id',
