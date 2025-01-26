@@ -96,9 +96,33 @@ const handleAccept = async () => {
   await axios(config).then(() => {
     setTimeout(() => {
       alert('The vehicle has been updated successfully!');
-      window.history.back();
     }, 500);
   });
+};
+
+const handleDecline = async () => {
+  const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
+  console.log({ vehicleId });
+
+  if (vehicleId) {
+    const authToken = window.localStorage.getItem('past_token');
+    const config = {
+      method: 'delete',
+      url: `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/delete/${vehicleId}`,
+      headers: {
+        Authorization: 'Bearer ' + authToken,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    await axios(config).then(() => {
+      setTimeout(() => {
+        alert(
+          `The review of the vehicle with id "${vehicleId}" has been successfully declined.`
+        );
+      }, 500);
+    });
+  }
 };
 
 const goToColorUpdate = () => {
@@ -126,6 +150,7 @@ const goToColorUpdate = () => {
       >
         <v-btn
           class="flex w-full sm:w-[160px] !text-[#212529] bg-white rounded-md text-base p-2 text-none text-center"
+          @click="handleDecline"
         >
           Decline
         </v-btn>
