@@ -137,8 +137,8 @@ const handleSave = async () => {
 
         await axios(config).then(() => {
           setTimeout(() => {
-            // alert('The color has been updated correctly!');
-            // window.history.back();
+            alert('The color has been updated correctly!');
+            window.history.back();
           }, 500);
         });
       }
