@@ -102,7 +102,6 @@ const handleAccept = async () => {
 
 const handleDecline = async () => {
   const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
-  console.log({ vehicleId });
 
   if (vehicleId) {
     const authToken = window.localStorage.getItem('past_token');

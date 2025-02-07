@@ -40,6 +40,7 @@ const applyFilters = async (data: FiltersGoValues) => {
   const brandName = getValue('brand_name');
   const familyName = getValue('bw_family_name');
   const modelName = getValue('bw_model_name'); // This is optional
+  const colorMode = getValue('COLOR_MODE'); // This is optional
   const colorFamilyName = getValue('colorfamily_name'); // This is optional
   const colorMainName = getValue('color_main_name'); // This is optional
 
@@ -57,10 +58,35 @@ const applyFilters = async (data: FiltersGoValues) => {
         filterMissingColorKeys.map(item => `${item}:${nullableValue}`)
       );
     } else {
-      params = params.concat([
-        colorFamilyName ? `colorfamily_name:${colorFamilyName}` : '',
-        colorMainName ? `color_main_name:${colorMainName}` : '',
-      ]);
+      if (colorMode) {
+        const subColorResponse = await axios.get(
+          `https://pastauction.com/api/v1/bidwatcher_color/?search=name:${colorMainName}`
+        );
+        const subColorData = subColorResponse.data.items?.map(
+          (item: any) => item
+        );
+        const colorId = subColorData?.[0]?.id;
+
+        const modes = colorMode?.split(',');
+        const colorModes = {
+          id_color_body: 'Body color',
+          id_color_roof: 'Roof color',
+          id_color_bicolor: 'Bicolor',
+        };
+        const keyModes = modes?.map(
+          mode =>
+            Object.entries(colorModes)?.find(item =>
+              mode?.includes?.(item?.[1])
+            )?.[0]
+        );
+        const colorParams = keyModes?.map(key => `${[key]}:${colorId}`);
+        params = params.concat(colorParams);
+      } else {
+        params = params.concat([
+          colorFamilyName ? `colorfamily_name:${colorFamilyName}` : '',
+          colorMainName ? `color_main_name:${colorMainName}` : '',
+        ]);
+      }
     }
 
     const newParams = params.filter(Boolean).join(',');
@@ -109,18 +135,20 @@ const handleSave = async () => {
       }
 
       if (Object.keys(colors)?.length) {
+        // id_color_body    ->  color_main_id
+        // id_color_bicolor ->  color_sec_id
+        // id_color_roof    ->  color_roof_id
+
         const data = {
           vehicle_id: vehicleId,
+          ...(colors?.color_main_name
+            ? { color_main_id: colors?.color_main_name }
+            : {}),
           ...(colors?.colorfamily_name
-            ? { id_color_bicolor: colors?.colorfamily_name }
+            ? { color_sec_id: colors?.colorfamily_name }
             : {}),
-
           ...(colors?.color_main_name
-            ? { id_color_body: colors?.color_main_name }
-            : {}),
-
-          ...(colors?.color_main_name
-            ? { id_color_roof: colors?.color_roof_name }
+            ? { color_roof_id: colors?.color_roof_name }
             : {}),
         };
 

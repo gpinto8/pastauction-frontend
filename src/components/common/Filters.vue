@@ -8,6 +8,7 @@ export type FilterAvailableKeys =
   | 'bw_family_name'
   | 'bw_model_name'
   | 'age_name'
+  | 'COLOR_MODE' // Custom
   | 'colorfamily_name'
   | 'color_main_name';
 
@@ -16,6 +17,7 @@ export type FiltersModelValue = {
   value: string;
   isRelated: boolean;
   label: string;
+  staticValues?: string[];
 }[];
 
 type FiltersDataProps = {
@@ -24,6 +26,7 @@ type FiltersDataProps = {
   defaultValues: string[];
   values: string[];
   isRelated?: boolean;
+  staticValues?: string[];
 };
 
 export type FiltersGoValues = {
@@ -63,6 +66,7 @@ const valuesMap = ref<{ [key in FilterAvailableKeys]: string }>({
   bw_family_name: '',
   bw_model_name: '',
   age_name: '',
+  COLOR_MODE: '',
   colorfamily_name: '',
   color_main_name: '',
 });
@@ -105,7 +109,8 @@ const getDynamicParams = (key: FilterAvailableKeys, addLike?: boolean) => {
   const additionalParams = filtersData.value
     .map(data => {
       const value = valuesMap.value[data.key];
-      if (data.isRelated && data.key !== key && value) {
+      const hasStaticValues = data.staticValues;
+      if (data.isRelated && data.key !== key && value && !hasStaticValues) {
         const newKey = `${data.key}${addLike ? '_like' : ''}:${value}`;
         return newKey;
       }
@@ -138,6 +143,11 @@ watch(
     }
 
     for await (const data of filtersData.value) {
+      if (data?.staticValues) {
+        updateFilterData(data.key, data.staticValues, true);
+        continue;
+      }
+
       // The filters have to be related to each other, thats why we need to pass the previous selected filters values to the current one BUT the current one, ofc
       const dynamicParams = getDynamicParams(data.key);
       const dynamicParamsString = dynamicParams
@@ -177,17 +187,25 @@ const resetFilterData = (key: FilterAvailableKeys) => {
       'bw_family_name',
       'bw_model_name',
       'age_name',
+      'COLOR_MODE',
       'colorfamily_name',
       'color_main_name',
     ],
     bw_family_name: [
       'bw_model_name',
       'age_name',
+      'COLOR_MODE',
       'colorfamily_name',
       'color_main_name',
     ],
-    bw_model_name: ['age_name', 'colorfamily_name', 'color_main_name'],
-    age_name: ['colorfamily_name', 'color_main_name'],
+    bw_model_name: [
+      'age_name',
+      'COLOR_MODE',
+      'colorfamily_name',
+      'color_main_name',
+    ],
+    age_name: ['COLOR_MODE', 'colorfamily_name', 'color_main_name'],
+    COLOR_MODE: ['colorfamily_name', 'color_main_name'],
     colorfamily_name: ['color_main_name'],
     color_main_name: [''],
   };
@@ -207,6 +225,8 @@ const handleSearchFocus = async (
   isFocused: boolean
 ) => {
   if (!isFocused) return;
+  if (!!props.modelValue?.find(value => value.key === key)?.staticValues)
+    return;
 
   emit('onSearchFocus', key);
 
@@ -229,6 +249,9 @@ const handleSearchFocus = async (
 
 const handleSearch = debounce(
   async (key: FilterAvailableKeys, term: string) => {
+    if (!!props.modelValue?.find(value => value.key === key)?.staticValues)
+      return;
+
     if (term) {
       // The filters have to be related to each other, thats why we need to pass the previous selected filters values to the current one BUT the current one, ofc
       const dynamicParams = getDynamicParams(key);
@@ -272,6 +295,7 @@ const getBrandName = () => getFilterData('brand_name');
 const getFamilyName = () => getFilterData('bw_family_name');
 const getModelName = () => getFilterData('bw_model_name');
 const getAgingName = () => getFilterData('age_name');
+const getColorMode = () => getFilterData('COLOR_MODE');
 const getColorFamilyName = () => getFilterData('colorfamily_name');
 const getColorMainName = () => getFilterData('color_main_name');
 
@@ -363,6 +387,24 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
         @update:search="term => handleSearch(getAgingName()?.key!, term)"
         @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
       />
+      <!-- COLOR MODE -->
+      <v-autocomplete
+        v-if="keysShown?.includes('COLOR_MODE')"
+        class="w-fit"
+        :class="classInput"
+        :label="getColorMode()?.label"
+        variant="outlined"
+        :items="
+          getColorMode()?.values.concat([
+            ...(colorFamilyAdditionalValues || []),
+          ])
+        "
+        density="compact"
+        :modelValue="valuesMap[getColorMode()?.key!]"
+        @update:modelValue="handleInputUpdated($event, getColorMode()?.key)"
+        @update:search="term => handleSearch(getColorMode()?.key!, term)"
+        @update:focused="handleSearchFocus(getColorMode()?.key!, $event)"
+      />
       <!-- COLOR FAMILY NAME -->
       <v-autocomplete
         v-if="keysShown?.includes('colorfamily_name')"
@@ -370,11 +412,7 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
         :class="classInput"
         :label="getColorFamilyName()?.label"
         variant="outlined"
-        :items="
-          getColorFamilyName()?.values.concat([
-            ...(colorFamilyAdditionalValues || []),
-          ])
-        "
+        :items="getColorFamilyName()?.values"
         density="compact"
         :modelValue="valuesMap[getColorFamilyName()?.key!]"
         @update:modelValue="
@@ -382,6 +420,7 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
         "
         @update:search="term => handleSearch(getColorFamilyName()?.key!, term)"
         @update:focused="handleSearchFocus(getColorFamilyName()?.key!, $event)"
+        :disabled="disabledSupportColor"
       />
       <!-- COLOR MAIN NAME -->
       <v-autocomplete
@@ -489,6 +528,24 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
             @update:search="term => handleSearch(getAgingName()?.key!, term)"
             @update:focused="handleSearchFocus(getAgingName()?.key!, $event)"
           />
+          <!-- COLOR MODE -->
+          <v-autocomplete
+            v-if="keysShown?.includes('COLOR_MODE')"
+            class="block sm:hidden w-full"
+            :class="classInput"
+            :label="getColorMode()?.label"
+            variant="outlined"
+            :items="
+              getColorMode()?.values.concat([
+                ...(colorFamilyAdditionalValues || []),
+              ])
+            "
+            density="compact"
+            :modelValue="valuesMap[getColorMode()?.key!]"
+            @update:modelValue="handleInputUpdated($event, getColorMode()?.key)"
+            @update:search="term => handleSearch(getColorMode()?.key!, term)"
+            @update:focused="handleSearchFocus(getColorMode()?.key!, $event)"
+          />
           <!-- COLOR FAMILY NAME -->
           <v-autocomplete
             v-if="keysShown?.includes('colorfamily_name')"
@@ -496,11 +553,7 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
             :class="classInput"
             :label="getColorFamilyName()?.label"
             variant="outlined"
-            :items="
-              getColorFamilyName()?.values.concat([
-                ...(colorFamilyAdditionalValues || []),
-              ])
-            "
+            :items="getColorFamilyName()?.values"
             density="compact"
             :modelValue="valuesMap[getColorFamilyName()?.key!]"
             @update:modelValue="
@@ -512,6 +565,7 @@ const handleInputUpdated = (value?: string, key?: FilterAvailableKeys) => {
             @update:focused="
               handleSearchFocus(getColorFamilyName()?.key!, $event)
             "
+            :disabled="disabledSupportColor"
           />
           <!-- COLOR MAIN NAME -->
           <v-autocomplete

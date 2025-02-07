@@ -39,6 +39,51 @@ const updateFilterModelValue = (
   }
 };
 
+const colorUpdateFilterUrl =
+  'https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color';
+
+const addSpace = (values: string[]) => values.map(item => ` ${item}`);
+
+// NO COLOR DATA
+const colorData = {
+  id_color_bicolor: 'No bicolor',
+  id_color_body: 'No body color',
+  id_color_roof: 'No roof color',
+};
+const colorFamilyAdditionalValues = [
+  addSpace([colorData.id_color_bicolor]),
+  addSpace([colorData.id_color_body]),
+  addSpace([colorData.id_color_roof]),
+  addSpace([colorData.id_color_bicolor, colorData.id_color_body]),
+  addSpace([colorData.id_color_bicolor, colorData.id_color_roof]),
+  addSpace([colorData.id_color_body, colorData.id_color_roof]),
+  addSpace([
+    colorData.id_color_bicolor,
+    colorData.id_color_body,
+    colorData.id_color_roof,
+  ]),
+].map(item => `● ${item}`);
+
+// COLOR MODE FILTER DATA
+const colorModes = {
+  id_color_body: 'Body color', // Modes
+  id_color_roof: 'Roof color',
+  id_color_bicolor: 'Bicolor',
+};
+const colorModesValues = [
+  addSpace([colorModes.id_color_bicolor]),
+  addSpace([colorModes.id_color_body]),
+  addSpace([colorModes.id_color_roof]),
+  addSpace([colorModes.id_color_bicolor, colorModes.id_color_body]),
+  addSpace([colorModes.id_color_bicolor, colorModes.id_color_roof]),
+  addSpace([colorModes.id_color_body, colorModes.id_color_roof]),
+  addSpace([
+    colorModes.id_color_bicolor,
+    colorModes.id_color_body,
+    colorModes.id_color_roof,
+  ]),
+].map(item => `● ${item}`);
+
 watch(
   () => props?.vehicleData,
   async () => {
@@ -60,6 +105,13 @@ watch(
         label: 'Model',
         value: props?.vehicleData?.bw_model_name || null,
         isRelated: true,
+      },
+      {
+        key: 'COLOR_MODE',
+        label: 'Color mode',
+        value: colorModesValues[1],
+        isRelated: true,
+        staticValues: colorModesValues,
       },
       {
         key: 'colorfamily_name',
@@ -88,30 +140,6 @@ watch(
     }
   }
 );
-
-const colorUpdateFilterUrl =
-  'https://pastauction.com/api/v1/filter/bidwatcher_vehicle_user_update_filter_color';
-
-const colorData = {
-  id_color_bicolor: 'No bicolor',
-  id_color_body: 'No body color',
-  id_color_roof: 'No roof color',
-};
-
-const addSpace = (values: string[]) => values.map(item => ` ${item}`);
-const colorFamilyAdditionalValues = [
-  addSpace([colorData.id_color_bicolor]),
-  addSpace([colorData.id_color_body]),
-  addSpace([colorData.id_color_roof]),
-  addSpace([colorData.id_color_bicolor, colorData.id_color_body]),
-  addSpace([colorData.id_color_bicolor, colorData.id_color_roof]),
-  addSpace([colorData.id_color_body, colorData.id_color_roof]),
-  addSpace([
-    colorData.id_color_bicolor,
-    colorData.id_color_body,
-    colorData.id_color_roof,
-  ]),
-].map(item => `● ${item}`);
 
 const handleSearchFocus = (key: FilterAvailableKeys) =>
   key === 'colorfamily_name' && (colorUpdateStore.filterMissingColorKeys = []);
@@ -187,7 +215,7 @@ watch(
     <Filters
       :fetchUrl="colorUpdateFilterUrl"
       class="!w-full md:!w-[75%] !p-0 md:!px-6 md:!py-5 md:!pb-0"
-      classInput="!min-w-[180px] md:!min-w-0 md:!w-[160px] md:!flex-grow-0"
+      classInput="!min-w-[180px] md:!min-w-0 md:!w-[135px] md:!flex-grow-0"
       hideMoveButtons
       :modelValue="filterModelValue"
       @onValueUpdated="handleValueUpdated"
