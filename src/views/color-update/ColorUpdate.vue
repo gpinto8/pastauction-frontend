@@ -135,20 +135,16 @@ const handleSave = async () => {
       }
 
       if (Object.keys(colors)?.length) {
-        // id_color_body    ->  color_main_id
-        // id_color_bicolor ->  color_sec_id
-        // id_color_roof    ->  color_roof_id
-
         const data = {
           vehicle_id: vehicleId,
           ...(colors?.color_main_name
-            ? { color_main_id: colors?.color_main_name }
+            ? { id_color_body: colors?.colorfamily_name }
             : {}),
           ...(colors?.colorfamily_name
-            ? { color_sec_id: colors?.colorfamily_name }
+            ? { id_color_bicolor: colors?.color_main_name }
             : {}),
           ...(colors?.color_main_name
-            ? { color_roof_id: colors?.color_roof_name }
+            ? { id_color_roof: colors?.color_roof_name }
             : {}),
         };
 
