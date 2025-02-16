@@ -59,28 +59,34 @@ const applyFilters = async (data: FiltersGoValues) => {
       );
     } else {
       if (colorMode) {
-        const subColorResponse = await axios.get(
-          `https://pastauction.com/api/v1/bidwatcher_color/?search=name:${colorMainName}`
-        );
-        const subColorData = subColorResponse.data.items?.map(
-          (item: any) => item
-        );
-        const colorId = subColorData?.[0]?.id;
+        const inputColor =
+          colorMainName || // The "Support color"
+          colorFamilyName; // The "Main color"
 
-        const modes = colorMode?.split(',');
-        const colorModes = {
-          id_color_body: 'Body color',
-          id_color_roof: 'Roof color',
-          id_color_bicolor: 'Bicolor',
-        };
-        const keyModes = modes?.map(
-          mode =>
-            Object.entries(colorModes)?.find(item =>
-              mode?.includes?.(item?.[1])
-            )?.[0]
-        );
-        const colorParams = keyModes?.map(key => `${[key]}:${colorId}`);
-        params = params.concat(colorParams);
+        if (inputColor) {
+          const subColorResponse = await axios.get(
+            `https://pastauction.com/api/v1/bidwatcher_color/?search=name:${inputColor}`
+          );
+          const subColorData = subColorResponse.data.items?.map(
+            (item: any) => item
+          );
+          const colorId = subColorData?.[0]?.id;
+
+          const modes = colorMode?.split(',');
+          const colorModes = {
+            id_color_body: 'Body color',
+            id_color_roof: 'Roof color',
+            id_color_bicolor: 'Bicolor',
+          };
+          const keyModes = modes?.map(
+            mode =>
+              Object.entries(colorModes)?.find(item =>
+                mode?.includes?.(item?.[1])
+              )?.[0]
+          );
+          const colorParams = keyModes?.map(key => `${[key]}:${colorId}`);
+          params = params.concat(colorParams);
+        }
       } else {
         params = params.concat([
           colorFamilyName ? `colorfamily_name:${colorFamilyName}` : '',

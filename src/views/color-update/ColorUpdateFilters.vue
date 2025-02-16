@@ -90,13 +90,13 @@ watch(
     filterModelValue.value = [
       {
         key: 'brand_name',
-        label: 'Brand',
+        label: 'Brand *',
         value: props?.vehicleData?.brand_name || null,
         isRelated: true,
       },
       {
         key: 'bw_family_name',
-        label: 'Family',
+        label: 'Family *',
         value: props?.vehicleData?.bw_family_name || null,
         isRelated: true,
       },
