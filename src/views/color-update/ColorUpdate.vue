@@ -137,13 +137,13 @@ const handleSave = async () => {
       if (Object.keys(colors)?.length) {
         const data = {
           vehicle_id: vehicleId,
-          ...(colors?.color_main_name
+          ...(colors?.colorfamily_name
             ? { id_color_body: colors?.colorfamily_name }
             : {}),
-          ...(colors?.colorfamily_name
+          ...(colors?.color_main_name
             ? { id_color_bicolor: colors?.color_main_name }
             : {}),
-          ...(colors?.color_main_name
+          ...(colors?.color_roof_name
             ? { id_color_roof: colors?.color_roof_name }
             : {}),
         };
