@@ -77,7 +77,7 @@ const handleAccept = async () => {
   const data = {
     vehicle_id: vehicleId,
     body_id: subBodies,
-    color_main_id: colorMainId,
+    id_color_body: colorMainId,
     id_model: modelId,
     note: notesInput,
   };
