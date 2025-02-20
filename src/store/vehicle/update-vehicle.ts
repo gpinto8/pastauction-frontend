@@ -23,6 +23,7 @@ export const updateVehicle = defineStore('updateVehicle', {
         { label: 'Color', value: '' },
         { label: 'Attribute', value: '' },
       ],
+      userReviewIdKey: 0
     };
   },
 });

@@ -124,6 +124,9 @@ watch(
       let userReviewedData = response.data?.items[0]; // Take the most recent review sent
       if (!userReviewedData) return;
 
+      const bvuId = userReviewedData?.bvu_id;
+      if (bvuId) updateVehicleStore.userReviewIdKey = bvuId;
+
       // VEHICLE ID & MODEL ID
       const bvuVehicleId = userReviewedData?.bvu_vehicle_id;
       const bvuModelId = userReviewedData?.bvu_id_model;
@@ -233,24 +236,6 @@ const applyFilters = async (data: FiltersGoValues) => {
       setAllVehicleData(_familyId, _modelSeries, true);
     }
   }
-};
-
-const sendApi = async (method: string, path: string, data?: any) => {
-  const authToken = window.localStorage.getItem('past_token');
-  const config = {
-    method,
-    url: 'https://pastauction.com/api/v1/' + path,
-    headers: {
-      Authorization: 'Bearer ' + authToken,
-      'Content-Type': 'application/json',
-    },
-    data: data || {},
-  };
-  await axios(config)
-    .then(response => {
-      console.log(path, { response, data });
-    })
-    .catch(e => e);
 };
 </script>
 

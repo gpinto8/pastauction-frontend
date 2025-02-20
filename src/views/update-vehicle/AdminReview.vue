@@ -65,6 +65,35 @@ const goForward = async () => {
   imagePaths.value = _imagePaths;
 };
 
+const handleDecline = async (
+  avoidSuccessMessage?: boolean,
+  avoidReload?: boolean
+) => {
+  const idKey = updateVehicleStore?.userReviewIdKey;
+
+  if (idKey) {
+    const authToken = window.localStorage.getItem('past_token');
+    const config = {
+      method: 'delete',
+      url: `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/delete/${idKey}`,
+      headers: {
+        Authorization: 'Bearer ' + authToken,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    await axios(config).then(() => {
+      setTimeout(() => {
+        if (!avoidSuccessMessage)
+          alert(
+            `The review of the vehicle with review id key "${idKey}" has been successfully declined.`
+          );
+        if (!avoidReload) location.reload();
+      }, 500);
+    });
+  }
+};
+
 const handleAccept = async () => {
   const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
   const subBodies = updateVehicleStore.selectedSubBodies;
@@ -93,35 +122,11 @@ const handleAccept = async () => {
     data,
   };
 
+  await handleDecline(true, true);
+
   await axios(config).then(() => {
-    setTimeout(() => {
-      alert('The vehicle has been updated successfully!');
-    }, 500);
+    setTimeout(() => alert('The vehicle has been updated successfully!'), 500);
   });
-};
-
-const handleDecline = async () => {
-  const vehicleId = updateVehicleStore.currentVehicleData?.vehicle_id;
-
-  if (vehicleId) {
-    const authToken = window.localStorage.getItem('past_token');
-    const config = {
-      method: 'delete',
-      url: `https://pastauction.com/api/v1/bidwatcher_vehicle_user_update/delete/${vehicleId}`,
-      headers: {
-        Authorization: 'Bearer ' + authToken,
-        'Content-Type': 'application/json',
-      },
-    };
-
-    await axios(config).then(() => {
-      setTimeout(() => {
-        alert(
-          `The review of the vehicle with id "${vehicleId}" has been successfully declined.`
-        );
-      }, 500);
-    });
-  }
 };
 
 const goToColorUpdate = () => {
